@@ -6,8 +6,10 @@ const { getFirestore } = require('firebase-admin/firestore')
 import { Resend } from 'resend'
 import { WirelessQuoteEmail } from './email'
 import { WirelessQuote } from './typing'
+import * as dotenv from 'dotenv'
+dotenv.config()
 
-const resend = new Resend('re_PR6C2YML_X9KEahBcZKuZbBLZz8DNYar3')
+const resend = new Resend(process.env.RESEND_API_KEY!)
 
 initializeApp()
 // Start writing functions

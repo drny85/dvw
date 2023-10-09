@@ -193,7 +193,7 @@ const WirelessQuoteEmail: React.FC<Readonly<WirelessQuote>> = ({
                                     </Column>
                                     <Column>
                                         <Text className="text-md">
-                                            -${autoPayDiscount()}
+                                            ${autoPayDiscount()}
                                         </Text>
                                     </Column>
                                 </Row>
@@ -207,7 +207,7 @@ const WirelessQuoteEmail: React.FC<Readonly<WirelessQuote>> = ({
                                     </Column>
                                     <Column>
                                         <Text className="text-md">
-                                            -${firstResponder()}
+                                            ${firstResponder()}
                                         </Text>
                                     </Column>
                                 </Row>
@@ -221,9 +221,7 @@ const WirelessQuoteEmail: React.FC<Readonly<WirelessQuote>> = ({
                                     </Column>
 
                                     <Column>
-                                        <Text className="text-md">
-                                            -${byod}
-                                        </Text>
+                                        <Text className="text-md">${byod}</Text>
                                     </Column>
                                 </Row>
                             )}
@@ -237,7 +235,7 @@ const WirelessQuoteEmail: React.FC<Readonly<WirelessQuote>> = ({
 
                                     <Column>
                                         <Text className="text-md">
-                                            -${loyalty}
+                                            ${loyalty}
                                         </Text>
                                     </Column>
                                 </Row>
@@ -252,7 +250,7 @@ const WirelessQuoteEmail: React.FC<Readonly<WirelessQuote>> = ({
                                     </Column>
                                     <Column>
                                         <Text className="text-md">
-                                            -${mobilePlusHomeDiscount()}
+                                            ${mobilePlusHomeDiscount()}
                                         </Text>
                                     </Column>
                                 </Row>
