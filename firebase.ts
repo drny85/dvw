@@ -12,7 +12,6 @@ import {
     DocumentData,
     collection
 } from 'firebase/firestore'
-import { WirelessQuote } from './types'
 
 const firebaseConfig = {
     apiKey: process.env.EXPO_PUBLIC_FIREBASE_APIKEY,
@@ -41,7 +40,7 @@ export const deleteUserAccount = (name: string) =>
     httpsCallable<{ uid: string }, Response>(functions, name)
 
 export const sendEmail = () =>
-    httpsCallable<{ quote: WirelessQuote }>(functions, 'sendEmail')
+    httpsCallable<{ quoteId: string }>(functions, 'sendEmail')
 
 //const auth = getAuth(authApp.app);
 // export const db = getFirestore(app);

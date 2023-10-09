@@ -8,6 +8,7 @@ import {
     Column,
     Row,
     Section,
+    Link,
     Text
 } from '@react-email/components'
 import * as React from 'react'
@@ -27,7 +28,8 @@ const WirelessQuoteEmail: React.FC<Readonly<WirelessQuote>> = ({
     internetPlan,
     isAutoPay,
     isFirstResponder,
-    lines
+    lines,
+    emPhone
 }) => {
     const total = (): number =>
         lines.reduce((acc, line) => acc + line.price, 0) -
@@ -108,7 +110,7 @@ const WirelessQuoteEmail: React.FC<Readonly<WirelessQuote>> = ({
                     <Container className="items-center bg-slate-100 p-6 rounded-md mx-auto max-w-2xl justify-center">
                         <Hr />
                         <Text className="text-center text-lg font-semibold my-2">
-                            Number of Line {lines.length}
+                            Number of Lines {lines.length}
                         </Text>
                         <Section>
                             {lines.map((line, index) => (
@@ -185,57 +187,59 @@ const WirelessQuoteEmail: React.FC<Readonly<WirelessQuote>> = ({
                             )}
 
                             {isAutoPay && (
-                                <Row className="justify-between items-center px-4 py-0">
-                                    <Column className="w-full">
+                                <Row className="justify-between items-center px-4 py-0 w-full">
+                                    <Column className="w-['70%]">
                                         <Text className="text-md">
                                             Auto Pay
                                         </Text>
                                     </Column>
-                                    <Column>
+                                    <Column className="flex justify-end">
                                         <Text className="text-md">
-                                            ${autoPayDiscount()}
+                                            -${autoPayDiscount()}
                                         </Text>
                                     </Column>
                                 </Row>
                             )}
                             {firstResponder() > 0 && isFirstResponder && (
                                 <Row className="justify-between items-center px-4 py-0">
-                                    <Column className="w-full">
+                                    <Column className="w-['70%]">
                                         <Text className="text-md">
                                             First Responder Discount
                                         </Text>
                                     </Column>
-                                    <Column>
+                                    <Column className="flex justify-end">
                                         <Text className="text-md">
-                                            ${firstResponder()}
+                                            -${firstResponder()}
                                         </Text>
                                     </Column>
                                 </Row>
                             )}
                             {byod > 0 && (
                                 <Row className="justify-between items-center px-4 py-0 w-full">
-                                    <Column className="w-full">
+                                    <Column className="w-['70%]">
                                         <Text className="text-md">
-                                            BYOD Savings
+                                            BYOD Savings -
                                         </Text>
                                     </Column>
 
-                                    <Column>
-                                        <Text className="text-md">${byod}</Text>
+                                    <Column className="flex justify-end">
+                                        <Text className="text-md">
+                                            -${byod}
+                                        </Text>
                                     </Column>
                                 </Row>
                             )}
                             {loyalty > 0 && (
                                 <Row className="justify-between items-center px-4 py-0 w-full">
-                                    <Column className="w-full">
+                                    <Column className="w-['70%]">
                                         <Text className="text-md">
                                             Loyalty Discount
                                         </Text>
                                     </Column>
 
-                                    <Column>
+                                    <Column className="flex justify-end">
                                         <Text className="text-md">
-                                            ${loyalty}
+                                            -${loyalty}
                                         </Text>
                                     </Column>
                                 </Row>
@@ -243,14 +247,14 @@ const WirelessQuoteEmail: React.FC<Readonly<WirelessQuote>> = ({
 
                             {mobilePlusHomeDiscount() > 0 && (
                                 <Row className="justify-between items-center px-4 py-0">
-                                    <Column className="w-full">
+                                    <Column className="w-['70%]">
                                         <Text className="text-md">
                                             Mobile + Home Discount
                                         </Text>
                                     </Column>
-                                    <Column>
+                                    <Column className="flex justify-end">
                                         <Text className="text-md">
-                                            ${mobilePlusHomeDiscount()}
+                                            -${mobilePlusHomeDiscount()}
                                         </Text>
                                     </Column>
                                 </Row>
@@ -267,6 +271,19 @@ const WirelessQuoteEmail: React.FC<Readonly<WirelessQuote>> = ({
                                     </Text>
                                 </Column>
                             </Row>
+                            {emPhone && (
+                                <Container className="flex align-middle self-center justify-center w-full my-4">
+                                    <Link
+                                        className="shadow-md bg-slate-600  text-white font-bold py-2 px-6 rounded-full text-md"
+                                        href={`tel:${emPhone.replace(
+                                            /[^0-9]/g,
+                                            ''
+                                        )}`}
+                                    >
+                                        Call Me
+                                    </Link>
+                                </Container>
+                            )}
                         </Section>
                         <Text className="text-md mb-4  text-center">
                             Thank you {customerName.split(' ')[0]} for your
@@ -277,12 +294,13 @@ const WirelessQuoteEmail: React.FC<Readonly<WirelessQuote>> = ({
 
                         <Text className="text-md my-2  text-center italic">
                             Note: This quote was created on{' '}
-                            {new Date(createdAt).toDateString()}, pricng might
-                            change at anytime.
+                            {new Date(createdAt).toDateString()}, prices may be
+                            changed at any time.
                         </Text>
                     </Container>
                     <Container>
                         <Text className="font-thin">
+                            <b>Disclaimer: </b>
                             The wireless quote you received was created solely
                             for illustrative purposes to give you an approximate
                             idea of the potential cost associated with the
@@ -292,6 +310,26 @@ const WirelessQuoteEmail: React.FC<Readonly<WirelessQuote>> = ({
                             conversation we might have had.
                         </Text>
                     </Container>
+                    {byod > 0 && (
+                        <Container>
+                            <Text className="font-thin text-sm my-2 italic">
+                                <b>BYOD. </b>
+                                Bring Your Phone Discount. Unlimited Ultimate:
+                                Plan price includes $540 promo credit per phone
+                                applied over 36 mos. when you add 1-4 new
+                                smartphone lines with your own 4G/5G smartphone.
+                                Unlimited Plus: Plan price includes $360 promo
+                                credit per phone applied over 36 mos. when you
+                                add 1-4 new smartphone lines with your own 4G/5G
+                                smartphone. Unlimited Welcome: Plan price
+                                includes $180 promo credit per phone applied
+                                over 36 mos for new customers activating a new
+                                smartphone line with your own 4G/5G smartphone.
+                                All promo credits end if eligibility req’s are
+                                no longer met. Limited time offer.
+                            </Text>
+                        </Container>
+                    )}
                 </Body>
             </Tailwind>
         </Html>

@@ -1,17 +1,16 @@
 import {
     Body,
-    Button,
     Column,
     Container,
     Head,
-    Heading,
     Hr,
     Html,
-    Link,
     Preview,
     Row,
     Section,
     Tailwind,
+    Link,
+    Img,
     Text
 } from '@react-email/components'
 import * as React from 'react'
@@ -347,7 +346,7 @@ export const VercelInviteUserEmail = ({
         status: 'pending',
         isAutoPay: true,
         isFirstResponder: false,
-        hasFios: false,
+        hasFios: true,
         hasGig: false,
         message: 'new message'
     }
@@ -457,14 +456,14 @@ export const VercelInviteUserEmail = ({
                                 </Row>
                             )}
                             {quote.isAutoPay && (
-                                <Row className="justify-between items-center px-4 py-0">
-                                    <Column className="w-full">
+                                <Row className="justify-between items-center px-4 py-0 w-full">
+                                    <Column className="w-['70%]">
                                         <Text className="text-md">
                                             Auto Pay
                                         </Text>
                                     </Column>
-                                    <Column>
-                                        <Text className="text-md">-$30</Text>
+                                    <Column className="flex justify-end">
+                                        <Text className="text-md">-$60</Text>
                                     </Column>
                                 </Row>
                             )}
@@ -476,24 +475,24 @@ export const VercelInviteUserEmail = ({
                                             BYOD Savings
                                         </Text>
                                     </Column>
-                                    <Column className="w-full">
+                                    <Column>
                                         <Text className="text-sm">
                                             Savings (10)
                                         </Text>
                                     </Column>
-                                    <Column>
+                                    <Column className="flex justify-end">
                                         <Text className="text-md">-$30</Text>
                                     </Column>
                                 </Row>
                             )}
-                            {quote.isFirstResponder && (
+                            {quote.hasFios && (
                                 <Row className="justify-between items-center px-4 py-0">
                                     <Column className="w-full">
                                         <Text className="text-md">
                                             First Responder Discount
                                         </Text>
                                     </Column>
-                                    <Column>
+                                    <Column className="flex justify-end">
                                         <Text className="text-md">-$20</Text>
                                     </Column>
                                 </Row>
@@ -505,7 +504,7 @@ export const VercelInviteUserEmail = ({
                                             Mobile + Home Discount
                                         </Text>
                                     </Column>
-                                    <Column>
+                                    <Column className="flex justify-end">
                                         <Text className="text-md">-$20</Text>
                                     </Column>
                                 </Row>
@@ -522,6 +521,14 @@ export const VercelInviteUserEmail = ({
                                     </Text>
                                 </Column>
                             </Row>
+                            <Container className="flex align-middle self-center justify-center w-full my-4">
+                                <Link
+                                    className="shadow-md bg-slate-600  text-white font-bold py-2 px-6 rounded-full text-md"
+                                    href="tel:+17205544555"
+                                >
+                                    Call Me
+                                </Link>
+                            </Container>
                         </Section>
                         <Text className="text-md mb-4  text-center">
                             Thank you {quote.customerName.split(' ')[0]} for
@@ -537,6 +544,7 @@ export const VercelInviteUserEmail = ({
                     </Container>
                     <Container>
                         <Text className="font-thin">
+                            <b>Disclaimer: </b>
                             The wireless quote you received was created solely
                             for illustrative purposes to give you an approximate
                             idea of the potential cost associated with the
@@ -544,6 +552,23 @@ export const VercelInviteUserEmail = ({
                             official quote from Verizon It was generated based
                             on our internal calculations, assumptions and any
                             conversation we might have had.
+                        </Text>
+                    </Container>
+                    <Container>
+                        <Text className="font-thin text-sm my-2 italic">
+                            <b>BYOD. </b>
+                            Bring Your Phone Discount. Unlimited Ultimate: Plan
+                            price includes $540 promo credit per phone applied
+                            over 36 mos. when you add 1-4 new smartphone lines
+                            with your own 4G/5G smartphone. Unlimited Plus: Plan
+                            price includes $360 promo credit per phone applied
+                            over 36 mos. when you add 1-4 new smartphone lines
+                            with your own 4G/5G smartphone. Unlimited Welcome:
+                            Plan price includes $180 promo credit per phone
+                            applied over 36 mos for new customers activating a
+                            new smartphone line with your own 4G/5G smartphone.
+                            All promo credits end if eligibility req’s are no
+                            longer met. Limited time offer.
                         </Text>
                     </Container>
                 </Body>

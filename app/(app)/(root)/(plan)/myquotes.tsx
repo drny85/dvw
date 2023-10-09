@@ -22,6 +22,7 @@ import {
     deleteWirelessQuote,
     updateWirelessQuote
 } from '@/features/wirelessQuotes/wirelessQuoteActions'
+import { sendEmail } from '@/firebase'
 import { Line, WirelessQuote } from '@/types'
 import { firstResponderDiscount } from '@/utils/firstResponderDiscount'
 import { totalPerksCount } from '@/utils/perksCount'
@@ -30,6 +31,8 @@ import { router } from 'expo-router'
 import moment from 'moment'
 import React from 'react'
 import {
+    Alert,
+    Button,
     FlatList,
     ListRenderItem,
     StyleSheet,
@@ -40,10 +43,27 @@ const MyQuotes = () => {
     const { loading, quotes } = useWirelessQuotes()
     const bgColor = useThemeColor('background')
     const iconColor = useThemeColor('warning')
+    const greyColor = useThemeColor('grey')
+    const btnColor = useThemeColor('button')
     const dispatch = useAppDispatch()
+    const [loadingQuote, setLoadingQuote] = React.useState(false)
+
+    const handleSendQuote = async (quoteId: string) => {
+        if (!quoteId) return
+        try {
+            setLoadingQuote(true)
+            const func = sendEmail()
+            await func({ quoteId })
+            Alert.alert('Email sent', 'This quote has been sent!')
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setLoadingQuote(false)
+        }
+    }
     const onPressQuote = (quote: WirelessQuote) => {
         if (quote.hasFios) {
-            dispatch(setExpressInternet(quote.hasGig ? 'gig' : '200'))
+            dispatch(setExpressInternet(quote.internetPlan))
         } else {
             dispatch(setExpressInternet())
         }
@@ -89,7 +109,7 @@ const MyQuotes = () => {
                 style={[
                     Styles.boxShadow,
                     {
-                        backgroundColor: bgColor,
+                        backgroundColor: !item.sent ? bgColor : greyColor,
                         padding: SIZES.padding,
                         borderRadius: SIZES.radius
                     }
@@ -185,6 +205,19 @@ const MyQuotes = () => {
                 <Text fontSize={12} style={{ marginTop: SIZES.base }}>
                     created on: {moment(item.createdAt).format('lll')}
                 </Text>
+                {item.sent && item.sentOn && (
+                    <Text fontSize={12} style={{ marginTop: SIZES.base }}>
+                        sent on: {moment(item.sentOn).format('lll')}
+                    </Text>
+                )}
+                <View style={{ marginTop: SIZES.padding }}>
+                    <Button
+                        disabled={loadingQuote}
+                        title="Send Quote"
+                        color={loadingQuote ? greyColor : btnColor}
+                        onPress={() => handleSendQuote(item.quoteId!)}
+                    />
+                </View>
             </View>
         )
     }
@@ -192,7 +225,10 @@ const MyQuotes = () => {
     if (loading) return <Loading />
     return (
         <Screen>
-            <Header title="My Quotes" onPressBack={router.back} />
+            <Header
+                title={`My Quotes (${quotes.length})`}
+                onPressBack={router.back}
+            />
             <FlatList
                 data={quotes.sort((a, b) =>
                     b.createdAt.localeCompare(a.createdAt)

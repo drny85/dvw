@@ -86,7 +86,9 @@ export interface WirelessQuote {
     phoneNumber: string
     lines: Line[]
     userId: string
+    sent?: boolean
     isAutoPay: boolean
+    sentOn?: string
     isFirstResponder: boolean
 }
 

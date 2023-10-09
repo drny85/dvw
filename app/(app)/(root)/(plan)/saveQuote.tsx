@@ -72,6 +72,7 @@ const SaveQuote = () => {
             email,
             phoneNumber: phone,
             status: 'pending',
+            sent: false,
             isAutoPay: expressAutoPay === 10,
             isFirstResponder: expressFirstResponder,
             hasFios: expressHasFios,
@@ -80,10 +81,6 @@ const SaveQuote = () => {
         }
         try {
             setLoading(true)
-            const func = sendEmail()
-            const res = await func({ quote })
-            console.log(res)
-
             dispatch(saveWirelessQuote(quote))
             setName('')
             setEmail('')

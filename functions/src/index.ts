@@ -49,15 +49,19 @@ exports.deleleAccount = onCall<{ uid: string }>(async ({ data, auth }) => {
     }
 })
 
-exports.sendEmail = onCall<{ quote: WirelessQuote }>(
+exports.sendEmail = onCall<{ quoteId: string }>(
     async ({ data, auth }): Promise<{ message: string }> => {
         try {
-            // const { from, subject, message, to } = data
-            // const response = await admin.auth().getUserByEmail(from)
-            // const user = response.toJSON()
-
             if (!auth) return { message: 'no authorized' }
-            if (!data.quote.email) return { message: 'no email' }
+            const quoteRef = admin
+                .firestore()
+                .collection('quotes')
+                .doc(data.quoteId)
+            const res = await quoteRef.get()
+            if (!res) return { message: 'no quote' }
+            const quote = res.data() as WirelessQuote
+
+            if (!quote.email) return { message: 'no email' }
             const userData = await admin
                 .firestore()
                 .collection('users')
@@ -65,14 +69,23 @@ exports.sendEmail = onCall<{ quote: WirelessQuote }>(
                 .get()
             if (!userData.exists) return { message: 'no user' }
             const user = userData.data()!
+            const quoteData: WirelessQuote = {
+                ...quote,
+                emPhone: user.phone || null
+            }
             const Template: typeof WirelessQuoteEmail = WirelessQuoteEmail
             await resend.emails.send({
                 from: `${user.name} <melendez@robertdev.net>`,
-                to: [data.quote.email],
+                to: [quote.email],
                 subject: 'Wireless Quote',
                 reply_to: user.email,
                 text: '',
-                react: Template(data.quote)
+                react: Template(quoteData)
+            })
+
+            await quoteRef.update({
+                sent: true,
+                sentOn: new Date().toISOString()
             })
 
             return {

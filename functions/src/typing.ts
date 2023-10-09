@@ -12,7 +12,9 @@ export interface WirelessQuote {
     lines: Line[]
     userId: string
     isAutoPay: boolean
+    sent?: boolean
     isFirstResponder: boolean
+    emPhone?: string
 }
 
 export type InternetPlan = '200' | '400' | 'gig' | '2gig' | undefined
@@ -104,6 +106,7 @@ export interface WirelessQuote {
     userId: string
     isAutoPay: boolean
     isFirstResponder: boolean
+    sentOn?: string
 }
 
 export type FeedType = 'quote' | 'feed'
@@ -139,6 +142,7 @@ export type AppUser = {
     emailVerified: boolean
     role?: UserRole
     image?: string
+    phone?: string | null
     pushToken?: string
     createdAt?: string
 }

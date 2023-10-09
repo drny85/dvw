@@ -1,34 +1,42 @@
-import React, { useCallback } from 'react'
-import ThemeSwitcher from '@/common/components/ThemeSwitcher'
 import Screen from '@/common/components/Screen'
+import ThemeSwitcher from '@/common/components/ThemeSwitcher'
 import View from '@/common/components/View'
-import Header from '@/common/components/Header'
-import Styles from '@/constants/Styles'
 import { SIZES } from '@/constants/Sizes'
+import Styles from '@/constants/Styles'
 import { FontAwesome } from '@expo/vector-icons'
+import React, { useCallback } from 'react'
 
-import useThemeColor from '@/common/hooks/useThemeColor'
-import { Alert, Button, Image, TouchableOpacity } from 'react-native'
-import useAppDispatch from '@/common/hooks/useAppDispatch'
-import { logoutUser, updateUser } from '@/features/auth/authActions'
-import useAppSelector from '@/common/hooks/useAppSelector'
-import { StyleSheet } from 'react-native'
-import Text from '@/common/components/Text'
 import Row from '@/common/components/Row'
-import { AnimatePresence, MotiView } from 'moti'
+import Text from '@/common/components/Text'
 import TextInput from '@/common/components/TextInput'
-import { isFullName } from '@/utils/isFullName'
 import { useAuth } from '@/common/hooks/auth/useAuth'
+import useAppDispatch from '@/common/hooks/useAppDispatch'
+import useAppSelector from '@/common/hooks/useAppSelector'
+import useThemeColor from '@/common/hooks/useThemeColor'
+import { logoutUser, updateUser } from '@/features/auth/authActions'
 import { AppUser } from '@/features/auth/authSlice'
+import { deleteUserAccount } from '@/firebase'
+import { isFullName } from '@/utils/isFullName'
 import * as Clipboard from 'expo-clipboard'
 import { router } from 'expo-router'
-import { deleteUserAccount } from '@/firebase'
+import { AnimatePresence, MotiView } from 'moti'
+import {
+    Alert,
+    Button,
+    Image,
+    StyleSheet,
+    TouchableOpacity
+} from 'react-native'
+import { formatPhone } from '@/utils/formatPhone'
 
 const Settings = () => {
     useAuth()
     const iconColor = useThemeColor('text')
+    const donateColor = useThemeColor('success')
     const deleteColor = useThemeColor('warning')
     const user = useAppSelector((state) => state.auth.user)
+    const [updatePhone, setUpdatePhone] = React.useState('')
+    const [showPhone, setShowPhone] = React.useState(false)
     const [updateName, setUpdateName] = React.useState(false)
     const dispatch = useAppDispatch()
     const copyToClipboard = async () => {
@@ -63,6 +71,26 @@ const Settings = () => {
             await func({ uid: user?.id! })
             dispatch(logoutUser())
             router.replace('/(app)/auth')
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const onUpdatePhone = async (value: string) => {
+        try {
+            console.log(value)
+            if (!value || value.length < 14) {
+                Alert.alert('Invalid Phone', 'Please enter a valid phone')
+                return
+            }
+
+            const updatedUser: AppUser = {
+                ...user!,
+                phone: value
+            }
+
+            dispatch(updateUser(updatedUser))
+            setShowPhone(false)
         } catch (error) {
             console.log(error)
         }
@@ -155,10 +183,30 @@ const Settings = () => {
                             />
                         )}
                     </Row>
+                    <Row style={{ gap: SIZES.padding }}>
+                        <Text fontFamily="SFBold" capitalize>
+                            Cell Phone
+                        </Text>
+                        {user?.phone && !updatePhone ? (
+                            <Text capitalize>{user?.phone}</Text>
+                        ) : (
+                            <Button
+                                title={updatePhone ? 'Cancel' : 'Add Phone'}
+                                onPress={() => {
+                                    setShowPhone((prev) => !prev)
+                                }}
+                            />
+                        )}
+                    </Row>
                     <UpdateForm
                         show={updateName}
                         onPress={onUpdateName}
                         placeholder="Full Name"
+                    />
+                    <UpdateForm
+                        show={showPhone}
+                        onPress={onUpdatePhone}
+                        placeholder="Cell Phone"
                     />
 
                     <Row style={{ gap: SIZES.padding }}>
@@ -202,36 +250,6 @@ const Settings = () => {
                             />
                         </Row>
                     </TouchableOpacity>
-                    <TouchableOpacity
-                        style={[
-                            {
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                marginTop: 30,
-                                ...Styles.boxShadow,
-                                backgroundColor: 'grey',
-                                borderRadius: SIZES.radius,
-                                padding: SIZES.padding,
-                                maxWidth: '60%',
-                                alignSelf: 'center',
-                                paddingHorizontal: SIZES.padding * 3
-                            }
-                        ]}
-                        onPress={() =>
-                            router.push('/(app)/(root)/(settings)/donate')
-                        }
-                    >
-                        <Row style={{ gap: SIZES.base }}>
-                            <FontAwesome
-                                name="dollar"
-                                size={20}
-                                color={iconColor}
-                            />
-                            <Text fontFamily="SFBold" capitalize>
-                                Donate
-                            </Text>
-                        </Row>
-                    </TouchableOpacity>
 
                     {!user?.image && (
                         <>
@@ -265,21 +283,54 @@ const Settings = () => {
                         alignSelf: 'center',
                         gap: SIZES.padding,
                         width: '100%',
-                        justifyContent: 'center',
-                        alignItems: 'center'
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        paddingHorizontal: SIZES.base
                     }}
                 >
-                    <Text color="grey">Delete My Account</Text>
                     <TouchableOpacity
-                        onPress={handleDeleteAccount}
-                        style={{ padding: SIZES.base }}
+                        style={[
+                            {
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                ...Styles.boxShadow,
+                                backgroundColor: donateColor,
+                                borderRadius: SIZES.radius,
+                                paddingVertical: SIZES.base,
+                                maxWidth: '60%',
+                                alignSelf: 'center',
+
+                                paddingHorizontal: SIZES.padding * 3
+                            }
+                        ]}
+                        onPress={() =>
+                            router.push('/(app)/(root)/(settings)/donate')
+                        }
                     >
-                        <FontAwesome
-                            name="trash-o"
-                            size={20}
-                            color={deleteColor}
-                        />
+                        <Row style={{ gap: SIZES.base }}>
+                            <FontAwesome
+                                name="dollar"
+                                size={20}
+                                color={'white'}
+                            />
+                            <Text fontFamily="SFBold" capitalize color="white">
+                                Donate
+                            </Text>
+                        </Row>
                     </TouchableOpacity>
+                    <Row>
+                        <Text color="grey">Delete My Account</Text>
+                        <TouchableOpacity
+                            onPress={handleDeleteAccount}
+                            style={{ padding: SIZES.base }}
+                        >
+                            <FontAwesome
+                                name="trash-o"
+                                size={20}
+                                color={deleteColor}
+                            />
+                        </TouchableOpacity>
+                    </Row>
                 </Row>
             </View>
         </Screen>
@@ -327,7 +378,11 @@ const UpdateForm = ({ show, onPress, placeholder }: Props) => {
                         <TextInput
                             placeholder={placeholder}
                             value={value}
-                            onChangeText={setValue}
+                            onChangeText={(text) =>
+                                placeholder.includes('Phone')
+                                    ? setValue(formatPhone(text))
+                                    : setValue(text)
+                            }
                             autoCapitalize="words"
                         />
                         <Button
