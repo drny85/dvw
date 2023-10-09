@@ -97,6 +97,19 @@ const SaveQuote = () => {
             setLoading(false)
         }
     }
+    if (loading) {
+        return (
+            <View
+                style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}
+            >
+                <Text fontSize={20}>Saving Qoute</Text>
+            </View>
+        )
+    }
 
     return (
         <Screen>
