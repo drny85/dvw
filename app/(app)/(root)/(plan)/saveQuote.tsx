@@ -22,9 +22,12 @@ import { WirelessQuote } from '@/types'
 import { onlyLetters } from '@/utils/onlyLetters'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { v4 } from 'uuid'
+import { sendEmail } from '@/firebase'
+import Loading from '@/common/components/Loading'
 
 const SaveQuote = () => {
     const [inReview, setReview] = useState(true)
+    const [loading, setLoading] = useState(false)
     const user = useAppSelector((s) => s.auth.user)
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
@@ -41,7 +44,7 @@ const SaveQuote = () => {
         expressInternet
     } = useAppSelector((s) => s.wireless)
 
-    const onSaveQuote = () => {
+    const onSaveQuote = async () => {
         if (!isFullName(name)) {
             Alert.alert('Please enter a valid name')
             return
@@ -72,10 +75,15 @@ const SaveQuote = () => {
             isAutoPay: expressAutoPay === 10,
             isFirstResponder: expressFirstResponder,
             hasFios: expressHasFios,
-            hasGig: expressInternet === 'gig',
+            internetPlan: expressInternet ? expressInternet : null,
             message
         }
         try {
+            setLoading(true)
+            const func = sendEmail()
+            const res = await func({ quote })
+            console.log(res)
+
             dispatch(saveWirelessQuote(quote))
             setName('')
             setEmail('')
@@ -85,6 +93,8 @@ const SaveQuote = () => {
             router.back()
         } catch (error) {
             console.log(error)
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -100,6 +110,7 @@ const SaveQuote = () => {
                     }
                 }}
             />
+
             {inReview && (
                 <View style={{ flex: 1, padding: 20 }}>
                     <Text center fontSize={20} fontFamily="SFBold">

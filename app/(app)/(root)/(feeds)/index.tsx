@@ -10,6 +10,7 @@ import useAppSelector from '@/common/hooks/useAppSelector'
 import { schedulePushNotification } from '@/common/hooks/useNotification'
 import { SIZES } from '@/constants/Sizes'
 import { deleteFeed, updateFeed } from '@/features/feeds/feedsActions'
+
 import { Feed } from '@/types'
 import BottomSheet from '@gorhom/bottom-sheet'
 import { router } from 'expo-router'
@@ -64,6 +65,7 @@ const Feeds = () => {
 
     useEffect(() => {
         setTimeout(() => {
+            //sendE()
             schedulePushNotification()
         }, 3000)
     }, [])

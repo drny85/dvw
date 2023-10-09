@@ -1,11 +1,11 @@
-import { Line, WirelessQuote } from '@/types'
+import { InternetPlan, Line, WirelessQuote } from '@/types'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 interface DataState {
     expressAutoPay: 0 | 10
     expressFirstResponder: boolean
     expressHasFios: boolean
-    expressInternet: '200' | '400' | 'gig' | '2gig' | undefined
+    expressInternet: InternetPlan
     BYOD: boolean
     hoverPlan: 'plus' | 'welcome' | 'ultimate' | undefined
     lines: Line[]

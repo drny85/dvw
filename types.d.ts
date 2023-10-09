@@ -46,6 +46,7 @@ export type SaleData = Pick<
     'saleType' | 'user' | 'numberOfLines' | 'createdAt' | 'id'
 >
 
+export type InternetPlan = '200' | '400' | 'gig' | '2gig' | undefined | null
 export interface Perk {
     name: PerkName
     price: number
@@ -80,7 +81,7 @@ export interface WirelessQuote {
     createdAt: string
     status: 'pending' | 'closed' | 'rejected'
     hasFios: boolean
-    hasGig: boolean
+    internetPlan: InternetPlan
     customerName: string
     phoneNumber: string
     lines: Line[]
