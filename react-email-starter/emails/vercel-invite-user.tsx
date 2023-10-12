@@ -140,11 +140,11 @@ export const VercelInviteUserEmail = ({
                 ],
                 id: 'cfefb4d5-c44b-4eb1-b783-125d590f6ff3',
                 price: 40,
-                name: 'Unlimited Welcome',
+                name: 'Unlimited Ultimate',
                 byod: false
             },
             {
-                name: 'Unlimited Ultimate',
+                name: 'Unlimited Plus',
                 byod: true,
                 id: 'b22f3b98-0e27-4cfc-81bc-0b6a4eaceb2d',
                 perks: [
@@ -351,6 +351,10 @@ export const VercelInviteUserEmail = ({
         message: 'new message'
     }
 
+    console.log(
+        quote.lines.map((l) => l.name.toLowerCase()).includes('unlimited plus')
+    )
+
     return (
         <Html>
             <Head />
@@ -538,7 +542,7 @@ export const VercelInviteUserEmail = ({
 
                         <Text className="text-md my-2  text-center italic">
                             Note: This quote was created on{' '}
-                            {new Date(quote.createdAt).toDateString()}, pricng
+                            {new Date(quote.createdAt).toDateString()}, pricing
                             might change at anytime.
                         </Text>
                     </Container>
@@ -571,6 +575,87 @@ export const VercelInviteUserEmail = ({
                             longer met. Limited time offer.
                         </Text>
                     </Container>
+
+                    {quote.lines
+                        .map((l) => l.name.toLowerCase())
+                        .includes('unlimited ultimate') && (
+                        <Container>
+                            <Text className="font-thin text-sm mt-2 italic">
+                                <b>Unlimited Ultimate Plan Includes</b>
+                            </Text>
+                            <Text>
+                                - Unlimited Premium Data, 5G Ultra Wideband
+                            </Text>
+                            <Text>- 60 GB of Mobile Hotspot</Text>
+                            <Text>
+                                - Unlimited Calls, text and data in The US,
+                                Mexico & Canada.
+                            </Text>
+                            <Text>
+                                - International data, talk, & text abroad, 210+
+                                Countries & Destinations
+                            </Text>
+                            <Text>- $25 off Verizon Home Internet</Text>
+                            <Text>
+                                - Up to $540 bring your own device credit
+                            </Text>
+                            <Text>
+                                - 50% off 2 connected device, smartwatch or
+                                tablet
+                            </Text>
+                            <Text>- Streaming quality up to 1080p HD</Text>
+                            <Hr className="bg-slate-600 mt-4 mb-4 h-px w-full opacity-50" />
+                        </Container>
+                    )}
+                    {quote.lines
+                        .map((l) => l.name.toLowerCase())
+                        .includes('unlimited plus') && (
+                        <Container>
+                            <Text className="font-thin text-sm mt-2 italic">
+                                <b>Unlimited Plus Plan Includes</b>
+                            </Text>
+                            <Text>
+                                - Unlimited Premium Data, 5G Ultra Wideband
+                            </Text>
+                            <Text>- 30 GB of Mobile Hotspot</Text>
+                            <Text>
+                                - Unlimited Calls, text and data in The US,
+                                Mexico & Canada
+                            </Text>
+                            <Text>- $25 off Verizon Home Internet</Text>
+                            <Text>
+                                - Up to $360 bring your own device credit
+                            </Text>
+                            <Text>
+                                - 50% off 1 connected device, smartwatch or
+                                tablet
+                            </Text>
+                            <Text>- Streaming quality up to 720p HD</Text>
+                            <Hr className="bg-slate-600 mt-4 mb-4 h-px w-full opacity-50" />
+                        </Container>
+                    )}
+                    {quote.lines
+                        .map((l) => l.name.toLowerCase())
+                        .includes('unlimited welcome') && (
+                        <Container>
+                            <Text className="font-thin text-sm mt-2 italic">
+                                <b>Unlimited Welcome Plan Includes</b>
+                            </Text>
+                            <Text>- Unlimited 5G</Text>
+
+                            <Text>
+                                - Unlimited Calls, text and data in The US,
+                                Mexico & Canada
+                            </Text>
+                            <Text>- $10 off Verizon Home Internet</Text>
+                            <Text>
+                                - Up to $180 bring your own device credit
+                            </Text>
+
+                            <Text>- Streaming quality up to 480p HD</Text>
+                            <Hr className="bg-slate-600 mt-4 mb-4 h-px w-full opacity-50" />
+                        </Container>
+                    )}
                 </Body>
             </Tailwind>
         </Html>

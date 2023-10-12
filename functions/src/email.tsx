@@ -262,7 +262,7 @@ const WirelessQuoteEmail: React.FC<Readonly<WirelessQuote>> = ({
                             <Row className="justify-between items-center px-4 py-0">
                                 <Column className="w-full">
                                     <Text className="text-2xl font-semibold">
-                                        Total
+                                        Total <i>(monthly before taxes)</i>
                                     </Text>
                                 </Column>
                                 <Column>
@@ -328,6 +328,86 @@ const WirelessQuoteEmail: React.FC<Readonly<WirelessQuote>> = ({
                                 All promo credits end if eligibility req’s are
                                 no longer met. Limited time offer.
                             </Text>
+                        </Container>
+                    )}
+                    {lines
+                        .map((l) => l.name.toLowerCase())
+                        .includes('unlimited ultimate') && (
+                        <Container>
+                            <Text className="font-thin text-sm mt-2 italic">
+                                <b>Unlimited Ultimate Plan Includes</b>
+                            </Text>
+                            <Text>
+                                - Unlimited Premium Data, 5G Ultra Wideband
+                            </Text>
+                            <Text>- 60 GB of Mobile Hotspot</Text>
+                            <Text>
+                                - Unlimited Calls, text and data in The US,
+                                Mexico & Canada.
+                            </Text>
+                            <Text>
+                                - International data, talk, & text abroad, 210+
+                                Countries & Destinations
+                            </Text>
+                            <Text>- $25 off Verizon Home Internet</Text>
+                            <Text>
+                                - Up to $540 bring your own device credit
+                            </Text>
+                            <Text>
+                                - 50% off 2 connected device, smartwatch or
+                                tablet
+                            </Text>
+                            <Text>- Streaming quality up to 1080p HD</Text>
+                            <Hr className="bg-slate-600 mt-4 mb-4 h-px w-full opacity-50" />
+                        </Container>
+                    )}
+                    {lines
+                        .map((l) => l.name.toLowerCase())
+                        .includes('unlimited plus') && (
+                        <Container>
+                            <Text className="font-thin text-sm mt-2 italic">
+                                <b>Unlimited Plus Plan Includes</b>
+                            </Text>
+                            <Text>
+                                - Unlimited Premium Data, 5G Ultra Wideband
+                            </Text>
+                            <Text>- 30 GB of Mobile Hotspot</Text>
+                            <Text>
+                                - Unlimited Calls, text and data in The US,
+                                Mexico & Canada
+                            </Text>
+                            <Text>- $25 off Verizon Home Internet</Text>
+                            <Text>
+                                - Up to $360 bring your own device credit
+                            </Text>
+                            <Text>
+                                - 50% off 1 connected device, smartwatch or
+                                tablet
+                            </Text>
+                            <Text>- Streaming quality up to 720p HD</Text>
+                            <Hr className="bg-slate-600 mt-4 mb-4 h-px w-full opacity-50" />
+                        </Container>
+                    )}
+                    {lines
+                        .map((l) => l.name.toLowerCase())
+                        .includes('unlimited welcome') && (
+                        <Container>
+                            <Text className="font-thin text-sm mt-2 italic">
+                                <b>Unlimited Welcome Plan Includes</b>
+                            </Text>
+                            <Text>- Unlimited 5G</Text>
+
+                            <Text>
+                                - Unlimited Calls, text and data in The US,
+                                Mexico & Canada
+                            </Text>
+                            <Text>- $10 off Verizon Home Internet</Text>
+                            <Text>
+                                - Up to $180 bring your own device credit
+                            </Text>
+
+                            <Text>- Streaming quality up to 480p HD</Text>
+                            <Hr className="bg-slate-600 mt-4 mb-4 h-px w-full opacity-50" />
                         </Container>
                     )}
                 </Body>

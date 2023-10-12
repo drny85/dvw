@@ -1,15 +1,23 @@
 {
   "__entry_css_mods__": {
+    "/Users/melendez/Desktop/dvw/react-email-starter/.react-email/src/app/page": [
+      "/Users/melendez/Desktop/dvw/react-email-starter/.react-email/src/styles/globals.css",
+      "/Users/melendez/Desktop/dvw/react-email-starter/node_modules/next/font/google/target.css?{\"path\":\"src/app/layout.tsx\",\"import\":\"Inter\",\"arguments\":[{\"subsets\":[\"latin\"],\"variable\":\"--font-inter\"}],\"variableName\":\"inter\"}"
+    ],
     "/Users/melendez/Desktop/dvw/react-email-starter/.react-email/src/app/preview/[slug]/page": [
       "/Users/melendez/Desktop/dvw/react-email-starter/.react-email/src/styles/globals.css",
       "/Users/melendez/Desktop/dvw/react-email-starter/node_modules/next/font/google/target.css?{\"path\":\"src/app/layout.tsx\",\"import\":\"Inter\",\"arguments\":[{\"subsets\":[\"latin\"],\"variable\":\"--font-inter\"}],\"variableName\":\"inter\"}"
     ]
   },
-  "/Users/melendez/Desktop/dvw/react-email-starter/.react-email/src/app/preview/[slug]/page.tsx": [
+  "/Users/melendez/Desktop/dvw/react-email-starter/.react-email/src/app/layout.tsx": [
     "/Users/melendez/Desktop/dvw/react-email-starter/node_modules/next/font/google/target.css?{\"path\":\"src/app/layout.tsx\",\"import\":\"Inter\",\"arguments\":[{\"subsets\":[\"latin\"],\"variable\":\"--font-inter\"}],\"variableName\":\"inter\"}",
     "/Users/melendez/Desktop/dvw/react-email-starter/.react-email/src/styles/globals.css"
   ],
-  "/Users/melendez/Desktop/dvw/react-email-starter/.react-email/src/app/layout.tsx": [
+  "/Users/melendez/Desktop/dvw/react-email-starter/.react-email/src/app/page.tsx": [
+    "/Users/melendez/Desktop/dvw/react-email-starter/node_modules/next/font/google/target.css?{\"path\":\"src/app/layout.tsx\",\"import\":\"Inter\",\"arguments\":[{\"subsets\":[\"latin\"],\"variable\":\"--font-inter\"}],\"variableName\":\"inter\"}",
+    "/Users/melendez/Desktop/dvw/react-email-starter/.react-email/src/styles/globals.css"
+  ],
+  "/Users/melendez/Desktop/dvw/react-email-starter/.react-email/src/app/preview/[slug]/page.tsx": [
     "/Users/melendez/Desktop/dvw/react-email-starter/node_modules/next/font/google/target.css?{\"path\":\"src/app/layout.tsx\",\"import\":\"Inter\",\"arguments\":[{\"subsets\":[\"latin\"],\"variable\":\"--font-inter\"}],\"variableName\":\"inter\"}",
     "/Users/melendez/Desktop/dvw/react-email-starter/.react-email/src/styles/globals.css"
   ]

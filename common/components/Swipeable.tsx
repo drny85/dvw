@@ -10,7 +10,6 @@ interface Props {
     rigthStyle?: ViewStyle
     children?: React.ReactNode
     rigthIconName?: React.ComponentProps<typeof Entypo>['name']
-    onSwipeableOpen: () => void
     onSwipeableClose: () => void
     onSwipeableWillOpen: () => void
     onRightIconPress?: (value: any) => void
@@ -28,7 +27,6 @@ const SwipeableItem: FC<Props> = React.forwardRef(
             rigthStyle,
             onSwipeableClose,
             onRightIconPress,
-            onSwipeableOpen,
             onReplyPress,
             rigthIconName,
             deleteIconColor,
@@ -94,7 +92,6 @@ const SwipeableItem: FC<Props> = React.forwardRef(
         }
         return (
             <Swipeable
-                onSwipeableOpen={onSwipeableOpen}
                 overshootRight={false}
                 ref={ref as any}
                 containerStyle={[style, { width: '100%' }]}
