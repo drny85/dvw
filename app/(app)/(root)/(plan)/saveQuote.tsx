@@ -11,7 +11,13 @@ import { isEmailValid } from '@/utils/isEmailValid'
 import { isFullName } from '@/utils/isFullName'
 import { router } from 'expo-router'
 import React, { useState } from 'react'
-import { Alert, Button, ScrollView, StyleSheet } from 'react-native'
+import {
+    Alert,
+    Button,
+    ScrollView,
+    StyleSheet,
+    TouchableOpacity
+} from 'react-native'
 
 import TotalView from '@/common/components/myPlan/TotalView'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
@@ -22,18 +28,20 @@ import { WirelessQuote } from '@/types'
 import { onlyLetters } from '@/utils/onlyLetters'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { v4 } from 'uuid'
-import { sendEmail } from '@/firebase'
-import Loading from '@/common/components/Loading'
+import DateTimePickerComponent from '@/common/components/DateTimePicker'
+import moment from 'moment'
 
 const SaveQuote = () => {
     const [inReview, setReview] = useState(true)
     const [loading, setLoading] = useState(false)
+    const [isVisible, setIsVisible] = useState(false)
     const user = useAppSelector((s) => s.auth.user)
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [message, setMessage] = useState('')
     const [phone, setPhone] = useState('')
     const bgColor = useThemeColor('primary')
+    const [scheduledOn, setScheduledOn] = useState<Date>(new Date())
     const dispatch = useAppDispatch()
 
     const {
@@ -44,7 +52,7 @@ const SaveQuote = () => {
         expressInternet
     } = useAppSelector((s) => s.wireless)
 
-    const onSaveQuote = async () => {
+    const validate = () => {
         if (!isFullName(name)) {
             Alert.alert('Please enter a valid name')
             return
@@ -62,7 +70,22 @@ const SaveQuote = () => {
             Alert.alert('Please a message or description')
             return
         }
+        Alert.alert(
+            'Is this follow up date ok?',
+            `${moment(scheduledOn).format('lll')}`,
+            [
+                {
+                    text: 'No',
+                    onPress: () => {
+                        return
+                    }
+                },
+                { text: 'Yes', onPress: onSaveQuote }
+            ]
+        )
+    }
 
+    const onSaveQuote = async () => {
         const quote: WirelessQuote = {
             id: v4(),
             lines,
@@ -73,6 +96,7 @@ const SaveQuote = () => {
             phoneNumber: phone,
             status: 'pending',
             sent: false,
+            scheduledOn: scheduledOn ? moment(scheduledOn).toISOString() : null,
             isAutoPay: expressAutoPay === 10,
             isFirstResponder: expressFirstResponder,
             hasFios: expressHasFios,
@@ -86,7 +110,7 @@ const SaveQuote = () => {
             setEmail('')
             setPhone('')
             setMessage('')
-
+            Alert.alert('Quote Saved', 'Your quote has been saved')
             router.back()
         } catch (error) {
             console.log(error)
@@ -247,8 +271,37 @@ const SaveQuote = () => {
                             isMultiline={true}
                             autoCapitalize="none"
                         />
+                        <View
+                            style={{
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}
+                        >
+                            <TouchableOpacity
+                                style={{ marginVertical: SIZES.base }}
+                                onPress={() => setIsVisible((prev) => !prev)}
+                            >
+                                <Text fontFamily="SFBold">
+                                    Schedule a Follow up
+                                </Text>
+                            </TouchableOpacity>
+                            <DateTimePickerComponent
+                                mode="datetime"
+                                value={scheduledOn}
+                                onVisibilityChange={(isVisible) => {
+                                    // setIsVisible(isVisible)
+                                }}
+                                isVisible={isVisible}
+                                onDateChange={(date) => {
+                                    console.log(date)
+                                    if (date) {
+                                        setScheduledOn(date)
+                                    }
+                                }}
+                            />
+                        </View>
 
-                        <Button title="Save Quote" onPress={onSaveQuote} />
+                        <Button title="Save Quote" onPress={validate} />
                     </View>
                 </KeyboardAwareScrollView>
             )}

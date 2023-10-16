@@ -34,7 +34,17 @@ const config: ExpoConfig = {
         output: 'static',
         favicon: './assets/images/favicon.png'
     },
-    plugins: ['expo-router', 'expo-notifications'],
+    plugins: [
+        'expo-router',
+        'expo-notifications',
+        [
+            'expo-image-picker',
+            {
+                photosPermission:
+                    'The app accesses your photos to let you share them with your friends.'
+            }
+        ]
+    ],
     experiments: {
         tsconfigPaths: true,
         typedRoutes: true

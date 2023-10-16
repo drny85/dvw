@@ -7,8 +7,6 @@ export const useMessages = (chatId: string) => {
     const [messages, setMessages] = useState<Message[]>([])
     const [loading, setLoading] = useState(true)
     useEffect(() => {
-        console.log('useMessages', chatId)
-
         if (!chatId) {
             setLoading(false)
             return

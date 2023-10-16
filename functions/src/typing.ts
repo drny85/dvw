@@ -106,6 +106,7 @@ export interface WirelessQuote {
     userId: string
     isAutoPay: boolean
     isFirstResponder: boolean
+    scheduledOn: string | null
     sentOn?: string
 }
 
@@ -146,7 +147,16 @@ export type AppUser = {
     pushToken?: string
     createdAt?: string
 }
-
+export type NotificationData = {
+    id: string
+    type: NotificationType
+}
+export type NotificationType =
+    | 'quote'
+    | 'feed'
+    | 'quote-reply'
+    | 'feed-reply'
+    | 'new-message'
 export type UserRole = 'admin' | 'em' | 'coach'
 export const BONUS_EXPIRATION_DATE = '12/31/2023'
 export const ULTIMATE_BYOD_VALUE = 540 / 36

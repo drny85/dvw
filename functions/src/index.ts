@@ -1,12 +1,16 @@
 import { onCall } from 'firebase-functions/v2/https'
+import { onDocumentCreated } from 'firebase-functions/v2/firestore'
 
+// import * as functions from 'firebase-functions'
+// import * as moment from 'moment'
 import * as admin from 'firebase-admin'
 const { initializeApp } = require('firebase-admin/app')
 const { getFirestore } = require('firebase-admin/firestore')
 import { Resend } from 'resend'
 import { WirelessQuoteEmail } from './email'
-import { WirelessQuote } from './typing'
+import { Message, NotificationData, WirelessQuote } from './typing'
 import * as dotenv from 'dotenv'
+import { sendNotificationToAllUsers } from './sendNotificationToAllUsers'
 dotenv.config()
 
 const resend = new Resend(process.env.RESEND_API_KEY!)
@@ -99,3 +103,61 @@ exports.sendEmail = onCall<{ quoteId: string }>(
         }
     }
 )
+
+exports.sendNewMessageNotification = onDocumentCreated(
+    'messages/{messageId}',
+    async (event) => {
+        try {
+            const messageData = event.data
+            const message = messageData?.data() as Message
+            const sender = message.sender.name
+            const usersRef = await admin.firestore().collection('users').get()
+            const users = usersRef.docs.map((doc) => doc.data())
+            const data: NotificationData = {
+                id: message.chatId,
+                type: 'new-message'
+            }
+            const pushTokens: string[] = []
+            users.map((user) => {
+                if (user.pushToken && user.id !== message.sender.id)
+                    pushTokens.push(user.pushToken)
+            })
+
+            return await sendNotificationToAllUsers(
+                'New Message',
+                'From ' + sender + ': ' + message.body,
+
+                data,
+                pushTokens
+            )
+        } catch (error) {
+            console.log(error)
+        }
+    }
+)
+// //const everyDayAt8Am = '0 8 * * *'
+// const everyTwoMinutes = '*/2 * * * *'
+// exports.scheduleTask = functions.pubsub
+//     .schedule(everyTwoMinutes)
+//     .onRun(async () => {
+//         try {
+//             const wirelessQoutes = await admin
+//                 .firestore()
+//                 .collection('quotes')
+//                 .get()
+//             wirelessQoutes.docs.map(async (doc) => {
+//                 const quote = doc.data() as WirelessQuote
+//                 const today = moment(quote.scheduledOn).isBetween(
+//                     moment().startOf('day'),
+//                     moment().endOf('day')
+//                 )
+//                 if (!today) return
+//                 return await admin
+//                     .firestore()
+//                     .collection('followups')
+//                     .add({ ...quote })
+//             })
+//         } catch (error) {
+//             console.log(error)
+//         }
+//     })

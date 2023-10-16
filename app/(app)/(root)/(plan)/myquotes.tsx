@@ -205,9 +205,15 @@ const MyQuotes = () => {
                 <Text fontSize={12} style={{ marginTop: SIZES.base }}>
                     created on: {moment(item.createdAt).format('lll')}
                 </Text>
+                {item.scheduledOn && (
+                    <Text fontSize={12} style={{ marginTop: SIZES.base }}>
+                        Follow Up: {moment(item.scheduledOn).format('lll')} (
+                        {moment(item.scheduledOn).fromNow()})
+                    </Text>
+                )}
                 {item.sent && item.sentOn && (
                     <Text fontSize={12} style={{ marginTop: SIZES.base }}>
-                        sent on: {moment(item.sentOn).format('lll')}
+                        sent on: {moment(item.sentOn).format('lll')} (
                     </Text>
                 )}
                 <View style={{ marginTop: SIZES.padding }}>

@@ -7,6 +7,7 @@ import Text from '@/common/components/Text'
 import TextInput from '@/common/components/TextInput'
 import View from '@/common/components/View'
 import MessageRow from '@/common/components/chats/MessageRow'
+import UploadButton from '@/common/components/chats/UploadPictuteButton'
 import { useChat } from '@/common/hooks/chats/useChat'
 import { useMessages } from '@/common/hooks/chats/useMessages'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
@@ -21,9 +22,11 @@ import { AnimatePresence, MotiView } from 'moti'
 import React, { useRef, useState } from 'react'
 import {
     FlatList,
+    Image,
     Keyboard,
     KeyboardAvoidingView,
     ListRenderItem,
+    Modal,
     Platform,
     StyleSheet,
     TouchableOpacity,
@@ -34,6 +37,7 @@ const Chat = () => {
     const flatListRef = useRef<FlatList>(null)
     const { chatId } = useLocalSearchParams<{ chatId: string }>()
     const [opened, setOpened] = useState<string | null>(null)
+    const [previewImage, setPreviewImage] = useState<string | null>(null)
     let rowRefs = new Map()
     const disabled = useAppSelector((s) => s.chats.loading)
     const user = useAppSelector((s) => s.auth.user)
@@ -45,16 +49,19 @@ const Chat = () => {
     const iconColor = useThemeColor('text')
     const dispatch = useAppDispatch()
 
-    const handleSendMessage = async () => {
+    const handleSendMessage = async (
+        messageType: 'text' | 'image',
+        body?: string
+    ) => {
         try {
             const newMessage: Message = {
-                body: message,
+                body: body || message,
                 createdAt: new Date().toISOString(),
                 chatId: chatId,
                 isReply: isReply,
                 reply: isReply && replyMessage ? replyMessage : null,
                 sender: user!,
-                type: 'text',
+                type: messageType,
                 storagePath: null
             }
             dispatch(sendMessage(newMessage))
@@ -129,7 +136,12 @@ const Chat = () => {
                         })
                     }}
                 >
-                    <MessageRow item={item} />
+                    <MessageRow
+                        item={item}
+                        onImagePress={(uri) => {
+                            setPreviewImage(uri)
+                        }}
+                    />
                 </SwipeableItem>
             </MotiView>
         )
@@ -144,8 +156,8 @@ const Chat = () => {
             <KeyboardAvoidingView
                 style={{ flex: 1 }}
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                keyboardVerticalOffset={80}
-                contentContainerStyle={{ flex: 1, marginBottom: 20 }}
+                keyboardVerticalOffset={60}
+                contentContainerStyle={{ flex: 1, marginBottom: 10 }}
             >
                 <TouchableWithoutFeedback
                     onPress={() => {
@@ -173,7 +185,6 @@ const Chat = () => {
                                 gap: SIZES.padding * 3
                             }}
                             onContentSizeChange={(w, h) => {
-                                console.log('content size change', w, h)
                                 flatListRef.current?.scrollToEnd({
                                     animated: true
                                 })
@@ -251,29 +262,55 @@ const Chat = () => {
                                     justifyContent: 'space-between',
                                     width: '100%',
                                     gap: SIZES.padding,
-                                    height: 52,
-                                    bottom: 0,
-                                    marginTop: 10,
+
+                                    marginVertical: 10,
+
                                     paddingHorizontal: SIZES.base
                                 }}
                             >
-                                <View style={{ flex: 1 }}>
+                                <UploadButton
+                                    chatId={chatId}
+                                    onImageUpload={(url) => {
+                                        if (url) {
+                                            handleSendMessage('image', url)
+                                        }
+                                    }}
+                                />
+                                <View
+                                    style={{
+                                        width: '80%',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}
+                                >
                                     <TextInput
                                         style={{
                                             borderWidth: 0,
                                             backgroundColor: 'lightgrey',
-                                            color: '#212121'
+                                            color: '#212121',
+                                            width: '100%',
+                                            borderRadius: SIZES.radius * 2,
+                                            minHeight: 46,
+                                            paddingVertical: 8,
+                                            alignItems: 'center'
                                         }}
+                                        textAlign={
+                                            message.length > 0
+                                                ? 'left'
+                                                : 'center'
+                                        }
                                         placeholder="Type a message"
-                                        multiline={true}
+                                        isMultiline={true}
                                         value={message}
-                                        onSubmitEditing={handleSendMessage}
+                                        onSubmitEditing={() =>
+                                            handleSendMessage('text')
+                                        }
                                         onChangeText={setMessage}
                                     />
                                 </View>
                                 <TouchableOpacity
                                     disabled={disabled || message.length < 2}
-                                    onPress={handleSendMessage}
+                                    onPress={() => handleSendMessage('text')}
                                 >
                                     <Ionicons
                                         name="ios-send"
@@ -290,6 +327,26 @@ const Chat = () => {
                     </>
                 </TouchableWithoutFeedback>
             </KeyboardAvoidingView>
+            <Modal
+                presentationStyle="fullScreen"
+                visible={previewImage !== null}
+            >
+                <Screen>
+                    <Header
+                        title="Preview"
+                        onPressBack={() => {
+                            setPreviewImage(null)
+                        }}
+                    />
+                    <View style={{ flex: 1 }}>
+                        <Image
+                            source={{ uri: previewImage! }}
+                            style={{ flex: 1, width: '100%', height: '100%' }}
+                            resizeMode="contain"
+                        />
+                    </View>
+                </Screen>
+            </Modal>
         </Screen>
     )
 }

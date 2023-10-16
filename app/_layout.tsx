@@ -2,6 +2,7 @@
 import { Slot, SplashScreen, router } from 'expo-router'
 import React from 'react'
 import * as Notifications from 'expo-notifications'
+import { NotificationData } from '@/types'
 
 // Export ErrorBoundary from 'expo-router'
 export { ErrorBoundary } from 'expo-router'
@@ -18,9 +19,9 @@ function useNotificationObserver() {
         let isMounted = true
 
         function redirect(notification: Notifications.Notification) {
-            const url = notification.request.content.data?.url
-            if (url) {
-                router.push(url)
+            const data = notification.request.content.data as NotificationData
+            if (data.type === 'new-message') {
+                router.push(`/(app)/(root)/(chats)/${data.id}`)
             }
         }
 

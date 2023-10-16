@@ -99,13 +99,9 @@ export default function () {
             <Tabs.Screen
                 name="(settings)"
                 options={{
-                    title: 'Settings',
+                    title: 'Profile',
                     tabBarIcon: ({ color, size }) => (
-                        <TabBarIcon
-                            name="gears"
-                            size={size - 4}
-                            color={color}
-                        />
+                        <TabBarIcon name="user" size={size - 4} color={color} />
                     )
                 }}
             />

@@ -116,48 +116,10 @@ const Settings = () => {
         }
     }, [])
 
-    const logoutPress = () => {
-        dispatch(logoutUser())
-    }
     return (
         <Screen>
-            <Row
-                style={{
-                    justifyContent: 'space-between',
-                    paddingHorizontal: SIZES.base
-                }}
-            >
-                <Row style={{ gap: SIZES.padding }}>
-                    <ThemeSwitcher small />
-                    <Text fontFamily="SFBold" fontSize={20}>
-                        Profile
-                    </Text>
-                </Row>
+            <ThemeSwitcher small />
 
-                <TouchableOpacity
-                    onPress={() => {
-                        Alert.alert(
-                            'Log Out',
-                            'Are you sure you want to log out?',
-                            [
-                                {
-                                    text: 'Yes',
-                                    onPress: logoutPress,
-                                    style: 'destructive'
-                                },
-                                { text: 'Cancel', style: 'cancel' }
-                            ]
-                        )
-                    }}
-                >
-                    <FontAwesome
-                        style={{ marginRight: SIZES.base }}
-                        name="sign-out"
-                        size={30}
-                        color={iconColor}
-                    />
-                </TouchableOpacity>
-            </Row>
             <View style={{ ...Styles.flex, marginTop: SIZES.base }}>
                 <Image
                     source={

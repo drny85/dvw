@@ -7,7 +7,6 @@ import FeedCard from '@/common/components/feed/FeedCard'
 import { useFeeds } from '@/common/hooks/feeds/useFeeds'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
 import useAppSelector from '@/common/hooks/useAppSelector'
-import { schedulePushNotification } from '@/common/hooks/useNotification'
 import { SIZES } from '@/constants/Sizes'
 import { deleteFeed, updateFeed } from '@/features/feeds/feedsActions'
 
@@ -63,12 +62,7 @@ const Feeds = () => {
         )
     }
 
-    useEffect(() => {
-        setTimeout(() => {
-            //sendE()
-            schedulePushNotification()
-        }, 3000)
-    }, [])
+    useEffect(() => {}, [])
 
     if (loading) return <Loading />
 
