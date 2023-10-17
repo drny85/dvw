@@ -58,6 +58,7 @@ const Sales = () => {
     const [followUps, setFollowUps] = useState<WirelessQuote[]>([])
     const sales = salesData(data)
     const backgroundColor = useThemeColor('accent')
+    const borderColor = useThemeColor('secondary')
     const iconColor = useThemeColor('text')
     const totalSales = data.reduce((a, b) => a + b.numberOfLines, 0)
 
@@ -124,7 +125,6 @@ const Sales = () => {
     }
 
     useEffect(() => {
-        schedulePushNotification(moment().add(4, 'seconds').toISOString())
         if (!feeds.length) return
         const sales = generateFeedsBasedOnRange(
             range,
@@ -161,7 +161,10 @@ const Sales = () => {
                 }}
             >
                 <TouchableOpacity
-                    style={{ borderBottomWidth: view === 'referrals' ? 2 : 0 }}
+                    style={{
+                        borderBottomWidth: view === 'referrals' ? 2 : 0,
+                        borderBottomColor: borderColor
+                    }}
                     onPress={() => setView('referrals')}
                 >
                     <Text fontFamily="SFBold" fontSize={22}>
@@ -169,7 +172,10 @@ const Sales = () => {
                     </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    style={{ borderBottomWidth: view === 'follow-ups' ? 2 : 0 }}
+                    style={{
+                        borderBottomWidth: view === 'follow-ups' ? 2 : 0,
+                        borderBottomColor: borderColor
+                    }}
                     onPress={() => setView('follow-ups')}
                 >
                     <Text fontFamily="SFBold" fontSize={22}>
@@ -177,7 +183,10 @@ const Sales = () => {
                     </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    style={{ borderBottomWidth: view === 'sales' ? 2 : 0 }}
+                    style={{
+                        borderBottomWidth: view === 'sales' ? 2 : 0,
+                        borderBottomColor: borderColor
+                    }}
                     onPress={() => setView('sales')}
                 >
                     <Text fontFamily="SFBold" fontSize={22}>

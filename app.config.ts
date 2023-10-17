@@ -1,9 +1,9 @@
 import { ExpoConfig } from 'expo/config'
 
 const config: ExpoConfig = {
-    name: process.env.APP_ENV === 'production' ? 'My DVW' : 'My DVW (DEV)',
+    name: 'DVW',
     slug: 'dvw',
-    version: '1.0.0',
+    version: '1.0.1',
     orientation: 'portrait',
     icon: './assets/images/icon.png',
     scheme: 'dvw',
@@ -17,7 +17,7 @@ const config: ExpoConfig = {
     ios: {
         supportsTablet: true,
         bundleIdentifier: 'net.robertdev.dvw',
-
+        buildNumber: '1',
         infoPlist: {
             LSApplicationQueriesSchemes: ['dvw'],
             EXUpdatesEnabled: true

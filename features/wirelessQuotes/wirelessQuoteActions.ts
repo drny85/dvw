@@ -3,16 +3,18 @@ import { WirelessQuote } from '@/types'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { addDoc, deleteDoc, doc, updateDoc } from 'firebase/firestore'
 
-export const saveWirelessQuote = createAsyncThunk(
-    'wirelessQuote/save',
-    async (quote: WirelessQuote) => {
-        try {
-            await addDoc(wirelessQuotesCollection, quote)
-        } catch (error) {
-            console.log('Error adding wireless quote: ', error)
-        }
+export const saveWirelessQuote = createAsyncThunk<
+    Promise<string | null>,
+    WirelessQuote
+>('wirelessQuote/save', async (quote: WirelessQuote) => {
+    try {
+        const res = await addDoc(wirelessQuotesCollection, quote)
+        return res.id
+    } catch (error) {
+        console.log('Error adding wireless quote: ', error)
+        return null
     }
-)
+})
 
 export const deleteWirelessQuote = createAsyncThunk(
     'wirelessQuote/delete',

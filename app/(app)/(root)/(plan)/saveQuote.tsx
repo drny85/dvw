@@ -30,6 +30,10 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { v4 } from 'uuid'
 import DateTimePickerComponent from '@/common/components/DateTimePicker'
 import moment from 'moment'
+import {
+    NotificationBody,
+    schedulePushNotification
+} from '@/common/hooks/useNotification'
 
 const SaveQuote = () => {
     const [inReview, setReview] = useState(true)
@@ -106,11 +110,19 @@ const SaveQuote = () => {
         try {
             setLoading(true)
             dispatch(saveWirelessQuote(quote))
+
             setName('')
             setEmail('')
             setPhone('')
             setMessage('')
             Alert.alert('Quote Saved', 'Your quote has been saved')
+            const noti: NotificationBody = {
+                body: `Get in touch with ${quote.customerName}`,
+                date: quote.scheduledOn!,
+                title: 'Quote Reminder',
+                data: { id: quote.id, type: 'reminder' }
+            }
+            await schedulePushNotification(noti)
             router.back()
         } catch (error) {
             console.log(error)

@@ -8,6 +8,7 @@ import { doc, setDoc } from '@firebase/firestore'
 import useAppSelector from './useAppSelector'
 import useThemeColor from './useThemeColor'
 import moment from 'moment'
+import { NotificationData } from '@/types'
 
 Notifications.setNotificationHandler({
     handleNotification: async (notification) => {
@@ -120,28 +121,30 @@ const useNotifications = () => {
 }
 
 export default useNotifications
-
-export async function schedulePushNotification(date: string) {
-    if (moment(date).diff(new Date(), 'seconds') < 1) {
+export type NotificationBody = {
+    date: string
+    title: string
+    body: string
+    data: NotificationData
+}
+export async function schedulePushNotification(values: NotificationBody) {
+    if (moment(values.date).diff(new Date(), 'seconds') < 1) {
         Alert.alert('select a time in the future')
         return
     }
     try {
-        console.log(date)
-        console.log('Notification scheduled')
         const noti = await Notifications.scheduleNotificationAsync({
             content: {
-                title: "You've got mail! 📬",
-                body: 'Here is the notification body',
-                data: { data: 'goes here' },
+                title: values.title,
+                body: values.body,
+                data: values.data,
                 sound: true,
                 vibrate: [0, 250, 250, 250],
                 autoDismiss: true
             },
-            trigger: { seconds: 2 },
+            trigger: { date: new Date(values.date) },
             identifier: 'reminder'
         })
-        console.log(noti)
     } catch (error) {
         console.log('@Error at scheduleNotification', error)
     }

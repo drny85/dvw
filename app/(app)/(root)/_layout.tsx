@@ -30,7 +30,7 @@ export default function () {
     // Check if the user is logged in using Redux state
     useAuth()
     const user = useAppSelector((state) => state.auth.user)
-    const tabBarActiveTintColor = useThemeColor('tabIconSelected')
+    const tabBarActiveTintColor = useThemeColor('secondary')
     const primaryColor = useThemeColor('background')
 
     if (!user) {

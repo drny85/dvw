@@ -15,6 +15,7 @@ type Props = {
 }
 const ReferralsMiniCard = ({ subtitle, type }: Props) => {
     const bg = useThemeColor('background')
+    const shadow = useThemeColor('secondary')
     const { loading, referrals } = useReferrals()
     if (loading) return null
 
@@ -25,7 +26,7 @@ const ReferralsMiniCard = ({ subtitle, type }: Props) => {
             style={[
                 Styles.boxShadow,
                 styles.container,
-                { backgroundColor: bg }
+                { backgroundColor: bg, shadowColor: shadow }
             ]}
         >
             <Text fontFamily="QSBold">{subtitle}</Text>

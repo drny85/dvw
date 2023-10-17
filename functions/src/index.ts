@@ -94,6 +94,18 @@ exports.sendEmail = onCall<{ quoteId: string }>(
                 sentOn: new Date().toISOString()
             })
 
+            await admin
+                .firestore()
+                .collection('users')
+                .doc(auth.uid)
+                .collection('emails')
+                .add({
+                    sentOn: new Date().toISOString(),
+                    sentTo: quote.email,
+                    subject: 'Wireless Quote',
+                    quoteId: quote.id
+                })
+
             return {
                 message: 'Email sent'
             }

@@ -41,6 +41,13 @@ const Settings = () => {
     const [showPhone, setShowPhone] = React.useState(false)
     const [updateName, setUpdateName] = React.useState(false)
     const dispatch = useAppDispatch()
+
+    const handleSignOut = () => {
+        Alert.alert('Signing Out', 'Are you sure you want to sign out?', [
+            { text: 'Yes', onPress: () => dispatch(logoutUser()) }
+        ])
+    }
+
     const copyToClipboard = async () => {
         await Clipboard.setStringAsync('robert.melendez@drascosales.com')
         Alert.alert(
@@ -80,7 +87,6 @@ const Settings = () => {
 
     const onUpdatePhone = async (value: string) => {
         try {
-            console.log(value)
             if (!value || value.length < 14) {
                 Alert.alert('Invalid Phone', 'Please enter a valid phone')
                 return
@@ -132,7 +138,7 @@ const Settings = () => {
                     <Text fontSize={20} fontFamily="SFBold">
                         Profile
                     </Text>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={handleSignOut}>
                         <FontAwesome
                             name="sign-out"
                             size={30}
