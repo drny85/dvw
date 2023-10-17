@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import Screen from '@/common/components/Screen'
 import View from '@/common/components/View'
 import Header from '@/common/components/Header'
-import { router, useLocalSearchParams } from 'expo-router'
+import { router, useLocalSearchParams, useSegments } from 'expo-router'
 import { UserRole } from '@/features/auth/authSlice'
 import TextInput from '@/common/components/TextInput'
 import { Helper } from '@/types'
@@ -21,6 +21,11 @@ import { helpersCollection } from '@/lib/collactions'
 
 const Person = () => {
     const { helper } = useLocalSearchParams<{ helper: UserRole }>()
+    const segment = useSegments()
+    console.log(segment)
+    if (segment.findIndex((s) => s === '(feeds)') === -1) {
+        console.log('redirect')
+    }
 
     const btn = useThemeColor('accent')
     const title =
@@ -64,6 +69,14 @@ const Person = () => {
             if (!user?.id) return
 
             await addDoc(helpersCollection(user?.id), { ...person })
+            setPerson({
+                name: '',
+                email: '',
+                phone: '',
+                type: helper,
+                userId: user?.id!,
+                addedOn: new Date().toISOString()
+            })
             router.back()
         } catch (error) {
             console.log(error)

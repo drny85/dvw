@@ -1,16 +1,17 @@
+import * as Device from 'expo-device'
 import * as Notifications from 'expo-notifications'
 import { useEffect, useRef } from 'react'
-import { Platform } from 'react-native'
-import * as Device from 'expo-device'
-import { useNavigation } from '@react-navigation/native'
+import { Alert, Platform } from 'react-native'
 
+import { usersCollection } from '@/lib/collactions'
 import { doc, setDoc } from '@firebase/firestore'
 import useAppSelector from './useAppSelector'
 import useThemeColor from './useThemeColor'
-import { usersCollection } from '@/lib/collactions'
+import moment from 'moment'
 
 Notifications.setNotificationHandler({
     handleNotification: async (notification) => {
+        console.log('NOTIFICATION', notification)
         return {
             shouldShowAlert: true,
             shouldPlaySound: true,
@@ -53,6 +54,7 @@ const useNotifications = () => {
                     const { content } = response.notification.request
                     const data = content.data as any
                     const { id, notificationType } = data
+                    console.log('NOTI =>', data)
 
                     // navigation.navigate('DeliveryView', {
                     //     orderId: order.id!
@@ -119,13 +121,28 @@ const useNotifications = () => {
 
 export default useNotifications
 
-export async function schedulePushNotification() {
-    await Notifications.scheduleNotificationAsync({
-        content: {
-            title: "You've got mail! 📬",
-            body: 'Here is the notification body',
-            data: { data: 'goes here' }
-        },
-        trigger: { seconds: 2 }
-    })
+export async function schedulePushNotification(date: string) {
+    if (moment(date).diff(new Date(), 'seconds') < 1) {
+        Alert.alert('select a time in the future')
+        return
+    }
+    try {
+        console.log(date)
+        console.log('Notification scheduled')
+        const noti = await Notifications.scheduleNotificationAsync({
+            content: {
+                title: "You've got mail! 📬",
+                body: 'Here is the notification body',
+                data: { data: 'goes here' },
+                sound: true,
+                vibrate: [0, 250, 250, 250],
+                autoDismiss: true
+            },
+            trigger: { seconds: 2 },
+            identifier: 'reminder'
+        })
+        console.log(noti)
+    } catch (error) {
+        console.log('@Error at scheduleNotification', error)
+    }
 }

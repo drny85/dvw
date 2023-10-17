@@ -1,19 +1,23 @@
-import { ImageBackground, StyleSheet } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { useComments } from '@/common/hooks/comments/useComments'
+import useAppSelector from '@/common/hooks/useAppSelector'
+import { SIZES } from '@/constants/Sizes'
 import { Feed } from '@/types'
-import { TouchableOpacity, Image } from 'react-native'
+import { FontAwesome } from '@expo/vector-icons'
+import moment from 'moment'
+import { AnimatePresence, MotiView } from 'moti'
+import React from 'react'
+import {
+    Image,
+    ImageBackground,
+    StyleSheet,
+    TouchableOpacity
+} from 'react-native'
+import { useDimensions } from '../../hooks/useDimensions'
 import useThemeColor from '../../hooks/useThemeColor'
 import Text from '../Text'
 import View from '../View'
-import { useDimensions } from '../../hooks/useDimensions'
-import { SIZES } from '@/constants/Sizes'
 import ActionView from './ActionView'
-import moment from 'moment'
-import { MotiView, AnimatePresence } from 'moti'
-import { FontAwesome } from '@expo/vector-icons'
-import { useComments } from '@/common/hooks/comments/useComments'
 import FeedSkeleton from './FeedSkeleton'
-import useAppSelector from '@/common/hooks/useAppSelector'
 
 type Props = {
     feed: Feed

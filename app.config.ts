@@ -17,8 +17,10 @@ const config: ExpoConfig = {
     ios: {
         supportsTablet: true,
         bundleIdentifier: 'net.robertdev.dvw',
+
         infoPlist: {
-            LSApplicationQueriesSchemes: ['dvw']
+            LSApplicationQueriesSchemes: ['dvw'],
+            EXUpdatesEnabled: true
         }
     },
     android: {

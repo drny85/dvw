@@ -69,7 +69,7 @@ const ReferralsScreen = () => {
         name: '',
         address: address,
         apt: '',
-        moveIn: null,
+        moveIn: moveIn,
         addedBy: user?.id!,
         applicationId: null,
         isReferral,

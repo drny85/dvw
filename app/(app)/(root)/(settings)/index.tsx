@@ -34,7 +34,7 @@ import Divider from '@/common/components/Divider'
 const Settings = () => {
     useAuth()
     const iconColor = useThemeColor('text')
-    const donateColor = useThemeColor('success')
+    const donateColor = useThemeColor('secondary')
     const deleteColor = useThemeColor('warning')
     const user = useAppSelector((state) => state.auth.user)
     const [updatePhone, setUpdatePhone] = React.useState('')

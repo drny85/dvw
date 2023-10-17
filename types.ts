@@ -190,7 +190,7 @@ export type Referral = {
 }
 
 export interface STATUS {
-    id: 'new' | 'in_progress' | 'closed' | 'not_sold' | 'pending' | undefined
+    id: 'new' | 'in_progress' | 'closed' | 'not_sold'
     name: 'New' | 'In Progress' | 'Closed' | 'Not Sold'
 }
 export const statuses: STATUS[] = [
@@ -271,3 +271,17 @@ export const WIRELESSnames: { [key: string]: string } = {
     wireless_referral: 'Wireless CTC',
     wireless_direct: 'Wireless DS'
 }
+
+export type ReferralsFilterType =
+    | 'all'
+    | 'in-progress'
+    | 'new'
+    | 'closed-today'
+    | 'closed-wtd'
+    | 'closed-mtd'
+    | 'moving-today'
+    | 'moving-in-one-week'
+    | 'moving-in-one-month'
+    | 'installation-today'
+    | 'installation-yesterday'
+    | 'installation-last-week'

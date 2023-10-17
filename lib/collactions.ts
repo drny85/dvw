@@ -21,7 +21,7 @@ export const helpersCollection = (userId: string) =>
     createCollection<Helper>(`helpers/${userId}/helpers`)
 
 export const referralssCollection = (userId: string) =>
-    createCollection<Referral>(`referralss/${userId}/referrals`)
+    createCollection<Referral>(`referrals/${userId}/referrals`)
 
 export const usersCollection = createCollection<AppUser>('users')
 export const chatsCollection = createCollection<Chat>('chats')

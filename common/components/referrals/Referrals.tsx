@@ -1,47 +1,30 @@
-import {
-    FlatList,
-    ListRenderItem,
-    StyleSheet,
-    TouchableOpacity
-} from 'react-native'
-import React from 'react'
-import Screen from '../Screen'
-import View from '../View'
-import Text from '../Text'
-import { FontAwesome } from '@expo/vector-icons'
-import { SIZES } from '@/constants/Sizes'
-import useThemeColor from '@/common/hooks/useThemeColor'
-import { router } from 'expo-router'
 import { useHelpers } from '@/common/hooks/referrals/useHelpers'
-import Loading from '../Loading'
+import useThemeColor from '@/common/hooks/useThemeColor'
+import { SIZES } from '@/constants/Sizes'
 import Styles from '@/constants/Styles'
-import { useReferrals } from '@/common/hooks/referrals/useReferrals'
-import { Referral } from '@/types'
+import { FontAwesome } from '@expo/vector-icons'
+import { router } from 'expo-router'
+import React from 'react'
+import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
+import Loading from '../Loading'
+import Row from '../Row'
+import Screen from '../Screen'
+import Text from '../Text'
+import View from '../View'
+import ReferralsMiniCard from './ReferralsMiniCard'
 
 const Referrals = () => {
     const bgColor = useThemeColor('secondary')
-    const textColor = useThemeColor('white')
     const { loading, helpers } = useHelpers()
-    const { loading: loadingReferrals, referrals } = useReferrals()
     const managers = helpers.filter((helper) => helper.type === 'ce')
     const referees = helpers.filter((helper) => helper.type === 'referee')
     const coaches = helpers.filter((helper) => helper.type === 'coach')
-    const candAdd = managers.length === 0 || referees.length === 0
+    const candAdd =
+        managers.length === 0 || referees.length === 0 || coaches.length === 0
     const show =
         coaches.length > 0 && managers.length > 0 && referees.length > 0
 
-    const renderReferrals: ListRenderItem<Referral> = ({ item }) => {
-        return (
-            <TouchableOpacity
-                onPress={() =>
-                    router.push(`/(app)/(root)/(sales)/details/${item.id}`)
-                }
-            >
-                <Text>{item.name}</Text>
-            </TouchableOpacity>
-        )
-    }
-    if (loading || loadingReferrals) return <Loading />
+    if (loading) return <Loading />
 
     return (
         <Screen>
@@ -55,82 +38,152 @@ const Referrals = () => {
                     }}
                 >
                     {referees.length === 0 && (
-                        <TouchableOpacity
-                            onPress={() => {
-                                router.push('/(app)/(root)/(settings)/referee')
-                            }}
-                            style={[
-                                Styles.boxShadow,
-                                styles.btn,
-                                { backgroundColor: bgColor }
-                            ]}
-                        >
-                            <Text color="white" fontFamily="SFBold">
-                                Add Referee / LA
-                            </Text>
-                        </TouchableOpacity>
+                        <Text fontFamily="SFBold">
+                            You need at least a Referee / LA
+                        </Text>
                     )}
                     {managers.length === 0 && (
-                        <TouchableOpacity
-                            onPress={() => {
-                                router.push('/(app)/(root)/(settings)/ce')
-                            }}
-                            style={[
-                                Styles.boxShadow,
-                                styles.btn,
-                                { backgroundColor: bgColor }
-                            ]}
-                        >
-                            <Text color="white" fontFamily="SFBold">
-                                Add Manager / CE
-                            </Text>
-                        </TouchableOpacity>
+                        <Text fontFamily="SFBold">You need at least a CE</Text>
                     )}
 
                     {coaches.length === 0 && (
-                        <TouchableOpacity
-                            onPress={() => {
-                                router.push('/(app)/(root)/(settings)/coach')
-                            }}
-                            style={[
-                                Styles.boxShadow,
-                                styles.btn,
-                                { backgroundColor: bgColor }
-                            ]}
-                        >
-                            <Text color="white" fontFamily="SFBold">
-                                Add Coach
-                            </Text>
-                        </TouchableOpacity>
+                        <Text fontFamily="SFBold">
+                            You need at least a Coach
+                        </Text>
                     )}
+                    <TouchableOpacity
+                        style={[
+                            Styles.boxShadow,
+                            styles.btn,
+                            { backgroundColor: bgColor }
+                        ]}
+                        onPress={() => {
+                            router.push('/(app)/(root)/(settings)')
+                        }}
+                    >
+                        <Text color="white" fontFamily="SFBold">
+                            Go to Settings
+                        </Text>
+                    </TouchableOpacity>
                 </View>
             )}
 
             {show && (
-                <View style={{ flex: 1 }}>
-                    <FlatList
-                        data={referrals}
-                        keyExtractor={(item) => item.id!}
-                        renderItem={renderReferrals}
-                        contentContainerStyle={{
-                            paddingHorizontal: SIZES.padding,
-                            paddingVertical: SIZES.padding * 2
-                        }}
-                        ListEmptyComponent={<Text center>No Referrals</Text>}
-                        ListFooterComponent={<View />}
-                    />
-                    <TouchableOpacity
-                        style={[
-                            styles.floatingButton,
-                            { backgroundColor: bgColor }
-                        ]}
-                        onPress={() => {
-                            router.push('/referrals')
-                        }}
-                    >
-                        <FontAwesome name="plus" size={30} color={textColor} />
-                    </TouchableOpacity>
-                </View>
+                <ScrollView
+                    contentContainerStyle={{
+                        padding: SIZES.base,
+                        gap: SIZES.padding
+                    }}
+                >
+                    <View>
+                        <Text center fontFamily="SFBold" fontSize={18}>
+                            Referrals By Status
+                        </Text>
+                        <Row
+                            style={{
+                                justifyContent: 'space-around',
+                                marginTop: SIZES.base
+                            }}
+                        >
+                            <ReferralsMiniCard type="new" subtitle="New" />
+                            <ReferralsMiniCard
+                                type="in-progress"
+                                subtitle="Pending"
+                            />
+                            <ReferralsMiniCard type="all" subtitle="All" />
+                        </Row>
+                    </View>
+                    <View>
+                        <Text center fontFamily="SFBold" fontSize={18}>
+                            Closed Referrals
+                        </Text>
+                        <Row
+                            style={{
+                                justifyContent: 'space-around',
+                                marginTop: SIZES.base
+                            }}
+                        >
+                            <ReferralsMiniCard
+                                type="closed-today"
+                                subtitle="Today"
+                            />
+                            <ReferralsMiniCard
+                                type="closed-wtd"
+                                subtitle="In Progress"
+                            />
+                            <ReferralsMiniCard
+                                type="closed-mtd"
+                                subtitle="Closed"
+                            />
+                        </Row>
+                    </View>
+                    <View>
+                        <Text center fontFamily="SFBold" fontSize={18}>
+                            Moving In
+                        </Text>
+                        <Row
+                            style={{
+                                justifyContent: 'space-around',
+                                marginTop: SIZES.base
+                            }}
+                        >
+                            <ReferralsMiniCard
+                                type="moving-today"
+                                subtitle="Today"
+                            />
+                            <ReferralsMiniCard
+                                type="moving-in-one-week"
+                                subtitle="A Week"
+                            />
+                            <ReferralsMiniCard
+                                type="moving-in-one-month"
+                                subtitle="A Month"
+                            />
+                        </Row>
+                    </View>
+                    <View>
+                        <Text center fontFamily="SFBold" fontSize={18}>
+                            Installations
+                        </Text>
+                        <Row
+                            style={{
+                                justifyContent: 'space-around',
+                                marginTop: SIZES.base
+                            }}
+                        >
+                            <ReferralsMiniCard
+                                type="installation-yesterday"
+                                subtitle="Yesterday"
+                            />
+                            <ReferralsMiniCard
+                                type="installation-today"
+                                subtitle="Today"
+                            />
+                            <ReferralsMiniCard
+                                type="installation-last-week"
+                                subtitle="Last Week"
+                            />
+                        </Row>
+                    </View>
+                    <View>
+                        <Text center fontFamily="SFBold" fontSize={18}>
+                            Earnings
+                        </Text>
+                    </View>
+                </ScrollView>
+            )}
+            {show && (
+                <TouchableOpacity
+                    style={[
+                        styles.floatingButton,
+                        { backgroundColor: bgColor }
+                    ]}
+                    onPress={() => {
+                        router.push('/referrals')
+                    }}
+                >
+                    <FontAwesome name="plus" size={30} color={'white'} />
+                </TouchableOpacity>
             )}
         </Screen>
     )
@@ -165,6 +218,7 @@ const styles = StyleSheet.create({
         width: '70%',
         justifyContent: 'center',
         alignItems: 'center',
-        maxWidth: 400
+        maxWidth: 400,
+        marginTop: SIZES.padding
     }
 })

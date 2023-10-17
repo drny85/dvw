@@ -1,8 +1,9 @@
 // Import necessary components and libraries from 'expo-router'
+import { NotificationData } from '@/types'
+import { onFetchUpdateAsync } from '@/utils/checkUpdates'
+import * as Notifications from 'expo-notifications'
 import { Slot, SplashScreen, router } from 'expo-router'
 import React from 'react'
-import * as Notifications from 'expo-notifications'
-import { NotificationData } from '@/types'
 
 // Export ErrorBoundary from 'expo-router'
 export { ErrorBoundary } from 'expo-router'
@@ -58,6 +59,7 @@ function useNotificationObserver() {
  */
 export default function () {
     // Render the Slot component to initiate navigation
+    onFetchUpdateAsync()
     useNotificationObserver()
     return <Slot />
 }

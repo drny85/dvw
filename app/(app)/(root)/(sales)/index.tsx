@@ -31,6 +31,7 @@ import {
 } from 'react-native'
 import { router } from 'expo-router'
 import Referrals from '@/common/components/referrals/Referrals'
+import { schedulePushNotification } from '@/common/hooks/useNotification'
 
 const GOAL = 66
 
@@ -123,6 +124,7 @@ const Sales = () => {
     }
 
     useEffect(() => {
+        schedulePushNotification(moment().add(4, 'seconds').toISOString())
         if (!feeds.length) return
         const sales = generateFeedsBasedOnRange(
             range,
@@ -212,7 +214,8 @@ const Sales = () => {
                                 data={followUps}
                                 contentContainerStyle={{
                                     marginHorizontal: SIZES.base,
-                                    marginTop: SIZES.padding
+                                    marginTop: SIZES.padding,
+                                    gap: SIZES.padding
                                 }}
                                 renderItem={renderFollowUps}
                                 keyExtractor={(item) => item.id}
