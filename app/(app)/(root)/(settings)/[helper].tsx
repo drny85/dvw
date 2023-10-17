@@ -21,6 +21,7 @@ import { helpersCollection } from '@/lib/collactions'
 
 const Person = () => {
     const { helper } = useLocalSearchParams<{ helper: UserRole }>()
+
     const btn = useThemeColor('accent')
     const title =
         helper === 'ce'

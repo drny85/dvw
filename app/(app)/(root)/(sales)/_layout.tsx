@@ -9,7 +9,6 @@ const SalesPayout = () => {
                 name="referrals"
                 options={{ presentation: 'fullScreenModal' }}
             />
-            <Stack.Screen name="[helper]" options={{ presentation: 'modal' }} />
             <Stack.Screen
                 name="details/[id]"
                 options={{ presentation: 'fullScreenModal' }}

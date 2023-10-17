@@ -57,6 +57,8 @@ const MyQuotes = () => {
             Alert.alert('Email sent', 'This quote has been sent!')
         } catch (error) {
             console.log(error)
+            const err = error as Error
+            Alert.alert('Email Error', err.message)
         } finally {
             setLoadingQuote(false)
         }
@@ -199,7 +201,7 @@ const MyQuotes = () => {
 
                 {item.message && (
                     <View style={{ padding: SIZES.padding }}>
-                        <Text>{item.message}</Text>
+                        <Text fontFamily="QSLight">{item.message}</Text>
                     </View>
                 )}
                 <Text fontSize={12} style={{ marginTop: SIZES.base }}>
@@ -213,7 +215,7 @@ const MyQuotes = () => {
                 )}
                 {item.sent && item.sentOn && (
                     <Text fontSize={12} style={{ marginTop: SIZES.base }}>
-                        sent on: {moment(item.sentOn).format('lll')} (
+                        sent on: {moment(item.sentOn).format('lll')}
                     </Text>
                 )}
                 <View style={{ marginTop: SIZES.padding }}>

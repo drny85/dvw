@@ -265,7 +265,7 @@ const Chat = () => {
 
                                     marginVertical: 10,
 
-                                    paddingHorizontal: SIZES.base
+                                    paddingHorizontal: SIZES.padding
                                 }}
                             >
                                 <UploadButton

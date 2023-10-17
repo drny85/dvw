@@ -24,10 +24,12 @@ import {
     Alert,
     Button,
     Image,
+    ScrollView,
     StyleSheet,
     TouchableOpacity
 } from 'react-native'
 import { formatPhone } from '@/utils/formatPhone'
+import Divider from '@/common/components/Divider'
 
 const Settings = () => {
     useAuth()
@@ -118,9 +120,29 @@ const Settings = () => {
 
     return (
         <Screen>
-            <ThemeSwitcher small />
+            <Row style={{ justifyContent: 'space-between' }}>
+                <ThemeSwitcher small />
+                <Row
+                    style={{
+                        justifyContent: 'space-between',
+                        flex: 1,
+                        paddingHorizontal: SIZES.padding
+                    }}
+                >
+                    <Text fontSize={20} fontFamily="SFBold">
+                        Profile
+                    </Text>
+                    <TouchableOpacity>
+                        <FontAwesome
+                            name="sign-out"
+                            size={30}
+                            color={iconColor}
+                        />
+                    </TouchableOpacity>
+                </Row>
+            </Row>
 
-            <View style={{ ...Styles.flex, marginTop: SIZES.base }}>
+            <ScrollView style={{ ...Styles.flex, marginTop: SIZES.base }}>
                 <Image
                     source={
                         user?.image
@@ -190,28 +212,6 @@ const Settings = () => {
                                 : 'EM'}
                         </Text>
                     </Row>
-                    <TouchableOpacity
-                        onPress={() =>
-                            router.push('/(app)/(root)/(settings)/numbers')
-                        }
-                    >
-                        <Row
-                            style={{
-                                gap: SIZES.padding,
-                                justifyContent: 'space-between'
-                            }}
-                        >
-                            <Text fontFamily="SFBold" capitalize>
-                                Useful Numbers
-                            </Text>
-
-                            <FontAwesome
-                                name="chevron-right"
-                                size={20}
-                                color={iconColor}
-                            />
-                        </Row>
-                    </TouchableOpacity>
 
                     {!user?.image && (
                         <>
@@ -236,10 +236,103 @@ const Settings = () => {
                         </>
                     )}
                 </View>
+                <Divider />
+                <View style={{ gap: SIZES.padding, marginBottom: 10 }}>
+                    <TouchableOpacity
+                        onPress={() =>
+                            router.push(
+                                '/(app)/(root)/(settings)/helpers/referees'
+                            )
+                        }
+                    >
+                        <Row
+                            style={{
+                                justifyContent: 'space-between',
+                                paddingHorizontal: SIZES.padding
+                            }}
+                        >
+                            <Text fontFamily="SFBold">My Referees / LA</Text>
+                            <FontAwesome
+                                name="chevron-right"
+                                size={20}
+                                color={iconColor}
+                            />
+                        </Row>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() =>
+                            router.push(
+                                '/(app)/(root)/(settings)/helpers/managers'
+                            )
+                        }
+                        style={{
+                            marginVertical: SIZES.padding
+                        }}
+                    >
+                        <Row
+                            style={{
+                                justifyContent: 'space-between',
+                                paddingHorizontal: SIZES.padding
+                            }}
+                        >
+                            <Text fontFamily="SFBold">My Managers / CEs</Text>
+                            <FontAwesome
+                                name="chevron-right"
+                                size={20}
+                                color={iconColor}
+                            />
+                        </Row>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() =>
+                            router.push(
+                                '/(app)/(root)/(settings)/helpers/coach'
+                            )
+                        }
+                        style={{
+                            marginBottom: SIZES.padding
+                        }}
+                    >
+                        <Row
+                            style={{
+                                justifyContent: 'space-between',
+                                paddingHorizontal: SIZES.padding
+                            }}
+                        >
+                            <Text fontFamily="SFBold">My Coach</Text>
+                            <FontAwesome
+                                name="chevron-right"
+                                size={20}
+                                color={iconColor}
+                            />
+                        </Row>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() =>
+                            router.push('/(app)/(root)/(settings)/numbers')
+                        }
+                    >
+                        <Row
+                            style={{
+                                paddingHorizontal: SIZES.padding,
+                                justifyContent: 'space-between'
+                            }}
+                        >
+                            <Text fontFamily="SFBold" capitalize>
+                                Useful Numbers
+                            </Text>
+
+                            <FontAwesome
+                                name="chevron-right"
+                                size={20}
+                                color={iconColor}
+                            />
+                        </Row>
+                    </TouchableOpacity>
+                </View>
                 <Row
                     style={{
-                        position: 'absolute',
-                        bottom: 20,
+                        marginVertical: 20,
                         left: 0,
                         right: 0,
                         alignSelf: 'center',
@@ -294,7 +387,7 @@ const Settings = () => {
                         </TouchableOpacity>
                     </Row>
                 </Row>
-            </View>
+            </ScrollView>
         </Screen>
     )
 }

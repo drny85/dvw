@@ -64,6 +64,7 @@ exports.sendEmail = onCall<{ quoteId: string }>(
             const res = await quoteRef.get()
             if (!res) return { message: 'no quote' }
             const quote = res.data() as WirelessQuote
+            if (quote.sent) return { message: 'quote already sent' }
 
             if (!quote.email) return { message: 'no email' }
             const userData = await admin
@@ -83,6 +84,7 @@ exports.sendEmail = onCall<{ quoteId: string }>(
                 to: [quote.email],
                 subject: 'Wireless Quote',
                 reply_to: user.email,
+                cc: [user.email],
                 text: '',
                 react: Template(quoteData)
             })

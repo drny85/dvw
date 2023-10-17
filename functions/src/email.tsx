@@ -190,7 +190,10 @@ const WirelessQuoteEmail: React.FC<Readonly<WirelessQuote>> = ({
                                 <Row className="justify-between items-center px-4 py-0 w-full">
                                     <Column className="w-['70%]">
                                         <Text className="text-md">
-                                            Auto Pay
+                                            Auto Pay{' '}
+                                            <i className="text-sm ml-3">
+                                                ($10 per line)
+                                            </i>
                                         </Text>
                                     </Column>
                                     <Column className="flex justify-end">
@@ -218,7 +221,7 @@ const WirelessQuoteEmail: React.FC<Readonly<WirelessQuote>> = ({
                                 <Row className="justify-between items-center px-4 py-0 w-full">
                                     <Column className="w-['70%]">
                                         <Text className="text-md">
-                                            BYOD Savings -
+                                            BYOD Savings
                                         </Text>
                                     </Column>
 
@@ -262,7 +265,10 @@ const WirelessQuoteEmail: React.FC<Readonly<WirelessQuote>> = ({
                             <Row className="justify-between items-center px-4 py-0">
                                 <Column className="w-full">
                                     <Text className="text-2xl font-semibold">
-                                        Total <i>(monthly before taxes)</i>
+                                        Total{' '}
+                                        <i className="text-sm">
+                                            (monthly before taxes)
+                                        </i>
                                     </Text>
                                 </Column>
                                 <Column>
@@ -334,7 +340,7 @@ const WirelessQuoteEmail: React.FC<Readonly<WirelessQuote>> = ({
                         .map((l) => l.name.toLowerCase())
                         .includes('unlimited ultimate') && (
                         <Container>
-                            <Text className="font-thin text-sm mt-2 italic">
+                            <Text className="font-semibold text-xl mt-2 italic">
                                 <b>Unlimited Ultimate Plan Includes</b>
                             </Text>
                             <Text>
@@ -365,7 +371,7 @@ const WirelessQuoteEmail: React.FC<Readonly<WirelessQuote>> = ({
                         .map((l) => l.name.toLowerCase())
                         .includes('unlimited plus') && (
                         <Container>
-                            <Text className="font-thin text-sm mt-2 italic">
+                            <Text className="font-semibold text-xl mt-2 italic">
                                 <b>Unlimited Plus Plan Includes</b>
                             </Text>
                             <Text>
@@ -392,7 +398,7 @@ const WirelessQuoteEmail: React.FC<Readonly<WirelessQuote>> = ({
                         .map((l) => l.name.toLowerCase())
                         .includes('unlimited welcome') && (
                         <Container>
-                            <Text className="font-thin text-sm mt-2 italic">
+                            <Text className="font-semibold text-xl mt-2 italic">
                                 <b>Unlimited Welcome Plan Includes</b>
                             </Text>
                             <Text>- Unlimited 5G</Text>

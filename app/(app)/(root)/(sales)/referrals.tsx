@@ -413,10 +413,9 @@ const ReferralsScreen = () => {
                 onCancel={() => setShowReferees(false)}
                 visisble={showReferees}
                 onAdd={() => {
-                    console.log('HERE')
                     setShowReferees(false)
                     router.back()
-                    router.push('/(app)/(root)/(sales)/referee')
+                    router.push('/(app)/(root)/(settings)/referee')
                 }}
                 data={helpers.filter((h) => h.type === 'referee')}
             />

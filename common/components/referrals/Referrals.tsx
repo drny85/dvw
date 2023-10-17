@@ -57,7 +57,7 @@ const Referrals = () => {
                     {referees.length === 0 && (
                         <TouchableOpacity
                             onPress={() => {
-                                router.push('/(app)/(root)/(sales)/referee')
+                                router.push('/(app)/(root)/(settings)/referee')
                             }}
                             style={[
                                 Styles.boxShadow,
@@ -73,7 +73,7 @@ const Referrals = () => {
                     {managers.length === 0 && (
                         <TouchableOpacity
                             onPress={() => {
-                                router.push('/(app)/(root)/(sales)/ce')
+                                router.push('/(app)/(root)/(settings)/ce')
                             }}
                             style={[
                                 Styles.boxShadow,
@@ -90,7 +90,7 @@ const Referrals = () => {
                     {coaches.length === 0 && (
                         <TouchableOpacity
                             onPress={() => {
-                                router.push('/(app)/(root)/(sales)/coach')
+                                router.push('/(app)/(root)/(settings)/coach')
                             }}
                             style={[
                                 Styles.boxShadow,
@@ -144,9 +144,9 @@ const styles = StyleSheet.create({
         bottom: SIZES.padding,
         right: SIZES.padding,
 
-        height: 60,
-        width: 60,
-        borderRadius: 30,
+        height: 50,
+        width: 50,
+        borderRadius: 25,
 
         shadowColor: '#000',
         shadowOffset: {
