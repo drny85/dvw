@@ -109,7 +109,7 @@ const Referrals = () => {
                             />
                             <ReferralsMiniCard
                                 type="closed-wtd"
-                                subtitle="In Progress"
+                                subtitle="WTD"
                             />
                             <ReferralsMiniCard
                                 type="closed-mtd"

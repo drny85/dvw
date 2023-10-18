@@ -19,7 +19,7 @@ const config: ExpoConfig = {
         bundleIdentifier: 'net.robertdev.dvw',
         buildNumber: '1',
         infoPlist: {
-            LSApplicationQueriesSchemes: ['dvw'],
+            LSApplicationQueriesSchemes: ['dvw', 'telprompt', 'tel'],
             EXUpdatesEnabled: true
         }
     },

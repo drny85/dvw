@@ -43,8 +43,8 @@ const MyQuotes = () => {
     const { loading, quotes } = useWirelessQuotes()
     const bgColor = useThemeColor('background')
     const iconColor = useThemeColor('warning')
-    const greyColor = useThemeColor('grey')
-    const btnColor = useThemeColor('button')
+    const greyColor = useThemeColor('placeholder')
+    const btnColor = useThemeColor('border')
     const dispatch = useAppDispatch()
     const [loadingQuote, setLoadingQuote] = React.useState(false)
 
@@ -220,7 +220,7 @@ const MyQuotes = () => {
                 )}
                 <View style={{ marginTop: SIZES.padding }}>
                     <Button
-                        disabled={loadingQuote}
+                        disabled={loadingQuote || item.sent}
                         title="Send Quote"
                         color={loadingQuote ? greyColor : btnColor}
                         onPress={() => handleSendQuote(item.quoteId!)}

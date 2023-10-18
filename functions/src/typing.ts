@@ -108,6 +108,7 @@ export interface WirelessQuote {
     isFirstResponder: boolean
     scheduledOn: string | null
     sentOn?: string
+    emPhone?: string
 }
 
 export type FeedType = 'quote' | 'feed'

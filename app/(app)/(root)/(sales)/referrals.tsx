@@ -1,43 +1,55 @@
-import { Alert, StyleSheet, TextInput as Input } from 'react-native'
-import React, { useRef } from 'react'
 import Screen from '@/common/components/Screen'
 import Text from '@/common/components/Text'
+import React, { useEffect, useRef } from 'react'
+import { Alert, TextInput as Input, StyleSheet } from 'react-native'
 
-import { router } from 'expo-router'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { SIZES } from '@/constants/Sizes'
-import TextInput from '@/common/components/TextInput'
 import ButtonRadio from '@/common/components/RadioButton'
-import View from '@/common/components/View'
 import Row from '@/common/components/Row'
-import Styles from '@/constants/Styles'
+import TextInput from '@/common/components/TextInput'
+import View from '@/common/components/View'
 import useThemeColor from '@/common/hooks/useThemeColor'
+import { SIZES } from '@/constants/Sizes'
+import Styles from '@/constants/Styles'
 import { ORDER_TYPE, Referral, SERVICE, services, statuses } from '@/types'
-import { TouchableOpacity } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons'
+import { router } from 'expo-router'
+import { AnimatePresence, MotiView } from 'moti'
+import { TouchableOpacity } from 'react-native'
 import {
     GooglePlacesAutocomplete,
     GooglePlacesAutocompleteRef
 } from 'react-native-google-places-autocomplete'
-import { AnimatePresence, MotiView } from 'moti'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import DateModal from '@/common/components/DateModal'
-import moment from 'moment'
-import { isFullName } from '@/utils/isFullName'
 import useAppSelector from '@/common/hooks/useAppSelector'
+import { isFullName } from '@/utils/isFullName'
+import moment from 'moment'
 
+import DataPickerModal from '@/common/components/DataPickerModal'
+import Loading from '@/common/components/Loading'
+import { useHelpers } from '@/common/hooks/referrals/useHelpers'
+import useAppDispatch from '@/common/hooks/useAppDispatch'
+import {
+    addReferral,
+    updateReferral
+} from '@/features/referrals/referralActions'
 import { formatPhone } from '@/utils/formatPhone'
 import { isEmailValid } from '@/utils/isEmailValid'
-import DataPickerModal from '@/common/components/DataPickerModal'
 import { FlatList } from 'react-native-gesture-handler'
-import { useHelpers } from '@/common/hooks/referrals/useHelpers'
-import Loading from '@/common/components/Loading'
-import { addDoc } from 'firebase/firestore'
-import { referralssCollection } from '@/lib/collactions'
+import {
+    setEditingReferral,
+    setReferralState
+} from '@/features/referrals/referralsSlide'
 const GOOGLE_KEY = process.env.EXPO_PUBLIC_GOOGLE_KEY as string
 
 const ReferralsScreen = () => {
     const user = useAppSelector((s) => s.auth.user)
+    const { referral: editingReferral, editing } = useAppSelector(
+        (s) => s.referrals
+    )
+    console.log(editing)
+    const dispatch = useAppDispatch()
     const { loading, helpers } = useHelpers()
     const scrollViewRef = useRef<KeyboardAwareScrollView>(null)
     const [index, setIndex] = React.useState(0)
@@ -118,7 +130,7 @@ const ReferralsScreen = () => {
         }
     }
 
-    const onPressNext = () => {
+    const onPressNext = async () => {
         if (index === 0) {
             setIndex((prev) => prev + 1)
         }
@@ -168,26 +180,30 @@ const ReferralsScreen = () => {
                     return
                 }
             }
-            console.log('Submiting', JSON.stringify(referral, null, 2))
-            addReferral(referral)
+            try {
+                if (editing && editingReferral) {
+                    dispatch(updateReferral(referral))
+                    dispatch(setEditingReferral(false))
+                    setReferralState(null)
+                } else {
+                    dispatch(addReferral(referral))
+                }
+
+                router.back()
+            } catch (error) {
+                console.log(error)
+            }
         }
     }
 
-    const addReferral = async (referral: Referral) => {
-        try {
-            await addDoc(referralssCollection(user?.id!), { ...referral })
-            router.back()
-        } catch (error) {
-            console.log('Error adding referral')
+    useEffect(() => {
+        if (editingReferral && editing) {
+            setAddress(editingReferral.address)
+            setReferral(editingReferral)
+            setMoveIn(referral.moveIn)
+            setIndex(3)
         }
-    }
-
-    React.useEffect(() => {
-        if (!address) return
-        if (!googleRef.current?.getAddressText()) {
-            googleRef.current?.setAddressText(address)
-        }
-    }, [address])
+    }, [editingReferral, editing])
 
     if (loading) return <Loading />
 
@@ -265,6 +281,7 @@ const ReferralsScreen = () => {
                         referral,
                         setReferral,
                         setShowMoveIn,
+                        editing,
                         setShowReferees,
                         moveIn
                     )}
@@ -397,6 +414,7 @@ const ReferralsScreen = () => {
                     })
                     setShowStatus(false)
                 }}
+                onCancel={() => setShowStatus(false)}
                 visisble={showStatus}
                 data={statuses}
             />
@@ -1020,7 +1038,7 @@ function SectionThree(
     )
 }
 
-function SectionOne(
+const SectionOne = (
     googleRef: React.RefObject<GooglePlacesAutocompleteRef>,
     bgColor: string,
     placeholderColor: string,
@@ -1030,9 +1048,10 @@ function SectionOne(
     referral: Referral,
     setReferral: React.Dispatch<React.SetStateAction<Referral>>,
     setShowMoveIn: React.Dispatch<React.SetStateAction<boolean>>,
+    editing: boolean,
     setShowReferees: React.Dispatch<React.SetStateAction<boolean>>,
     moveIn: string | null
-): React.ReactNode {
+): React.ReactNode => {
     return (
         <View
             style={{
@@ -1111,6 +1130,11 @@ function SectionOne(
                         />
                     }
                 />
+                {editing && (
+                    <Text color="grey" style={{ marginLeft: SIZES.padding }}>
+                        {address}
+                    </Text>
+                )}
             </View>
             <AnimatePresence>
                 {address.length > 0 && (

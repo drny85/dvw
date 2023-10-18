@@ -8,7 +8,7 @@ const { initializeApp } = require('firebase-admin/app')
 const { getFirestore } = require('firebase-admin/firestore')
 import { Resend } from 'resend'
 import { WirelessQuoteEmail } from './email'
-import { Message, NotificationData, WirelessQuote } from './typing'
+import { AppUser, Message, NotificationData, WirelessQuote } from './typing'
 import * as dotenv from 'dotenv'
 import { sendNotificationToAllUsers } from './sendNotificationToAllUsers'
 dotenv.config()
@@ -73,10 +73,10 @@ exports.sendEmail = onCall<{ quoteId: string }>(
                 .doc(auth.uid)
                 .get()
             if (!userData.exists) return { message: 'no user' }
-            const user = userData.data()!
+            const user = userData.data() as AppUser
             const quoteData: WirelessQuote = {
                 ...quote,
-                emPhone: user.phone || null
+                emPhone: user.phone!
             }
             const Template: typeof WirelessQuoteEmail = WirelessQuoteEmail
             await resend.emails.send({
@@ -84,7 +84,7 @@ exports.sendEmail = onCall<{ quoteId: string }>(
                 to: [quote.email],
                 subject: 'Wireless Quote',
                 reply_to: user.email,
-                cc: [user.email],
+                cc: [user.email!],
                 text: '',
                 react: Template(quoteData)
             })
@@ -93,18 +93,28 @@ exports.sendEmail = onCall<{ quoteId: string }>(
                 sent: true,
                 sentOn: new Date().toISOString()
             })
-
-            await admin
+            const emailsRef = admin
                 .firestore()
                 .collection('users')
                 .doc(auth.uid)
                 .collection('emails')
-                .add({
-                    sentOn: new Date().toISOString(),
-                    sentTo: quote.email,
-                    subject: 'Wireless Quote',
-                    quoteId: quote.id
-                })
+            const emailsCount = await emailsRef.get()
+            if (
+                emailsCount.size >= 5 &&
+                user.email !== 'robert.melendez@drascosales.com'
+            ) {
+                return {
+                    message: 'Max emails reached. Please donate'
+                }
+            }
+
+            admin
+            emailsRef.add({
+                sentOn: new Date().toISOString(),
+                sentTo: quote.email,
+                subject: 'Wireless Quote',
+                quoteId: data.quoteId
+            })
 
             return {
                 message: 'Email sent'
