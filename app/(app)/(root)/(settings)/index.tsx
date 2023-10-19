@@ -402,9 +402,9 @@ export default Settings
 
 const styles = StyleSheet.create({
     image: {
-        height: SIZES.width * 0.5,
-        width: SIZES.width * 0.5,
-        borderRadius: (SIZES.width * 0.5) / 2,
+        height: SIZES.width * 0.4,
+        width: SIZES.width * 0.4,
+        borderRadius: (SIZES.width * 0.4) / 2,
         alignSelf: 'center'
     },
     info: {

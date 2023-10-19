@@ -16,6 +16,7 @@ import { useCallback, useState } from 'react'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 
 export default function () {
     const [stateLoaded, setStateLoaded] = useState(false)
@@ -34,12 +35,14 @@ export default function () {
             <PersistGate persistor={persistor} onBeforeLift={onBeforeLimit}>
                 {/* Render the SafeAreaView and AppNavigator when fonts and state are loaded */}
                 {fontsLoaded && stateLoaded && (
-                    <GestureHandlerRootView
-                        onLayout={onLayout}
-                        style={Styles.flex}
-                    >
-                        <RootLayout />
-                    </GestureHandlerRootView>
+                    <BottomSheetModalProvider>
+                        <GestureHandlerRootView
+                            onLayout={onLayout}
+                            style={Styles.flex}
+                        >
+                            <RootLayout />
+                        </GestureHandlerRootView>
+                    </BottomSheetModalProvider>
                 )}
             </PersistGate>
         </Provider>

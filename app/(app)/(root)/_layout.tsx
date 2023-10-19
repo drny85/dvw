@@ -10,6 +10,7 @@ import { FontAwesome } from '@expo/vector-icons'
 import { useAuth } from '@/common/hooks/auth/useAuth'
 import React from 'react'
 import { LogBox } from 'react-native'
+import { onFetchUpdateAsync } from '@/utils/checkUpdates'
 
 function TabBarIcon(props: {
     name: React.ComponentProps<typeof FontAwesome>['name']
@@ -29,6 +30,7 @@ export const unstable_settings = {
 export default function () {
     // Check if the user is logged in using Redux state
     useAuth()
+    onFetchUpdateAsync()
     const user = useAppSelector((state) => state.auth.user)
     const tabBarActiveTintColor = useThemeColor('secondary')
     const primaryColor = useThemeColor('background')

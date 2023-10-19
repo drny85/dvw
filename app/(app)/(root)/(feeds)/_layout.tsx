@@ -11,6 +11,7 @@ export const unstable_settings = {
 const _layout = () => {
     const router = useRouter()
     const bgColor = useThemeColor('background')
+    console.log('Feeds')
     useNotifications()
     return (
         <Stack

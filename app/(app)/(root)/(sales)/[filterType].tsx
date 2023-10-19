@@ -64,14 +64,36 @@ const FilteredReferrals = () => {
                         Apt / Unit or FLR: {item.apt}
                     </Text>
                     <Row style={{ justifyContent: 'space-between' }}>
-                        <Text fontFamily="QSLight">
-                            Move In: {moment(item.moveIn).format('LL')}
+                        <Text fontFamily="QSBold">
+                            Move In:{' '}
+                            <Text fontFamily="QSLight">
+                                {moment(item.moveIn).format('LL')}
+                            </Text>
                         </Text>
                         <Text fontFamily="QSLight">
                             ({moment(item.moveIn).fromNow()})
                         </Text>
                     </Row>
                 </View>
+                {item.status.id === 'closed' && (
+                    <Row
+                        style={{
+                            justifyContent: 'space-between',
+                            marginTop: SIZES.base
+                        }}
+                    >
+                        <Text fontFamily="QSBold">
+                            Closed On:{' '}
+                            <Text fontFamily="QSLight">
+                                {moment(item.order_date).format('lll')}
+                            </Text>
+                        </Text>
+
+                        <Text fontFamily="QSLight">
+                            ({moment(item.moveIn).fromNow()})
+                        </Text>
+                    </Row>
+                )}
                 <Text center style={{ marginTop: SIZES.base }}>
                     Status: {item.status.name}
                 </Text>

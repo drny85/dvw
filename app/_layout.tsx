@@ -1,7 +1,7 @@
 // Import necessary components and libraries from 'expo-router'
 
 import { useNotificationObserver } from '@/common/hooks/useNotificationObserver'
-import { onFetchUpdateAsync } from '@/utils/checkUpdates'
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 
 import { Slot, SplashScreen } from 'expo-router'
 import React from 'react'
@@ -29,7 +29,11 @@ SplashScreen.preventAutoHideAsync()
  */
 export default function () {
     // Render the Slot component to initiate navigation
-    onFetchUpdateAsync()
+
     useNotificationObserver()
-    return <Slot />
+    return (
+        <BottomSheetModalProvider>
+            <Slot />
+        </BottomSheetModalProvider>
+    )
 }

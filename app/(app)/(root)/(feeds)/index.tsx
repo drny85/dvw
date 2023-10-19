@@ -11,16 +11,20 @@ import { SIZES } from '@/constants/Sizes'
 import { deleteFeed, updateFeed } from '@/features/feeds/feedsActions'
 
 import { Feed } from '@/types'
-import BottomSheet from '@gorhom/bottom-sheet'
+import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { router } from 'expo-router'
-import React, { useEffect, useRef } from 'react'
+import React, { useCallback, useRef } from 'react'
 import { Button, FlatList, ListRenderItem, StyleSheet } from 'react-native'
 
 const Feeds = () => {
-    const bottomSheetRef = useRef<BottomSheet>(null)
-    const { loading, feeds } = useFeeds()
+    const bottomSheetModalRef = useRef<BottomSheetModal>(null)
+    const { feeds, loading } = useFeeds()
     const [feed, setFeed] = React.useState<Feed | null>(null)
     const user = useAppSelector((s) => s.auth.user)
+
+    const handlePresentModalPress = useCallback(() => {
+        bottomSheetModalRef.current?.present()
+    }, [])
 
     const [shouldFocus, setShouldFocus] = React.useState(false)
 
@@ -56,13 +60,11 @@ const Feeds = () => {
                 onCommentPress={(shouldFocus) => {
                     setShouldFocus(shouldFocus)
                     setFeed(item)
-                    bottomSheetRef.current?.snapToIndex(3)
+                    handlePresentModalPress()
                 }}
             />
         )
     }
-
-    useEffect(() => {}, [])
 
     if (loading) return <Loading />
 
@@ -94,7 +96,7 @@ const Feeds = () => {
                 />
             )}
             <FeedBottomSheet
-                ref={bottomSheetRef}
+                ref={bottomSheetModalRef}
                 feedId={feed?.id!}
                 shouldFocus={shouldFocus}
             />

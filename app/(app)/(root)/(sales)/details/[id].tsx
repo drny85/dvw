@@ -40,7 +40,7 @@ const ReferralDetails = () => {
     const updateComment = async () => {
         try {
             if (referral?.comment === newComment) return
-            console.log('Updating')
+
             const newReferral: Referral = {
                 ...referral!,
                 comment: newComment

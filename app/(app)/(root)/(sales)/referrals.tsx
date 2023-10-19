@@ -1076,6 +1076,7 @@ const SectionOne = (
                     renderItem={() => <></>}
                     contentContainerStyle={{ width: '100%' }}
                     ListHeaderComponentStyle={{ width: '100%' }}
+                    keyboardShouldPersistTaps="handled"
                     ListHeaderComponent={
                         <GooglePlacesAutocomplete
                             ref={googleRef}
