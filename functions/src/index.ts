@@ -8,7 +8,13 @@ const { initializeApp } = require('firebase-admin/app')
 const { getFirestore } = require('firebase-admin/firestore')
 import { Resend } from 'resend'
 import { WirelessQuoteEmail } from './email'
-import { AppUser, Message, NotificationData, WirelessQuote } from './typing'
+import {
+    AppUser,
+    Feed,
+    Message,
+    NotificationData,
+    WirelessQuote
+} from './typing'
 import * as dotenv from 'dotenv'
 import { sendNotificationToAllUsers } from './sendNotificationToAllUsers'
 dotenv.config()
@@ -150,6 +156,41 @@ exports.sendNewMessageNotification = onDocumentCreated(
             return await sendNotificationToAllUsers(
                 'New Message',
                 'From ' + sender + ': ' + message.body,
+
+                data,
+                pushTokens
+            )
+        } catch (error) {
+            console.log(error)
+        }
+    }
+)
+
+exports.sendNewPostNotification = onDocumentCreated(
+    'quotes/{quoteId}',
+    async (event) => {
+        try {
+            const quoteData = event.data
+            const quote = quoteData?.data() as Feed
+            const sender = quote.user
+            const usersRef = await admin.firestore().collection('users').get()
+            const users = usersRef.docs.map((doc) => doc.data())
+            const data: NotificationData = {
+                id: event.params.quoteId,
+                type: 'feed'
+            }
+            const pushTokens: string[] = []
+            users.map((user) => {
+                if (user.pushToken && user.id !== sender.id)
+                    pushTokens.push(user.pushToken)
+            })
+            const msg =
+                quote.feedType === 'feed'
+                    ? `New Wireless Sale, ${quote.numberOfLines} lines`
+                    : 'A Quote'
+            return await sendNotificationToAllUsers(
+                'New Post',
+                'From ' + sender.name + ': ' + msg,
 
                 data,
                 pushTokens

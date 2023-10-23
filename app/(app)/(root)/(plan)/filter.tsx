@@ -89,27 +89,27 @@ const filter = () => {
                             </View>
                             <Divider />
                             <Switcher
-                                value={expressInternet === 'gig'}
+                                value={expressInternet === 'one_gig'}
                                 title="1 GIG Internet"
                                 onValueChange={() => {
                                     dispatch(
                                         setExpressInternet(
-                                            expressInternet === 'gig'
-                                                ? '200'
-                                                : 'gig'
+                                            expressInternet === 'one_gig'
+                                                ? '300'
+                                                : 'one_gig'
                                         )
                                     )
                                 }}
                             />
                             <Switcher
-                                value={expressInternet === '2gig'}
+                                value={expressInternet === 'two_gig'}
                                 title="2 GIG Internet"
                                 onValueChange={() => {
                                     dispatch(
                                         setExpressInternet(
-                                            expressInternet === '2gig'
-                                                ? '200'
-                                                : '2gig'
+                                            expressInternet === 'two_gig'
+                                                ? '300'
+                                                : 'two_gig'
                                         )
                                     )
                                 }}

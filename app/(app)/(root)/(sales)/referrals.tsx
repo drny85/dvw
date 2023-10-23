@@ -48,7 +48,7 @@ const ReferralsScreen = () => {
     const { referral: editingReferral, editing } = useAppSelector(
         (s) => s.referrals
     )
-    console.log(editing)
+
     const dispatch = useAppDispatch()
     const { loading, helpers } = useHelpers()
     const scrollViewRef = useRef<KeyboardAwareScrollView>(null)
@@ -106,7 +106,8 @@ const ReferralsScreen = () => {
         type: orderType,
         updated: null,
         userId: user?.id!,
-        email: ''
+        email: '',
+        followUpOn: null
     })
     const validateServicesOrdered = (): boolean => {
         if (

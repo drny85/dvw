@@ -66,8 +66,8 @@ export const loyaltyBonusDiscount = (
             (line.name === 'Unlimited Welcome' ||
                 line.name === 'Unlimited Plus' ||
                 line.name === 'Unlimited Ultimate') &&
-            expressInternet !== '2gig' &&
-            expressInternet !== 'gig' &&
+            expressInternet !== 'two_gig' &&
+            expressInternet !== 'one_gig' &&
             expressHasFios
                 ? {
                       discount:
@@ -81,7 +81,8 @@ export const loyaltyBonusDiscount = (
                   }
                 : (line.name === 'Unlimited Plus' ||
                       line.name === 'Unlimited Ultimate') &&
-                  (expressInternet === '2gig' || expressInternet === 'gig') &&
+                  (expressInternet === 'two_gig' ||
+                      expressInternet === 'one_gig') &&
                   expressHasFios
                 ? {
                       discount:
@@ -89,7 +90,8 @@ export const loyaltyBonusDiscount = (
                   }
                 : line.name === 'Unlimited Welcome' &&
                   expressHasFios &&
-                  (expressInternet === 'gig' || expressInternet === '2gig')
+                  (expressInternet === 'one_gig' ||
+                      expressInternet === 'two_gig')
                 ? {
                       discount:
                           lines.length === 1

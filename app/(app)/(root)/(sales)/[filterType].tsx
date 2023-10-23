@@ -1,28 +1,19 @@
-import {
-    FlatList,
-    ListRenderItem,
-    StyleSheet,
-    TouchableOpacity
-} from 'react-native'
-import React, { useState } from 'react'
-import Screen from '@/common/components/Screen'
-import Text from '@/common/components/Text'
-import { router, useLocalSearchParams } from 'expo-router'
-import { Referral, ReferralsFilterType } from '@/types'
 import Header from '@/common/components/Header'
-import { useReferrals } from '@/common/hooks/referrals/useReferrals'
 import Loading from '@/common/components/Loading'
-import { getResults } from '@/utils/getReferralsFilterData'
-import { SIZES } from '@/constants/Sizes'
-import { FontAwesome } from '@expo/vector-icons'
-import { AnimatePresence, MotiView } from 'moti'
+import Screen from '@/common/components/Screen'
 import TextInput from '@/common/components/TextInput'
+import ReferralCard from '@/common/components/referrals/ReferralCard'
+import { useReferrals } from '@/common/hooks/referrals/useReferrals'
 import useThemeColor from '@/common/hooks/useThemeColor'
+import { SIZES } from '@/constants/Sizes'
+import { Referral, ReferralsFilterType } from '@/types'
 import { filterTitle } from '@/utils/filterTitle'
-import Styles from '@/constants/Styles'
-import View from '@/common/components/View'
-import Row from '@/common/components/Row'
-import moment from 'moment'
+import { getResults } from '@/utils/getReferralsFilterData'
+import { FontAwesome } from '@expo/vector-icons'
+import { router, useLocalSearchParams } from 'expo-router'
+import { AnimatePresence, MotiView } from 'moti'
+import React, { useState } from 'react'
+import { FlatList, ListRenderItem, TouchableOpacity } from 'react-native'
 
 const FilteredReferrals = () => {
     const { filterType } = useLocalSearchParams<{
@@ -37,68 +28,7 @@ const FilteredReferrals = () => {
     const data = getResults(referrals, filterType)
 
     const renderReferrals: ListRenderItem<Referral> = ({ item }) => {
-        return (
-            <TouchableOpacity
-                style={[
-                    Styles.boxShadow,
-                    styles.card,
-                    ,
-                    { backgroundColor: bgColor }
-                ]}
-                onPress={() =>
-                    router.push(`/(app)/(root)/(sales)/details/${item.id}`)
-                }
-            >
-                <Text
-                    style={{ marginBottom: SIZES.base }}
-                    center
-                    fontFamily="SFBold"
-                >
-                    {item.name}
-                </Text>
-                <View style={{ gap: SIZES.base }}>
-                    <Text fontFamily="QSLight">
-                        {item.address.slice(0, item.address.length - 5)}
-                    </Text>
-                    <Text fontFamily="QSLight">
-                        Apt / Unit or FLR: {item.apt}
-                    </Text>
-                    <Row style={{ justifyContent: 'space-between' }}>
-                        <Text fontFamily="QSBold">
-                            Move In:{' '}
-                            <Text fontFamily="QSLight">
-                                {moment(item.moveIn).format('LL')}
-                            </Text>
-                        </Text>
-                        <Text fontFamily="QSLight">
-                            ({moment(item.moveIn).fromNow()})
-                        </Text>
-                    </Row>
-                </View>
-                {item.status.id === 'closed' && (
-                    <Row
-                        style={{
-                            justifyContent: 'space-between',
-                            marginTop: SIZES.base
-                        }}
-                    >
-                        <Text fontFamily="QSBold">
-                            Closed On:{' '}
-                            <Text fontFamily="QSLight">
-                                {moment(item.order_date).format('lll')}
-                            </Text>
-                        </Text>
-
-                        <Text fontFamily="QSLight">
-                            ({moment(item.moveIn).fromNow()})
-                        </Text>
-                    </Row>
-                )}
-                <Text center style={{ marginTop: SIZES.base }}>
-                    Status: {item.status.name}
-                </Text>
-            </TouchableOpacity>
-        )
+        return <ReferralCard item={item} bgColor={bgColor} />
     }
     return (
         <Screen>
@@ -134,7 +64,10 @@ const FilteredReferrals = () => {
                 )}
             </AnimatePresence>
             <FlatList
-                contentContainerStyle={{ padding: SIZES.padding }}
+                contentContainerStyle={{
+                    padding: SIZES.padding,
+                    gap: SIZES.padding
+                }}
                 showsVerticalScrollIndicator={false}
                 data={data}
                 renderItem={renderReferrals}
@@ -144,10 +77,3 @@ const FilteredReferrals = () => {
 }
 
 export default FilteredReferrals
-
-const styles = StyleSheet.create({
-    card: {
-        padding: SIZES.base,
-        borderRadius: SIZES.radius
-    }
-})

@@ -75,13 +75,13 @@ const WirelessQuoteEmail: React.FC<Readonly<WirelessQuote>> = ({
                 (line.name === 'Unlimited Plus' ||
                     line.name === 'Unlimited Ultimate') &&
                 hasFios &&
-                (internetPlan === '2gig' || internetPlan === 'gig')
+                (internetPlan === 'two_gig' || internetPlan === 'one_gig')
                     ? { discount: 10 }
                     : (line.name === 'Unlimited Plus' ||
                           line.name === 'Unlimited Ultimate') &&
                       hasFios &&
-                      internetPlan !== '2gig' &&
-                      internetPlan !== 'gig'
+                      internetPlan !== 'two_gig' &&
+                      internetPlan !== 'one_gig'
                     ? { discount: 5 }
                     : line.name === 'Unlimited Welcome' && hasFios
                     ? { discount: 5 }
@@ -363,7 +363,7 @@ const WirelessQuoteEmail: React.FC<Readonly<WirelessQuote>> = ({
                                 - 50% off 2 connected device, smartwatch or
                                 tablet
                             </Text>
-                            <Text>- Streaming quality up to 1080p HD</Text>
+                            <Text>- Streaming quality up to 1080p HD / 4K</Text>
                             <Hr className="bg-slate-600 mt-4 mb-4 h-px w-full opacity-50" />
                         </Container>
                     )}

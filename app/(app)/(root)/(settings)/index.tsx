@@ -44,7 +44,8 @@ const Settings = () => {
 
     const handleSignOut = () => {
         Alert.alert('Signing Out', 'Are you sure you want to sign out?', [
-            { text: 'Yes', onPress: () => dispatch(logoutUser()) }
+            { text: 'Yes', onPress: () => dispatch(logoutUser()) },
+            { text: 'Cancel', style: 'cancel' }
         ])
     }
 

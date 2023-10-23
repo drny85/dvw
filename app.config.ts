@@ -3,7 +3,7 @@ import { ExpoConfig } from 'expo/config'
 const config: ExpoConfig = {
     name: 'DVW',
     slug: 'dvw',
-    version: '1.0.2',
+    version: '1.0.4',
     orientation: 'portrait',
     icon: './assets/images/icon.png',
     scheme: 'dvw',
@@ -17,7 +17,7 @@ const config: ExpoConfig = {
     ios: {
         supportsTablet: true,
         bundleIdentifier: 'net.robertdev.dvw',
-        buildNumber: '2',
+        buildNumber: '4',
         infoPlist: {
             LSApplicationQueriesSchemes: ['dvw', 'telprompt', 'tel'],
             EXUpdatesEnabled: true
@@ -29,7 +29,7 @@ const config: ExpoConfig = {
             backgroundColor: '#ffffff'
         },
         package: 'net.robertdev.dvw',
-        versionCode: 2
+        versionCode: 4
     },
     web: {
         bundler: 'metro',

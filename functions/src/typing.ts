@@ -17,7 +17,7 @@ export interface WirelessQuote {
     emPhone?: string
 }
 
-export type InternetPlan = '200' | '400' | 'gig' | '2gig' | undefined
+export type InternetPlan = '300' | '500' | 'one_gig' | 'two_gig' | undefined
 
 export type Feed = {
     id?: string

@@ -27,11 +27,13 @@ const LineItem = ({
     onPerksPress,
     index
 }: Props) => {
-    const bgColor = useThemeColor('primary')
     const ascent = useThemeColor('placeholder')
     const text = useThemeColor('text')
     const warning = useThemeColor('warning')
-    const btnColor = useThemeColor('secondary')
+
+    const trackColor = useThemeColor('accent')
+    const thumbColor = useThemeColor('success')
+    const bgColor = useThemeColor('background')
 
     const [linePressed, setLinePressed] = React.useState(false)
     const onPressLineName = (name: LineName) => {
@@ -102,7 +104,10 @@ const LineItem = ({
                         ].map((p) => (
                             <View key={p}>
                                 <MenuItem
-                                    textStyle={{ color: text }}
+                                    textStyle={{
+                                        color: text,
+                                        fontFamily: 'SFBold'
+                                    }}
                                     pressColor={bgColor}
                                     onPress={() =>
                                         onPressLineName(p as LineName)
@@ -123,8 +128,9 @@ const LineItem = ({
                     </Text>
                     <Switch
                         value={line.byod}
-                        trackColor={{ true: ascent, false: bgColor }}
-                        thumbColor={btnColor}
+                        trackColor={{ false: thumbColor, true: trackColor }}
+                        thumbColor={line.byod ? thumbColor : 'grey'}
+                        ios_backgroundColor={bgColor}
                         onChange={() => onBYOD(line.id)}
                     />
                 </View>

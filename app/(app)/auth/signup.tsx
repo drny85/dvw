@@ -22,9 +22,12 @@ import KeyboardScreen from '@/common/components/KeyboardScreen'
 import { FIREBASE_ERRORS } from '@/utils/firebaseErrorMessages'
 import { UserRole } from '@/features/auth/authSlice'
 import { isValidDrascoEmail } from '@/utils/isEmailValid'
+import { isFullName } from '@/utils/isFullName'
+import { FontAwesome } from '@expo/vector-icons'
 
 const scheme = z
     .object({
+        name: z.string().min(6, 'Please enter a first and last name'),
         email: z.string().email(),
         password: z
             .string()
@@ -42,14 +45,24 @@ type FormValues = z.infer<typeof scheme>
 
 const Signup = () => {
     const btnColor = useThemeColor('accent')
+    const textColor = useThemeColor('text')
+    const [showPassword, setShowPassword] = useState(false)
     const [role, setRole] = useState<UserRole>()
     const onSubmit = async (data: FormValues) => {
         try {
-            const { email, password } = data
+            const { email, password, name } = data
             if (!isValidDrascoEmail(email)) {
                 Alert.alert(
                     'Invaid Email',
                     'Your email must be a drascosales.com domain'
+                )
+
+                return
+            }
+            if (!isFullName(name)) {
+                Alert.alert(
+                    'Invalid Name',
+                    'Your name must be at least 6 characters'
                 )
 
                 return
@@ -65,8 +78,8 @@ const Signup = () => {
             await setDoc(docRef, {
                 id: user.uid,
                 email: user.email!,
-                name: '',
-                role: 'em',
+                name: name,
+                role: role,
                 emailVerified: user.emailVerified,
                 createdAt: new Date().toISOString()
             })
@@ -165,7 +178,29 @@ const Signup = () => {
                                     ? 'Engagement Manager'
                                     : 'Coach / Manager'}
                             </Text>
-
+                            <View style={{ width: '100%' }}>
+                                <Controller
+                                    control={control}
+                                    name="name"
+                                    render={({
+                                        field: { onChange, value, onBlur }
+                                    }) => (
+                                        <TextInput
+                                            placeholder="Full Name"
+                                            value={value}
+                                            autoCapitalize="words"
+                                            onBlur={() => {
+                                                onBlur()
+                                            }}
+                                            onChangeText={onChange}
+                                            error={
+                                                errors.name &&
+                                                errors.name.message
+                                            }
+                                        />
+                                    )}
+                                />
+                            </View>
                             <View style={{ width: '100%' }}>
                                 <Controller
                                     control={control}
@@ -192,7 +227,13 @@ const Signup = () => {
                                     )}
                                 />
                             </View>
-                            <View style={{ width: '100%' }}>
+                            <View
+                                style={{
+                                    width: '100%',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                            >
                                 <Controller
                                     control={control}
                                     name="password"
@@ -206,7 +247,7 @@ const Signup = () => {
                                                 onBlur()
                                             }}
                                             onChangeText={onChange}
-                                            secureTextEntry
+                                            secureTextEntry={!showPassword}
                                             error={
                                                 errors.password &&
                                                 errors.password.message
@@ -214,8 +255,26 @@ const Signup = () => {
                                         />
                                     )}
                                 />
+                                <FontAwesome
+                                    style={{
+                                        position: 'absolute',
+                                        right: SIZES.padding
+                                    }}
+                                    onPress={() =>
+                                        setShowPassword(!showPassword)
+                                    }
+                                    color={textColor}
+                                    name={showPassword ? 'eye' : 'eye-slash'}
+                                    size={20}
+                                />
                             </View>
-                            <View style={{ width: '100%' }}>
+                            <View
+                                style={{
+                                    width: '100%',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                            >
                                 <Controller
                                     control={control}
                                     name="confirmPassword"
@@ -229,13 +288,25 @@ const Signup = () => {
                                             onBlur={() => {
                                                 onBlur()
                                             }}
-                                            secureTextEntry
+                                            secureTextEntry={!showPassword}
                                             error={
                                                 errors.confirmPassword &&
                                                 errors.confirmPassword.message
                                             }
                                         />
                                     )}
+                                />
+                                <FontAwesome
+                                    style={{
+                                        position: 'absolute',
+                                        right: SIZES.padding
+                                    }}
+                                    onPress={() =>
+                                        setShowPassword(!showPassword)
+                                    }
+                                    color={textColor}
+                                    name={showPassword ? 'eye' : 'eye-slash'}
+                                    size={20}
                                 />
                             </View>
                             <TouchableOpacity

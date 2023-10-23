@@ -14,7 +14,7 @@ export type AppUser = {
     createdAt?: string
 }
 
-export type UserRole = 'admin' | 'em' | 'coach' | 'ce' | 'referee'
+export type UserRole = 'admin' | 'em' | 'coach' | 'ce' | 'referee' | 'ceo'
 export type AuthState = {
     user: AppUser | null
     loading: boolean // Indicates if the user is logged in

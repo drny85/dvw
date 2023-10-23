@@ -17,7 +17,7 @@ const ReferralsMiniCard = ({ subtitle, type }: Props) => {
     const bg = useThemeColor('background')
     const shadow = useThemeColor('secondary')
     const { loading, referrals } = useReferrals()
-    if (loading) return null
+    if (loading) null
 
     return (
         <TouchableOpacity

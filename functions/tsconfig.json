@@ -7,8 +7,10 @@
         "sourceMap": true,
         "strict": true,
         "target": "es2017",
+        "typeRoots": ["node_modules/@types"],
         "jsx": "react-jsx"
     },
+
     "compileOnSave": true,
     "include": ["src", "**/*.ts", "**/*.tsx"]
 }

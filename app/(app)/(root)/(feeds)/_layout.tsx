@@ -11,7 +11,7 @@ export const unstable_settings = {
 const _layout = () => {
     const router = useRouter()
     const bgColor = useThemeColor('background')
-    console.log('Feeds')
+
     useNotifications()
     return (
         <Stack
@@ -27,8 +27,8 @@ const _layout = () => {
                         return (
                             <Ionicon
                                 color="text"
-                                name="add"
-                                size={32}
+                                name="ios-add-sharp"
+                                size={34}
                                 onPress={() =>
                                     router.push(
                                         '/(app)/(root)/(feeds)/addFeedView'

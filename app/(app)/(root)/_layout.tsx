@@ -32,7 +32,7 @@ export default function () {
     useAuth()
     onFetchUpdateAsync()
     const user = useAppSelector((state) => state.auth.user)
-    const tabBarActiveTintColor = useThemeColor('secondary')
+    const tabBarActiveTintColor = useThemeColor('accent')
     const primaryColor = useThemeColor('background')
 
     if (!user) {
@@ -45,6 +45,7 @@ export default function () {
             screenOptions={{
                 tabBarActiveTintColor,
                 headerShadowVisible: false,
+
                 headerShown: false,
                 headerTitleStyle: {
                     fontFamily: 'SFMedium'

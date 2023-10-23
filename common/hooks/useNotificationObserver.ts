@@ -15,6 +15,9 @@ export function useNotificationObserver() {
             if (data.type === 'reminder') {
                 router.push(`/(app)/(root)/(plan)/myquotes`)
             }
+            if (data.type === 'feed') {
+                router.push('/(app)/(root)/(feeds)')
+            }
         }
 
         Notifications.getLastNotificationResponseAsync().then((response) => {

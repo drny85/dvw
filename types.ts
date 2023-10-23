@@ -188,6 +188,7 @@ export type Referral = {
     email_sent: boolean
     email_sent_on: string | null
     comment: string | null
+    followUpOn: string | null
 }
 
 export interface STATUS {
@@ -264,13 +265,43 @@ export const TVnames: { [key: string]: string } = {
 export const INTERNETnames: { [key: string]: string } = {
     internet_300: '300 Mbps',
     internet_500: '500 Mbps',
-    one_gig: '1 GIG',
-    two_gig: '2 GIG'
+    one_gig: '1 Gigabit',
+    two_gig: '2 Gigabit'
 }
 
 export const WIRELESSnames: { [key: string]: string } = {
     wireless_referral: 'Wireless CTC',
     wireless_direct: 'Wireless DS'
+}
+export const TIERS = {
+    internet: {
+        internet_300: 20,
+        internet_500: 35,
+        one_gig: 55,
+        two_gig: 75
+    },
+    tv: {
+        tv_your: { tier1: 15, tier2: 25, tier3: 30 },
+        tv_test_drive: { tier1: 20, tier2: 30, tier3: 40 },
+        tv_more: { tier1: 15, tier2: 25, tier3: 30 },
+        tv_most: { tier1: 30, tier2: 40, tier3: 50 },
+        tv_mundo: { tier1: 10, tier2: 20, tier3: 25 },
+        tv_total: { tier1: 10, tier2: 20, tier3: 25 },
+        youtube: { tier1: 15, tier2: 15, tier3: 15 }
+    },
+    home: {
+        home_phone: 10
+    },
+
+    tier: {
+        tier1: 8,
+        tier2: 9,
+        tier3: 15
+    },
+    wireless: {
+        wireless_referral: 60,
+        wireless_direct: 125
+    }
 }
 
 export type ReferralsFilterType =
@@ -286,3 +317,5 @@ export type ReferralsFilterType =
     | 'installation-today'
     | 'installation-yesterday'
     | 'installation-last-week'
+
+export const data = [{ id: '0' }, { id: '1' }, { id: '2' }, { id: '3' }]

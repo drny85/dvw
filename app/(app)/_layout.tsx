@@ -52,13 +52,17 @@ export default function () {
 function RootLayout() {
     const colorScheme = useColorScheme()
     const navigationBarColor = useThemeColor('background')
+    const bg = useThemeColor('background')
 
     return (
         <ThemeProvider
             value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
         >
             {/* Set the status bar style based on the color scheme */}
-            <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+            <StatusBar
+                style={colorScheme === 'dark' ? 'light' : 'dark'}
+                backgroundColor={bg}
+            />
             <Stack
                 screenOptions={{
                     headerShown: false,

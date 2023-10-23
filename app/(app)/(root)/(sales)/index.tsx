@@ -10,7 +10,7 @@ import useAppSelector from '@/common/hooks/useAppSelector'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import Styles from '@/constants/Styles'
-import { SaleData, SalesRange, WirelessQuote } from '@/types'
+import { Referral, SaleData, SalesRange, WirelessQuote } from '@/types'
 import {
     formatedData,
     generateFeedsBasedOnRange,
@@ -19,7 +19,6 @@ import {
 import { FontAwesome } from '@expo/vector-icons'
 import moment from 'moment'
 import { AnimatePresence, MotiView } from 'moti'
-import * as Progress from 'react-native-progress'
 
 import { useWirelessQuotes } from '@/common/hooks/wirelessQuotes/useWirelessQuotes'
 import React, { useEffect, useState } from 'react'
@@ -31,23 +30,28 @@ import {
 } from 'react-native'
 import { router } from 'expo-router'
 import Referrals from '@/common/components/referrals/Referrals'
-import { schedulePushNotification } from '@/common/hooks/useNotification'
+import ProgressCircle from '@/common/components/referrals/ProgressCircle'
+import ReferralCard from '@/common/components/referrals/ReferralCard'
+import { useReferrals } from '@/common/hooks/referrals/useReferrals'
 
-const GOAL = 66
+const GOAL = 70
 
 const getMonthlyGoal = (range: SalesRange): number => {
     if (range === 'mtd') return GOAL
     if (range === 'ytd') return GOAL * 12
     if (range === 'wtd') return GOAL / 4
     if (range === 'all') return GOAL * 7
-    if (range === 'today') return GOAL / 28
+    if (range === 'today') return GOAL / 30
     return 0
 }
 
 const Sales = () => {
     const { quotes, loading: loadingQoutes } = useWirelessQuotes()
+    const { referrals, loading: loadingReferrals } = useReferrals()
     const { loading, feeds } = useFeeds()
-
+    const [secondView, setSecondView] = useState<'wireless' | 'referrals'>(
+        'wireless'
+    )
     const [view, setView] = useState<'follow-ups' | 'sales' | 'referrals'>(
         'referrals'
     )
@@ -56,9 +60,11 @@ const Sales = () => {
     const [expand, setExpand] = useState<boolean>(false)
     const [saleId, setSaleId] = useState<string>()
     const [followUps, setFollowUps] = useState<WirelessQuote[]>([])
+    const [referralsFollowUps, setReferralsFollowUps] = useState<Referral[]>([])
     const sales = salesData(data)
     const backgroundColor = useThemeColor('accent')
     const borderColor = useThemeColor('secondary')
+    const bgColor = useThemeColor('background')
     const iconColor = useThemeColor('text')
     const totalSales = data.reduce((a, b) => a + b.numberOfLines, 0)
 
@@ -66,8 +72,15 @@ const Sales = () => {
         router.push('/(app)/(root)/(plan)/myquotes')
     }
 
-    const goalPercentage = Math.round(
-        (totalSales / getMonthlyGoal(range)) * 100
+    const goalPercentage = (r: SalesRange) =>
+        Math.round((totalSales / getMonthlyGoal(r)) * 100)
+
+    const today = data.filter((d) =>
+        moment(d.createdAt).startOf('day').isSame(moment().startOf('day'))
+    )
+
+    const todayGoal = Math.round(
+        (today.reduce((a, b) => a + b.numberOfLines, 0) / (GOAL / 30)) * 100
     )
 
     const renderSales: ListRenderItem<SaleData> = ({ item }) => {
@@ -124,6 +137,10 @@ const Sales = () => {
         )
     }
 
+    const renderReferralsFollowUp: ListRenderItem<Referral> = ({ item }) => {
+        return <ReferralCard item={item} bgColor={bgColor} />
+    }
+
     useEffect(() => {
         if (!feeds.length) return
         const sales = generateFeedsBasedOnRange(
@@ -134,6 +151,19 @@ const Sales = () => {
         const listData = formatedData(sales)
         setData(listData)
     }, [feeds.length, range])
+
+    useEffect(() => {
+        setReferralsFollowUps(
+            referrals.filter(
+                (r) =>
+                    r.followUpOn &&
+                    moment(r.followUpOn).isBetween(
+                        moment().startOf('day'),
+                        moment().endOf('day')
+                    )
+            )
+        )
+    }, [referrals])
 
     useEffect(() => {
         if (quotes.length === 0) return
@@ -150,7 +180,7 @@ const Sales = () => {
         )
     }, [quotes.length])
 
-    if (loading || loadingQoutes) return <Loading />
+    if (loading || loadingQoutes || loadingReferrals) return <Loading />
 
     return (
         <Screen>
@@ -197,7 +227,40 @@ const Sales = () => {
             {view === 'referrals' && <Referrals />}
             {view === 'follow-ups' && (
                 <View style={{ flex: 1 }}>
-                    {followUps.length === 0 && (
+                    <Row
+                        style={{
+                            justifyContent: 'space-evenly',
+                            marginBottom: SIZES.padding
+                        }}
+                    >
+                        <TouchableOpacity
+                            onPress={() => setSecondView('referrals')}
+                            style={{
+                                borderBottomColor: borderColor,
+                                borderBottomWidth:
+                                    secondView === 'referrals' ? 2 : 0,
+                                paddingBottom: SIZES.base
+                            }}
+                        >
+                            <Text fontFamily="SFBold" fontSize={18}>
+                                Referrals
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => setSecondView('wireless')}
+                            style={{
+                                borderBottomColor: borderColor,
+                                borderBottomWidth:
+                                    secondView === 'wireless' ? 2 : 0,
+                                paddingBottom: SIZES.base
+                            }}
+                        >
+                            <Text fontFamily="SFBold" fontSize={18}>
+                                Wireless
+                            </Text>
+                        </TouchableOpacity>
+                    </Row>
+                    {followUps.length === 0 && secondView === 'wireless' && (
                         <View
                             style={{
                                 alignItems: 'center',
@@ -205,12 +268,30 @@ const Sales = () => {
                                 flex: 1
                             }}
                         >
-                            <Text fontFamily="QSBold" fontSize={20}>
-                                No Follow ups yet
+                            <Text fontFamily="QSBold" capitalize fontSize={20}>
+                                No {secondView} Follow ups yet
                             </Text>
                         </View>
                     )}
-                    {followUps.length > 0 && (
+                    {referralsFollowUps.length === 0 &&
+                        secondView === 'referrals' && (
+                            <View
+                                style={{
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    flex: 1
+                                }}
+                            >
+                                <Text
+                                    fontFamily="QSBold"
+                                    capitalize
+                                    fontSize={20}
+                                >
+                                    No {secondView} Follow ups yet
+                                </Text>
+                            </View>
+                        )}
+                    {followUps.length > 0 && secondView === 'wireless' && (
                         <View
                             style={{
                                 flex: 1
@@ -231,39 +312,96 @@ const Sales = () => {
                             />
                         </View>
                     )}
+                    {referralsFollowUps.length > 0 &&
+                        secondView === 'referrals' && (
+                            <View
+                                style={{
+                                    flex: 1
+                                }}
+                            >
+                                <Text center fontFamily="QSBold" fontSize={20}>
+                                    Today's Follow ups:{' '}
+                                    {referralsFollowUps.length}
+                                </Text>
+                                <FlatList
+                                    data={referralsFollowUps}
+                                    contentContainerStyle={{
+                                        marginHorizontal: SIZES.base,
+                                        marginTop: SIZES.padding,
+                                        gap: SIZES.padding
+                                    }}
+                                    renderItem={renderReferralsFollowUp}
+                                    keyExtractor={(item) => item.id!}
+                                />
+                            </View>
+                        )}
                 </View>
             )}
             {view === 'sales' && (
                 <View style={{ flex: 1 }}>
-                    <SalesHeader />
-
                     <View
                         style={{
                             justifyContent: 'center',
                             alignItems: 'center',
-                            gap: SIZES.base
+                            gap: SIZES.base,
+                            marginBottom: SIZES.base
                         }}
                     >
                         <Text fontFamily="SFBold">Monthly Goal {GOAL}</Text>
-                        <Row style={{ gap: SIZES.base }}>
-                            <Progress.Bar
-                                // color={"red"}
-                                animated
-                                unfilledColor="white"
-                                progress={goalPercentage / 100}
-                                color={backgroundColor}
-                                borderWidth={3}
-                                height={10}
-                                borderRadius={SIZES.radius}
-                                width={SIZES.width * 0.7}
-                                borderColor={iconColor}
-                            />
-                            <Text>{goalPercentage}%</Text>
+                        <Row style={{ gap: SIZES.padding }}>
+                            {['today', 'wtd', 'mtd', 'ytd'].map((r) => (
+                                <View
+                                    style={{
+                                        justifyContent: 'center',
+                                        alignItems: 'center'
+                                    }}
+                                    key={r}
+                                >
+                                    <ProgressCircle
+                                        percentage={
+                                            r === 'today'
+                                                ? todayGoal
+                                                : goalPercentage(
+                                                      r as SalesRange
+                                                  )
+                                        }
+                                        textColor={iconColor}
+                                        color={backgroundColor}
+                                        duration={600}
+                                        max={100}
+                                        strokeWidth={8}
+                                    />
+                                    <Text fontFamily="SFBold" fontSize={12}>
+                                        {r === 'wtd'
+                                            ? 'Weekly'
+                                            : r === 'mtd'
+                                            ? 'Monthly'
+                                            : 'Daily'}{' '}
+                                        (
+                                        {r === 'today'
+                                            ? (GOAL / 30).toFixed(1)
+                                            : Math.ceil(
+                                                  getMonthlyGoal(
+                                                      r as SalesRange
+                                                  )
+                                              ).toFixed(1)}
+                                        )
+                                    </Text>
+                                </View>
+                            ))}
                         </Row>
                     </View>
-
+                    <Divider small />
+                    <SalesHeader />
                     <FlatList
                         showsVerticalScrollIndicator={false}
+                        ListHeaderComponent={
+                            sales.length > 0 ? (
+                                <Text center fontFamily="SFBold">
+                                    By EM
+                                </Text>
+                            ) : null
+                        }
                         contentContainerStyle={{
                             padding: SIZES.base,
                             gap: SIZES.padding

@@ -6,6 +6,7 @@ import { ColorName } from '@/constants/Colors'
 import useThemeColor from '../hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import View from './View'
+import { FontAwesome } from '@expo/vector-icons'
 
 // Define props for the custom TextInput component, including customizable text styling properties and backgroundColor option
 type InputError = {
@@ -27,6 +28,7 @@ const TextInput = forwardRef(
             isMultiline,
             error,
             style,
+
             onFocus,
             onBlur,
             ...props
@@ -61,7 +63,7 @@ const TextInput = forwardRef(
                     style={[
                         styles.input,
                         {
-                            borderWidth: StyleSheet.hairlineWidth,
+                            borderWidth: 1,
                             borderColor,
                             borderRadius: isMultiline
                                 ? SIZES.radius
@@ -78,6 +80,7 @@ const TextInput = forwardRef(
                         style
                     ]}
                 />
+
                 {error && (
                     <View
                         style={{
