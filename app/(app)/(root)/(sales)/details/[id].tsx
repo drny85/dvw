@@ -26,7 +26,7 @@ import * as Linking from 'expo-linking'
 import { router, useLocalSearchParams } from 'expo-router'
 import moment from 'moment'
 import { AnimatePresence, MotiView } from 'moti'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Alert, StyleSheet, TouchableOpacity } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
@@ -43,7 +43,7 @@ const ReferralDetails = () => {
     const deleteColor = useThemeColor('warning')
     const placeholderColor = useThemeColor('placeholder')
 
-    const handleFollowUp = async () => {
+    const handleFollowUp = useCallback(async () => {
         try {
             if (!referral) return
             dispatch(
@@ -62,7 +62,7 @@ const ReferralDetails = () => {
         } catch (error) {
             console.log(error)
         }
-    }
+    }, [])
 
     const updateComment = async () => {
         try {
@@ -191,7 +191,7 @@ const ReferralDetails = () => {
                             <FontAwesome
                                 name="calendar-o"
                                 color={textColor}
-                                size={26}
+                                size={24}
                             />
                         </TouchableOpacity>
                     </Row>

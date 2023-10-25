@@ -1,3 +1,6 @@
+import Eula from '@/common/components/Eula'
+import Header from '@/common/components/Header'
+import { Ionicon } from '@/common/components/Icon'
 import Loading from '@/common/components/Loading'
 import Screen from '@/common/components/Screen'
 import Text from '@/common/components/Text'
@@ -8,12 +11,14 @@ import { useFeeds } from '@/common/hooks/feeds/useFeeds'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
 import useAppSelector from '@/common/hooks/useAppSelector'
 import { SIZES } from '@/constants/Sizes'
+import { updateUser } from '@/features/auth/authActions'
 import { deleteFeed, updateFeed } from '@/features/feeds/feedsActions'
 
 import { Feed } from '@/types'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { router } from 'expo-router'
-import React, { useCallback, useRef } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
+import { set } from 'react-hook-form'
 import { Button, FlatList, ListRenderItem, StyleSheet } from 'react-native'
 
 const Feeds = () => {
@@ -77,23 +82,54 @@ const Feeds = () => {
                         <Button
                             title="Add First Post"
                             onPress={() => {
-                                router.push('/(app)/(root)/(feeds)/addFeedView')
+                                if (user?.acceptedEULA) {
+                                    router.push(
+                                        '/(app)/(root)/(feeds)/addFeedView'
+                                    )
+                                } else {
+                                    router.push('/(app)/(root)/(feeds)/eula')
+                                }
                             }}
                         />
                     </View>
                 </View>
             )}
             {feeds.length > 0 && (
-                <FlatList
-                    data={feeds}
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{
-                        paddingHorizontal: 6,
-                        gap: SIZES.padding
-                    }}
-                    keyExtractor={(item) => item.id!}
-                    renderItem={renderFeeds}
-                />
+                <>
+                    <Header
+                        title="Posts"
+                        contentContainerStyle={{ paddingRight: 10 }}
+                        hasRightIcon
+                        rightIcon={
+                            <Ionicon
+                                color="text"
+                                name="ios-add-sharp"
+                                size={34}
+                                onPress={() => {
+                                    if (user?.acceptedEULA) {
+                                        router.push(
+                                            '/(app)/(root)/(feeds)/addFeedView'
+                                        )
+                                    } else {
+                                        router.push(
+                                            '/(app)/(root)/(feeds)/eula'
+                                        )
+                                    }
+                                }}
+                            />
+                        }
+                    />
+                    <FlatList
+                        data={feeds}
+                        showsVerticalScrollIndicator={false}
+                        contentContainerStyle={{
+                            paddingHorizontal: 6,
+                            gap: SIZES.padding
+                        }}
+                        keyExtractor={(item) => item.id!}
+                        renderItem={renderFeeds}
+                    />
+                </>
             )}
             <FeedBottomSheet
                 ref={bottomSheetModalRef}

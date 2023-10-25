@@ -1,4 +1,4 @@
-import useThemeColor from '@/common/hooks/useThemeColor'
+import useAppSelector from '@/common/hooks/useAppSelector'
 import { SIZES } from '@/constants/Sizes'
 import { Chat } from '@/types'
 import { FontAwesome } from '@expo/vector-icons'
@@ -18,10 +18,17 @@ type Props = {
 }
 
 const ChatList = ({ setOpened, item, rowRefs, onDelete, iconColor }: Props) => {
-    const trashColor = useThemeColor('warning')
+    const user = useAppSelector((s) => s.auth.user)
     return (
         <TouchableOpacity
-            onPress={() => router.push(`/(app)/(root)/(chats)/${item.id}`)}
+            onPress={() => {
+                if (user && user.acceptedEULA && user.acceptedEULA === true) {
+                    router.push(`/(app)/(root)/(chats)/${item.id}`)
+                } else {
+                    console.log('EULA not accepted')
+                    router.push('/eula')
+                }
+            }}
         >
             <Row
                 style={{

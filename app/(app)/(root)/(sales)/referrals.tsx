@@ -400,6 +400,10 @@ const ReferralsScreen = () => {
                     if (date) {
                         setMoveIn(date?.toISOString())
                         setShowMoveIn(false)
+                        setReferral({
+                            ...referral!,
+                            moveIn: date.toISOString()
+                        })
                     }
                 }}
                 show={showMoveIn}

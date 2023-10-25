@@ -12,7 +12,8 @@ import { getResults } from '@/utils/getReferralsFilterData'
 import { FontAwesome } from '@expo/vector-icons'
 import { router, useLocalSearchParams } from 'expo-router'
 import { AnimatePresence, MotiView } from 'moti'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { set } from 'react-hook-form'
 import { FlatList, ListRenderItem, TouchableOpacity } from 'react-native'
 
 const FilteredReferrals = () => {
@@ -23,13 +24,33 @@ const FilteredReferrals = () => {
     const bgColor = useThemeColor('background')
     const [searching, setSearching] = useState(false)
     const { loading, referrals } = useReferrals()
+    const [filtered, setFiltered] = useState<Referral[]>([])
     if (loading) return <Loading />
 
     const data = getResults(referrals, filterType)
 
+    const handleSearch = (value: string) => {
+        if (value.length > 0) {
+            setSearching(true)
+        } else {
+            setSearching(false)
+        }
+        const f = referrals.filter((r) => {
+            const regex = new RegExp(`${value}`, 'gi')
+            return (
+                r.name.match(regex) ||
+                r.address.match(regex) ||
+                (r.status.id === 'closed' && r.mon?.match(regex)) ||
+                r.phone.match(regex)
+            )
+        })
+        setFiltered(f)
+    }
+
     const renderReferrals: ListRenderItem<Referral> = ({ item }) => {
         return <ReferralCard item={item} bgColor={bgColor} />
     }
+
     return (
         <Screen>
             <Header
@@ -37,12 +58,22 @@ const FilteredReferrals = () => {
                 title={filterTitle(filterType)}
                 hasRightIcon
                 rightIcon={
-                    <TouchableOpacity style={{ marginRight: SIZES.padding }}>
+                    <TouchableOpacity
+                        onPress={() => {
+                            setSearching((prev) => {
+                                if (prev) {
+                                    return false
+                                }
+                                setFiltered(referrals)
+                                return true
+                            })
+                        }}
+                        style={{ marginRight: SIZES.padding }}
+                    >
                         <FontAwesome
                             name={searching ? 'times' : 'search'}
                             color={color}
                             size={26}
-                            onPress={() => setSearching(!searching)}
                         />
                     </TouchableOpacity>
                 }
@@ -58,7 +89,7 @@ const FilteredReferrals = () => {
                     >
                         <TextInput
                             placeholder="Search by name, email or phone"
-                            onChangeText={(text) => {}}
+                            onChangeText={handleSearch}
                         />
                     </MotiView>
                 )}
@@ -69,7 +100,7 @@ const FilteredReferrals = () => {
                     gap: SIZES.padding
                 }}
                 showsVerticalScrollIndicator={false}
-                data={data}
+                data={searching ? filtered : data}
                 renderItem={renderReferrals}
             />
         </Screen>

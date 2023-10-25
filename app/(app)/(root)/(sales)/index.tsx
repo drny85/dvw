@@ -220,7 +220,7 @@ const Sales = () => {
                     onPress={() => setView('sales')}
                 >
                     <Text fontFamily="SFBold" fontSize={22}>
-                        Sales
+                        Wireless
                     </Text>
                 </TouchableOpacity>
             </Row>
@@ -435,21 +435,27 @@ function SaleDataLine(
     data: SaleData[]
 ): React.ReactElement<any, string | React.JSXElementConstructor<any>> | null {
     return (
-        <View style={[styles.row, Styles.boxShadow, { backgroundColor }]}>
-            <Row style={{ justifyContent: 'space-between' }}>
-                <Row style={{ justifyContent: 'space-between', width: '70%' }}>
-                    <Text capitalize>{item.user.name}</Text>
-                    <Text capitalize>
-                        {item.numberOfLines}{' '}
-                        {item.numberOfLines === 1 ? 'line' : 'lines'}
-                    </Text>
-                </Row>
-                <TouchableOpacity
-                    onPress={() => {
-                        setSaleId(item.user.id)
-                        setExpand(!expand)
-                    }}
-                >
+        <MotiView style={[styles.row, Styles.boxShadow, { backgroundColor }]}>
+            <TouchableOpacity
+                onPress={() => {
+                    setSaleId(item.user.id)
+                    setExpand(!expand)
+                }}
+            >
+                <Row style={{ justifyContent: 'space-between' }}>
+                    <Row
+                        style={{
+                            justifyContent: 'space-between',
+                            width: '70%'
+                        }}
+                    >
+                        <Text capitalize>{item.user.name}</Text>
+                        <Text capitalize>
+                            {item.numberOfLines}{' '}
+                            {item.numberOfLines === 1 ? 'line' : 'lines'}
+                        </Text>
+                    </Row>
+
                     <FontAwesome
                         name={
                             expand && saleId === item.user.id
@@ -459,14 +465,14 @@ function SaleDataLine(
                         size={20}
                         color={iconColor}
                     />
-                </TouchableOpacity>
-            </Row>
+                </Row>
+            </TouchableOpacity>
             <AnimatePresence>
                 {expand && saleId === item.user.id && (
                     <MotiView
-                        from={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
+                        from={{ opacity: 0, scale: 0 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0 }}
                         transition={{ type: 'timing', duration: 400 }}
                     >
                         <Divider />
@@ -503,6 +509,6 @@ function SaleDataLine(
                     </MotiView>
                 )}
             </AnimatePresence>
-        </View>
+        </MotiView>
     )
 }

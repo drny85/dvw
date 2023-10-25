@@ -81,7 +81,8 @@ const Signup = () => {
                 name: name,
                 role: role,
                 emailVerified: user.emailVerified,
-                createdAt: new Date().toISOString()
+                createdAt: new Date().toISOString(),
+                acceptedEULA: false
             })
 
             reset()
@@ -214,6 +215,7 @@ const Signup = () => {
                                             autoComplete="email"
                                             autoCapitalize="none"
                                             capitalize={false}
+                                            autoCorrect={false}
                                             keyboardType="email-address"
                                             onBlur={() => {
                                                 onBlur()

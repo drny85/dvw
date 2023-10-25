@@ -243,7 +243,7 @@ const renderPayoutInfo = (
                     marginTop: SIZES.padding * 1.2,
                     alignSelf: 'center',
                     width: '98%',
-                    paddingTop: SIZES.padding * 1.2
+                    padding: SIZES.padding * 1.2
                 }
             ]}
         >
@@ -253,7 +253,7 @@ const renderPayoutInfo = (
                     alignItems: 'center'
                 }}
             >
-                <Text fontFamily="QSRegular" fontSize={16}>
+                <Text fontFamily="QSLight" fontSize={16}>
                     {refs.length <= TIERS.tier.tier1 &&
                         `Hey ${name}, let see how we can get you to Tier 2`}
                 </Text>

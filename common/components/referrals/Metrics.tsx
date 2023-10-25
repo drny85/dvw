@@ -44,7 +44,6 @@ const Metrics = () => {
         Object.values(wireless).reduce((a, b) => a + b, 0) ?? 0
 
     useEffect(() => {
-        console.log('RAN @1')
         setData(
             period === 'wtd'
                 ? wtd
@@ -61,7 +60,6 @@ const Metrics = () => {
     }, [period])
 
     useEffect(() => {
-        console.log('RAN @2', wtd.length)
         setData(wtd)
     }, [wtd.length])
     console.log(loading, loadingRefs)

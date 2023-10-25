@@ -11,12 +11,10 @@ export type Feed = {
     user: AppUser
     comments: Comment[]
     likes: string[]
-    dislikes: AppUser[]
     liked: boolean
     commentsCount: number
     likesCount: number
-    dislikesCount: number
-    views: number
+
     feedType: FeedType
     saleType: SaleType | null
 }

@@ -51,11 +51,8 @@ const AddFeedModal = () => {
             message: data.message,
             title: data.title,
             user: user!,
-            dislikes: [],
-            dislikesCount: 0,
             likesCount: 0,
             numberOfLines: saleType ? numberOfLines : 0,
-            views: 0,
             image: String(image),
             feedType: feedType!,
             saleType
@@ -97,11 +94,8 @@ const AddFeedModal = () => {
             message: values.message,
             title: values.title,
             user: user!,
-            dislikes: [],
-            dislikesCount: 0,
             likesCount: 0,
             numberOfLines: saleType ? numberOfLines : 0,
-            views: 0,
             image: String(image),
             feedType: feedType!,
             saleType

@@ -12,6 +12,7 @@ export type AppUser = {
     phone?: string | null
     pushToken?: string
     createdAt?: string
+    acceptedEULA: boolean
 }
 
 export type UserRole = 'admin' | 'em' | 'coach' | 'ce' | 'referee' | 'ceo'

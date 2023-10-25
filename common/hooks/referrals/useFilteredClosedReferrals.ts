@@ -57,13 +57,7 @@ export const useFilteredClosedReferrals = (data?: Referral[]) => {
                 moment().subtract(1, 'month').endOf('month')
             )
         })
-        console.log(
-            'RESULTS =>',
-            today.length,
-            lw.length,
-            thisMonth.length,
-            newResults.length
-        )
+
         setWtd(newResults)
         setLastMonth(lastMonth)
         setLastWeek(lastWeek)
