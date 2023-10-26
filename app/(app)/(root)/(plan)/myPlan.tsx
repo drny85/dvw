@@ -16,7 +16,14 @@ import {
 import { SIZES } from '@/constants/Sizes'
 import { setReferralState } from '@/features/referrals/referralsSlide'
 import { setSaleQuoteReferral } from '@/features/sales/salesSlide'
-import { setLinesData, setReviewModal } from '@/features/wireless/wirelessSlide'
+import {
+    setExpressAutoPay,
+    setExpressFirstResponder,
+    setExpressHasFios,
+    setExpressInternet,
+    setLinesData,
+    setReviewModal
+} from '@/features/wireless/wirelessSlide'
 import { perks } from '@/perks'
 import { Line, LineName } from '@/types'
 import { AntDesign } from '@expo/vector-icons'
@@ -44,6 +51,14 @@ const MyPlan = () => {
     const deleteLine = (id: string) => {
         const newLines = lines.filter((line) => line.id !== id)
         dispatch(setLinesData(newLines))
+    }
+
+    const resetAllButAutoPay = () => {
+        dispatch(setLinesData([]))
+        dispatch(setExpressAutoPay(10))
+        dispatch(setExpressFirstResponder(false))
+        dispatch(setExpressHasFios(false))
+        dispatch(setExpressInternet())
     }
 
     const onAddLine = () => {
@@ -258,6 +273,12 @@ const MyPlan = () => {
         expressInternet,
         expressHasFios
     ])
+
+    useEffect(() => {
+        if (saleQuote) {
+            resetAllButAutoPay()
+        }
+    }, [saleQuote])
 
     useEffect(() => {
         if (!bottomShetRef.current) return
