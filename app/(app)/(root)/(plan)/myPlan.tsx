@@ -14,6 +14,8 @@ import {
     WELCOME_BYOD_VALUE
 } from '@/constants'
 import { SIZES } from '@/constants/Sizes'
+import { setReferralState } from '@/features/referrals/referralsSlide'
+import { setSaleQuoteReferral } from '@/features/sales/salesSlide'
 import { setLinesData, setReviewModal } from '@/features/wireless/wirelessSlide'
 import { perks } from '@/perks'
 import { Line, LineName } from '@/types'
@@ -27,6 +29,7 @@ import uuid from 'react-native-uuid'
 
 const MyPlan = () => {
     const iconColor = useThemeColor('text')
+    const { saleQuote } = useAppSelector((s) => s.sales)
     const dispatch = useAppDispatch()
     const bottomShetRef = useRef<BottomSheet>(null)
     const lines = useAppSelector((s) => s.wireless.lines)
@@ -188,18 +191,18 @@ const MyPlan = () => {
 
     const mobilePlusHome = (line: Line): number => {
         if (
-            (expressInternet === 'gig' || expressInternet === '2gig') &&
+            (expressInternet === 'one_gig' || expressInternet === 'two_gig') &&
             (line.name === 'Unlimited Plus' ||
                 line.name === 'Unlimited Ultimate')
         ) {
             return 10
         } else if (
             expressHasFios &&
-            expressInternet === 'gig' &&
+            expressInternet === 'one_gig' &&
             line.name === 'Unlimited Welcome'
         ) {
             return 5
-        } else if (expressHasFios && expressInternet !== 'gig') {
+        } else if (expressHasFios && expressInternet !== 'one_gig') {
             return 5
         } else {
             return 0
@@ -211,7 +214,7 @@ const MyPlan = () => {
         internet: typeof expressInternet
     ): number => {
         if (!expressHasFios || lines.length === 0) return 0
-        const gig = internet === 'gig' || internet === '2gig'
+        const gig = internet === 'one_gig' || internet === 'two_gig'
         if (
             line.name === 'Unlimited Plus' ||
             line.name === 'Unlimited Ultimate'
@@ -290,7 +293,12 @@ const MyPlan = () => {
                             dispatch(setReviewModal())
                             router.push('/(app)/(root)/(plan)/myquotes')
                         } else {
-                            router.back()
+                            if (saleQuote) {
+                                dispatch(setSaleQuoteReferral(null))
+                                router.push('/(app)/(root)/(plan)')
+                            } else {
+                                router.back()
+                            }
                         }
                     }}
                 />

@@ -1,7 +1,7 @@
 import Screen from '@/common/components/Screen'
 import Text from '@/common/components/Text'
 import React, { useEffect, useRef } from 'react'
-import { Alert, TextInput as Input, StyleSheet } from 'react-native'
+import { Alert, TextInput as Input, Modal, StyleSheet } from 'react-native'
 
 import ButtonRadio from '@/common/components/RadioButton'
 import Row from '@/common/components/Row'
@@ -41,6 +41,9 @@ import {
     setEditingReferral,
     setReferralState
 } from '@/features/referrals/referralsSlide'
+import { setSaleQuoteReferral } from '@/features/sales/salesSlide'
+import Congratulations from '@/common/components/referrals/Congratulations'
+
 const GOOGLE_KEY = process.env.EXPO_PUBLIC_GOOGLE_KEY as string
 
 const ReferralsScreen = () => {
@@ -57,6 +60,7 @@ const ReferralsScreen = () => {
     const [animatePack, setAnimatePack] = React.useState(false)
     const googleRef = useRef<GooglePlacesAutocompleteRef>(null)
     const [isReferral, setIsReferral] = React.useState(true)
+    const [showCongratulations, setShowCongratulations] = React.useState(false)
     const [showMoveIn, setShowMoveIn] = React.useState(false)
     const [showStatus, setShowStatus] = React.useState(false)
     const [address, setAddress] = React.useState('')
@@ -180,17 +184,45 @@ const ReferralsScreen = () => {
                     Alert.alert('Please select at least one package')
                     return
                 }
+                if (referral.order_date === null) {
+                    Alert.alert('Please enter a valid order date')
+                    return
+                }
+                if (referral.due_date === null) {
+                    Alert.alert('Please enter a valid due date')
+                    return
+                }
             }
+
             try {
                 if (editing && editingReferral) {
                     dispatch(updateReferral(referral))
                     dispatch(setEditingReferral(false))
                     setReferralState(null)
+                    if (
+                        referral.status.id === 'closed' &&
+                        editingReferral.status.id !== 'closed'
+                    ) {
+                        if (!referral.isVerizonWirelessCustomer) {
+                            dispatch(setSaleQuoteReferral(referral))
+                        }
+                        router.push('/congratulations')
+                    } else {
+                        router.back()
+                    }
                 } else {
-                    dispatch(addReferral(referral))
+                    if (referral.status.id === 'closed') {
+                        if (!referral.isVerizonWirelessCustomer) {
+                            dispatch(setSaleQuoteReferral(referral))
+                        }
+                        dispatch(addReferral(referral))
+                        console.log('HERE')
+                        setShowCongratulations(true)
+                        //router.push('/(app)/(root)/(sales)/congratulations')
+                    } else {
+                        router.back()
+                    }
                 }
-
-                router.back()
             } catch (error) {
                 console.log(error)
             }
@@ -203,6 +235,12 @@ const ReferralsScreen = () => {
             setReferral(editingReferral)
             setMoveIn(referral.moveIn)
             setIndex(3)
+        }
+
+        return () => {
+            dispatch(setEditingReferral(false))
+            dispatch(setReferralState(null))
+            setIndex(0)
         }
     }, [editingReferral, editing])
 
@@ -284,6 +322,7 @@ const ReferralsScreen = () => {
                         setShowMoveIn,
                         editing,
                         setShowReferees,
+                        isReferral,
                         moveIn
                     )}
                 {index === 2 &&
@@ -309,7 +348,8 @@ const ReferralsScreen = () => {
                         setShowWirelessPicker,
                         validateServicesOrdered,
                         setShowOrderDate,
-                        setShowOrderDueDate
+                        setShowOrderDueDate,
+                        orderType
                     )}
             </KeyboardAwareScrollView>
             <View style={{ padding: SIZES.padding }}>
@@ -521,6 +561,13 @@ const ReferralsScreen = () => {
                     })
                 }}
             />
+            <Modal
+                presentationStyle="overFullScreen"
+                visible={showCongratulations}
+                animationType="slide"
+            >
+                <Congratulations setShow={setShowCongratulations} />
+            </Modal>
         </Screen>
     )
 }
@@ -567,7 +614,8 @@ function SectionThree(
     setShowWirelessPicker: React.Dispatch<React.SetStateAction<boolean>>,
     validateServicesOrdered: () => boolean,
     setShowOrderDate: React.Dispatch<React.SetStateAction<boolean>>,
-    setShowOrderDueDate: React.Dispatch<React.SetStateAction<boolean>>
+    setShowOrderDueDate: React.Dispatch<React.SetStateAction<boolean>>,
+    orderType: ORDER_TYPE
 ): React.ReactNode {
     return (
         <View>
@@ -653,268 +701,278 @@ function SectionThree(
                 )}
             </AnimatePresence>
             <AnimatePresence>
-                {referral.mon !== null && referral.mon.length === 13 && (
-                    <MotiView
-                        style={{
-                            marginBottom: 8,
-                            gap: SIZES.padding
-                        }}
-                        from={{
-                            opacity: 0,
-                            translateY: -SIZES.padding
-                        }}
-                        animate={{
-                            opacity: 1,
-                            translateY: SIZES.padding,
-                            scale: animatePack ? [1, 1.1, 1] : 1
-                        }}
-                        transition={{
-                            type: 'timing',
-                            repeat: animatePack ? -1 : 0,
-                            duration: 300
-                        }}
-                        exit={{ opacity: 0 }}
-                    >
-                        <Text center fontFamily="SFBold">
-                            Select a Package
-                        </Text>
-                        <Row
+                {referral.mon !== null &&
+                    referral.mon.length === 13 &&
+                    referral.status.id === 'closed' && (
+                        <MotiView
                             style={{
-                                justifyContent: 'space-evenly',
-                                alignItems: 'center',
-                                marginHorizontal: 10,
-                                paddingHorizontal: 10,
+                                marginBottom: 8,
                                 gap: SIZES.padding
                             }}
+                            from={{
+                                opacity: 0,
+                                translateY: -SIZES.padding
+                            }}
+                            animate={{
+                                opacity: 1,
+                                translateY: SIZES.padding,
+                                scale: animatePack ? [1, 1.1, 1] : 1
+                            }}
+                            transition={{
+                                type: 'timing',
+                                repeat: animatePack ? -1 : 0,
+                                duration: 300
+                            }}
+                            exit={{ opacity: 0 }}
                         >
-                            <View>
-                                <TouchableOpacity
-                                    onPress={() => setShowInternetPicker(true)}
-                                    style={[
-                                        styles.choice,
-                                        {
-                                            backgroundColor:
+                            <Text center fontFamily="SFBold">
+                                Select a Package
+                            </Text>
+                            <Row
+                                style={{
+                                    justifyContent: 'space-evenly',
+                                    alignItems: 'center',
+                                    marginHorizontal: 10,
+                                    paddingHorizontal: 10,
+                                    gap: SIZES.padding
+                                }}
+                            >
+                                <View>
+                                    <TouchableOpacity
+                                        onPress={() =>
+                                            setShowInternetPicker(true)
+                                        }
+                                        style={[
+                                            styles.choice,
+                                            {
+                                                backgroundColor:
+                                                    referral.package
+                                                        ?.internet !== null
+                                                        ? placeholderColor
+                                                        : secondaryColor
+                                            }
+                                        ]}
+                                    >
+                                        <Text
+                                            color="white"
+                                            fontFamily={
                                                 referral.package?.internet !==
                                                 null
-                                                    ? placeholderColor
-                                                    : secondaryColor
-                                        }
-                                    ]}
-                                >
-                                    <Text
-                                        color="white"
-                                        fontFamily={
-                                            referral.package?.internet !== null
-                                                ? 'SFBold'
-                                                : 'SFRegular'
-                                        }
-                                    >
-                                        {referral.package?.internet
-                                            ? referral.package.internet.name
-                                            : 'Internet'}
-                                    </Text>
-                                </TouchableOpacity>
-                                {referral.package?.internet !== null && (
-                                    <TouchableOpacity
-                                        onPress={() =>
-                                            setReferral({
-                                                ...referral,
-                                                package: {
-                                                    ...referral.package!,
-                                                    internet: null
+                                                    ? 'SFBold'
+                                                    : 'SFRegular'
+                                            }
+                                        >
+                                            {referral.package?.internet
+                                                ? referral.package.internet.name
+                                                : 'Internet'}
+                                        </Text>
+                                    </TouchableOpacity>
+                                    {referral.package?.internet !== null && (
+                                        <TouchableOpacity
+                                            onPress={() =>
+                                                setReferral({
+                                                    ...referral,
+                                                    package: {
+                                                        ...referral.package!,
+                                                        internet: null
+                                                    }
+                                                })
+                                            }
+                                            style={[
+                                                styles.remove,
+                                                {
+                                                    backgroundColor:
+                                                        placeholderColor
                                                 }
-                                            })
-                                        }
+                                            ]}
+                                        >
+                                            <FontAwesome
+                                                name="close"
+                                                size={18}
+                                                color={'white'}
+                                            />
+                                        </TouchableOpacity>
+                                    )}
+                                </View>
+                                <View>
+                                    <TouchableOpacity
+                                        onPress={() => setShowTvPicker(true)}
                                         style={[
-                                            styles.remove,
+                                            styles.choice,
                                             {
                                                 backgroundColor:
-                                                    placeholderColor
+                                                    referral.package?.tv !==
+                                                    null
+                                                        ? placeholderColor
+                                                        : secondaryColor
                                             }
                                         ]}
                                     >
-                                        <FontAwesome
-                                            name="close"
-                                            size={18}
-                                            color={'white'}
-                                        />
-                                    </TouchableOpacity>
-                                )}
-                            </View>
-                            <View>
-                                <TouchableOpacity
-                                    onPress={() => setShowTvPicker(true)}
-                                    style={[
-                                        styles.choice,
-                                        {
-                                            backgroundColor:
+                                        <Text
+                                            color="white"
+                                            fontFamily={
                                                 referral.package?.tv !== null
-                                                    ? placeholderColor
-                                                    : secondaryColor
-                                        }
-                                    ]}
-                                >
-                                    <Text
-                                        color="white"
-                                        fontFamily={
-                                            referral.package?.tv !== null
-                                                ? 'SFBold'
-                                                : 'SFRegular'
-                                        }
-                                    >
-                                        {referral.package?.tv
-                                            ? referral.package.tv.name
-                                            : 'TV'}
-                                    </Text>
-                                </TouchableOpacity>
-                                {referral.package?.tv !== null && (
-                                    <TouchableOpacity
-                                        onPress={() =>
-                                            setReferral({
-                                                ...referral,
-                                                package: {
-                                                    ...referral.package!,
-                                                    tv: null
+                                                    ? 'SFBold'
+                                                    : 'SFRegular'
+                                            }
+                                        >
+                                            {referral.package?.tv
+                                                ? referral.package.tv.name
+                                                : 'TV'}
+                                        </Text>
+                                    </TouchableOpacity>
+                                    {referral.package?.tv !== null && (
+                                        <TouchableOpacity
+                                            onPress={() =>
+                                                setReferral({
+                                                    ...referral,
+                                                    package: {
+                                                        ...referral.package!,
+                                                        tv: null
+                                                    }
+                                                })
+                                            }
+                                            style={[
+                                                styles.remove,
+                                                {
+                                                    backgroundColor:
+                                                        placeholderColor
                                                 }
-                                            })
-                                        }
+                                            ]}
+                                        >
+                                            <FontAwesome
+                                                name="close"
+                                                size={18}
+                                                color={'white'}
+                                            />
+                                        </TouchableOpacity>
+                                    )}
+                                </View>
+                            </Row>
+                            <Row
+                                style={{
+                                    justifyContent: 'space-evenly',
+                                    alignItems: 'center',
+                                    marginHorizontal: 10,
+                                    paddingHorizontal: 10,
+                                    gap: SIZES.padding
+                                }}
+                            >
+                                <View>
+                                    <TouchableOpacity
+                                        onPress={() => setShowHomePicker(true)}
                                         style={[
-                                            styles.remove,
+                                            styles.choice,
                                             {
                                                 backgroundColor:
-                                                    placeholderColor
+                                                    referral.package?.home !==
+                                                    null
+                                                        ? placeholderColor
+                                                        : secondaryColor
                                             }
                                         ]}
                                     >
-                                        <FontAwesome
-                                            name="close"
-                                            size={18}
-                                            color={'white'}
-                                        />
-                                    </TouchableOpacity>
-                                )}
-                            </View>
-                        </Row>
-                        <Row
-                            style={{
-                                justifyContent: 'space-evenly',
-                                alignItems: 'center',
-                                marginHorizontal: 10,
-                                paddingHorizontal: 10,
-                                gap: SIZES.padding
-                            }}
-                        >
-                            <View>
-                                <TouchableOpacity
-                                    onPress={() => setShowHomePicker(true)}
-                                    style={[
-                                        styles.choice,
-                                        {
-                                            backgroundColor:
+                                        <Text
+                                            color="white"
+                                            fontFamily={
                                                 referral.package?.home !== null
-                                                    ? placeholderColor
-                                                    : secondaryColor
-                                        }
-                                    ]}
-                                >
-                                    <Text
-                                        color="white"
-                                        fontFamily={
-                                            referral.package?.home !== null
-                                                ? 'SFBold'
-                                                : 'SFRegular'
-                                        }
-                                    >
-                                        {referral.package?.home
-                                            ? referral.package.home.name
-                                            : 'Home Phone'}
-                                    </Text>
-                                </TouchableOpacity>
-                                {referral.package?.home !== null && (
+                                                    ? 'SFBold'
+                                                    : 'SFRegular'
+                                            }
+                                        >
+                                            {referral.package?.home
+                                                ? referral.package.home.name
+                                                : 'Home Phone'}
+                                        </Text>
+                                    </TouchableOpacity>
+                                    {referral.package?.home !== null && (
+                                        <TouchableOpacity
+                                            onPress={() =>
+                                                setReferral({
+                                                    ...referral,
+                                                    package: {
+                                                        ...referral.package!,
+                                                        home: null
+                                                    }
+                                                })
+                                            }
+                                            style={[
+                                                styles.remove,
+                                                {
+                                                    backgroundColor:
+                                                        placeholderColor
+                                                }
+                                            ]}
+                                        >
+                                            <FontAwesome
+                                                name="close"
+                                                size={18}
+                                                color={'white'}
+                                            />
+                                        </TouchableOpacity>
+                                    )}
+                                </View>
+
+                                <View>
                                     <TouchableOpacity
                                         onPress={() =>
-                                            setReferral({
-                                                ...referral,
-                                                package: {
-                                                    ...referral.package!,
-                                                    home: null
-                                                }
-                                            })
+                                            setShowWirelessPicker(true)
                                         }
                                         style={[
-                                            styles.remove,
+                                            styles.choice,
                                             {
                                                 backgroundColor:
-                                                    placeholderColor
+                                                    referral.package
+                                                        ?.wireless !== null
+                                                        ? placeholderColor
+                                                        : secondaryColor
                                             }
                                         ]}
                                     >
-                                        <FontAwesome
-                                            name="close"
-                                            size={18}
-                                            color={'white'}
-                                        />
-                                    </TouchableOpacity>
-                                )}
-                            </View>
-
-                            <View>
-                                <TouchableOpacity
-                                    onPress={() => setShowWirelessPicker(true)}
-                                    style={[
-                                        styles.choice,
-                                        {
-                                            backgroundColor:
+                                        <Text
+                                            color="white"
+                                            fontFamily={
                                                 referral.package?.wireless !==
                                                 null
-                                                    ? placeholderColor
-                                                    : secondaryColor
-                                        }
-                                    ]}
-                                >
-                                    <Text
-                                        color="white"
-                                        fontFamily={
-                                            referral.package?.wireless !== null
-                                                ? 'SFBold'
-                                                : 'SFRegular'
-                                        }
-                                    >
-                                        {referral.package?.wireless
-                                            ? referral.package.wireless.name
-                                            : 'Wireless'}
-                                    </Text>
-                                </TouchableOpacity>
-                                {referral.package?.wireless !== null && (
-                                    <TouchableOpacity
-                                        onPress={() =>
-                                            setReferral({
-                                                ...referral,
-                                                package: {
-                                                    ...referral.package!,
-                                                    wireless: null
-                                                }
-                                            })
-                                        }
-                                        style={[
-                                            styles.remove,
-                                            {
-                                                backgroundColor:
-                                                    placeholderColor
+                                                    ? 'SFBold'
+                                                    : 'SFRegular'
                                             }
-                                        ]}
-                                    >
-                                        <FontAwesome
-                                            name="close"
-                                            size={18}
-                                            color={'white'}
-                                        />
+                                        >
+                                            {referral.package?.wireless
+                                                ? referral.package.wireless.name
+                                                : 'Wireless'}
+                                        </Text>
                                     </TouchableOpacity>
-                                )}
-                            </View>
-                        </Row>
-                    </MotiView>
-                )}
+                                    {referral.package?.wireless !== null && (
+                                        <TouchableOpacity
+                                            onPress={() =>
+                                                setReferral({
+                                                    ...referral,
+                                                    package: {
+                                                        ...referral.package!,
+                                                        wireless: null
+                                                    }
+                                                })
+                                            }
+                                            style={[
+                                                styles.remove,
+                                                {
+                                                    backgroundColor:
+                                                        placeholderColor
+                                                }
+                                            ]}
+                                        >
+                                            <FontAwesome
+                                                name="close"
+                                                size={18}
+                                                color={'white'}
+                                            />
+                                        </TouchableOpacity>
+                                    )}
+                                </View>
+                            </Row>
+                        </MotiView>
+                    )}
             </AnimatePresence>
             <AnimatePresence>
                 {validateServicesOrdered() && (
@@ -1018,6 +1076,29 @@ function SectionThree(
                     </MotiView>
                 )}
             </AnimatePresence>
+            {orderType === 'acp' && (
+                <View style={{ marginVertical: SIZES.base * 1.5 }}>
+                    <Text
+                        fontFamily="SFBold"
+                        style={{
+                            margin: SIZES.base
+                        }}
+                    >
+                        ACP Application ID
+                    </Text>
+                    <TextInput
+                        placeholder="B98765-43210"
+                        value={referral.applicationId!}
+                        maxLength={12}
+                        onChangeText={(text) =>
+                            setReferral({
+                                ...referral,
+                                applicationId: text.toUpperCase()
+                            })
+                        }
+                    />
+                </View>
+            )}
             <View style={{ marginVertical: SIZES.base * 1.5 }}>
                 <Text
                     fontFamily="SFBold"
@@ -1055,6 +1136,7 @@ const SectionOne = (
     setShowMoveIn: React.Dispatch<React.SetStateAction<boolean>>,
     editing: boolean,
     setShowReferees: React.Dispatch<React.SetStateAction<boolean>>,
+    isReferral: boolean,
     moveIn: string | null
 ): React.ReactNode => {
     return (
@@ -1209,56 +1291,59 @@ const SectionOne = (
                                 </TouchableOpacity>
                             </Row>
                         </View>
-                        <View>
+                        {isReferral && (
                             <View>
-                                <Text
-                                    fontFamily="SFBold"
-                                    style={{
-                                        margin: SIZES.base
-                                    }}
-                                >
-                                    Referred By
-                                </Text>
-                                <TouchableOpacity
-                                    onPress={() => setShowReferees(true)}
-                                >
-                                    <Row
+                                <View>
+                                    <Text
+                                        fontFamily="SFBold"
                                         style={{
-                                            width: '100%',
-                                            ...Styles.boxShadow,
-                                            backgroundColor: placeholderColor,
-                                            padding: SIZES.base * 1.5,
-                                            borderRadius: SIZES.radius * 2
+                                            margin: SIZES.base
                                         }}
                                     >
-                                        <FontAwesome
-                                            name="user-o"
-                                            color={'white'}
-                                            size={24}
+                                        Referred By
+                                    </Text>
+                                    <TouchableOpacity
+                                        onPress={() => setShowReferees(true)}
+                                    >
+                                        <Row
                                             style={{
-                                                marginHorizontal: SIZES.base
-                                            }}
-                                        />
-                                        <View
-                                            style={{
-                                                borderRadius: SIZES.radius,
-                                                overflow: 'hidden',
-                                                marginLeft: SIZES.padding
+                                                width: '100%',
+                                                ...Styles.boxShadow,
+                                                backgroundColor:
+                                                    placeholderColor,
+                                                padding: SIZES.base * 1.5,
+                                                borderRadius: SIZES.radius * 2
                                             }}
                                         >
-                                            <Text
-                                                fontFamily="SFBold"
-                                                color="white"
+                                            <FontAwesome
+                                                name="user-o"
+                                                color={'white'}
+                                                size={24}
+                                                style={{
+                                                    marginHorizontal: SIZES.base
+                                                }}
+                                            />
+                                            <View
+                                                style={{
+                                                    borderRadius: SIZES.radius,
+                                                    overflow: 'hidden',
+                                                    marginLeft: SIZES.padding
+                                                }}
                                             >
-                                                {referral.referee
-                                                    ? referral.referee.name
-                                                    : 'Pick a Referred By'}
-                                            </Text>
-                                        </View>
-                                    </Row>
-                                </TouchableOpacity>
+                                                <Text
+                                                    fontFamily="SFBold"
+                                                    color="white"
+                                                >
+                                                    {referral.referee
+                                                        ? referral.referee.name
+                                                        : 'Pick a Referred By'}
+                                                </Text>
+                                            </View>
+                                        </Row>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
-                        </View>
+                        )}
                     </MotiView>
                 )}
             </AnimatePresence>

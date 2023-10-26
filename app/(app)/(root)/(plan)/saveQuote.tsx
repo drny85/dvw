@@ -10,7 +10,7 @@ import { formatPhone } from '@/utils/formatPhone'
 import { isEmailValid } from '@/utils/isEmailValid'
 import { isFullName } from '@/utils/isFullName'
 import { router } from 'expo-router'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     Alert,
     Button,
@@ -34,6 +34,7 @@ import {
     NotificationBody,
     schedulePushNotification
 } from '@/common/hooks/useNotification'
+import { setSaleQuoteReferral } from '@/features/sales/salesSlide'
 
 const SaveQuote = () => {
     const [inReview, setReview] = useState(true)
@@ -47,6 +48,7 @@ const SaveQuote = () => {
     const bgColor = useThemeColor('primary')
     const [scheduledOn, setScheduledOn] = useState<Date>(new Date())
     const dispatch = useAppDispatch()
+    const { saleQuote } = useAppSelector((s) => s.sales)
 
     const {
         lines,
@@ -123,6 +125,9 @@ const SaveQuote = () => {
                 data: { id: quote.id, type: 'reminder' }
             }
             await schedulePushNotification(noti)
+            if (saleQuote) {
+                dispatch(setSaleQuoteReferral(null))
+            }
             router.back()
         } catch (error) {
             console.log(error)
@@ -143,6 +148,14 @@ const SaveQuote = () => {
             </View>
         )
     }
+
+    useEffect(() => {
+        if (saleQuote) {
+            setName(saleQuote.name)
+            setEmail(saleQuote.email!)
+            setPhone(saleQuote.phone)
+        }
+    }, [saleQuote])
 
     return (
         <Screen>

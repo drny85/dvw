@@ -1,10 +1,12 @@
 import { useFilteredClosedReferrals } from '@/common/hooks/referrals/useFilteredClosedReferrals'
 import { useHelpers } from '@/common/hooks/referrals/useHelpers'
 import { usePayout } from '@/common/hooks/referrals/usePayout'
+import useAppDispatch from '@/common/hooks/useAppDispatch'
 import useAppSelector from '@/common/hooks/useAppSelector'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import Styles from '@/constants/Styles'
+import { setGoToPlanRoute } from '@/features/referrals/referralsSlide'
 import { Referral, TIERS } from '@/types'
 import { FontAwesome } from '@expo/vector-icons'
 import { router } from 'expo-router'
@@ -15,15 +17,15 @@ import Row from '../Row'
 import Screen from '../Screen'
 import Text from '../Text'
 import View from '../View'
-import ProgressCircle from './ProgressCircle'
 import ReferralsMiniCard from './ReferralsMiniCard'
 
 const Referrals = () => {
     const bgColor = useThemeColor('secondary')
     const { loading, helpers } = useHelpers()
     const accent = useThemeColor('accent')
-    const textColor = useThemeColor('text')
+    const dispatch = useAppDispatch()
     const user = useAppSelector((s) => s.auth.user)
+    const goToPlan = useAppSelector((s) => s.referrals.goToPlan)
     const name = user?.name.split(' ')[0] ?? ''
     const [animateInternetAmount, setAnimateInternetAmount] = useState(0)
     const managers = helpers.filter((helper) => helper.type === 'ce')
@@ -33,7 +35,7 @@ const Referrals = () => {
         managers.length === 0 || referees.length === 0 || coaches.length === 0
     const show =
         coaches.length > 0 && managers.length > 0 && referees.length > 0
-    const { wtd, today, mtd, loading: ld } = useFilteredClosedReferrals()
+    const { wtd, loading: ld } = useFilteredClosedReferrals()
     const { internetAmount, tvAmount, homeAmount, wirelessAmount } =
         usePayout(wtd)
 
@@ -48,6 +50,15 @@ const Referrals = () => {
             clearTimeout(timer)
         }
     }, [internetAmount])
+
+    useEffect(() => {
+        if (goToPlan) {
+            router.push('/(app)/(root)/(plan)/myPlan')
+        }
+        return () => {
+            dispatch(setGoToPlanRoute(false))
+        }
+    }, [goToPlan])
 
     if (loading || ld) return <Loading />
 

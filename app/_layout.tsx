@@ -1,6 +1,5 @@
 // Import necessary components and libraries from 'expo-router'
 
-import ErrorComponent from '@/common/components/ErrorComponent'
 import { useNotificationObserver } from '@/common/hooks/useNotificationObserver'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 
@@ -33,10 +32,8 @@ export default function () {
 
     useNotificationObserver()
     return (
-        <ErrorComponent>
-            <BottomSheetModalProvider>
-                <Slot />
-            </BottomSheetModalProvider>
-        </ErrorComponent>
+        <BottomSheetModalProvider>
+            <Slot />
+        </BottomSheetModalProvider>
     )
 }

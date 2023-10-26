@@ -8,6 +8,7 @@ import { TouchableOpacity } from 'react-native'
 import Row from '../Row'
 import Text from '../Text'
 import View from '../View'
+import { AnimatePresence, MotiView } from 'moti'
 
 type Props = {
     setOpened: React.Dispatch<React.SetStateAction<string | null>>
@@ -15,51 +16,94 @@ type Props = {
     rowRefs: Map<any, any>
     onDelete: (id: string) => Promise<void>
     iconColor: string
+    showDelete: boolean
+    setShowDelete: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const ChatList = ({ setOpened, item, rowRefs, onDelete, iconColor }: Props) => {
+const ChatList = ({
+    setOpened,
+    item,
+    rowRefs,
+    onDelete,
+    iconColor,
+    showDelete,
+    setShowDelete
+}: Props) => {
     const user = useAppSelector((s) => s.auth.user)
+    const show = showDelete && user?.id === item.user.id
     return (
-        <TouchableOpacity
-            onPress={() => {
-                if (user && user.acceptedEULA && user.acceptedEULA === true) {
-                    router.push(`/(app)/(root)/(chats)/${item.id}`)
-                } else {
-                    console.log('EULA not accepted')
-                    router.push('/eula')
-                }
-            }}
-        >
-            <Row
-                style={{
-                    justifyContent: 'space-between',
-                    padding: SIZES.padding
-                }}
+        <Row>
+            <AnimatePresence>
+                {show && (
+                    <MotiView
+                        animate={{ translateX: SIZES.width * 0.1 }}
+                        exit={{ translateX: -SIZES.width * 0.1 }}
+                    >
+                        <TouchableOpacity onPress={() => onDelete(item.id!)}>
+                            <FontAwesome name="trash" size={20} color={'red'} />
+                        </TouchableOpacity>
+                    </MotiView>
+                )}
+            </AnimatePresence>
+            <MotiView
+                animate={{ translateX: show ? SIZES.width * 0.15 : 0 }}
+                transition={{ type: 'spring' }}
+                exit={{ translateX: 0 }}
             >
-                <View style={{ width: '90%' }}>
-                    <Text fontFamily="SFBold" fontSize={20}>
-                        {item.name}
-                    </Text>
+                <TouchableOpacity
+                    onPress={() => {
+                        if (
+                            user &&
+                            user.acceptedEULA &&
+                            user.acceptedEULA === true
+                        ) {
+                            router.push(`/(app)/(root)/(chats)/${item.id}`)
+                        } else {
+                            console.log('EULA not accepted')
+                            router.push('/eula')
+                        }
+                    }}
+                >
                     <Row
                         style={{
                             justifyContent: 'space-between',
-                            alignItems: 'center'
+                            padding: SIZES.padding
                         }}
                     >
-                        <Text fontSize={10} color="grey">
-                            created by:{' '}
-                            <Text color="grey" fontSize={12} capitalize>
-                                {item.user.name}
+                        <View style={{ width: '90%' }}>
+                            <Text fontFamily="SFBold" fontSize={20}>
+                                {item.name}
                             </Text>
-                        </Text>
-                        <Text fontFamily="QSLight" fontSize={12} color="grey">
-                            {moment(item.createdAt).fromNow()}
-                        </Text>
+                            <Row
+                                style={{
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center'
+                                }}
+                            >
+                                <Text fontSize={10} color="grey">
+                                    created by:{' '}
+                                    <Text color="grey" fontSize={12} capitalize>
+                                        {item.user.name}
+                                    </Text>
+                                </Text>
+                                <Text
+                                    fontFamily="QSLight"
+                                    fontSize={12}
+                                    color="grey"
+                                >
+                                    {moment(item.createdAt).fromNow()}
+                                </Text>
+                            </Row>
+                        </View>
+                        <FontAwesome
+                            name="chevron-right"
+                            size={20}
+                            color={iconColor}
+                        />
                     </Row>
-                </View>
-                <FontAwesome name="chevron-right" size={20} color={iconColor} />
-            </Row>
-        </TouchableOpacity>
+                </TouchableOpacity>
+            </MotiView>
+        </Row>
     )
 }
 

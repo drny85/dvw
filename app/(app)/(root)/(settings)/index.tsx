@@ -34,7 +34,6 @@ import Divider from '@/common/components/Divider'
 const Settings = () => {
     useAuth()
     const iconColor = useThemeColor('text')
-    const donateColor = useThemeColor('secondary')
     const deleteColor = useThemeColor('warning')
     const user = useAppSelector((state) => state.auth.user)
     const [updatePhone, setUpdatePhone] = React.useState('')
@@ -345,12 +344,12 @@ const Settings = () => {
                         alignSelf: 'center',
                         gap: SIZES.padding,
                         width: '100%',
-                        justifyContent: 'space-between',
+                        justifyContent: 'center',
                         alignItems: 'center',
                         paddingHorizontal: SIZES.base
                     }}
                 >
-                    <TouchableOpacity
+                    {/* <TouchableOpacity
                         style={[
                             {
                                 justifyContent: 'center',
@@ -376,10 +375,10 @@ const Settings = () => {
                                 color={'white'}
                             />
                             <Text fontFamily="SFBold" capitalize color="white">
-                                Donate
+                                Contribute
                             </Text>
                         </Row>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                     <Row>
                         <Text color="grey">Delete My Account</Text>
                         <TouchableOpacity

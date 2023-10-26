@@ -95,6 +95,7 @@ const ReferralDetails = () => {
                         onPress: () => {
                             if (!referral?.id) return
                             dispatch(deleteReferral(referral.id))
+                            router.back()
                         },
                         style: 'destructive'
                     }
@@ -108,7 +109,6 @@ const ReferralDetails = () => {
     const onEditPress = () => {
         dispatch(setEditingReferral(true))
         dispatch(setReferralState(referral))
-
         router.push('/referrals')
     }
 
@@ -129,7 +129,24 @@ const ReferralDetails = () => {
                 console.log(error)
             })
     }
+
     if (loading) return <Loading />
+    if (!referral)
+        return (
+            <Screen>
+                <Header title="Details" onPressBack={router.back} />
+                <View
+                    style={{
+                        flex: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }}
+                >
+                    <Text center>No Referral Found</Text>
+                    <Text center>Please try again later</Text>
+                </View>
+            </Screen>
+        )
     return (
         <Screen>
             <Header
@@ -248,10 +265,11 @@ const ReferralDetails = () => {
                     </AnimatePresence>
                     <View style={{ gap: SIZES.base, marginTop: SIZES.base }}>
                         <Text fontFamily="QSLight">
-                            {referral?.address.slice(
-                                0,
-                                referral.address.length - 5
-                            )}
+                            {referral?.address &&
+                                referral?.address.slice(
+                                    0,
+                                    referral.address.length - 5
+                                )}
                         </Text>
                         <Text fontFamily="QSLight">
                             Apt, Unit / FLR: {referral?.apt}
@@ -304,12 +322,12 @@ const ReferralDetails = () => {
                             {moment(referral?.moveIn).fromNow()}
                         </Text>
                     </Row>
-                    <Text>
+                    {/* <Text>
                         Status:{' '}
                         <Text fontFamily="QSLight">
                             {referral?.status.name}
                         </Text>
-                    </Text>
+                    </Text> */}
                     <Text>
                         Is Verizon Wireless :{' '}
                         <Text fontFamily="QSLight">
@@ -324,12 +342,22 @@ const ReferralDetails = () => {
                             </Text>
                         </Text>
                     )}
-                    <Text>
-                        Referred By:{' '}
-                        <Text fontFamily="QSLight">
-                            {referral?.referee?.name}
+                    {referral?.referee && (
+                        <Text>
+                            Referred By:{' '}
+                            <Text fontFamily="QSLight">
+                                {referral?.referee?.name}
+                            </Text>
                         </Text>
-                    </Text>
+                    )}
+                    {referral?.applicationId && (
+                        <Text>
+                            ACP:{' '}
+                            <Text fontFamily="QSLight">
+                                {referral?.applicationId}
+                            </Text>
+                        </Text>
+                    )}
                 </View>
                 {referral?.status.id === 'closed' && (
                     <View

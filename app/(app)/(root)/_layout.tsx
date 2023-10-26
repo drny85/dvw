@@ -20,7 +20,9 @@ function TabBarIcon(props: {
     return <FontAwesome {...props} />
 }
 
-LogBox.ignoreLogs(['Require cycle:'])
+LogBox.ignoreLogs([
+    'Require cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle.'
+])
 
 export const unstable_settings = {
     // Ensure any route can link back to `/`
@@ -31,7 +33,7 @@ export default function () {
     // Check if the user is logged in using Redux state
     useAuth()
     onFetchUpdateAsync()
-    const user = useAppSelector((state) => state.auth.user)
+    const { user } = useAppSelector((state) => state.auth)
     const tabBarActiveTintColor = useThemeColor('accent')
     const primaryColor = useThemeColor('background')
 
