@@ -16,11 +16,13 @@ import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import { deleteMessage, sendMessage } from '@/features/chats/chatsActions'
 import { Message } from '@/types'
+import { analyzeTextForToxicity } from '@/utils/moderateMessage'
 import { FontAwesome, Ionicons } from '@expo/vector-icons'
 import { router, useLocalSearchParams } from 'expo-router'
 import { AnimatePresence, MotiView } from 'moti'
 import React, { useRef, useState } from 'react'
 import {
+    Alert,
     FlatList,
     Image,
     Keyboard,
@@ -54,6 +56,15 @@ const Chat = () => {
         body?: string
     ) => {
         try {
+            const res = await analyzeTextForToxicity(message)
+            console.log('toxicity', res)
+            if (res) {
+                Alert.alert(
+                    'Please change your message as it might containt inappropiate words, be polite'
+                )
+                return
+            }
+
             const newMessage: Message = {
                 body: body || message,
                 createdAt: new Date().toISOString(),

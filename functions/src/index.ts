@@ -13,10 +13,12 @@ import {
     Feed,
     Message,
     NotificationData,
+    Referral,
     WirelessQuote
 } from './typing'
 import * as dotenv from 'dotenv'
 import { sendNotificationToAllUsers } from './sendNotificationToAllUsers'
+import IntroductionEmail, { IntroductionEmailProps } from './introductionEmail'
 dotenv.config()
 
 const resend = new Resend(process.env.RESEND_API_KEY!)
@@ -56,6 +58,59 @@ exports.deleleAccount = onCall<{ uid: string }>(async ({ data, auth }) => {
         return {
             error
         }
+    }
+})
+
+exports.sendIntroductionEmail = onCall<{
+    referralId: string
+}>(async ({ data, auth }): Promise<{ message: string | null }> => {
+    if (!auth) return { message: 'Not authorized' }
+    if (!data.referralId) return { message: 'No referral id' }
+    try {
+        const referralRef = await admin
+            .firestore()
+            .collection('referrals')
+            .doc(auth.uid)
+            .collection('referrals')
+            .doc(data.referralId)
+            .get()
+        if (!referralRef.exists) return { message: 'no referral found' }
+
+        const referral = referralRef.data() as Referral
+        if (referral.email_sent) return { message: 'Email already sent' }
+        const userData = await admin
+            .firestore()
+            .collection('users')
+            .doc(auth.uid)
+            .get()
+        if (!userData.exists) return { message: null }
+        const user = userData.data() as AppUser
+
+        const info: IntroductionEmailProps = {
+            myName: user.name,
+            myEmail: user.email!,
+            myNumber: user.phone!,
+            propertyName: referral.propertyName,
+            customerName: referral.name
+        }
+        const Template: typeof IntroductionEmail = IntroductionEmail
+        await resend.emails.send({
+            from: `${user.name} <melendez@robertdev.net>`,
+            to: [referral.email!],
+            subject: 'Your Dedicated Verizon Specialist',
+            cc: [user.email!],
+            text: '',
+            react: Template(info)
+        })
+        referralRef.ref.update({
+            email_sent: true,
+            email_sent_on: new Date().toISOString()
+        })
+
+        return { message: 'Email sent!' }
+    } catch (error) {
+        const err = error as Error
+        return { message: err.message }
     }
 })
 

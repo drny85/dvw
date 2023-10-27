@@ -14,7 +14,6 @@ import {
     WELCOME_BYOD_VALUE
 } from '@/constants'
 import { SIZES } from '@/constants/Sizes'
-import { setReferralState } from '@/features/referrals/referralsSlide'
 import { setSaleQuoteReferral } from '@/features/sales/salesSlide'
 import {
     setExpressAutoPay,
@@ -274,11 +273,11 @@ const MyPlan = () => {
         expressHasFios
     ])
 
-    useEffect(() => {
-        if (saleQuote) {
-            resetAllButAutoPay()
-        }
-    }, [saleQuote])
+    // useEffect(() => {
+    //     if (saleQuote) {
+    //         resetAllButAutoPay()
+    //     }
+    // }, [saleQuote])
 
     useEffect(() => {
         if (!bottomShetRef.current) return

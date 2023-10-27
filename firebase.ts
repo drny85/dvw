@@ -42,6 +42,12 @@ export const deleteUserAccount = (name: string) =>
 export const sendEmail = () =>
     httpsCallable<{ quoteId: string }>(functions, 'sendEmail')
 
+export const sendIntroductionEmail = () =>
+    httpsCallable<{ referralId: string }, { message: string | null }>(
+        functions,
+        'sendIntroductionEmail'
+    )
+
 //const auth = getAuth(authApp.app);
 // export const db = getFirestore(app);
 

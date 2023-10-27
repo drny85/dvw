@@ -95,6 +95,7 @@ const ReferralsScreen = () => {
         email_sent_on: null,
         date_entered: new Date().toISOString(),
         isVerizonWirelessCustomer: isVZW,
+        propertyName: '',
         mon: null,
         manager: null,
         package: {
@@ -148,6 +149,12 @@ const ReferralsScreen = () => {
             }
             if (referral.apt === '') {
                 Alert.alert('Please enter apt # or Floor #')
+                return
+            }
+            if (referral.propertyName === '') {
+                Alert.alert(
+                    'Please enter a name for this property \n if you dont know the name, please just enter the address. Ex 123 Main St'
+                )
                 return
             }
             if (moveIn === null) {
@@ -206,7 +213,7 @@ const ReferralsScreen = () => {
                         if (!referral.isVerizonWirelessCustomer) {
                             dispatch(setSaleQuoteReferral(referral))
                         }
-                        router.push('/congratulations')
+                        setShowCongratulations(true)
                     } else {
                         router.back()
                     }
@@ -220,6 +227,7 @@ const ReferralsScreen = () => {
                         setShowCongratulations(true)
                         //router.push('/(app)/(root)/(sales)/congratulations')
                     } else {
+                        dispatch(addReferral(referral))
                         router.back()
                     }
                 }
@@ -1248,6 +1256,27 @@ const SectionOne = (
                                     setReferral({
                                         ...referral,
                                         apt: text.toUpperCase()
+                                    })
+                                }
+                            />
+                        </View>
+                        <View>
+                            <Text
+                                fontFamily="SFBold"
+                                style={{
+                                    margin: SIZES.base
+                                }}
+                            >
+                                Property's Name
+                            </Text>
+                            <TextInput
+                                placeholder="Ex, The Avalon"
+                                value={referral.propertyName}
+                                autoCapitalize="words"
+                                onChangeText={(text) =>
+                                    setReferral({
+                                        ...referral!,
+                                        propertyName: text
                                     })
                                 }
                             />

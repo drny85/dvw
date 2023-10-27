@@ -31,8 +31,8 @@ const Congratulations = ({ setShow }: Props) => {
     const goToPlan = () => {
         console.log('Go to plan')
         setShow(false)
-        router.back()
         dispatch(setGoToPlanRoute(true))
+        router.back()
     }
     return (
         <Screen style={Styles.flex}>

@@ -152,6 +152,72 @@ export type NotificationData = {
     id: string
     type: NotificationType
 }
+
+export type Referral = {
+    id?: string
+    name: string
+    phone: string
+    email?: string
+    address: string
+    propertyName: string
+    apt?: string | null
+    package: {
+        home: { id: string; name: string } | null
+        internet: {
+            id: 'internet_300' | 'internet_500' | 'one_gig' | 'two_gig'
+            name: '300 Mbps' | '500 Mbps' | '1 Gigabit' | '2 Gigabit'
+        } | null
+        tv: {
+            id:
+                | 'tv_test_drive'
+                | 'tv_your'
+                | 'tv_more'
+                | 'tv_most'
+                | 'tv_mundo'
+                | 'tv_total'
+                | 'youtube'
+            name: string
+        } | null
+        wireless: {
+            id: 'wireless_referral' | 'wireless_direct'
+            name: string
+        } | null
+    } | null
+    order_date: string | null
+    due_date: string | null
+    referee: Helper | null
+    manager: Helper | null
+    status: STATUS
+    date_entered: string
+    userId: string | null
+    moveIn: string | null
+    addedBy: string
+    updated: string | null
+    isVerizonWirelessCustomer: boolean
+    isReferral: boolean
+    type: 'move' | 'new' | 'acp' | 'other'
+    applicationId: string | null
+    mon: string | null
+    email_sent: boolean
+    email_sent_on: string | null
+    comment: string | null
+    followUpOn: string | null
+}
+
+export interface Helper {
+    id?: string
+    name: string
+    phone: string
+    email: string
+    addedOn: string
+    userId: string
+    type: UserRole
+}
+export interface STATUS {
+    id: 'new' | 'in_progress' | 'closed' | 'not_sold'
+    name: 'New' | 'In Progress' | 'Closed' | 'Not Sold'
+}
+
 export type NotificationType =
     | 'quote'
     | 'feed'

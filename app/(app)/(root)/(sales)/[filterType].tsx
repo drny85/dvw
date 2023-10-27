@@ -4,6 +4,7 @@ import Screen from '@/common/components/Screen'
 import TextInput from '@/common/components/TextInput'
 import ReferralCard from '@/common/components/referrals/ReferralCard'
 import { useReferrals } from '@/common/hooks/referrals/useReferrals'
+import useAppSelector from '@/common/hooks/useAppSelector'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import { Referral, ReferralsFilterType } from '@/types'
@@ -13,13 +14,13 @@ import { FontAwesome } from '@expo/vector-icons'
 import { router, useLocalSearchParams } from 'expo-router'
 import { AnimatePresence, MotiView } from 'moti'
 import React, { useEffect, useState } from 'react'
-import { set } from 'react-hook-form'
 import { FlatList, ListRenderItem, TouchableOpacity } from 'react-native'
 
 const FilteredReferrals = () => {
     const { filterType } = useLocalSearchParams<{
         filterType: ReferralsFilterType
     }>()
+    const goToPlan = useAppSelector((s) => s.referrals.goToPlan)
     const color = useThemeColor('text')
     const bgColor = useThemeColor('background')
     const [searching, setSearching] = useState(false)
@@ -50,6 +51,12 @@ const FilteredReferrals = () => {
     const renderReferrals: ListRenderItem<Referral> = ({ item }) => {
         return <ReferralCard item={item} bgColor={bgColor} />
     }
+
+    // useEffect(() => {
+    //     if (goToPlan) {
+    //         router.back()
+    //     }
+    // }, [goToPlan])
 
     return (
         <Screen>

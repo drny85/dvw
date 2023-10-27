@@ -145,6 +145,7 @@ export type Referral = {
     phone: string
     email?: string
     address: string
+    propertyName: string
     apt?: string | null
     package: {
         home: { id: string; name: string } | null

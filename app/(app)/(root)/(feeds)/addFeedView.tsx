@@ -13,6 +13,7 @@ import { SIZES } from '@/constants/Sizes'
 import Styles from '@/constants/Styles'
 import { addFeed } from '@/features/feeds/feedsActions'
 import { Feed, FeedType, SaleType } from '@/types'
+import { analyzeTextForToxicity } from '@/utils/moderateMessage'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'expo-router'
 import { AnimatePresence, MotiView } from 'moti'
@@ -42,6 +43,11 @@ const AddFeedModal = () => {
     const [reviewFeed, setReviewFeed] = useState(false)
     const image = Math.floor(Math.random() * 9)
     const onSubmit = async (data: FormValues) => {
+        const res = await analyzeTextForToxicity(data.message)
+        if (res) {
+            Alert.alert('Message is not appropiate')
+            return
+        }
         const newFeed: Feed = {
             commentsCount: 0,
             createdAt: new Date().toISOString(),

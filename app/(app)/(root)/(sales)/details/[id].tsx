@@ -8,6 +8,7 @@ import TextInput from '@/common/components/TextInput'
 import View from '@/common/components/View'
 import { useReferral } from '@/common/hooks/referrals/useReferral'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
+import useAppSelector from '@/common/hooks/useAppSelector'
 import { schedulePushNotification } from '@/common/hooks/useNotification'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
@@ -20,6 +21,7 @@ import {
     setEditingReferral,
     setReferralState
 } from '@/features/referrals/referralsSlide'
+import { sendIntroductionEmail } from '@/firebase'
 import { Referral } from '@/types'
 import { FontAwesome } from '@expo/vector-icons'
 import * as Linking from 'expo-linking'
@@ -34,6 +36,7 @@ const ReferralDetails = () => {
     const { id } = useLocalSearchParams<{ id: string }>()
     const dispatch = useAppDispatch()
     const { loading, referral } = useReferral(id)
+    const goToPlan = useAppSelector((s) => s.referrals.goToPlan)
     const [editComment, setEditComment] = useState(false)
     const [showFollowUp, setShowFollowUp] = useState(false)
     const [followUp, setFollowUp] = useState(new Date())
@@ -42,6 +45,19 @@ const ReferralDetails = () => {
     const textColor = useThemeColor('text')
     const deleteColor = useThemeColor('warning')
     const placeholderColor = useThemeColor('placeholder')
+
+    const sendIntroEmail = useCallback(async () => {
+        try {
+            const func = sendIntroductionEmail()
+            const res = await func({
+                referralId: id
+            })
+
+            if (res.data.message) Alert.alert(res.data.message)
+        } catch (error) {
+            console.log(error)
+        }
+    }, [id])
 
     const handleFollowUp = useCallback(async () => {
         try {
@@ -115,7 +131,6 @@ const ReferralDetails = () => {
     const makeCall = () => {
         const number = referral?.phone.replace(/[^0-9]/g, '').trim()
         if (!number) return
-        console.log(number)
 
         Linking.canOpenURL(`tel:${number}`)
             .then((supported) => {
@@ -147,6 +162,7 @@ const ReferralDetails = () => {
                 </View>
             </Screen>
         )
+
     return (
         <Screen>
             <Header
@@ -278,10 +294,7 @@ const ReferralDetails = () => {
                             <Text fontFamily="QSLight">
                                 Phone: {referral?.phone}
                             </Text>
-                            <TouchableOpacity
-                                onPress={makeCall}
-                                style={{ marginRight: SIZES.padding }}
-                            >
+                            <TouchableOpacity onPress={makeCall}>
                                 <FontAwesome
                                     name="phone"
                                     size={22}
@@ -290,9 +303,38 @@ const ReferralDetails = () => {
                             </TouchableOpacity>
                         </Row>
                         {referral?.email && (
-                            <Text fontFamily="QSLight">
-                                Email: {referral?.email}
-                            </Text>
+                            <Row style={{ justifyContent: 'space-between' }}>
+                                <Text fontFamily="QSLight">
+                                    Email: {referral?.email}
+                                </Text>
+                                {!referral.email_sent && (
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            Alert.alert(
+                                                'Send Email',
+                                                'This will send an email introduction to the customer \n Would you like to send it?',
+                                                [
+                                                    {
+                                                        text: 'Cancel',
+                                                        style: 'cancel'
+                                                    },
+                                                    {
+                                                        text: 'Send',
+                                                        onPress: sendIntroEmail,
+                                                        style: 'destructive'
+                                                    }
+                                                ]
+                                            )
+                                        }}
+                                    >
+                                        <FontAwesome
+                                            name="envelope"
+                                            size={22}
+                                            color={textColor}
+                                        />
+                                    </TouchableOpacity>
+                                )}
+                            </Row>
                         )}
                         {referral?.followUpOn && (
                             <Text fontFamily="QSLight">
