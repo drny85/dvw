@@ -1,6 +1,6 @@
 // You need to install the 'node-fetch' package if you haven't already.
 
-const API_KEY = 'AIzaSyCFE5Dr0N39MZotCMpkxfeuE1fpdlUfAJA' // Replace with your API key
+const API_KEY = process.env.EXPO_PUBLIC_MODERATE // Replace with your API key
 const PERSPECTIVE_API_URL =
     'https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze'
 
@@ -36,7 +36,7 @@ export async function analyzeTextForToxicity(text: string): Promise<boolean> {
         let answer: boolean = false
         for (const key in result) {
             const score = result[key]
-            if (score >= 0.7) {
+            if (score >= 0.6) {
                 answer = true
                 break
             } else {

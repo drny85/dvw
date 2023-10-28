@@ -59,9 +59,7 @@ const Chat = () => {
             const res = await analyzeTextForToxicity(message)
             console.log('toxicity', res)
             if (res) {
-                Alert.alert(
-                    'Please change your message as it might containt inappropiate words, be polite'
-                )
+                Alert.alert('Message might not be appropriate')
                 return
             }
 
