@@ -1,4 +1,4 @@
-import { wirelessQuotesCollection } from '@/lib/collactions'
+import { wirelessQuotesCollection } from '@/lib/collections'
 import { WirelessQuote } from '@/types'
 import { onSnapshot, query, where } from 'firebase/firestore'
 import { useEffect, useState } from 'react'

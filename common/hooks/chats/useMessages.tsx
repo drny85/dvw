@@ -1,4 +1,4 @@
-import { messagesCollection } from '@/lib/collactions'
+import { messagesCollection } from '@/lib/collections'
 import { Message } from '@/types'
 import { onSnapshot, orderBy, query, where } from 'firebase/firestore'
 import { useEffect, useState } from 'react'

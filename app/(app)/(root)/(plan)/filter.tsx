@@ -117,21 +117,6 @@ const filter = () => {
                         </MotiView>
                     )}
                 </AnimatePresence>
-                <View
-                    style={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginTop: SIZES.padding * 2
-                    }}
-                >
-                    <TouchableOpacity
-                        onPress={() =>
-                            router.push('/(app)/(root)/(plan)/details/free')
-                        }
-                    >
-                        <Text fontFamily="SFBold">View Free Phones</Text>
-                    </TouchableOpacity>
-                </View>
 
                 <View
                     style={{

@@ -17,7 +17,7 @@ import { isEmailValid } from '@/utils/isEmailValid'
 import { isFullName } from '@/utils/isFullName'
 import Loading from '@/common/components/Loading'
 import { addDoc } from 'firebase/firestore'
-import { helpersCollection } from '@/lib/collactions'
+import { helpersCollection } from '@/lib/collections'
 
 const Person = () => {
     const { helper } = useLocalSearchParams<{ helper: UserRole }>()

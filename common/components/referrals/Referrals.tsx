@@ -201,23 +201,25 @@ const Referrals = () => {
                             />
                         </Row>
                     </View>
-                    <View
-                        style={{
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            width: '100%'
-                        }}
-                    >
-                        <Text center fontFamily="SFBold" fontSize={18}>
-                            Earnings WTD
-                        </Text>
-                        {renderPayoutInfo(
-                            animateInternetAmount,
-                            wtd,
-                            accent,
-                            name
-                        )}
-                    </View>
+                    {wtd.length > 0 && (
+                        <View
+                            style={{
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                width: '100%'
+                            }}
+                        >
+                            <Text center fontFamily="SFBold" fontSize={18}>
+                                Earnings WTD
+                            </Text>
+                            {renderPayoutInfo(
+                                animateInternetAmount,
+                                wtd,
+                                accent,
+                                name
+                            )}
+                        </View>
+                    )}
                 </ScrollView>
             )}
             {show && (

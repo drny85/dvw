@@ -154,28 +154,6 @@ exports.sendEmail = onCall<{ quoteId: string }>(
                 sent: true,
                 sentOn: new Date().toISOString()
             })
-            const emailsRef = admin
-                .firestore()
-                .collection('users')
-                .doc(auth.uid)
-                .collection('emails')
-            const emailsCount = await emailsRef.get()
-            if (
-                emailsCount.size >= 5 &&
-                user.email !== 'robert.melendez@drascosales.com'
-            ) {
-                return {
-                    message: 'Max emails reached. Please donate'
-                }
-            }
-
-            admin
-            emailsRef.add({
-                sentOn: new Date().toISOString(),
-                sentTo: quote.email,
-                subject: 'Wireless Quote',
-                quoteId: data.quoteId
-            })
 
             return {
                 message: 'Email sent'

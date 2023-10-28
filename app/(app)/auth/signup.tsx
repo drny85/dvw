@@ -17,7 +17,7 @@ import {
 } from 'firebase/auth'
 import { auth } from '@/firebase'
 import { doc, setDoc } from 'firebase/firestore'
-import { usersCollection } from '@/lib/collactions'
+import { usersCollection } from '@/lib/collections'
 import KeyboardScreen from '@/common/components/KeyboardScreen'
 import { FIREBASE_ERRORS } from '@/utils/firebaseErrorMessages'
 import { UserRole } from '@/features/auth/authSlice'

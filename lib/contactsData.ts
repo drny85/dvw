@@ -36,5 +36,9 @@ export const CONTACT_NUMBERS: ContactNumber[] = [
     {
         name: 'Wireless Customer Care',
         number: '1-800-922-0204'
+    },
+    {
+        name: 'AT&T Transfer PIN',
+        number: '*7678'
     }
 ]

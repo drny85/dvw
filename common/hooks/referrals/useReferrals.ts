@@ -1,4 +1,4 @@
-import { referralssCollection } from '@/lib/collactions'
+import { referralssCollection } from '@/lib/collections'
 import { Referral } from '@/types'
 import { onSnapshot } from 'firebase/firestore'
 import { useEffect, useState } from 'react'

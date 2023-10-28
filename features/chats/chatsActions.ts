@@ -1,5 +1,5 @@
 import { Chat, Message } from '@/types'
-import { chatsCollection, messagesCollection } from '@/lib/collactions'
+import { chatsCollection, messagesCollection } from '@/lib/collections'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { addDoc, deleteDoc, doc } from 'firebase/firestore'
 
