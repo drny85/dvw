@@ -25,7 +25,7 @@ const IntroductionEmail = ({
     myEmail,
     myNumber
 }: IntroductionEmailProps) => {
-    const previewText = `Your dedicated Verizon Specialist at ${propertyName}.`
+    const previewText = `Your dedicated Verizon Specialist at ${propertyName} at ${propertyName}.`
 
     return (
         <Html>
@@ -34,7 +34,9 @@ const IntroductionEmail = ({
             <Tailwind>
                 <Body className="bg-slate-100 mx-auto font-sans p-4 shadow-md m-2 rounded-md  items-center justify-center flex flex-col">
                     <Container className="text-lg">
-                        <Text className="text-lg">Hello {customerName},</Text>
+                        <Text className="text-lg">
+                            Hello {customerName.split(' ')[0]},
+                        </Text>
                         <Text className="text-lg">
                             This is {myName}, your dedicated Verizon
                             representative for {propertyName}. I wanted to

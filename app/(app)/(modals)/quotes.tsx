@@ -29,6 +29,7 @@ import { totalPerksCount } from '@/utils/perksCount'
 import { FontAwesome } from '@expo/vector-icons'
 import { router } from 'expo-router'
 import moment from 'moment'
+import Animated, { FadeOutLeft } from 'react-native-reanimated'
 import React from 'react'
 import {
     Alert,
@@ -38,9 +39,11 @@ import {
     StyleSheet,
     TouchableOpacity
 } from 'react-native'
+import useAppSelector from '@/common/hooks/useAppSelector'
 
 const MyQuotes = () => {
     const { loading, quotes } = useWirelessQuotes()
+    const { route } = useAppSelector((s) => s.settings)
     const bgColor = useThemeColor('background')
     const iconColor = useThemeColor('warning')
     const greyColor = useThemeColor('placeholder')
@@ -75,7 +78,7 @@ const MyQuotes = () => {
         dispatch(setExpressHasFios(quote.hasFios))
         dispatch(setLinesData(quote.lines))
         dispatch(setReviewModal('review'))
-        router.push('/(app)/(root)/(plan)/myPlan')
+        router.push('/(app)/(root)/(plan)')
     }
 
     const toggleQuoteStatus = async (q: WirelessQuote) => {
@@ -107,11 +110,12 @@ const MyQuotes = () => {
 
     const renderQuotes: ListRenderItem<WirelessQuote> = ({ index, item }) => {
         return (
-            <View
+            <Animated.View
+                exiting={FadeOutLeft}
                 style={[
                     Styles.boxShadow,
                     {
-                        backgroundColor: !item.sent ? bgColor : greyColor,
+                        backgroundColor: !item.sent ? bgColor : 'gray',
                         padding: SIZES.padding,
                         borderRadius: SIZES.radius
                     }
@@ -221,12 +225,12 @@ const MyQuotes = () => {
                 <View style={{ marginTop: SIZES.padding }}>
                     <Button
                         disabled={loadingQuote || item.sent}
-                        title="Send Quote"
+                        title={item.sent ? 'Sent' : 'Send Quote'}
                         color={loadingQuote ? greyColor : btnColor}
                         onPress={() => handleSendQuote(item.quoteId!)}
                     />
                 </View>
-            </View>
+            </Animated.View>
         )
     }
 
@@ -235,8 +239,19 @@ const MyQuotes = () => {
         <Screen>
             <Header
                 title={`My Quotes (${quotes.length})`}
-                onPressBack={router.back}
+                onPressBack={() => {
+                    if (route === 'myPlan') {
+                        router.push(`/(app)/(root)/(plan)`)
+                        return
+                    }
+                    if (router.canGoBack()) {
+                        router.back()
+                    } else {
+                        router.push('/(app)/(root)/(sales)')
+                    }
+                }}
             />
+
             <FlatList
                 data={quotes.sort((a, b) =>
                     b.createdAt.localeCompare(a.createdAt)

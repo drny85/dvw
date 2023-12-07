@@ -127,10 +127,12 @@ export type NotificationBody = {
     body: string
     data: NotificationData
 }
-export async function schedulePushNotification(values: NotificationBody) {
+export async function schedulePushNotification(
+    values: NotificationBody
+): Promise<boolean> {
     if (moment(values.date).diff(new Date(), 'seconds') < 1) {
         Alert.alert('select a time in the future')
-        return
+        return false
     }
     try {
         const noti = await Notifications.scheduleNotificationAsync({
@@ -145,7 +147,10 @@ export async function schedulePushNotification(values: NotificationBody) {
             trigger: { date: new Date(values.date) },
             identifier: 'reminder'
         })
+
+        return true
     } catch (error) {
         console.log('@Error at scheduleNotification', error)
+        return false
     }
 }

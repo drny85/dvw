@@ -18,12 +18,14 @@ import Divider from '../Divider'
 import Row from '../Row'
 import Text from '../Text'
 import View from '../View'
+import { useRouter } from 'expo-router'
 
 type Props = {
     showResetAll?: boolean
     onClickSave: () => void
 }
 const TotalView = ({ onClickSave, showResetAll }: Props) => {
+    const router = useRouter()
     const lines = useAppSelector((s) => s.wireless.lines)
     const dispatch = useAppDispatch()
 
@@ -219,24 +221,52 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
                 <Text fontFamily="SFHeavy" fontSize={22}>
                     Total
                 </Text>
+                <Text color="grey">
+                    {autoPayDiscount() === 0 ? 'w/o' : 'w/'} auto pay
+                </Text>
                 <Text fontFamily="SFHeavy" fontSize={22}>
                     ${total().toFixed(0)}
                 </Text>
             </RowView>
+            <Divider small />
             {showResetAll && (
-                <TouchableOpacity
-                    onPress={resetAll}
+                <Row
                     style={{
-                        // position: "absolute",
-                        bottom: SIZES.padding,
-                        alignSelf: 'center',
-                        marginTop: 30
+                        justifyContent: 'space-around',
+                        alignItems: 'center'
                     }}
                 >
-                    <Text fontFamily="SFBold" center color="warning">
-                        RESET ALL
-                    </Text>
-                </TouchableOpacity>
+                    <View
+                        style={{
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginTop: SIZES.padding * 2
+                        }}
+                    >
+                        <TouchableOpacity
+                            onPress={() =>
+                                router.push('/(app)/(modals)/quotes')
+                            }
+                        >
+                            <Text fontFamily="SFBold" color="grey">
+                                View Saved Quotes
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                    <TouchableOpacity
+                        onPress={resetAll}
+                        style={{
+                            // position: "absolute",
+
+                            alignSelf: 'center',
+                            marginTop: 30
+                        }}
+                    >
+                        <Text fontFamily="SFBold" center color="warning">
+                            RESET ALL
+                        </Text>
+                    </TouchableOpacity>
+                </Row>
             )}
         </View>
     )

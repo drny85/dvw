@@ -69,7 +69,7 @@ const Sales = () => {
     const totalSales = data.reduce((a, b) => a + b.numberOfLines, 0)
 
     const viewQuote = () => {
-        router.push('/(app)/(root)/(plan)/myquotes')
+        router.push('/(app)/(modals)/quotes')
     }
 
     const goalPercentage = (r: SalesRange) =>
@@ -349,7 +349,7 @@ const Sales = () => {
                     >
                         <Text fontFamily="SFBold">Monthly Goal {GOAL}</Text>
                         <Row style={{ gap: SIZES.padding }}>
-                            {['today', 'wtd', 'mtd', 'ytd'].map((r) => (
+                            {['today', 'wtd', 'mtd'].map((r) => (
                                 <View
                                     style={{
                                         justifyContent: 'center',
@@ -376,7 +376,9 @@ const Sales = () => {
                                             ? 'Weekly'
                                             : r === 'mtd'
                                             ? 'Monthly'
-                                            : 'Daily'}{' '}
+                                            : r === 'today'
+                                            ? 'Daily'
+                                            : ''}
                                         (
                                         {r === 'today'
                                             ? (GOAL / 30).toFixed(1)

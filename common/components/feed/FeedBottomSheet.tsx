@@ -10,8 +10,7 @@ import {
     BottomSheetBackdrop,
     BottomSheetBackdropProps,
     BottomSheetScrollView,
-    BottomSheetTextInput,
-    BottomSheetModalProvider
+    BottomSheetTextInput
 } from '@gorhom/bottom-sheet'
 import { AnimatePresence, MotiView } from 'moti'
 import React, { forwardRef, useCallback, useMemo } from 'react'

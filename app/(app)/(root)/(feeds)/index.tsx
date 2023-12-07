@@ -1,4 +1,3 @@
-import Eula from '@/common/components/Eula'
 import Header from '@/common/components/Header'
 import { Ionicon } from '@/common/components/Icon'
 import Loading from '@/common/components/Loading'
@@ -11,14 +10,14 @@ import { useFeeds } from '@/common/hooks/feeds/useFeeds'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
 import useAppSelector from '@/common/hooks/useAppSelector'
 import { SIZES } from '@/constants/Sizes'
-import { updateUser } from '@/features/auth/authActions'
+
 import { deleteFeed, updateFeed } from '@/features/feeds/feedsActions'
 
 import { Feed } from '@/types'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { router } from 'expo-router'
 import React, { useCallback, useRef, useState } from 'react'
-import { set } from 'react-hook-form'
+
 import { Button, FlatList, ListRenderItem, StyleSheet } from 'react-native'
 
 const Feeds = () => {

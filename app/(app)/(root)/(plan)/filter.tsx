@@ -117,22 +117,6 @@ const filter = () => {
                         </MotiView>
                     )}
                 </AnimatePresence>
-
-                <View
-                    style={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginTop: SIZES.padding * 2
-                    }}
-                >
-                    <TouchableOpacity
-                        onPress={() =>
-                            router.push('/(app)/(root)/(plan)/myquotes')
-                        }
-                    >
-                        <Text fontFamily="SFBold">View Saved Quotes</Text>
-                    </TouchableOpacity>
-                </View>
             </View>
         </Screen>
     )

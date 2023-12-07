@@ -18,6 +18,10 @@ import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 
+export const unstable_settings = {
+    initialRouteName: '(root)'
+}
+
 export default function () {
     const [stateLoaded, setStateLoaded] = useState(false)
     const [fontsLoaded] = useFonts(Fonts)
@@ -69,7 +73,12 @@ function RootLayout() {
                     navigationBarColor,
                     animation: 'slide_from_bottom'
                 }}
-            />
+            >
+                <Stack.Screen
+                    name="(modals)/quotes"
+                    options={{ presentation: 'modal' }}
+                />
+            </Stack>
         </ThemeProvider>
     )
 }

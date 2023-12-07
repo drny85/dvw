@@ -12,22 +12,8 @@ const PlanLaypout = () => {
             <Stack.Screen name="filter" options={{ presentation: 'modal' }} />
 
             <Stack.Screen
-                name="myPlan"
-                options={{
-                    presentation: 'fullScreenModal',
-                    headerShown: false
-                }}
-            />
-            <Stack.Screen
                 name="saveQuote"
                 options={{ presentation: 'modal' }}
-            />
-            <Stack.Screen
-                name="myquotes"
-                options={{
-                    presentation: 'fullScreenModal',
-                    headerShown: false
-                }}
             />
             <Stack.Screen
                 name="emailSent"

@@ -29,19 +29,26 @@ import { router, useLocalSearchParams } from 'expo-router'
 import moment from 'moment'
 import { AnimatePresence, MotiView } from 'moti'
 import React, { useCallback, useState } from 'react'
-import { Alert, StyleSheet, TouchableOpacity } from 'react-native'
+import {
+    ActivityIndicator,
+    Alert,
+    StyleSheet,
+    TouchableOpacity
+} from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 const ReferralDetails = () => {
     const { id } = useLocalSearchParams<{ id: string }>()
     const dispatch = useAppDispatch()
     const { loading, referral } = useReferral(id)
+    const [sendingEmail, setSendingEmail] = useState(false)
     const goToPlan = useAppSelector((s) => s.referrals.goToPlan)
     const [editComment, setEditComment] = useState(false)
     const [showFollowUp, setShowFollowUp] = useState(false)
     const [followUp, setFollowUp] = useState(new Date())
     const [newComment, setNewComment] = useState('')
     const bgColor = useThemeColor('background')
+    const bgDanger = useThemeColor('error')
     const textColor = useThemeColor('text')
     const deleteColor = useThemeColor('warning')
     const placeholderColor = useThemeColor('placeholder')
@@ -49,6 +56,7 @@ const ReferralDetails = () => {
     const sendIntroEmail = useCallback(async () => {
         try {
             const func = sendIntroductionEmail()
+            setSendingEmail(true)
             const res = await func({
                 referralId: id
             })
@@ -56,6 +64,8 @@ const ReferralDetails = () => {
             if (res.data.message) Alert.alert(res.data.message)
         } catch (error) {
             console.log(error)
+        } finally {
+            setSendingEmail(false)
         }
     }, [id])
 
@@ -211,11 +221,12 @@ const ReferralDetails = () => {
                 >
                     <Row
                         style={{
-                            justifyContent: 'space-evenly',
+                            justifyContent: 'space-between',
                             alignItems: 'center'
                         }}
                     >
-                        <Text center fontSize={20} fontFamily="SFBold">
+                        <Text />
+                        <Text center fontSize={22} fontFamily="SFBold">
                             {referral?.name}
                         </Text>
                         <TouchableOpacity
@@ -228,6 +239,11 @@ const ReferralDetails = () => {
                             />
                         </TouchableOpacity>
                     </Row>
+                    {!referral.propertyName.includes(referral.address) && (
+                        <Text fontSize={18} fontFamily="QSBold">
+                            Property: {referral.propertyName}
+                        </Text>
+                    )}
                     <AnimatePresence>
                         {showFollowUp && (
                             <MotiView
@@ -307,33 +323,42 @@ const ReferralDetails = () => {
                                 <Text fontFamily="QSLight">
                                     Email: {referral?.email}
                                 </Text>
-                                {!referral.email_sent && (
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            Alert.alert(
-                                                'Send Email',
-                                                'This will send an email introduction to the customer \n Would you like to send it?',
-                                                [
-                                                    {
-                                                        text: 'Cancel',
-                                                        style: 'cancel'
-                                                    },
-                                                    {
-                                                        text: 'Send',
-                                                        onPress: sendIntroEmail,
-                                                        style: 'destructive'
-                                                    }
-                                                ]
-                                            )
-                                        }}
-                                    >
-                                        <FontAwesome
-                                            name="envelope"
-                                            size={22}
-                                            color={textColor}
-                                        />
-                                    </TouchableOpacity>
+                                {sendingEmail && (
+                                    <ActivityIndicator
+                                        size="small"
+                                        color={textColor}
+                                    />
                                 )}
+                                {!referral.email_sent &&
+                                    referral.status.id !== 'not_sold' && (
+                                        <TouchableOpacity
+                                            disabled={sendingEmail}
+                                            onPress={() => {
+                                                Alert.alert(
+                                                    'Send Email',
+                                                    'This will send an email introduction to the customer \n Would you like to send it?',
+                                                    [
+                                                        {
+                                                            text: 'Cancel',
+                                                            style: 'cancel'
+                                                        },
+                                                        {
+                                                            text: 'Send',
+                                                            onPress:
+                                                                sendIntroEmail,
+                                                            style: 'destructive'
+                                                        }
+                                                    ]
+                                                )
+                                            }}
+                                        >
+                                            <FontAwesome
+                                                name="envelope"
+                                                size={22}
+                                                color={textColor}
+                                            />
+                                        </TouchableOpacity>
+                                    )}
                             </Row>
                         )}
                         {referral?.followUpOn && (
@@ -342,15 +367,34 @@ const ReferralDetails = () => {
                                 {moment(referral?.followUpOn).format('lll')}
                             </Text>
                         )}
+                        {referral?.email_sent && (
+                            <Text fontFamily="QSLight">
+                                Email Sent On:{' '}
+                                {moment(referral?.email_sent_on).format('lll')}
+                            </Text>
+                        )}
                     </View>
                 </View>
                 <View
                     style={[
                         Styles.boxShadow,
                         styles.container,
-                        { backgroundColor: bgColor }
+                        {
+                            backgroundColor:
+                                referral.status.name === 'Not Sold'
+                                    ? bgDanger
+                                    : bgColor
+                        }
                     ]}
                 >
+                    <Row style={{ justifyContent: 'space-between' }}>
+                        <Text>
+                            Status:{' '}
+                            <Text fontFamily="QSLight">
+                                {referral.status.name}
+                            </Text>
+                        </Text>
+                    </Row>
                     <Row style={{ justifyContent: 'space-between' }}>
                         <Text>
                             Move In:{' '}
@@ -387,7 +431,7 @@ const ReferralDetails = () => {
                     {referral?.referee && (
                         <Text>
                             Referred By:{' '}
-                            <Text fontFamily="QSLight">
+                            <Text capitalize fontFamily="QSLight">
                                 {referral?.referee?.name}
                             </Text>
                         </Text>

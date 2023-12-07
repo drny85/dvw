@@ -81,12 +81,14 @@ const SaveQuote = () => {
             `${moment(scheduledOn).format('lll')}`,
             [
                 {
-                    text: 'No',
-                    onPress: () => {
-                        return
-                    }
+                    text: 'No'
                 },
-                { text: 'Yes', onPress: onSaveQuote }
+                {
+                    text: 'Yes',
+                    onPress: async () => {
+                        await onSaveQuote()
+                    }
+                }
             ]
         )
     }
@@ -124,29 +126,19 @@ const SaveQuote = () => {
                 title: 'Quote Reminder',
                 data: { id: quote.id, type: 'reminder' }
             }
-            await schedulePushNotification(noti)
-            if (saleQuote) {
-                dispatch(setSaleQuoteReferral(null))
+            const saved = await schedulePushNotification(noti)
+
+            setLoading(false)
+            if (saved) {
+                if (saleQuote) {
+                    dispatch(setSaleQuoteReferral(null))
+                }
             }
             router.back()
         } catch (error) {
             console.log(error)
-        } finally {
             setLoading(false)
         }
-    }
-    if (loading) {
-        return (
-            <View
-                style={{
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                }}
-            >
-                <Text fontSize={20}>Saving Qoute</Text>
-            </View>
-        )
     }
 
     useEffect(() => {
