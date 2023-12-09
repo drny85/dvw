@@ -240,8 +240,8 @@ const ReferralDetails = () => {
                         </TouchableOpacity>
                     </Row>
                     {!referral.propertyName.includes(referral.address) && (
-                        <Text fontSize={18} fontFamily="QSBold">
-                            Property: {referral.propertyName}
+                        <Text color="grey" fontSize={16} fontFamily="QSBold">
+                            {referral.propertyName}
                         </Text>
                     )}
                     <AnimatePresence>

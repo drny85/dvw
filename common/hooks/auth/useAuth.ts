@@ -8,8 +8,9 @@ import useAppDispatch from '../useAppDispatch'
 export const useAuth = () => {
     const user = auth.currentUser
     const dispatch = useAppDispatch()
+
     useEffect(() => {
-        if (!user) {
+        if (!user || !user.emailVerified) {
             dispatch(setAppUser(null))
             return
         }

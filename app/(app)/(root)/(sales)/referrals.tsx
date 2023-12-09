@@ -10,7 +10,14 @@ import View from '@/common/components/View'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import Styles from '@/constants/Styles'
-import { ORDER_TYPE, Referral, SERVICE, services, statuses } from '@/types'
+import {
+    ORDER_TYPE,
+    Referral,
+    SERVICE,
+    STATUS,
+    services,
+    statuses
+} from '@/types'
 import { FontAwesome } from '@expo/vector-icons'
 import { router } from 'expo-router'
 import { AnimatePresence, MotiView } from 'moti'
@@ -223,7 +230,7 @@ const ReferralsScreen = () => {
                             dispatch(setSaleQuoteReferral(referral))
                         }
                         dispatch(addReferral(referral))
-                        console.log('HERE')
+
                         setShowCongratulations(true)
                         //router.push('/(app)/(root)/(sales)/congratulations')
                     } else {
@@ -251,6 +258,15 @@ const ReferralsScreen = () => {
             setIndex(0)
         }
     }, [editingReferral, editing])
+
+    useEffect(() => {
+        if (helpers.filter((h) => h.type === 'ce').length === 1) {
+            setReferral({
+                ...referral,
+                manager: helpers.filter((h) => h.type === 'ce')[0]
+            })
+        }
+    }, [helpers.length])
 
     if (loading) return <Loading />
 
@@ -460,10 +476,14 @@ const ReferralsScreen = () => {
 
             <DataPickerModal
                 title="Status"
-                onPress={(status) => {
+                onPress={(status: STATUS) => {
                     setReferral({
                         ...referral,
-                        status: status as typeof referral.status
+                        status: status,
+                        order_date:
+                            status.id === 'closed'
+                                ? new Date().toISOString()
+                                : null
                     })
                     setShowStatus(false)
                 }}

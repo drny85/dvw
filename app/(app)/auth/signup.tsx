@@ -24,6 +24,7 @@ import { UserRole } from '@/features/auth/authSlice'
 import { isValidDrascoEmail } from '@/utils/isEmailValid'
 import { isFullName } from '@/utils/isFullName'
 import { FontAwesome } from '@expo/vector-icons'
+import Loading from '@/common/components/Loading'
 
 const scheme = z
     .object({
@@ -48,6 +49,7 @@ const Signup = () => {
     const textColor = useThemeColor('text')
     const [showPassword, setShowPassword] = useState(false)
     const [role, setRole] = useState<UserRole>()
+    const [loading, setLoading] = useState(false)
     const onSubmit = async (data: FormValues) => {
         try {
             const { email, password, name } = data
@@ -62,17 +64,21 @@ const Signup = () => {
             if (!isFullName(name)) {
                 Alert.alert(
                     'Invalid Name',
-                    'Your name must be at least 6 characters'
+                    'Your name and last name combination must be at least 6 characters'
                 )
 
                 return
             }
+            setLoading(true)
             const { user } = await createUserWithEmailAndPassword(
                 auth,
                 email,
                 password
             )
-            if (!user) return
+            if (!user) {
+                setLoading(false)
+                return
+            }
             await sendEmailVerification(user)
             const docRef = doc(usersCollection, user.uid)
             await setDoc(docRef, {
@@ -86,10 +92,12 @@ const Signup = () => {
             })
 
             reset()
+            setLoading(false)
             router.replace('/auth/verify')
         } catch (error) {
             console.log('Error =>', error)
             const err = error as Error
+            setLoading(false)
             Alert.alert('Error', FIREBASE_ERRORS[err.message] || err.message)
         }
     }
@@ -97,8 +105,7 @@ const Signup = () => {
         control,
         handleSubmit,
         reset,
-
-        formState: { errors, isLoading, isSubmitting, isValid }
+        formState: { errors, isLoading, isSubmitting }
     } = useForm<FormValues>({
         resolver: zodResolver(scheme),
         defaultValues: {
@@ -107,6 +114,8 @@ const Signup = () => {
             confirmPassword: ''
         }
     })
+
+    if (loading) return <Loading />
 
     return (
         <Screen>

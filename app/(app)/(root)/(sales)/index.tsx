@@ -33,15 +33,14 @@ import Referrals from '@/common/components/referrals/Referrals'
 import ProgressCircle from '@/common/components/referrals/ProgressCircle'
 import ReferralCard from '@/common/components/referrals/ReferralCard'
 import { useReferrals } from '@/common/hooks/referrals/useReferrals'
-
-const GOAL = 70
+import { WIRELESS_MONTHLY_GOAL } from '@/constants'
 
 const getMonthlyGoal = (range: SalesRange): number => {
-    if (range === 'mtd') return GOAL
-    if (range === 'ytd') return GOAL * 12
-    if (range === 'wtd') return GOAL / 4
-    if (range === 'all') return GOAL * 7
-    if (range === 'today') return GOAL / 30
+    if (range === 'mtd') return WIRELESS_MONTHLY_GOAL
+    if (range === 'ytd') return WIRELESS_MONTHLY_GOAL * 12
+    if (range === 'wtd') return WIRELESS_MONTHLY_GOAL / 4
+    if (range === 'all') return WIRELESS_MONTHLY_GOAL * 7
+    if (range === 'today') return WIRELESS_MONTHLY_GOAL / 30
     return 0
 }
 
@@ -80,7 +79,9 @@ const Sales = () => {
     )
 
     const todayGoal = Math.round(
-        (today.reduce((a, b) => a + b.numberOfLines, 0) / (GOAL / 30)) * 100
+        (today.reduce((a, b) => a + b.numberOfLines, 0) /
+            (WIRELESS_MONTHLY_GOAL / 30)) *
+            100
     )
 
     const renderSales: ListRenderItem<SaleData> = ({ item }) => {
@@ -347,7 +348,9 @@ const Sales = () => {
                             marginBottom: SIZES.base
                         }}
                     >
-                        <Text fontFamily="SFBold">Monthly Goal {GOAL}</Text>
+                        <Text fontFamily="SFBold">
+                            Monthly Goal {WIRELESS_MONTHLY_GOAL}
+                        </Text>
                         <Row style={{ gap: SIZES.padding }}>
                             {['today', 'wtd', 'mtd'].map((r) => (
                                 <View
@@ -381,7 +384,9 @@ const Sales = () => {
                                             : ''}
                                         (
                                         {r === 'today'
-                                            ? (GOAL / 30).toFixed(1)
+                                            ? (
+                                                  WIRELESS_MONTHLY_GOAL / 30
+                                              ).toFixed(1)
                                             : Math.ceil(
                                                   getMonthlyGoal(
                                                       r as SalesRange

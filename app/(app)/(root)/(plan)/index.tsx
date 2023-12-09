@@ -282,7 +282,6 @@ const MyPlan = () => {
 
     useEffect(() => {
         if (!bottomShetRef.current) return
-
         const timer = setTimeout(() => {
             if (lines.length === 0) {
                 bottomShetRef.current?.close()
@@ -352,7 +351,6 @@ const MyPlan = () => {
                 />
             </ScrollView>
             <TotalContainer ref={bottomShetRef} />
-
             <AnimatePresence>
                 {lines.length === 0 && (
                     <MotiView

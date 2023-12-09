@@ -1,11 +1,9 @@
-import Loading from '@/common/components/Loading'
 import Screen from '@/common/components/Screen'
 import Text from '@/common/components/Text'
 import TextInput from '@/common/components/TextInput'
 import ThemeSwitcher from '@/common/components/ThemeSwitcher'
 import View from '@/common/components/View'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
-import useAppSelector from '@/common/hooks/useAppSelector'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import Styles from '@/constants/Styles'
@@ -27,7 +25,7 @@ const Login = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false)
-    const loading = useAppSelector((s) => s.auth.loading)
+
     const dispatch = useAppDispatch()
     const btnColor = useThemeColor('accent')
     const textColor = useThemeColor('text')
@@ -50,8 +48,15 @@ const Login = () => {
                 email,
                 password
             )
-            console.log(user.email)
+            console.log(user.email, user.emailVerified)
             if (!user) return
+            if (user && !user.emailVerified) {
+                Alert.alert(
+                    'Please verify your email',
+                    'There is an account with this email but it has not been verified. \n Please check your inbox and spam folder'
+                )
+                return
+            }
             dispatch(
                 getUser({ userId: user.uid, isVerified: user.emailVerified })
             )
@@ -63,7 +68,7 @@ const Login = () => {
         }
     }
 
-    if (loading) return <Loading />
+    //if (loading) return <Loading />
     return (
         <Screen style={Styles.flex}>
             <ThemeSwitcher small />
@@ -108,9 +113,15 @@ const Login = () => {
                 </View>
 
                 <TouchableOpacity
-                    style={[styles.btn, { backgroundColor: btnColor }]}
+                    style={[
+                        styles.btn,
+                        {
+                            backgroundColor: btnColor
+                            //opacity: disabled ? 0.5 : 1
+                        }
+                    ]}
                     onPress={handleLogin}
-                    disabled={!email || !password || loading}
+                    // disabled={disabled}
                 >
                     <Text center fontSize={24} fontFamily="SFBold">
                         Login
@@ -158,7 +169,7 @@ const styles = StyleSheet.create({
     btn: {
         borderRadius: SIZES.radius * 3,
         paddingHorizontal: SIZES.padding * 4,
-        paddingVertical: SIZES.padding,
+        paddingVertical: SIZES.padding * 0.8,
         justifyContent: 'center',
         alignItems: 'center'
     },

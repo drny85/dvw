@@ -14,21 +14,22 @@ export default function () {
     const loggedIn = useAppSelector((state) => state.auth.user)
     useNotifications()
     const dispatch = useAppDispatch()
-    const unbsucribed = onAuthStateChanged(auth, async (user) => {
-        if (!user) {
-            dispatch(setAppUser(null))
 
-            return
-        }
-
-        dispatch(getUser({ userId: user.uid, isVerified: user.emailVerified }))
-    })
     useEffect(() => {
-        return () => {
-            unbsucribed()
-        }
+        return onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                dispatch(setAppUser(null))
+
+                return
+            }
+
+            dispatch(
+                getUser({ userId: user.uid, isVerified: user.emailVerified })
+            )
+        })
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [loggedIn])
 
     // If the user is logged in, redirect to the home page
     if (loggedIn && loggedIn.emailVerified) {

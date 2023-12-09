@@ -62,7 +62,6 @@ const Metrics = () => {
     useEffect(() => {
         setData(wtd)
     }, [wtd.length])
-    console.log(loading, loadingRefs)
 
     if (loading || loadingRefs) return <Loading />
 

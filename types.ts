@@ -220,8 +220,8 @@ export const services = [
         internet: [
             { id: 'internet_300', name: '300 Mbps' },
             { id: 'internet_500', name: '500 Mbps' },
-            { id: 'one-gig', name: '1 Gigabit' },
-            { id: 'two-gig', name: '2 Gigabit' }
+            { id: 'one_gig', name: '1 Gigabit' },
+            { id: 'two_gig', name: '2 Gigabit' }
         ]
     },
     {

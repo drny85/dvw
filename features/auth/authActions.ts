@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { AppUser, setAppUser } from './authSlice'
+import { AppUser } from './authSlice'
 
 import { auth } from '@/firebase'
 import { RootState } from '@/store/configureStore'
@@ -21,6 +21,7 @@ export const getUser = createAsyncThunk(
             const appUser: AppUser = {
                 id: userData?.id!,
                 email: userData?.email!,
+                acceptedEULA: userData?.acceptedEULA || false,
                 role: userData?.role,
                 emailVerified: values.isVerified,
                 name: userData?.name || '',
