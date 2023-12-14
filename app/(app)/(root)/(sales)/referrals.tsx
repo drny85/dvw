@@ -1,6 +1,6 @@
 import Screen from '@/common/components/Screen'
 import Text from '@/common/components/Text'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Alert, TextInput as Input, Modal, StyleSheet } from 'react-native'
 
 import ButtonRadio from '@/common/components/RadioButton'
@@ -54,12 +54,12 @@ import Congratulations from '@/common/components/referrals/Congratulations'
 const GOOGLE_KEY = process.env.EXPO_PUBLIC_GOOGLE_KEY as string
 
 const ReferralsScreen = () => {
+    const dispatch = useAppDispatch()
     const user = useAppSelector((s) => s.auth.user)
     const { referral: editingReferral, editing } = useAppSelector(
         (s) => s.referrals
     )
 
-    const dispatch = useAppDispatch()
     const { loading, helpers } = useHelpers()
     const scrollViewRef = useRef<KeyboardAwareScrollView>(null)
     const [index, setIndex] = React.useState(0)

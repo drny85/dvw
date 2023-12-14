@@ -14,7 +14,6 @@ import {
     WELCOME_BYOD_VALUE
 } from '@/constants'
 import { SIZES } from '@/constants/Sizes'
-import { setSaleQuoteReferral } from '@/features/sales/salesSlide'
 import { setReturnRoute } from '@/features/settings/settingsSlice'
 import {
     setExpressAutoPay,
@@ -30,13 +29,14 @@ import BottomSheet from '@gorhom/bottom-sheet'
 import { router } from 'expo-router'
 import { AnimatePresence, MotiView } from 'moti'
 
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 
 import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
 import uuid from 'react-native-uuid'
 
 const MyPlan = () => {
     const iconColor = useThemeColor('text')
+    const saleQuote = useAppSelector((s) => s.sales.saleQuote)
     const dispatch = useAppDispatch()
     const bottomShetRef = useRef<BottomSheet>(null)
     const lines = useAppSelector((s) => s.wireless.lines)
@@ -44,8 +44,7 @@ const MyPlan = () => {
         expressAutoPay,
         expressHasFios,
         expressFirstResponder,
-        expressInternet,
-        reviewModal
+        expressInternet
     } = useAppSelector((state) => state.wireless)
 
     const deleteLine = (id: string) => {
@@ -274,11 +273,15 @@ const MyPlan = () => {
         expressHasFios
     ])
 
-    // useEffect(() => {
-    //     if (saleQuote) {
-    //         resetAllButAutoPay()
-    //     }
-    // }, [saleQuote])
+    useEffect(() => {
+        if (saleQuote) {
+            resetAllButAutoPay()
+        }
+
+        return () => {
+            console.log('Leaving plan')
+        }
+    }, [saleQuote])
 
     useEffect(() => {
         if (!bottomShetRef.current) return

@@ -7,7 +7,6 @@ import Text from '@/common/components/Text'
 import TextInput from '@/common/components/TextInput'
 import View from '@/common/components/View'
 import MessageRow from '@/common/components/chats/MessageRow'
-import UploadButton from '@/common/components/chats/UploadPictuteButton'
 import { useChat } from '@/common/hooks/chats/useChat'
 import { useMessages } from '@/common/hooks/chats/useMessages'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
@@ -24,11 +23,9 @@ import React, { useRef, useState } from 'react'
 import {
     Alert,
     FlatList,
-    Image,
     Keyboard,
     KeyboardAvoidingView,
     ListRenderItem,
-    Modal,
     Platform,
     StyleSheet,
     TouchableOpacity,
@@ -39,7 +36,6 @@ const Chat = () => {
     const flatListRef = useRef<FlatList>(null)
     const { chatId } = useLocalSearchParams<{ chatId: string }>()
     const [opened, setOpened] = useState<string | null>(null)
-    const [previewImage, setPreviewImage] = useState<string | null>(null)
     let rowRefs = new Map()
     const disabled = useAppSelector((s) => s.chats.loading)
     const user = useAppSelector((s) => s.auth.user)
@@ -51,10 +47,7 @@ const Chat = () => {
     const iconColor = useThemeColor('text')
     const dispatch = useAppDispatch()
 
-    const handleSendMessage = async (
-        messageType: 'text' | 'image',
-        body?: string
-    ) => {
+    const handleSendMessage = async (body?: string) => {
         try {
             const res = await analyzeTextForToxicity(message)
             console.log('toxicity', res)
@@ -70,7 +63,6 @@ const Chat = () => {
                 isReply: isReply,
                 reply: isReply && replyMessage ? replyMessage : null,
                 sender: user!,
-                type: messageType,
                 storagePath: null
             }
             dispatch(sendMessage(newMessage))
@@ -145,12 +137,7 @@ const Chat = () => {
                         })
                     }}
                 >
-                    <MessageRow
-                        item={item}
-                        onImagePress={(uri) => {
-                            setPreviewImage(uri)
-                        }}
-                    />
+                    <MessageRow item={item} />
                 </SwipeableItem>
             </MotiView>
         )
@@ -271,23 +258,13 @@ const Chat = () => {
                                     justifyContent: 'space-between',
                                     width: '100%',
                                     gap: SIZES.padding,
-
                                     marginVertical: 10,
-
                                     paddingHorizontal: SIZES.padding
                                 }}
                             >
-                                <UploadButton
-                                    chatId={chatId}
-                                    onImageUpload={(url) => {
-                                        if (url) {
-                                            handleSendMessage('image', url)
-                                        }
-                                    }}
-                                />
                                 <View
                                     style={{
-                                        width: '80%',
+                                        width: '90%',
                                         alignItems: 'center',
                                         justifyContent: 'center'
                                     }}
@@ -299,7 +276,7 @@ const Chat = () => {
                                             color: '#212121',
                                             width: '100%',
                                             borderRadius: SIZES.radius * 2,
-                                            minHeight: 46,
+                                            minHeight: 45,
                                             paddingVertical: 8,
                                             alignItems: 'center'
                                         }}
@@ -312,14 +289,14 @@ const Chat = () => {
                                         isMultiline={true}
                                         value={message}
                                         onSubmitEditing={() =>
-                                            handleSendMessage('text')
+                                            handleSendMessage(message)
                                         }
                                         onChangeText={setMessage}
                                     />
                                 </View>
                                 <TouchableOpacity
                                     disabled={disabled || message.length < 2}
-                                    onPress={() => handleSendMessage('text')}
+                                    onPress={() => handleSendMessage(message)}
                                 >
                                     <Ionicons
                                         name="ios-send"
@@ -336,26 +313,6 @@ const Chat = () => {
                     </>
                 </TouchableWithoutFeedback>
             </KeyboardAvoidingView>
-            <Modal
-                presentationStyle="fullScreen"
-                visible={previewImage !== null}
-            >
-                <Screen>
-                    <Header
-                        title="Preview"
-                        onPressBack={() => {
-                            setPreviewImage(null)
-                        }}
-                    />
-                    <View style={{ flex: 1 }}>
-                        <Image
-                            source={{ uri: previewImage! }}
-                            style={{ flex: 1, width: '100%', height: '100%' }}
-                            resizeMode="contain"
-                        />
-                    </View>
-                </Screen>
-            </Modal>
         </Screen>
     )
 }

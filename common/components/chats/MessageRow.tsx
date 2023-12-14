@@ -1,4 +1,4 @@
-import { Image, StyleSheet, TouchableOpacity } from 'react-native'
+import { Image, StyleSheet } from 'react-native'
 import React from 'react'
 import Row from '../Row'
 import { Message } from '@/types'
@@ -11,10 +11,9 @@ import moment from 'moment'
 
 type Props = {
     item: Message
-    onImagePress?: (imageUrl: string) => void
 }
 
-const MessageRow = ({ item, onImagePress }: Props) => {
+const MessageRow = ({ item }: Props) => {
     const user = useAppSelector((s) => s.auth.user)
     const receiverColor = useThemeColor('grey')
     const bgColor = useThemeColor('background')
@@ -84,26 +83,11 @@ const MessageRow = ({ item, onImagePress }: Props) => {
                         </Text>
                     </View>
                 )}
-                {!item.isReply && item.type === 'text' && (
-                    <Text fontSize={16} color={'white'}>
-                        {item.body}
-                    </Text>
-                )}
-                {item.type === 'image' && (
-                    <TouchableOpacity
-                        onPress={() => onImagePress && onImagePress(item.body)}
-                    >
-                        <Image
-                            source={{ uri: item.body }}
-                            style={{
-                                width: '100%',
-                                height: SIZES.height * 0.2,
-                                resizeMode: 'contain',
-                                borderRadius: SIZES.radius
-                            }}
-                        />
-                    </TouchableOpacity>
-                )}
+
+                <Text fontSize={16} color={'white'}>
+                    {item.body}
+                </Text>
+
                 <View style={styles.timestamp}>
                     <Text fontSize={10} color="white">
                         {moment(item.createdAt).format('lll')}

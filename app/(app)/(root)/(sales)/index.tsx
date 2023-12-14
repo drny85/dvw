@@ -56,6 +56,7 @@ const Sales = () => {
     )
     const [data, setData] = useState<SaleData[]>([])
     const range = useAppSelector((s) => s.sales.range)
+    const saleQoute = useAppSelector((s) => s.sales.saleQuote)
     const [expand, setExpand] = useState<boolean>(false)
     const [saleId, setSaleId] = useState<string>()
     const [followUps, setFollowUps] = useState<WirelessQuote[]>([])
@@ -180,6 +181,12 @@ const Sales = () => {
             )
         )
     }, [quotes.length])
+
+    useEffect(() => {
+        if (saleQoute) {
+            router.push('/(app)/(root)/(plan)')
+        }
+    }, [])
 
     if (loading || loadingQoutes || loadingReferrals) return <Loading />
 

@@ -25,7 +25,7 @@ const Referrals = () => {
     const accent = useThemeColor('accent')
     const dispatch = useAppDispatch()
     const user = useAppSelector((s) => s.auth.user)
-    const goToPlan = useAppSelector((s) => s.referrals.goToPlan)
+
     const name = user?.name.split(' ')[0] ?? ''
     const [animateInternetAmount, setAnimateInternetAmount] = useState(0)
     const managers = helpers.filter((helper) => helper.type === 'ce')
@@ -50,15 +50,6 @@ const Referrals = () => {
             clearTimeout(timer)
         }
     }, [internetAmount])
-
-    useEffect(() => {
-        if (goToPlan) {
-            router.push('/(app)/(root)/(plan)/myPlan')
-        }
-        return () => {
-            dispatch(setGoToPlanRoute(false))
-        }
-    }, [goToPlan])
 
     if (loading || ld) return <Loading />
 

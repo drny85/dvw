@@ -32,6 +32,7 @@ const Congratulations = ({ setShow }: Props) => {
         console.log('Go to plan')
         setShow(false)
         dispatch(setGoToPlanRoute(true))
+        // router.push('/(app)/(root)/(plan)')
         router.back()
     }
     return (

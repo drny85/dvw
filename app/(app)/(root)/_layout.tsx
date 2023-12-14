@@ -11,7 +11,6 @@ import { useAuth } from '@/common/hooks/auth/useAuth'
 import React from 'react'
 import { LogBox } from 'react-native'
 import { onFetchUpdateAsync } from '@/utils/checkUpdates'
-import { auth } from '@/firebase'
 
 function TabBarIcon(props: {
     name: React.ComponentProps<typeof FontAwesome>['name']
@@ -32,15 +31,17 @@ export const unstable_settings = {
 
 export default function () {
     // Check if the user is logged in using Redux state
-    useAuth()
+    const { loading } = useAuth()
     onFetchUpdateAsync()
 
-    const { user } = useAppSelector((state) => state.auth)
+    const { user, loading: ld } = useAppSelector((state) => state.auth)
     const tabBarActiveTintColor = useThemeColor('accent')
     const primaryColor = useThemeColor('background')
 
-    if (!user || !user.emailVerified) {
-        console.log('Redirect to auth')
+    if (loading || ld) return null
+
+    if ((!user || !user.emailVerified) && !loading) {
+        console.log('Redirect to auth from app/layout')
         return <Redirect href={'/(app)/auth'} />
     }
 

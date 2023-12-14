@@ -29,7 +29,7 @@ export default function () {
         })
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [loggedIn])
+    }, [])
 
     // If the user is logged in, redirect to the home page
     if (loggedIn && loggedIn.emailVerified) {

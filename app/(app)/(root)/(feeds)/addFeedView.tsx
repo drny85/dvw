@@ -18,7 +18,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'expo-router'
 import { AnimatePresence, MotiView } from 'moti'
 import React, { useState } from 'react'
-import { Controller, set, useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { Alert, Button, TouchableOpacity } from 'react-native'
 import { z } from 'zod'
 
@@ -44,7 +44,9 @@ const AddFeedModal = () => {
     const image = Math.floor(Math.random() * 9)
     const onSubmit = async (data: FormValues) => {
         const res = await analyzeTextForToxicity(data.message)
-        if (res) {
+        const titleCkeck = await analyzeTextForToxicity(data.title)
+
+        if (res || titleCkeck) {
             Alert.alert('Message is not appropiate')
             return
         }

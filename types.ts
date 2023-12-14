@@ -120,7 +120,6 @@ export type Message = {
     chatId: string
     isReply: boolean
     sender: AppUser
-    type: 'text' | 'image'
     storagePath: string | null
 }
 
