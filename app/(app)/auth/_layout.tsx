@@ -1,4 +1,5 @@
 // Import necessary modules and hooks
+import { useAuth } from '@/common/hooks/auth/useAuth'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
 import useAppSelector from '@/common/hooks/useAppSelector'
 import useNotifications from '@/common/hooks/useNotification'
@@ -14,6 +15,7 @@ export default function () {
     const loggedIn = useAppSelector((state) => state.auth.user)
     useNotifications()
     const dispatch = useAppDispatch()
+    useAuth()
 
     useEffect(() => {
         return onAuthStateChanged(auth, async (user) => {

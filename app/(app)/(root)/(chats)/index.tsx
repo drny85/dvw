@@ -21,6 +21,7 @@ const Chats = () => {
     const iconColor = useThemeColor('text')
     const dispatch = useAppDispatch()
     const user = useAppSelector((s) => s.auth.user)
+
     const { chats, loading } = useChats()
     const [opened, setOpened] = useState<string | null>(null)
     const [showDelete, setShowDelete] = useState<boolean>(false)

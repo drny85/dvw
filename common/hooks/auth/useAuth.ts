@@ -4,9 +4,11 @@ import { usersCollection } from '@/lib/collections'
 import { doc, onSnapshot } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import useAppDispatch from '../useAppDispatch'
+import useAppSelector from '../useAppSelector'
 
 export const useAuth = () => {
     const user = auth.currentUser
+
     const dispatch = useAppDispatch()
     const [loading, setLoading] = useState(false)
 
@@ -25,7 +27,7 @@ export const useAuth = () => {
             )
             setLoading(false)
         })
-        return () => sub()
+        return sub
     }, [user])
 
     return { loading }

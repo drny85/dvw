@@ -26,7 +26,7 @@ import {
     updateComment
 } from '@/features/comments/commentActions'
 import { useComments } from '@/common/hooks/comments/useComments'
-import Screen from '../Screen'
+import { analyzeTextForToxicity } from '@/utils/moderateMessage'
 
 type Props = {
     feedId: string
@@ -58,9 +58,15 @@ const FeedBottomSheet = forwardRef(
             }
         }
 
-        const onPressCommentSend = () => {
+        const onPressCommentSend = async () => {
             if (comment.length < 2) {
                 Alert.alert('Comment must be at least 2 characters long')
+                return
+            }
+
+            const noGood = await analyzeTextForToxicity(comment)
+            if (noGood) {
+                Alert.alert('Comment contains inappropriate content')
                 return
             }
 
@@ -78,8 +84,13 @@ const FeedBottomSheet = forwardRef(
             setComment('')
         }
 
-        const onPressReplySend = () => {
+        const onPressReplySend = async () => {
             if (replying) {
+                const noGood = await analyzeTextForToxicity(comment)
+                if (noGood) {
+                    Alert.alert('Comment contains inappropriate content')
+                    return
+                }
                 const newComment: Comment = {
                     content: comment,
                     createdAt: new Date().toISOString(),

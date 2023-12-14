@@ -325,7 +325,7 @@ const AddFeedModal = () => {
                                                     }
                                                 }) => (
                                                     <TextInput
-                                                        placeholder="A message for your feed"
+                                                        placeholder="A message for your post"
                                                         onBlur={() => {
                                                             onBlur()
                                                         }}
