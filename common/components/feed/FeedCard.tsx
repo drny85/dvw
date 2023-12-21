@@ -9,6 +9,7 @@ import React from 'react'
 import {
     Image,
     ImageBackground,
+    Pressable,
     StyleSheet,
     TouchableOpacity
 } from 'react-native'
@@ -18,7 +19,10 @@ import Text from '../Text'
 import View from '../View'
 import ActionView from './ActionView'
 import FeedSkeleton from './FeedSkeleton'
-
+import { MaterialIcons } from '@expo/vector-icons'
+import Row from '../Row'
+import { updateUser } from '@/features/auth/authActions'
+import useAppDispatch from '@/common/hooks/useAppDispatch'
 type Props = {
     feed: Feed
 
@@ -34,16 +38,28 @@ const FeedCard = ({
     onDeletePress
 }: Props) => {
     const bgColor = useThemeColor('primary')
+    const dispatch = useAppDispatch()
     const user = useAppSelector((s) => s.auth.user)
     const isMe = feed.user.id === user?.id
     const deleteColor = useThemeColor('warning')
-    const editColor = useThemeColor('button')
     const [viewMore, setViewMore] = React.useState(false)
     const [pressAction, setPressAction] = React.useState(false)
     const { comments, loading } = useComments(feed.id!)
     const { value } = useDimensions()
     const toogleViewMore = () => {
         setViewMore(!viewMore)
+    }
+
+    const blockUser = async () => {
+        try {
+            const blockedUsers = user?.blockedUsers
+                ? [...user.blockedUsers, feed.user.id]
+                : [feed.user.id]
+            dispatch(updateUser({ ...user!, blockedUsers: blockedUsers }))
+            setPressAction(false)
+        } catch (error) {
+            console.log('Error blocking user', error)
+        }
     }
 
     // Generate a random phone number
@@ -173,7 +189,11 @@ const FeedCard = ({
                         }}
                     >
                         <Image
-                            style={{ height: 50, width: 50, borderRadius: 25 }}
+                            style={{
+                                height: 50,
+                                width: 50,
+                                borderRadius: 25
+                            }}
                             source={
                                 feed.user.image
                                     ? { uri: feed.user.image }
@@ -184,22 +204,17 @@ const FeedCard = ({
                             {feed.user.name}
                         </Text>
                     </View>
-                    {isMe && (
-                        <TouchableOpacity
-                            style={{ marginRight: SIZES.padding }}
-                            onPress={() => {
-                                setPressAction(!pressAction)
-                            }}
-                        >
-                            <Text
-                                color="white"
-                                fontSize={26}
-                                fontFamily="SFBold"
-                            >
-                                ...
-                            </Text>
-                        </TouchableOpacity>
-                    )}
+
+                    <TouchableOpacity
+                        style={{ marginRight: SIZES.padding }}
+                        onPress={() => {
+                            setPressAction(!pressAction)
+                        }}
+                    >
+                        <Text color="white" fontSize={26} fontFamily="SFBold">
+                            ...
+                        </Text>
+                    </TouchableOpacity>
                 </View>
 
                 <AnimatePresence>
@@ -235,18 +250,32 @@ const FeedCard = ({
                                     gap: SIZES.padding * 2
                                 }}
                             >
-                                <TouchableOpacity
-                                    onPress={() => onDeletePress(feed.id!)}
-                                >
-                                    <FontAwesome
-                                        name="trash-o"
-                                        size={30}
-                                        color={deleteColor}
-                                    />
-                                </TouchableOpacity>
-                                {/* <TouchableOpacity>
-                  <FontAwesome name="edit" size={30} color={editColor} />
-                </TouchableOpacity> */}
+                                {isMe && (
+                                    <TouchableOpacity
+                                        onPress={() => onDeletePress(feed.id!)}
+                                    >
+                                        <FontAwesome
+                                            name="trash-o"
+                                            size={30}
+                                            color={deleteColor}
+                                        />
+                                    </TouchableOpacity>
+                                )}
+                                {!isMe && (
+                                    <TouchableOpacity onPress={blockUser}>
+                                        <Row>
+                                            <Text>Block User</Text>
+                                            <MaterialIcons
+                                                name="block"
+                                                size={24}
+                                                style={{
+                                                    marginLeft: SIZES.base
+                                                }}
+                                                color={deleteColor}
+                                            />
+                                        </Row>
+                                    </TouchableOpacity>
+                                )}
                             </View>
                         </MotiView>
                     )}

@@ -36,6 +36,10 @@ const SettingsLayout = () => {
                 name="helpers/[helperId]"
                 options={{ presentation: 'fullScreenModal' }}
             />
+            <Stack.Screen
+                name="blocked"
+                options={{ presentation: 'fullScreenModal' }}
+            />
         </Stack>
     )
 }

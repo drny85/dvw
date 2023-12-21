@@ -8,13 +8,14 @@ import useAppSelector from '../useAppSelector'
 
 export const useAuth = () => {
     const user = auth.currentUser
+    // const user = useAppSelector((s) => s.auth.user)
 
     const dispatch = useAppDispatch()
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
-        if (!user || !user.emailVerified) {
-            dispatch(setAppUser(null))
+        if (!user) {
+            //dispatch(setAppUser(null))
 
             return
         }

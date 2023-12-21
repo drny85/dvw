@@ -28,7 +28,7 @@ const _layout = () => {
 
             <Stack.Screen
                 name="[feedId]"
-                options={{ title: 'Feed  Details', headerShown: false }}
+                options={{ title: 'Feed Details', headerShown: false }}
             />
             <Stack.Screen
                 name="addFeedView"

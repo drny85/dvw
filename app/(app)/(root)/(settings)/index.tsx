@@ -124,6 +124,8 @@ const Settings = () => {
         }
     }, [])
 
+    console.log(user)
+
     return (
         <Screen>
             <Row style={{ justifyContent: 'space-between' }}>
@@ -243,7 +245,7 @@ const Settings = () => {
                     )}
                 </View>
                 <Divider />
-                <View style={{ gap: SIZES.padding, marginBottom: 10 }}>
+                <View style={{ gap: SIZES.padding * 1.5, marginBottom: 10 }}>
                     <TouchableOpacity
                         onPress={() =>
                             router.push(
@@ -271,9 +273,6 @@ const Settings = () => {
                                 '/(app)/(root)/(settings)/helpers/managers'
                             )
                         }
-                        style={{
-                            marginVertical: SIZES.padding
-                        }}
                     >
                         <Row
                             style={{
@@ -295,9 +294,6 @@ const Settings = () => {
                                 '/(app)/(root)/(settings)/helpers/coach'
                             )
                         }
-                        style={{
-                            marginBottom: SIZES.padding
-                        }}
                     >
                         <Row
                             style={{
@@ -328,6 +324,28 @@ const Settings = () => {
                                 Useful Numbers
                             </Text>
 
+                            <FontAwesome
+                                name="chevron-right"
+                                size={20}
+                                color={iconColor}
+                            />
+                        </Row>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() =>
+                            router.push('/(app)/(root)/(settings)/blocked')
+                        }
+                        style={{
+                            marginBottom: SIZES.padding
+                        }}
+                    >
+                        <Row
+                            style={{
+                                justifyContent: 'space-between',
+                                paddingHorizontal: SIZES.padding
+                            }}
+                        >
+                            <Text fontFamily="SFBold">Blocked Users</Text>
                             <FontAwesome
                                 name="chevron-right"
                                 size={20}

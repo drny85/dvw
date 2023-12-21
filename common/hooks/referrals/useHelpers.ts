@@ -10,7 +10,11 @@ export const useHelpers = () => {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        if (!user || !user?.id) return
+        if (!user || !user?.id) {
+            setLoading(false)
+
+            return
+        }
         const sub = onSnapshot(helpersCollection(user.id), (res) => {
             setHelpers(res.docs.map((d) => ({ id: d.id, ...d.data() })))
             setLoading(false)

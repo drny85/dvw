@@ -88,7 +88,8 @@ const Signup = () => {
                 role: role,
                 emailVerified: user.emailVerified,
                 createdAt: new Date().toISOString(),
-                acceptedEULA: false
+                acceptedEULA: false,
+                blockedUsers: []
             })
 
             reset()

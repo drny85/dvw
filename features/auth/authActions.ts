@@ -27,7 +27,8 @@ export const getUser = createAsyncThunk(
                 name: userData?.name || '',
                 image: userData?.image || '',
                 pushToken: userData?.pushToken || '',
-                createdAt: userData?.createdAt || ''
+                createdAt: userData?.createdAt || '',
+                blockedUsers: userData?.blockedUsers || []
             }
 
             return appUser

@@ -1,12 +1,10 @@
 import { useFilteredClosedReferrals } from '@/common/hooks/referrals/useFilteredClosedReferrals'
 import { useHelpers } from '@/common/hooks/referrals/useHelpers'
 import { usePayout } from '@/common/hooks/referrals/usePayout'
-import useAppDispatch from '@/common/hooks/useAppDispatch'
 import useAppSelector from '@/common/hooks/useAppSelector'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import Styles from '@/constants/Styles'
-import { setGoToPlanRoute } from '@/features/referrals/referralsSlide'
 import { Referral, TIERS } from '@/types'
 import { FontAwesome } from '@expo/vector-icons'
 import { router } from 'expo-router'
@@ -23,7 +21,7 @@ const Referrals = () => {
     const bgColor = useThemeColor('secondary')
     const { loading, helpers } = useHelpers()
     const accent = useThemeColor('accent')
-    const dispatch = useAppDispatch()
+
     const user = useAppSelector((s) => s.auth.user)
 
     const name = user?.name.split(' ')[0] ?? ''

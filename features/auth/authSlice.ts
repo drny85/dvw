@@ -13,6 +13,7 @@ export type AppUser = {
     pushToken?: string
     createdAt?: string
     acceptedEULA: boolean
+    blockedUsers: string[]
 }
 
 export type UserRole = 'admin' | 'em' | 'coach' | 'ce' | 'referee' | 'ceo'

@@ -40,10 +40,10 @@ export default function () {
 
     if (loading || ld) return null
 
-    if ((!user || !user.emailVerified) && !loading) {
-        console.log('Redirect to auth from app/layout')
-        return <Redirect href={'/(app)/auth'} />
-    }
+    // if ((!user || !user.emailVerified) && !loading) {
+    //     console.log('Redirect to auth from app/layout')
+    //     return <Redirect href={'/(app)/auth'} />
+    // }
 
     return (
         <Tabs

@@ -6,6 +6,7 @@ import Text from '@/common/components/Text'
 import View from '@/common/components/View'
 import FeedBottomSheet from '@/common/components/feed/FeedBottomSheet'
 import FeedCard from '@/common/components/feed/FeedCard'
+import { useAuth } from '@/common/hooks/auth/useAuth'
 import { useFeeds } from '@/common/hooks/feeds/useFeeds'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
 import useAppSelector from '@/common/hooks/useAppSelector'
@@ -16,16 +17,17 @@ import { deleteFeed, updateFeed } from '@/features/feeds/feedsActions'
 import { Feed } from '@/types'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { router } from 'expo-router'
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useRef } from 'react'
 
 import { Button, FlatList, ListRenderItem, StyleSheet } from 'react-native'
 
 const Feeds = () => {
+    useAuth()
     const bottomSheetModalRef = useRef<BottomSheetModal>(null)
     const { feeds, loading } = useFeeds()
     const [feed, setFeed] = React.useState<Feed | null>(null)
     const user = useAppSelector((s) => s.auth.user)
-
+    console.log('Feeds', feeds.length)
     const handlePresentModalPress = useCallback(() => {
         bottomSheetModalRef.current?.present()
     }, [])
@@ -71,7 +73,7 @@ const Feeds = () => {
     }
 
     if (loading) return <Loading />
-
+    console.log(user?.acceptedEULA)
     return (
         <Screen>
             {feeds.length === 0 && (
