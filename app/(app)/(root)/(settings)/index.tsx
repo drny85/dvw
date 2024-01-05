@@ -311,6 +311,25 @@ const Settings = () => {
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={() =>
+                            router.push('/(app)/(modals)/properties')
+                        }
+                    >
+                        <Row
+                            style={{
+                                justifyContent: 'space-between',
+                                paddingHorizontal: SIZES.padding
+                            }}
+                        >
+                            <Text fontFamily="SFBold">My Properties</Text>
+                            <FontAwesome
+                                name="chevron-right"
+                                size={20}
+                                color={iconColor}
+                            />
+                        </Row>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() =>
                             router.push('/(app)/(root)/(settings)/numbers')
                         }
                     >

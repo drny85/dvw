@@ -48,7 +48,7 @@ const Login = () => {
                 email,
                 password
             )
-            console.log(user.email, user.emailVerified)
+
             if (!user) return
             if (user && !user.emailVerified) {
                 Alert.alert(

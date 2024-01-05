@@ -25,5 +25,7 @@ export const referralssCollection = (userId: string) =>
 
 export const usersCollection = createCollection<AppUser>('users')
 export const chatsCollection = createCollection<Chat>('chats')
+export const propertiesCollection = (userId: string) =>
+    createCollection<{ name: string }>(`/properties/${userId}/properties`)
 export const commentsCollection = (feedId: string) =>
     createCollection<Comment>(`comments/${feedId}/comments`)

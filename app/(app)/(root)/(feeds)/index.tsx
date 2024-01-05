@@ -73,7 +73,7 @@ const Feeds = () => {
     }
 
     if (loading) return <Loading />
-    console.log(user?.acceptedEULA)
+
     return (
         <Screen>
             {feeds.length === 0 && (
