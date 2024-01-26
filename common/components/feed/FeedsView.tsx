@@ -18,6 +18,7 @@ const FeedsView = () => {
     const dispatch = useAppDispatch()
     const background = useThemeColor('background')
     const textColor = useThemeColor('text')
+    const errorColor = useThemeColor('error')
     const { loading, referrals } = useReferrals()
     const moves = referrals
         .filter((r) => r.due_date !== null)
@@ -134,7 +135,7 @@ const FeedsView = () => {
                                         }
                                         color={
                                             r.isVerizonWirelessCustomer
-                                                ? 'red'
+                                                ? errorColor
                                                 : textColor
                                         }
                                         size={20}

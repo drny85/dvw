@@ -13,6 +13,7 @@ export const unstable_settings = {
 
 const _layout = () => {
     const bgColor = useThemeColor('background')
+    const textColor = useThemeColor('text')
     const user = useAppSelector((s) => s.auth.user)
     useNotifications()
     return (
@@ -22,20 +23,24 @@ const _layout = () => {
                 headerStyle: { backgroundColor: bgColor },
                 headerShadowVisible: false,
                 headerTitle: () => (
-                    <Text fontFamily="QSRegular" fontSize={18}>
+                    <Text fontFamily="SFLight" fontSize={18}>
                         Welcome {user?.name.split(' ')[0]}
                     </Text>
                 ),
                 headerLeft: () => (
                     <Image
-                        source={{ uri: user?.image }}
+                        source={{
+                            uri:
+                                user?.image ||
+                                `https://ui-avatars.com/api/?background=0D8ABC&color=fff`
+                        }}
                         style={{ width: 40, height: 40, borderRadius: 20 }}
                         resizeMode="cover"
                     />
                 ),
                 headerRight: () => (
                     <Ionicons
-                        color="text"
+                        color={textColor}
                         name="ios-add-sharp"
                         size={34}
                         onPress={() => {

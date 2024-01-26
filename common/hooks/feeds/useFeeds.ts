@@ -1,5 +1,5 @@
 import { Feed } from '@/types'
-import { onSnapshot, orderBy, query } from 'firebase/firestore'
+import { onSnapshot } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import useAppSelector from '../useAppSelector'
 import { feedsColletion } from '@/lib/collections'
@@ -9,7 +9,6 @@ export const useFeeds = () => {
     const [feeds, setFeeds] = useState<Feed[]>([])
 
     const user = useAppSelector((s) => s.auth.user)
-    console.log('User from useFeeds', user)
     useEffect(() => {
         if (!user) {
             setLoading(false)

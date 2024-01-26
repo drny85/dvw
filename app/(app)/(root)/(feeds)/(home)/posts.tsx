@@ -1,4 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native'
+import Text from '@/common/components/Text'
+import View from '@/common/components/View'
 import React from 'react'
 
 const posts = () => {
@@ -10,5 +11,3 @@ const posts = () => {
 }
 
 export default posts
-
-const styles = StyleSheet.create({})

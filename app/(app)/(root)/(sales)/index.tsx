@@ -10,7 +10,7 @@ import useAppSelector from '@/common/hooks/useAppSelector'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import Styles from '@/constants/Styles'
-import { Referral, SaleData, SalesRange, WirelessQuote } from '@/types'
+import { SaleData, SalesRange } from '@/types'
 import {
     formatedData,
     generateFeedsBasedOnRange,
@@ -20,7 +20,10 @@ import { FontAwesome } from '@expo/vector-icons'
 import moment from 'moment'
 import { AnimatePresence, MotiView } from 'moti'
 
-import { useWirelessQuotes } from '@/common/hooks/wirelessQuotes/useWirelessQuotes'
+import ProgressCircle from '@/common/components/referrals/ProgressCircle'
+import Referrals from '@/common/components/referrals/Referrals'
+import { WIRELESS_MONTHLY_GOAL } from '@/constants'
+import { router } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import {
     FlatList,
@@ -28,12 +31,6 @@ import {
     StyleSheet,
     TouchableOpacity
 } from 'react-native'
-import { router } from 'expo-router'
-import Referrals from '@/common/components/referrals/Referrals'
-import ProgressCircle from '@/common/components/referrals/ProgressCircle'
-import ReferralCard from '@/common/components/referrals/ReferralCard'
-import { useReferrals } from '@/common/hooks/referrals/useReferrals'
-import { WIRELESS_MONTHLY_GOAL } from '@/constants'
 
 const getMonthlyGoal = (range: SalesRange): number => {
     if (range === 'mtd') return WIRELESS_MONTHLY_GOAL
@@ -45,30 +42,21 @@ const getMonthlyGoal = (range: SalesRange): number => {
 }
 
 const Sales = () => {
-    const { quotes, loading: loadingQoutes } = useWirelessQuotes()
-    const { referrals, loading: loadingReferrals } = useReferrals()
     const { loading, feeds } = useFeeds()
-    const [secondView, setSecondView] = useState<'wireless' | 'referrals'>(
-        'wireless'
-    )
+
     const [view, setView] = useState<'sales' | 'referrals'>('referrals')
     const [data, setData] = useState<SaleData[]>([])
     const range = useAppSelector((s) => s.sales.range)
     const saleQoute = useAppSelector((s) => s.sales.saleQuote)
     const [expand, setExpand] = useState<boolean>(false)
     const [saleId, setSaleId] = useState<string>()
-    const [followUps, setFollowUps] = useState<WirelessQuote[]>([])
-    const [referralsFollowUps, setReferralsFollowUps] = useState<Referral[]>([])
+
     const sales = salesData(data)
     const backgroundColor = useThemeColor('accent')
     const borderColor = useThemeColor('secondary')
-    const bgColor = useThemeColor('background')
+
     const iconColor = useThemeColor('text')
     const totalSales = data.reduce((a, b) => a + b.numberOfLines, 0)
-
-    const viewQuote = () => {
-        router.push('/(app)/(modals)/quotes')
-    }
 
     const goalPercentage = (r: SalesRange) =>
         Math.round((totalSales / getMonthlyGoal(r)) * 100)
@@ -96,47 +84,6 @@ const Sales = () => {
         )
     }
 
-    const renderFollowUps: ListRenderItem<WirelessQuote> = ({ item }) => {
-        return (
-            <View
-                style={[
-                    Styles.boxShadow,
-                    {
-                        backgroundColor: backgroundColor,
-                        padding: SIZES.padding,
-                        borderRadius: SIZES.radius
-                    }
-                ]}
-            >
-                <Row style={{ justifyContent: 'space-between' }}>
-                    <View>
-                        <Text fontFamily="SFBold">{item.customerName}</Text>
-                        <Text>Total Lines : {item.lines.length}</Text>
-                    </View>
-                    <Row
-                        style={{
-                            alignItems: 'center',
-                            gap: SIZES.padding * 1.5
-                        }}
-                    >
-                        <TouchableOpacity>
-                            <FontAwesome
-                                name="phone"
-                                size={26}
-                                color={iconColor}
-                            />
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={viewQuote}>
-                            <Text fontSize={18} fontFamily="SFBold">
-                                View
-                            </Text>
-                        </TouchableOpacity>
-                    </Row>
-                </Row>
-            </View>
-        )
-    }
-
     useEffect(() => {
         if (!feeds.length) return
         const sales = generateFeedsBasedOnRange(
@@ -149,27 +96,12 @@ const Sales = () => {
     }, [feeds.length, range])
 
     useEffect(() => {
-        if (quotes.length === 0) return
-        setFollowUps(
-            quotes.filter(
-                (q) =>
-                    q.scheduledOn &&
-                    q.status == 'pending' &&
-                    moment(q.scheduledOn).isBetween(
-                        moment().startOf('day'),
-                        moment().endOf('day')
-                    )
-            )
-        )
-    }, [quotes.length])
-
-    useEffect(() => {
         if (saleQoute) {
             router.push('/(app)/(root)/(plan)')
         }
     }, [])
 
-    if (loading || loadingQoutes || loadingReferrals) return <Loading />
+    if (loading) return <Loading />
 
     return (
         <Screen>

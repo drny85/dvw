@@ -1,4 +1,3 @@
-import { Ionicon } from '@/common/components/Icon'
 import Screen from '@/common/components/Screen'
 import Text from '@/common/components/Text'
 import View from '@/common/components/View'
