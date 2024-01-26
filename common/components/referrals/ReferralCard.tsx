@@ -9,6 +9,8 @@ import moment from 'moment'
 import { Referral } from '@/types'
 import { SIZES } from '@/constants/Sizes'
 import Row from '../Row'
+import useAppDispatch from '@/common/hooks/useAppDispatch'
+import { setReferralId } from '@/features/referrals/referralsSlide'
 
 type Props = {
     item: Referral
@@ -16,6 +18,7 @@ type Props = {
 }
 
 const ReferralCard = ({ item, bgColor }: Props) => {
+    const dispatch = useAppDispatch()
     return (
         <TouchableOpacity
             style={[
@@ -24,9 +27,10 @@ const ReferralCard = ({ item, bgColor }: Props) => {
                 ,
                 { backgroundColor: bgColor }
             ]}
-            onPress={() =>
-                router.push(`/(app)/(root)/(sales)/details/${item.id}`)
-            }
+            onPress={() => {
+                dispatch(setReferralId(item.id!))
+                router.push(`/(app)/(modals)/referralDetail`)
+            }}
         >
             <Text
                 style={{ marginBottom: SIZES.base }}

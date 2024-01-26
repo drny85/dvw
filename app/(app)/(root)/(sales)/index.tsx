@@ -51,9 +51,7 @@ const Sales = () => {
     const [secondView, setSecondView] = useState<'wireless' | 'referrals'>(
         'wireless'
     )
-    const [view, setView] = useState<'follow-ups' | 'sales' | 'referrals'>(
-        'referrals'
-    )
+    const [view, setView] = useState<'sales' | 'referrals'>('referrals')
     const [data, setData] = useState<SaleData[]>([])
     const range = useAppSelector((s) => s.sales.range)
     const saleQoute = useAppSelector((s) => s.sales.saleQuote)
@@ -139,10 +137,6 @@ const Sales = () => {
         )
     }
 
-    const renderReferralsFollowUp: ListRenderItem<Referral> = ({ item }) => {
-        return <ReferralCard item={item} bgColor={bgColor} />
-    }
-
     useEffect(() => {
         if (!feeds.length) return
         const sales = generateFeedsBasedOnRange(
@@ -153,19 +147,6 @@ const Sales = () => {
         const listData = formatedData(sales)
         setData(listData)
     }, [feeds.length, range])
-
-    useEffect(() => {
-        setReferralsFollowUps(
-            referrals.filter(
-                (r) =>
-                    r.followUpOn &&
-                    moment(r.followUpOn).isBetween(
-                        moment().startOf('day'),
-                        moment().endOf('day')
-                    )
-            )
-        )
-    }, [referrals])
 
     useEffect(() => {
         if (quotes.length === 0) return
@@ -209,17 +190,7 @@ const Sales = () => {
                         Referrals
                     </Text>
                 </TouchableOpacity>
-                <TouchableOpacity
-                    style={{
-                        borderBottomWidth: view === 'follow-ups' ? 2 : 0,
-                        borderBottomColor: borderColor
-                    }}
-                    onPress={() => setView('follow-ups')}
-                >
-                    <Text fontFamily="SFBold" fontSize={22}>
-                        Follow Ups
-                    </Text>
-                </TouchableOpacity>
+
                 <TouchableOpacity
                     style={{
                         borderBottomWidth: view === 'sales' ? 2 : 0,
@@ -233,118 +204,7 @@ const Sales = () => {
                 </TouchableOpacity>
             </Row>
             {view === 'referrals' && <Referrals />}
-            {view === 'follow-ups' && (
-                <View style={{ flex: 1 }}>
-                    <Row
-                        style={{
-                            justifyContent: 'space-evenly',
-                            marginBottom: SIZES.padding
-                        }}
-                    >
-                        <TouchableOpacity
-                            onPress={() => setSecondView('referrals')}
-                            style={{
-                                borderBottomColor: borderColor,
-                                borderBottomWidth:
-                                    secondView === 'referrals' ? 2 : 0,
-                                paddingBottom: SIZES.base
-                            }}
-                        >
-                            <Text fontFamily="SFBold" fontSize={18}>
-                                Referrals
-                            </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() => setSecondView('wireless')}
-                            style={{
-                                borderBottomColor: borderColor,
-                                borderBottomWidth:
-                                    secondView === 'wireless' ? 2 : 0,
-                                paddingBottom: SIZES.base
-                            }}
-                        >
-                            <Text fontFamily="SFBold" fontSize={18}>
-                                Wireless
-                            </Text>
-                        </TouchableOpacity>
-                    </Row>
-                    {followUps.length === 0 && secondView === 'wireless' && (
-                        <View
-                            style={{
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                flex: 1
-                            }}
-                        >
-                            <Text fontFamily="QSBold" capitalize fontSize={20}>
-                                No {secondView} Follow ups yet
-                            </Text>
-                        </View>
-                    )}
-                    {referralsFollowUps.length === 0 &&
-                        secondView === 'referrals' && (
-                            <View
-                                style={{
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    flex: 1
-                                }}
-                            >
-                                <Text
-                                    fontFamily="QSBold"
-                                    capitalize
-                                    fontSize={20}
-                                >
-                                    No {secondView} Follow ups yet
-                                </Text>
-                            </View>
-                        )}
-                    {followUps.length > 0 && secondView === 'wireless' && (
-                        <View
-                            style={{
-                                flex: 1
-                            }}
-                        >
-                            <Text center fontFamily="QSBold" fontSize={20}>
-                                Today's Follow ups: {followUps.length}
-                            </Text>
-                            <FlatList
-                                data={followUps}
-                                contentContainerStyle={{
-                                    marginHorizontal: SIZES.base,
-                                    marginTop: SIZES.padding,
-                                    gap: SIZES.padding
-                                }}
-                                renderItem={renderFollowUps}
-                                keyExtractor={(item) => item.id}
-                            />
-                        </View>
-                    )}
-                    {referralsFollowUps.length > 0 &&
-                        secondView === 'referrals' && (
-                            <View
-                                style={{
-                                    flex: 1
-                                }}
-                            >
-                                <Text center fontFamily="QSBold" fontSize={20}>
-                                    Today's Follow ups:{' '}
-                                    {referralsFollowUps.length}
-                                </Text>
-                                <FlatList
-                                    data={referralsFollowUps}
-                                    contentContainerStyle={{
-                                        marginHorizontal: SIZES.base,
-                                        marginTop: SIZES.padding,
-                                        gap: SIZES.padding
-                                    }}
-                                    renderItem={renderReferralsFollowUp}
-                                    keyExtractor={(item) => item.id!}
-                                />
-                            </View>
-                        )}
-                </View>
-            )}
+
             {view === 'sales' && (
                 <View style={{ flex: 1 }}>
                     <View

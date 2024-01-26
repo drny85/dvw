@@ -1,6 +1,6 @@
 import React from 'react'
 import Screen from '@/common/components/Screen'
-import Text from '@/common/components/Text'
+
 import Header from '@/common/components/Header'
 import { router, useLocalSearchParams } from 'expo-router'
 import { ScrollView } from 'react-native'

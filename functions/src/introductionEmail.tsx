@@ -29,7 +29,9 @@ const IntroductionEmail = ({
 
     return (
         <Html>
-            <Head />
+            <Head>
+                <link rel="icon" type="image/x-icon" href="./favicon.ico" />
+            </Head>
             <Preview>{previewText}</Preview>
             <Tailwind>
                 <Body className="bg-slate-100 mx-auto font-sans p-4 shadow-md m-2 rounded-md  items-center justify-center flex flex-col">

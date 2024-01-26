@@ -98,7 +98,7 @@ exports.sendIntroductionEmail = onCall<{
             from: `${user.name} <melendez@robertdev.net>`,
             to: [referral.email!],
             subject: `Your Dedicated Verizon Specialist at ${referral.propertyName}`,
-            cc: [user.email!],
+            bcc: [user.email!],
             text: '',
             react: Template(info)
         })

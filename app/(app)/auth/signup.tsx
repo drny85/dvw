@@ -335,7 +335,7 @@ const Signup = () => {
                                     fontSize={20}
                                     fontFamily="SFBold"
                                 >
-                                    Signup
+                                    Sign Up
                                 </Text>
                             </TouchableOpacity>
                         </View>

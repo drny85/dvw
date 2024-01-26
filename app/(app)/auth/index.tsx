@@ -123,7 +123,12 @@ const Login = () => {
                     onPress={handleLogin}
                     // disabled={disabled}
                 >
-                    <Text center fontSize={24} fontFamily="SFBold">
+                    <Text
+                        center
+                        color="white"
+                        fontSize={24}
+                        fontFamily="SFBold"
+                    >
                         Login
                     </Text>
                 </TouchableOpacity>

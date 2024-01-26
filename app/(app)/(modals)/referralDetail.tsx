@@ -19,16 +19,19 @@ import {
 } from '@/features/referrals/referralActions'
 import {
     setEditingReferral,
+    setGoHome,
+    setReferralId,
     setReferralState
 } from '@/features/referrals/referralsSlide'
 import { sendIntroductionEmail } from '@/firebase'
+import { scheduleFollowUp } from '@/lib/scheduleFollowUp'
 import { Referral } from '@/types'
 import { FontAwesome } from '@expo/vector-icons'
 import * as Linking from 'expo-linking'
 import { router, useLocalSearchParams } from 'expo-router'
 import moment from 'moment'
 import { AnimatePresence, MotiView } from 'moti'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import {
     ActivityIndicator,
     Alert,
@@ -38,11 +41,12 @@ import {
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 const ReferralDetails = () => {
-    const { id } = useLocalSearchParams<{ id: string }>()
+    const id = useAppSelector((s) => s.referrals.referralId)
     const dispatch = useAppDispatch()
-    const { loading, referral } = useReferral(id)
+    const { loading, referral } = useReferral(id!)
     const [sendingEmail, setSendingEmail] = useState(false)
-    const goToPlan = useAppSelector((s) => s.referrals.goToPlan)
+    const goHome = useAppSelector((s) => s.referrals.goHome)
+    console.log('Go Home', goHome)
     const [editComment, setEditComment] = useState(false)
     const [showFollowUp, setShowFollowUp] = useState(false)
     const [followUp, setFollowUp] = useState(new Date())
@@ -55,6 +59,7 @@ const ReferralDetails = () => {
 
     const sendIntroEmail = useCallback(async () => {
         try {
+            if (!id) return
             const func = sendIntroductionEmail()
             setSendingEmail(true)
             const res = await func({
@@ -71,24 +76,13 @@ const ReferralDetails = () => {
 
     const handleFollowUp = useCallback(async () => {
         try {
-            if (!referral) return
-            dispatch(
-                updateReferral({
-                    ...referral,
-                    followUpOn: followUp.toISOString()
-                })
-            )
+            if (!referral || !followUp) return
+            await scheduleFollowUp(referral!, followUp.toISOString())
             setShowFollowUp(false)
-            schedulePushNotification({
-                title: 'Follow Up',
-                data: { id: referral.id!, type: 'reminder' },
-                body: `Get in contact with ${referral.name}`,
-                date: followUp.toISOString()
-            })
         } catch (error) {
             console.log(error)
         }
-    }, [])
+    }, [referral, followUp])
 
     const updateComment = async () => {
         try {
@@ -135,7 +129,7 @@ const ReferralDetails = () => {
     const onEditPress = () => {
         dispatch(setEditingReferral(true))
         dispatch(setReferralState(referral))
-        router.push('/referrals')
+        router.push('/(app)/(modals)/referral')
     }
 
     const makeCall = () => {
@@ -155,7 +149,7 @@ const ReferralDetails = () => {
             })
     }
 
-    if (loading) return <Loading />
+    if (loading || !id) return <Loading />
     if (!referral)
         return (
             <Screen>
@@ -177,7 +171,15 @@ const ReferralDetails = () => {
         <Screen>
             <Header
                 title="Details"
-                onPressBack={router.back}
+                onPressBack={() => {
+                    // if (goHome) {
+                    //     dispatch(setGoHome(false))
+                    //     router.push('/(app)/(root)/(feeds)/(home)')
+                    // } else {
+                    //     router.push(`/(app)/(root)/(sales)`)
+                    // }
+                    router.back()
+                }}
                 hasRightIcon
                 rightIcon={
                     <Row style={{ gap: SIZES.padding * 1.5 }}>

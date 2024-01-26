@@ -13,14 +13,14 @@ import { getResults } from '@/utils/getReferralsFilterData'
 import { FontAwesome } from '@expo/vector-icons'
 import { router, useLocalSearchParams } from 'expo-router'
 import { AnimatePresence, MotiView } from 'moti'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { FlatList, ListRenderItem, TouchableOpacity } from 'react-native'
 
 const FilteredReferrals = () => {
     const { filterType } = useLocalSearchParams<{
         filterType: ReferralsFilterType
     }>()
-    const goToPlan = useAppSelector((s) => s.referrals.goToPlan)
+
     const color = useThemeColor('text')
     const bgColor = useThemeColor('background')
     const [searching, setSearching] = useState(false)

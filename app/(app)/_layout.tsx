@@ -73,12 +73,7 @@ function RootLayout() {
                     navigationBarColor,
                     animation: 'slide_from_bottom'
                 }}
-            >
-                <Stack.Screen
-                    name="(modals)/quotes"
-                    options={{ presentation: 'modal' }}
-                />
-            </Stack>
+            ></Stack>
         </ThemeProvider>
     )
 }

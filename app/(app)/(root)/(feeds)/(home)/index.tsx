@@ -1,11 +1,14 @@
 import Header from '@/common/components/Header'
 import { Ionicon } from '@/common/components/Icon'
 import Loading from '@/common/components/Loading'
+import Row from '@/common/components/Row'
 import Screen from '@/common/components/Screen'
 import Text from '@/common/components/Text'
 import View from '@/common/components/View'
 import FeedBottomSheet from '@/common/components/feed/FeedBottomSheet'
 import FeedCard from '@/common/components/feed/FeedCard'
+import FeedSwitcher from '@/common/components/feed/FeedSwitcher'
+import FeedsView from '@/common/components/feed/FeedsView'
 import { useAuth } from '@/common/hooks/auth/useAuth'
 import { useFeeds } from '@/common/hooks/feeds/useFeeds'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
@@ -13,11 +16,13 @@ import useAppSelector from '@/common/hooks/useAppSelector'
 import { SIZES } from '@/constants/Sizes'
 
 import { deleteFeed, updateFeed } from '@/features/feeds/feedsActions'
+import { setView } from '@/features/feeds/feedsSlide'
 
 import { Feed } from '@/types'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { router } from 'expo-router'
-import React, { useCallback, useRef } from 'react'
+import { ScrollView } from 'moti'
+import React, { useCallback, useEffect, useRef } from 'react'
 
 import { Button, FlatList, ListRenderItem, StyleSheet } from 'react-native'
 
@@ -27,7 +32,6 @@ const Feeds = () => {
     const { feeds, loading } = useFeeds()
     const [feed, setFeed] = React.useState<Feed | null>(null)
     const user = useAppSelector((s) => s.auth.user)
-    console.log('Feeds', feeds.length)
     const handlePresentModalPress = useCallback(() => {
         bottomSheetModalRef.current?.present()
     }, [])
@@ -72,10 +76,25 @@ const Feeds = () => {
         )
     }
 
+    useEffect(() => {
+        if (feeds.length === 0) {
+            dispatch(setView('feeds'))
+        }
+    }, [feeds.length])
+
     if (loading) return <Loading />
 
     return (
         <Screen>
+            <Row
+                style={{
+                    justifyContent: 'space-between',
+                    paddingHorizontal: SIZES.base,
+                    marginTop: SIZES.base
+                }}
+            >
+                <View />
+            </Row>
             {feeds.length === 0 && (
                 <View style={styles.center}>
                     <Text style={{ fontSize: 20 }}>No posts yet</Text>
@@ -97,29 +116,15 @@ const Feeds = () => {
             )}
             {feeds.length > 0 && (
                 <>
-                    <Header
+                    {/* <Header
                         title="Posts"
                         contentContainerStyle={{ paddingRight: 10 }}
                         hasRightIcon
                         rightIcon={
-                            <Ionicon
-                                color="text"
-                                name="ios-add-sharp"
-                                size={34}
-                                onPress={() => {
-                                    if (user?.acceptedEULA) {
-                                        router.push(
-                                            '/(app)/(root)/(feeds)/addFeedView'
-                                        )
-                                    } else {
-                                        router.push(
-                                            '/(app)/(root)/(feeds)/eula'
-                                        )
-                                    }
-                                }}
-                            />
+                           
                         }
-                    />
+                    /> */}
+
                     <FlatList
                         data={feeds}
                         showsVerticalScrollIndicator={false}
@@ -132,6 +137,7 @@ const Feeds = () => {
                     />
                 </>
             )}
+
             <FeedBottomSheet
                 ref={bottomSheetModalRef}
                 feedId={feed?.id!}
