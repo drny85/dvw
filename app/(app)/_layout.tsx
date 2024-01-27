@@ -73,7 +73,7 @@ function RootLayout() {
                     navigationBarColor,
                     animation: 'slide_from_bottom'
                 }}
-            ></Stack>
+            />
         </ThemeProvider>
     )
 }

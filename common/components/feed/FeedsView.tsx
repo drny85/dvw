@@ -12,7 +12,7 @@ import useThemeColor from '@/common/hooks/useThemeColor'
 import { FontAwesome } from '@expo/vector-icons'
 import { router } from 'expo-router'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
-import { setGoHome, setReferralId } from '@/features/referrals/referralsSlide'
+import { setReferralId } from '@/features/referrals/referralsSlide'
 
 const FeedsView = () => {
     const dispatch = useAppDispatch()
@@ -111,7 +111,6 @@ const FeedsView = () => {
                             <TouchableOpacity
                                 key={r.id}
                                 onPress={() => {
-                                    dispatch(setGoHome(true))
                                     dispatch(setReferralId(r.id!))
                                     router.push(
                                         '/(app)/(modals)/referralDetail'

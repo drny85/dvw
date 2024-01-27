@@ -1,23 +1,22 @@
-import React from 'react'
+import Divider from '@/common/components/Divider'
+import Header from '@/common/components/Header'
 import Screen from '@/common/components/Screen'
+import Switcher from '@/common/components/Switcher'
 import Text from '@/common/components/Text'
 import View from '@/common/components/View'
-import Styles from '@/constants/Styles'
-import Header from '@/common/components/Header'
-import { router } from 'expo-router'
-import Switcher from '@/common/components/Switcher'
-import useAppSelector from '@/common/hooks/useAppSelector'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
+import useAppSelector from '@/common/hooks/useAppSelector'
+import { SIZES } from '@/constants/Sizes'
+import Styles from '@/constants/Styles'
 import {
     setExpressAutoPay,
     setExpressFirstResponder,
     setExpressHasFios,
     setExpressInternet
 } from '@/features/wireless/wirelessSlide'
-import { MotiView, AnimatePresence } from 'moti'
-import Divider from '@/common/components/Divider'
-import { SIZES } from '@/constants/Sizes'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import { router } from 'expo-router'
+import { AnimatePresence, MotiView } from 'moti'
+import React from 'react'
 
 const filter = () => {
     const {

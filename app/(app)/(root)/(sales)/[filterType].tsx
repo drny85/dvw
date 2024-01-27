@@ -51,12 +51,6 @@ const FilteredReferrals = () => {
         return <ReferralCard item={item} bgColor={bgColor} />
     }
 
-    // useEffect(() => {
-    //     if (goToPlan) {
-    //         router.back()
-    //     }
-    // }, [goToPlan])
-
     return (
         <Screen>
             <Header

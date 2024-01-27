@@ -9,7 +9,6 @@ import View from '@/common/components/View'
 import { useReferral } from '@/common/hooks/referrals/useReferral'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
 import useAppSelector from '@/common/hooks/useAppSelector'
-import { schedulePushNotification } from '@/common/hooks/useNotification'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import Styles from '@/constants/Styles'
@@ -19,8 +18,6 @@ import {
 } from '@/features/referrals/referralActions'
 import {
     setEditingReferral,
-    setGoHome,
-    setReferralId,
     setReferralState
 } from '@/features/referrals/referralsSlide'
 import { sendIntroductionEmail } from '@/firebase'
@@ -28,10 +25,10 @@ import { scheduleFollowUp } from '@/lib/scheduleFollowUp'
 import { Referral } from '@/types'
 import { FontAwesome } from '@expo/vector-icons'
 import * as Linking from 'expo-linking'
-import { router, useLocalSearchParams } from 'expo-router'
+import { router } from 'expo-router'
 import moment from 'moment'
 import { AnimatePresence, MotiView } from 'moti'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import {
     ActivityIndicator,
     Alert,
@@ -45,8 +42,7 @@ const ReferralDetails = () => {
     const dispatch = useAppDispatch()
     const { loading, referral } = useReferral(id!)
     const [sendingEmail, setSendingEmail] = useState(false)
-    const goHome = useAppSelector((s) => s.referrals.goHome)
-    console.log('Go Home', goHome)
+
     const [editComment, setEditComment] = useState(false)
     const [showFollowUp, setShowFollowUp] = useState(false)
     const [followUp, setFollowUp] = useState(new Date())

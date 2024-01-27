@@ -72,7 +72,7 @@ export default function () {
             <Tabs.Screen
                 name="(feeds)"
                 options={{
-                    title: 'Posts',
+                    title: 'Home',
                     tabBarIcon: ({ color, size }) => (
                         <TabBarIcon name="home" size={size} color={color} />
                     )

@@ -54,7 +54,6 @@ const Sales = () => {
     const sales = salesData(data)
     const backgroundColor = useThemeColor('accent')
     const borderColor = useThemeColor('secondary')
-
     const iconColor = useThemeColor('text')
     const totalSales = data.reduce((a, b) => a + b.numberOfLines, 0)
 
