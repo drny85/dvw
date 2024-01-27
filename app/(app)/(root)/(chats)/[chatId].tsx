@@ -299,7 +299,7 @@ const Chat = () => {
                                     onPress={() => handleSendMessage(message)}
                                 >
                                     <Ionicons
-                                        name="ios-send"
+                                        name="send"
                                         size={30}
                                         color={
                                             disabled || message.length < 2

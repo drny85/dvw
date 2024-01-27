@@ -16,7 +16,7 @@ export function useNotificationObserver() {
                 router.push('/(app)/(modals)/quotes')
             }
             if (data.type === 'feed') {
-                router.push('/(app)/(root)/(feeds)')
+                router.push('/(app)/(root)/(feeds)/(home)')
             }
         }
 

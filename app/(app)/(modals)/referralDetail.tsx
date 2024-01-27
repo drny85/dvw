@@ -398,7 +398,7 @@ const ReferralDetails = () => {
                             Move In:{' '}
                             <Text fontFamily="QSLight">
                                 {moment(referral?.moveIn).format(
-                                    'ddd, MMMM Do, YYYY'
+                                    'ddd, MMM Do, YYYY'
                                 )}
                             </Text>
                         </Text>

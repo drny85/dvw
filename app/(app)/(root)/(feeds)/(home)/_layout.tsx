@@ -14,6 +14,10 @@ export const MaterialTopTabs = withLayoutContext<
     MaterialTopTabNavigationEventMap
 >(Navigator)
 
+export const unstable_settings = {
+    initialRouteName: '(feeds)'
+}
+
 const HomeLayout = () => {
     const bgColor = useThemeColor('background')
     const acent = useThemeColor('accent')

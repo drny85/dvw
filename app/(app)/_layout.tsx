@@ -9,27 +9,29 @@ import {
     ThemeProvider
 } from '@react-navigation/native'
 import { useFonts } from 'expo-font'
-import { SplashScreen, Stack } from 'expo-router'
+import { Stack } from 'expo-router'
+import * as SplashScreen from 'expo-splash-screen'
 import { StatusBar } from 'expo-status-bar'
 import { useCallback, useState } from 'react'
-
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 
 export const unstable_settings = {
-    initialRouteName: '(root)'
+    initialRouteName: '(feeds)'
 }
 
 export default function () {
     const [stateLoaded, setStateLoaded] = useState(false)
-    const [fontsLoaded] = useFonts(Fonts)
+    const [fontsLoaded, fontError] = useFonts(Fonts)
 
     // Callback function to hide the splash screen when layout is triggered
-    const onLayout = useCallback(() => {
-        SplashScreen.hideAsync()
-    }, [])
+    const onLayout = useCallback(async () => {
+        if (fontsLoaded || fontError) {
+            await SplashScreen.hideAsync()
+        }
+    }, [fontsLoaded, fontError])
 
     // Callback function executed before the persist gate is lifted
     const onBeforeLimit = useCallback(() => setStateLoaded(true), [])
@@ -38,7 +40,7 @@ export default function () {
         <Provider store={store}>
             <PersistGate persistor={persistor} onBeforeLift={onBeforeLimit}>
                 {/* Render the SafeAreaView and AppNavigator when fonts and state are loaded */}
-                {fontsLoaded && stateLoaded && (
+                {stateLoaded && fontsLoaded && (
                     <BottomSheetModalProvider>
                         <GestureHandlerRootView
                             onLayout={onLayout}

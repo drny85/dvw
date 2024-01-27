@@ -1,4 +1,5 @@
 import Text from '@/common/components/Text'
+import Greeting from '@/common/components/feed/Greeting'
 import useAppSelector from '@/common/hooks/useAppSelector'
 import useNotifications from '@/common/hooks/useNotification'
 import useThemeColor from '@/common/hooks/useThemeColor'
@@ -8,7 +9,7 @@ import React from 'react'
 import { Image } from 'react-native'
 
 export const unstable_settings = {
-    initialRouteName: '(home)'
+    initialRouteName: '(feeds)'
 }
 
 const _layout = () => {
@@ -22,11 +23,7 @@ const _layout = () => {
             screenOptions={{
                 headerStyle: { backgroundColor: bgColor },
                 headerShadowVisible: false,
-                headerTitle: () => (
-                    <Text fontFamily="SFLight" fontSize={18}>
-                        Welcome {user?.name.split(' ')[0]}
-                    </Text>
-                ),
+                headerTitle: () => <Greeting />,
                 headerLeft: () => (
                     <Image
                         source={{
@@ -41,7 +38,7 @@ const _layout = () => {
                 headerRight: () => (
                     <Ionicons
                         color={textColor}
-                        name="ios-add-sharp"
+                        name="add-sharp"
                         size={34}
                         onPress={() => {
                             if (user?.acceptedEULA) {

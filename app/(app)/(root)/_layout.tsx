@@ -47,7 +47,7 @@ export default function () {
 
     return (
         <Tabs
-            initialRouteName="(feeds)"
+            initialRouteName="(home)"
             screenOptions={{
                 tabBarActiveTintColor,
                 headerShadowVisible: false,
