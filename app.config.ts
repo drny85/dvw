@@ -16,7 +16,7 @@ const config: ExpoConfig = {
     assetBundlePatterns: ['**/*'],
     ios: {
         supportsTablet: true,
-        bundleIdentifier: 'net.robertdev.drasco',
+        bundleIdentifier: 'net.robertdev.drasco-dvw',
         buildNumber: '1',
         infoPlist: {
             LSApplicationQueriesSchemes: ['dvw', 'telprompt', 'tel'],
@@ -28,12 +28,12 @@ const config: ExpoConfig = {
             foregroundImage: './assets/images/adaptive-icon.png',
             backgroundColor: '#ffffff'
         },
-        package: 'net.robertdev.drasco',
+        package: 'net.robertdev.drasco.dvw',
         versionCode: 1
     },
     web: {
         bundler: 'metro',
-        output: 'server',
+        output: 'static',
         favicon: './assets/images/favicon.png'
     },
     plugins: [
@@ -66,7 +66,7 @@ const config: ExpoConfig = {
         policy: 'appVersion'
     },
     updates: {
-        url: 'https://u.expo.dev/fee3a90d-6448-46b1-a708-eabb1d817d42'
+        url: 'https://u.expo.dev/e87419d5-8fcd-4daa-945c-ce36e902a7c6'
     }
 }
 
