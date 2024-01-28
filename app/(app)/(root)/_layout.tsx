@@ -1,8 +1,6 @@
-// Import necessary components and hooks
-
 import useAppSelector from '@/common/hooks/useAppSelector'
 
-import { Redirect, Tabs, useSegments } from 'expo-router'
+import { Redirect, Tabs } from 'expo-router'
 
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { FontAwesome } from '@expo/vector-icons'
@@ -33,9 +31,7 @@ export default function () {
     // Check if the user is logged in using Redux state
     const { loading } = useAuth()
     onFetchUpdateAsync()
-    const segments = useSegments()
 
-    console.log('segments', segments)
     const { user, loading: ld } = useAppSelector((state) => state.auth)
     const tabBarActiveTintColor = useThemeColor('accent')
     const primaryColor = useThemeColor('background')

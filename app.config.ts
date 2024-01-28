@@ -1,12 +1,12 @@
 import { ExpoConfig } from 'expo/config'
 
 const config: ExpoConfig = {
-    name: 'DVW',
-    slug: 'dvw',
-    version: '1.0.5',
+    name: 'Drasco',
+    slug: 'drasco',
+    version: '1.0.0',
     orientation: 'portrait',
     icon: './assets/images/icon.png',
-    scheme: 'dvw',
+    scheme: 'drasco',
     userInterfaceStyle: 'automatic',
     splash: {
         image: './assets/images/splash.png',
@@ -16,8 +16,8 @@ const config: ExpoConfig = {
     assetBundlePatterns: ['**/*'],
     ios: {
         supportsTablet: true,
-        bundleIdentifier: 'net.robertdev.dvw',
-        buildNumber: '5',
+        bundleIdentifier: 'net.robertdev.drasco',
+        buildNumber: '1',
         infoPlist: {
             LSApplicationQueriesSchemes: ['dvw', 'telprompt', 'tel'],
             EXUpdatesEnabled: true
@@ -28,8 +28,8 @@ const config: ExpoConfig = {
             foregroundImage: './assets/images/adaptive-icon.png',
             backgroundColor: '#ffffff'
         },
-        package: 'net.robertdev.dvw',
-        versionCode: 5
+        package: 'net.robertdev.drasco',
+        versionCode: 1
     },
     web: {
         bundler: 'metro',
@@ -40,6 +40,7 @@ const config: ExpoConfig = {
         'expo-router',
         'expo-font',
         'expo-notifications',
+
         [
             'expo-image-picker',
             {
@@ -57,7 +58,7 @@ const config: ExpoConfig = {
             origin: false
         },
         eas: {
-            projectId: '888d6d2c-fe0d-48a6-b255-50cc59d1deef'
+            projectId: 'e87419d5-8fcd-4daa-945c-ce36e902a7c6'
         }
     },
     owner: 'drny85',
@@ -65,7 +66,7 @@ const config: ExpoConfig = {
         policy: 'appVersion'
     },
     updates: {
-        url: 'https://u.expo.dev/888d6d2c-fe0d-48a6-b255-50cc59d1deef'
+        url: 'https://u.expo.dev/fee3a90d-6448-46b1-a708-eabb1d817d42'
     }
 }
 

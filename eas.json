@@ -1,18 +1,14 @@
 {
     "cli": {
-        "version": ">= 5.2.0"
+        "version": ">= 7.1.1"
     },
     "build": {
         "development": {
-            "channel": "development",
             "developmentClient": true,
             "distribution": "internal",
             "ios": {
                 "resourceClass": "large",
                 "simulator": true
-            },
-            "env": {
-                "APP_ENV": "development"
             }
         },
         "preview": {

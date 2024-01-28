@@ -1,12 +1,12 @@
+import Screen from '@/common/components/Screen'
 import Text from '@/common/components/Text'
-import View from '@/common/components/View'
 import React from 'react'
 
 const FollowUps = () => {
     return (
-        <View>
-            <Text>posts</Text>
-        </View>
+        <Screen style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <Text fontSize={20}>No Follow Ups</Text>
+        </Screen>
     )
 }
 
