@@ -1,6 +1,6 @@
 import Screen from '@/common/components/Screen'
 import Text from '@/common/components/Text'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Alert, TextInput as Input, Modal, StyleSheet } from 'react-native'
 
 import ButtonRadio from '@/common/components/RadioButton'
@@ -508,7 +508,9 @@ const ReferralsScreen = () => {
                     router.back()
                     router.push('/(app)/(root)/(settings)/referee')
                 }}
-                data={helpers.filter((h) => h.type === 'referee')}
+                data={helpers
+                    .filter((h) => h.type === 'referee')
+                    .sort((a, b) => (a.name > b.name ? 1 : -1))}
             />
 
             <DataPickerModal

@@ -21,15 +21,17 @@ import { usersCollection } from '@/lib/collections'
 import KeyboardScreen from '@/common/components/KeyboardScreen'
 import { FIREBASE_ERRORS } from '@/utils/firebaseErrorMessages'
 import { UserRole } from '@/features/auth/authSlice'
-import { isValidDrascoEmail } from '@/utils/isEmailValid'
+import { isEmailValid } from '@/utils/isEmailValid'
 import { isFullName } from '@/utils/isFullName'
 import { FontAwesome } from '@expo/vector-icons'
 import Loading from '@/common/components/Loading'
+import { formatPhone } from '@/utils/formatPhone'
 
 const scheme = z
     .object({
         name: z.string().min(6, 'Please enter a first and last name'),
         email: z.string().email(),
+        phone: z.string().min(14, 'Please enter a valid phone number'),
         password: z
             .string()
             .min(6, 'Password must contain at least 6 characters'),
@@ -52,11 +54,11 @@ const Signup = () => {
     const [loading, setLoading] = useState(false)
     const onSubmit = async (data: FormValues) => {
         try {
-            const { email, password, name } = data
-            if (!isValidDrascoEmail(email)) {
+            const { email, password, name, phone } = data
+            if (!isEmailValid) {
                 Alert.alert(
                     'Invaid Email',
-                    'Your email must be a drascosales.com domain'
+                    'Your email is invalid or incomplete'
                 )
 
                 return
@@ -86,12 +88,13 @@ const Signup = () => {
                 email: user.email!,
                 name: name,
                 role: role,
+                phone: phone,
                 emailVerified: user.emailVerified,
                 createdAt: new Date().toISOString(),
                 acceptedEULA: false,
                 blockedUsers: []
             })
-
+            94
             reset()
             setLoading(false)
             router.replace('/auth/verify')
@@ -112,6 +115,7 @@ const Signup = () => {
         defaultValues: {
             email: '',
             password: '',
+            phone: '',
             confirmPassword: ''
         }
     })
@@ -234,6 +238,34 @@ const Signup = () => {
                                             error={
                                                 errors.email &&
                                                 errors.email.message
+                                            }
+                                        />
+                                    )}
+                                />
+                            </View>
+                            <View style={{ width: '100%' }}>
+                                <Controller
+                                    control={control}
+                                    name="phone"
+                                    render={({
+                                        field: { onChange, value, onBlur }
+                                    }) => (
+                                        <TextInput
+                                            placeholder="Work Phone"
+                                            value={value}
+                                            autoCapitalize="none"
+                                            capitalize={false}
+                                            autoCorrect={false}
+                                            keyboardType="number-pad"
+                                            onBlur={() => {
+                                                onBlur()
+                                            }}
+                                            onChangeText={(text) =>
+                                                onChange(formatPhone(text))
+                                            }
+                                            error={
+                                                errors.phone &&
+                                                errors.phone.message
                                             }
                                         />
                                     )}

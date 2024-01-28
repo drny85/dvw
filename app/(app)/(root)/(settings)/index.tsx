@@ -124,8 +124,6 @@ const Settings = () => {
         }
     }, [])
 
-    console.log(user)
-
     return (
         <Screen>
             <Row style={{ justifyContent: 'space-between' }}>

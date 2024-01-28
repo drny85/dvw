@@ -22,7 +22,11 @@ export const useAuth = () => {
         const userQuery = doc(usersCollection, user.uid)
         const sub = onSnapshot(userQuery, (snapshot) => {
             dispatch(
-                setAppUser({ ...snapshot.data(), id: snapshot.id } as AppUser)
+                setAppUser({
+                    ...snapshot.data(),
+                    id: snapshot.id,
+                    emailVerified: user.emailVerified
+                } as AppUser)
             )
             setLoading(false)
         })

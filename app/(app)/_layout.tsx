@@ -19,7 +19,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 
 export const unstable_settings = {
-    initialRouteName: '(feeds)'
+    initialRouteName: '(root)'
 }
 
 export default function () {
@@ -41,14 +41,14 @@ export default function () {
             <PersistGate persistor={persistor} onBeforeLift={onBeforeLimit}>
                 {/* Render the SafeAreaView and AppNavigator when fonts and state are loaded */}
                 {stateLoaded && fontsLoaded && (
-                    <BottomSheetModalProvider>
-                        <GestureHandlerRootView
-                            onLayout={onLayout}
-                            style={Styles.flex}
-                        >
+                    <GestureHandlerRootView
+                        onLayout={onLayout}
+                        style={Styles.flex}
+                    >
+                        <BottomSheetModalProvider>
                             <RootLayout />
-                        </GestureHandlerRootView>
-                    </BottomSheetModalProvider>
+                        </BottomSheetModalProvider>
+                    </GestureHandlerRootView>
                 )}
             </PersistGate>
         </Provider>

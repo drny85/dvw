@@ -13,7 +13,6 @@ const ChatLayout = () => {
             <Stack.Screen
                 name="eula"
                 options={{
-                    headerShown: false,
                     presentation: 'fullScreenModal'
                 }}
             />

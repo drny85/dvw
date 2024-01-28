@@ -2,7 +2,7 @@ import Text from '@/common/components/Text'
 import View from '@/common/components/View'
 import React from 'react'
 
-const posts = () => {
+const FollowUps = () => {
     return (
         <View>
             <Text>posts</Text>
@@ -10,4 +10,4 @@ const posts = () => {
     )
 }
 
-export default posts
+export default FollowUps

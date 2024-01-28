@@ -19,6 +19,7 @@ import Row from '../Row'
 import Text from '../Text'
 import View from '../View'
 import { useRouter } from 'expo-router'
+import { LOYALTY_EXPIRATION_DATE } from '@/constants'
 
 type Props = {
     showResetAll?: boolean
@@ -207,6 +208,9 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
             </RowView>
             <RowView show={loyaltyBonusDiscount() > 0}>
                 <Text>Loyalty Discount</Text>
+                <Text fontSize={14} color="error">
+                    ends ({LOYALTY_EXPIRATION_DATE})
+                </Text>
                 <Text>-${loyaltyBonusDiscount()}</Text>
             </RowView>
             <RowView show={firstResponder() > 0}>

@@ -1,7 +1,7 @@
-import DateTimePickerComponent from '@/common/components/DateTimePicker'
 import Header from '@/common/components/Header'
 import Loading from '@/common/components/Loading'
 import Row from '@/common/components/Row'
+import Scheduler from '@/common/components/Scheduler'
 import Screen from '@/common/components/Screen'
 import Text from '@/common/components/Text'
 import TextInput from '@/common/components/TextInput'
@@ -18,16 +18,16 @@ import {
 } from '@/features/referrals/referralActions'
 import {
     setEditingReferral,
-    setReferralState
+    setReferralState,
+    setShowScheduler
 } from '@/features/referrals/referralsSlide'
 import { sendIntroductionEmail } from '@/firebase'
-import { scheduleFollowUp } from '@/lib/scheduleFollowUp'
+
 import { Referral } from '@/types'
 import { FontAwesome } from '@expo/vector-icons'
 import * as Linking from 'expo-linking'
 import { router } from 'expo-router'
 import moment from 'moment'
-import { AnimatePresence, MotiView } from 'moti'
 import React, { useCallback, useState } from 'react'
 import {
     ActivityIndicator,
@@ -44,8 +44,7 @@ const ReferralDetails = () => {
     const [sendingEmail, setSendingEmail] = useState(false)
 
     const [editComment, setEditComment] = useState(false)
-    const [showFollowUp, setShowFollowUp] = useState(false)
-    const [followUp, setFollowUp] = useState(new Date())
+
     const [newComment, setNewComment] = useState('')
     const bgColor = useThemeColor('background')
     const bgDanger = useThemeColor('error')
@@ -69,16 +68,6 @@ const ReferralDetails = () => {
             setSendingEmail(false)
         }
     }, [id])
-
-    const handleFollowUp = useCallback(async () => {
-        try {
-            if (!referral || !followUp) return
-            await scheduleFollowUp(referral!, followUp.toISOString())
-            setShowFollowUp(false)
-        } catch (error) {
-            console.log(error)
-        }
-    }, [referral, followUp])
 
     const updateComment = async () => {
         try {
@@ -210,6 +199,7 @@ const ReferralDetails = () => {
                     gap: SIZES.padding
                 }}
             >
+                <Scheduler referral={referral} />
                 <View
                     style={[
                         Styles.boxShadow,
@@ -227,72 +217,28 @@ const ReferralDetails = () => {
                         <Text center fontSize={22} fontFamily="SFBold">
                             {referral?.name}
                         </Text>
-                        <TouchableOpacity
-                            onPress={() => setShowFollowUp(!showFollowUp)}
-                        >
-                            <FontAwesome
-                                name="calendar-o"
-                                color={textColor}
-                                size={24}
-                            />
-                        </TouchableOpacity>
+                        {!referral.followUpOn ? (
+                            <TouchableOpacity
+                                onPress={() => {
+                                    dispatch(setShowScheduler(true))
+                                }}
+                            >
+                                <FontAwesome
+                                    name="calendar-o"
+                                    color={textColor}
+                                    size={24}
+                                />
+                            </TouchableOpacity>
+                        ) : (
+                            <Text />
+                        )}
                     </Row>
                     {!referral.propertyName.includes(referral.address) && (
                         <Text color="grey" fontSize={16} fontFamily="QSBold">
                             {referral.propertyName}
                         </Text>
                     )}
-                    <AnimatePresence>
-                        {showFollowUp && (
-                            <MotiView
-                                style={{
-                                    padding: SIZES.padding,
-                                    borderRadius: SIZES.radius,
-                                    justifyContent: 'center',
-                                    gap: SIZES.base,
-                                    alignItems: 'center',
 
-                                    backgroundColor: bgColor,
-                                    ...Styles.boxShadow
-                                }}
-                                from={{ opacity: 0, translateY: -20 }}
-                                animate={{ opacity: 1, translateY: 0 }}
-                                exit={{ opacity: 0, translateY: -20 }}
-                                transition={{
-                                    type: 'timing',
-                                    duration: 400,
-                                    delay: 200
-                                }}
-                            >
-                                <Text center fontFamily="QSBold">
-                                    Schedule Follow Up
-                                </Text>
-                                <Row>
-                                    <DateTimePickerComponent
-                                        onDateChange={(date) => {
-                                            setFollowUp(date)
-                                        }}
-                                        isVisible
-                                        style={{
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            backgroundColor: 'white',
-                                            borderRadius: 20
-                                        }}
-                                        mode="datetime"
-                                        value={followUp}
-                                        onVisibilityChange={() => {}}
-                                    />
-                                    <TouchableOpacity
-                                        onPress={handleFollowUp}
-                                        style={{ marginLeft: SIZES.padding }}
-                                    >
-                                        <Text fontFamily="SFBold">Save</Text>
-                                    </TouchableOpacity>
-                                </Row>
-                            </MotiView>
-                        )}
-                    </AnimatePresence>
                     <View style={{ gap: SIZES.base, marginTop: SIZES.base }}>
                         <Text fontFamily="QSLight">
                             {referral?.address &&

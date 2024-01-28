@@ -1,4 +1,3 @@
-import Text from '@/common/components/Text'
 import Greeting from '@/common/components/feed/Greeting'
 import useAppSelector from '@/common/hooks/useAppSelector'
 import useNotifications from '@/common/hooks/useNotification'

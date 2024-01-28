@@ -6,12 +6,13 @@ type ReferralsState = {
     referralId: string | null
     editing: boolean
     goToPlan: boolean
+    showScheduler: boolean
 }
 const initialState: ReferralsState = {
     referral: null,
     editing: false,
     goToPlan: false,
-
+    showScheduler: false,
     referralId: null
 }
 
@@ -31,6 +32,9 @@ const referralsSlide = createSlice({
 
         setReferralId: (state, { payload }: PayloadAction<string | null>) => {
             state.referralId = payload
+        },
+        setShowScheduler: (state, { payload }: PayloadAction<boolean>) => {
+            state.showScheduler = payload
         }
     }
 })
@@ -39,7 +43,8 @@ export const {
     setReferralState,
     setEditingReferral,
     setGoToPlanRoute,
-    setReferralId
+    setReferralId,
+    setShowScheduler
 } = referralsSlide.actions
 
 export default referralsSlide.reducer

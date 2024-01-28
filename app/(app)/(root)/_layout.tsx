@@ -2,15 +2,15 @@
 
 import useAppSelector from '@/common/hooks/useAppSelector'
 
-import { Redirect, Tabs } from 'expo-router'
+import { Redirect, Tabs, useSegments } from 'expo-router'
 
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { FontAwesome } from '@expo/vector-icons'
 
 import { useAuth } from '@/common/hooks/auth/useAuth'
+import { onFetchUpdateAsync } from '@/utils/checkUpdates'
 import React from 'react'
 import { LogBox } from 'react-native'
-import { onFetchUpdateAsync } from '@/utils/checkUpdates'
 
 function TabBarIcon(props: {
     name: React.ComponentProps<typeof FontAwesome>['name']
@@ -26,14 +26,16 @@ LogBox.ignoreLogs([
 
 export const unstable_settings = {
     // Ensure any route can link back to `/`
-    initialRouteName: '(feeds)'
+    initialRouteName: '(root)'
 }
 
 export default function () {
     // Check if the user is logged in using Redux state
     const { loading } = useAuth()
     onFetchUpdateAsync()
+    const segments = useSegments()
 
+    console.log('segments', segments)
     const { user, loading: ld } = useAppSelector((state) => state.auth)
     const tabBarActiveTintColor = useThemeColor('accent')
     const primaryColor = useThemeColor('background')
@@ -42,12 +44,13 @@ export default function () {
 
     if ((!user || !user.emailVerified) && !loading) {
         console.log('Redirect to auth from app/layout')
+
         return <Redirect href={'/(app)/auth'} />
     }
 
     return (
         <Tabs
-            initialRouteName="(home)"
+            initialRouteName="(feeds)"
             screenOptions={{
                 tabBarActiveTintColor,
                 headerShadowVisible: false,

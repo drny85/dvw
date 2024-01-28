@@ -12,7 +12,6 @@ import { NotificationData } from '@/types'
 
 Notifications.setNotificationHandler({
     handleNotification: async (notification) => {
-        console.log('NOTIFICATION', notification)
         return {
             shouldShowAlert: true,
             shouldPlaySound: true,

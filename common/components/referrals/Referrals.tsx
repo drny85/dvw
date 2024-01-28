@@ -16,12 +16,18 @@ import Screen from '../Screen'
 import Text from '../Text'
 import View from '../View'
 import ReferralsMiniCard from './ReferralsMiniCard'
+import useAppDispatch from '@/common/hooks/useAppDispatch'
+import {
+    setEditingReferral,
+    setReferralId,
+    setReferralState
+} from '@/features/referrals/referralsSlide'
 
 const Referrals = () => {
     const bgColor = useThemeColor('secondary')
     const { loading, helpers } = useHelpers()
     const accent = useThemeColor('accent')
-
+    const dispatch = useAppDispatch()
     const user = useAppSelector((s) => s.auth.user)
 
     const name = user?.name.split(' ')[0] ?? ''
@@ -218,7 +224,10 @@ const Referrals = () => {
                         { backgroundColor: bgColor }
                     ]}
                     onPress={() => {
-                        router.push('/referrals')
+                        dispatch(setEditingReferral(false))
+                        dispatch(setReferralId(null))
+                        dispatch(setReferralState(null))
+                        router.push('/(app)/(modals)/referral')
                     }}
                 >
                     <FontAwesome name="plus" size={30} color={'white'} />

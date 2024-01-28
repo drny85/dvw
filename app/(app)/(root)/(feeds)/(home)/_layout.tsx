@@ -30,11 +30,17 @@ const HomeLayout = () => {
                 tabBarIndicatorStyle: { backgroundColor: acent },
                 tabBarLabelStyle: {
                     textTransform: 'capitalize',
-                    fontWeight: 'bold'
+                    fontWeight: 'bold',
+                    fontSize: 16
                 }
             }}
         >
-            <MaterialTopTabs.Screen name="index" options={{ title: 'Home' }} />
+            <MaterialTopTabs.Screen name="index" options={{ title: 'Posts' }} />
+            <MaterialTopTabs.Screen name="feeds" options={{ title: 'Feeds' }} />
+            <MaterialTopTabs.Screen
+                name="followups"
+                options={{ title: 'Follow Ups' }}
+            />
         </MaterialTopTabs>
     )
 }

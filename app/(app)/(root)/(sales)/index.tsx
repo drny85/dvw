@@ -254,8 +254,10 @@ function SaleDataLine(
                             width: '70%'
                         }}
                     >
-                        <Text capitalize>{item.user.name}</Text>
-                        <Text capitalize>
+                        <Text color="white" capitalize>
+                            {item.user.name}
+                        </Text>
+                        <Text color="white" capitalize>
                             {item.numberOfLines}{' '}
                             {item.numberOfLines === 1 ? 'line' : 'lines'}
                         </Text>
@@ -268,7 +270,7 @@ function SaleDataLine(
                                 : 'chevron-right'
                         }
                         size={20}
-                        color={iconColor}
+                        color={'#ffffff'}
                     />
                 </Row>
             </TouchableOpacity>

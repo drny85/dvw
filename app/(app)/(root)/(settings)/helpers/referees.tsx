@@ -8,7 +8,7 @@ import { SIZES } from '@/constants/Sizes'
 import { FontAwesome } from '@expo/vector-icons'
 import { router } from 'expo-router'
 import React from 'react'
-import { StyleSheet, TouchableOpacity } from 'react-native'
+import { TouchableOpacity } from 'react-native'
 
 const Referees = () => {
     const { loading, helpers } = useHelpers()
@@ -31,11 +31,13 @@ const Referees = () => {
                     </TouchableOpacity>
                 }
             />
-            <PersonList data={helpers.filter((h) => h.type === 'referee')} />
+            <PersonList
+                data={helpers
+                    .filter((h) => h.type === 'referee')
+                    .sort((a, b) => (a.name > b.name ? 1 : -1))}
+            />
         </Screen>
     )
 }
 
 export default Referees
-
-const styles = StyleSheet.create({})
