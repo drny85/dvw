@@ -9,7 +9,7 @@ export const unstable_settings = {
 const ChatLayout = () => {
     return (
         <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="main" options={{ headerShown: false }} />
             <Stack.Screen
                 name="eula"
                 options={{
