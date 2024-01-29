@@ -1,5 +1,11 @@
 import { onCall } from 'firebase-functions/v2/https'
-import { onDocumentCreated } from 'firebase-functions/v2/firestore'
+import {
+    Change,
+    DocumentSnapshot,
+    FirestoreEvent,
+    onDocumentCreated,
+    onDocumentWritten
+} from 'firebase-functions/v2/firestore'
 
 // import * as functions from 'firebase-functions'
 // import * as moment from 'moment'
@@ -11,6 +17,7 @@ import { WirelessQuoteEmail } from './email'
 import {
     AppUser,
     Feed,
+    Helper,
     Message,
     NotificationData,
     Referral,
@@ -230,6 +237,34 @@ exports.sendNewPostNotification = onDocumentCreated(
             )
         } catch (error) {
             console.log(error)
+        }
+    }
+)
+
+exports.sendCloseEmail = onDocumentWritten(
+    'referrals/{userId}/referrals/{referralId}',
+    async (event: FirestoreEvent<Change<DocumentSnapshot>> | undefined) => {
+        try {
+            if (!event?.data.after.exists) return
+            const d = event?.data.before.data()
+            const data = d as Referral
+            if (data.status.id !== 'closed' || data.email_sent) return
+            const refereeEmail = data.referee?.email
+            const ceEmail = data.manager?.email
+            const helpersRef = (
+                await admin
+                    .firestore()
+                    .collection('helpers')
+                    .doc(data.userId!)
+                    .get()
+            ).data() as Helper[]
+            const coach = helpersRef.find((h) => h.type === 'coach')
+            const coachEmail = coach?.email || ''
+            console.log(refereeEmail, ceEmail, coachEmail)
+            //SEND EMAIL TO LA
+        } catch (error) {
+            const e = error as Error
+            console.log(e.message)
         }
     }
 )
