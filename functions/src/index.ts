@@ -1,8 +1,5 @@
 import { onCall } from 'firebase-functions/v2/https'
 import {
-    Change,
-    DocumentSnapshot,
-    FirestoreEvent,
     onDocumentCreated,
     onDocumentWritten
 } from 'firebase-functions/v2/firestore'
@@ -26,6 +23,8 @@ import {
 import * as dotenv from 'dotenv'
 import { sendNotificationToAllUsers } from './sendNotificationToAllUsers'
 import IntroductionEmail, { IntroductionEmailProps } from './introductionEmail'
+import SendCloseEmail from './closeSaleEmail'
+import SendCloseEmailToReferee from './closeEmailToReferee'
 dotenv.config()
 
 const resend = new Resend(process.env.RESEND_API_KEY!)
@@ -152,7 +151,7 @@ exports.sendEmail = onCall<{ quoteId: string }>(
                 to: [quote.email],
                 subject: 'Wireless Quote',
                 reply_to: user.email,
-                cc: [user.email!],
+                bcc: [user.email!],
                 text: '',
                 react: Template(quoteData)
             })
@@ -243,7 +242,7 @@ exports.sendNewPostNotification = onDocumentCreated(
 
 exports.sendCloseEmail = onDocumentWritten(
     'referrals/{userId}/referrals/{referralId}',
-    async (event: FirestoreEvent<Change<DocumentSnapshot>> | undefined) => {
+    async (event: any) => {
         try {
             if (!event?.data.after.exists) return
             const d = event?.data.before.data()
@@ -261,7 +260,37 @@ exports.sendCloseEmail = onDocumentWritten(
             const coach = helpersRef.find((h) => h.type === 'coach')
             const coachEmail = coach?.email || ''
             console.log(refereeEmail, ceEmail, coachEmail)
+            const userRef = await admin
+                .firestore()
+                .collection('users')
+                .doc(data.userId!)
+                .get()
+            const user = userRef.data() as AppUser
+            const Template: typeof SendCloseEmail = SendCloseEmail
             //SEND EMAIL TO LA
+            await resend.emails.send({
+                from: `${user.name} <melendez@robertdev.net>`,
+                to: [coachEmail],
+                subject: 'Sale / Referral Closed',
+                reply_to: user.email,
+                bcc: [data.manager?.email!],
+                text: '',
+                react: Template(data)
+            })
+
+            if (data.isReferral && refereeEmail) {
+                const TemplateTwo: typeof SendCloseEmailToReferee =
+                    SendCloseEmailToReferee
+                await resend.emails.send({
+                    from: `${user.name} <melendez@robertdev.net>`,
+                    to: [refereeEmail],
+                    subject: 'Congratulations! This Referral Has Been Closed',
+                    reply_to: user.email,
+                    bcc: [data.manager?.email!, coachEmail],
+                    text: '',
+                    react: TemplateTwo(data)
+                })
+            }
         } catch (error) {
             const e = error as Error
             console.log(e.message)

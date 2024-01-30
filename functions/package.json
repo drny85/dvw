@@ -19,7 +19,7 @@
         "dotenv": "^16.3.1",
         "expo-server-sdk": "^3.7.0",
         "firebase-admin": "^11.8.0",
-        "firebase-functions": "^4.3.1",
+        "firebase-functions": "^4.6.0",
         "moment": "^2.29.4",
         "resend": "^1.1.0"
     },
