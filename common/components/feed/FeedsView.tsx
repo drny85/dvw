@@ -80,7 +80,12 @@ const FeedsView = () => {
                         You have placed {todayOrders.length} order
                         {todayOrders.length > 1 ? 's' : ''} today.
                     </Text>
-                    <View style={{ padding: SIZES.base, gap: SIZES.base }}>
+                    <View
+                        style={{
+                            padding: SIZES.base,
+                            gap: SIZES.base * 1.5
+                        }}
+                    >
                         {todayOrders.map((r, index) => (
                             <Text key={r.id} fontFamily="QSLight">
                                 {' '}
@@ -89,6 +94,23 @@ const FeedsView = () => {
                             </Text>
                         ))}
                     </View>
+                    {todayOrders.length >= 3 && (
+                        <Row
+                            style={{
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                gap: SIZES.padding,
+                                marginTop: SIZES.padding
+                            }}
+                        >
+                            <Text fontFamily="QSBold">Excellent!</Text>
+                            <FontAwesome
+                                name="thumbs-o-up"
+                                color={textColor}
+                                size={20}
+                            />
+                        </Row>
+                    )}
                 </MotiView>
             )}
             {todayFollowups.length > 0 && (
@@ -223,7 +245,8 @@ const FeedsView = () => {
                     <Text fontFamily="QSBold" fontSize={18} center>
                         There {movingTomorrow.length === 1 ? 'is' : 'are'}{' '}
                         {movingTomorrow.length} customer
-                        {movingTomorrow.length === 1 ? '' : 's'} who are moving
+                        {movingTomorrow.length === 1 ? '' : 's'} who{' '}
+                        {movingTomorrow.length === 1 ? 'is' : 'are'} moving
                         tomorrow.
                     </Text>
 
@@ -234,7 +257,7 @@ const FeedsView = () => {
                             marginTop: SIZES.base
                         }}
                     >
-                        {movedYesterday.map((r) => (
+                        {movingTomorrow.map((r) => (
                             <TouchableOpacity
                                 key={r.id}
                                 onPress={() => {

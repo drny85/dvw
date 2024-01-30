@@ -1,4 +1,5 @@
 import Greeting from '@/common/components/feed/Greeting'
+import { useReferrals } from '@/common/hooks/referrals/useReferrals'
 import useAppSelector from '@/common/hooks/useAppSelector'
 import useNotifications from '@/common/hooks/useNotification'
 import useThemeColor from '@/common/hooks/useThemeColor'
@@ -14,6 +15,7 @@ export const unstable_settings = {
 const _layout = () => {
     const bgColor = useThemeColor('background')
     const textColor = useThemeColor('text')
+    useReferrals()
     const user = useAppSelector((s) => s.auth.user)
     useNotifications()
     return (

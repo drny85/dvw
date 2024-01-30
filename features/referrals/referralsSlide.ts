@@ -3,6 +3,7 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 type ReferralsState = {
     referral: Referral | null
+    referrals: Referral[]
     referralId: string | null
     editing: boolean
     goToPlan: boolean
@@ -10,6 +11,7 @@ type ReferralsState = {
 }
 const initialState: ReferralsState = {
     referral: null,
+    referrals: [],
     editing: false,
     goToPlan: false,
     showScheduler: false,
@@ -35,6 +37,9 @@ const referralsSlide = createSlice({
         },
         setShowScheduler: (state, { payload }: PayloadAction<boolean>) => {
             state.showScheduler = payload
+        },
+        setAllReferrals: (state, { payload }: PayloadAction<Referral[]>) => {
+            state.referrals = payload
         }
     }
 })
@@ -44,7 +49,8 @@ export const {
     setEditingReferral,
     setGoToPlanRoute,
     setReferralId,
-    setShowScheduler
+    setShowScheduler,
+    setAllReferrals
 } = referralsSlide.actions
 
 export default referralsSlide.reducer
