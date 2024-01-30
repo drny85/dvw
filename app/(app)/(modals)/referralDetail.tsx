@@ -28,7 +28,7 @@ import { FontAwesome } from '@expo/vector-icons'
 import * as Linking from 'expo-linking'
 import { router } from 'expo-router'
 import moment from 'moment'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import {
     ActivityIndicator,
     Alert,
@@ -44,7 +44,6 @@ const ReferralDetails = () => {
     const [sendingEmail, setSendingEmail] = useState(false)
 
     const [editComment, setEditComment] = useState(false)
-
     const [newComment, setNewComment] = useState('')
     const bgColor = useThemeColor('background')
     const bgDanger = useThemeColor('error')
@@ -133,6 +132,23 @@ const ReferralDetails = () => {
                 console.log(error)
             })
     }
+
+    useEffect(() => {
+        if (referral?.followUpOn) {
+            const diff = moment(referral?.followUpOn).isBefore(
+                moment().subtract(15, 'minutes')
+            )
+            if (diff) {
+                dispatch(
+                    updateReferral({
+                        ...referral!,
+                        followUpOn: null,
+                        followUpType: null
+                    })
+                )
+            }
+        }
+    }, [])
 
     if (loading || !id) return <Loading />
     if (!referral)

@@ -254,7 +254,18 @@ function SaleDataLine(
                             width: '70%'
                         }}
                     >
-                        <Text color="white" capitalize>
+                        <Text
+                            color="white"
+                            capitalize
+                            fontFamily={
+                                expand && saleId === item.user.id
+                                    ? 'SFBold'
+                                    : 'SFRegular'
+                            }
+                            fontSize={
+                                expand && saleId === item.user.id ? 20 : 16
+                            }
+                        >
                             {item.user.name}
                         </Text>
                         <Text color="white" capitalize>
@@ -293,20 +304,20 @@ function SaleDataLine(
                                         margin: SIZES.base
                                     }}
                                 >
-                                    <Text>
+                                    <Text color="white">
                                         {s.numberOfLines}{' '}
                                         {s.numberOfLines === 1
                                             ? 'line'
                                             : 'lines'}
                                     </Text>
-                                    <Text>
+                                    <Text color="white">
                                         {s.saleType === 'direct'
                                             ? s.numberOfLines === 1
                                                 ? 'Direct Sale'
                                                 : 'Direct Sales'
                                             : 'Click to Call'}
                                     </Text>
-                                    <Text>
+                                    <Text color="white">
                                         {moment(s.createdAt).format(
                                             'MMM DD, YYYY'
                                         )}

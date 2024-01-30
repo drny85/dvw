@@ -144,6 +144,7 @@ export type Referral = {
     phone: string
     email?: string
     address: string
+    followUpType: 'fios' | 'wireless' | null
     propertyName: string
     apt?: string | null
     package: {

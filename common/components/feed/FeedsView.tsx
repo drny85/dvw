@@ -54,7 +54,9 @@ const FeedsView = () => {
     const todayFollowups = referrals.filter(
         (r) =>
             r.followUpOn !== null &&
-            moment(r.followUpOn).startOf('day').isSame(moment().startOf('day'))
+            moment(r.followUpOn)
+                .startOf('day')
+                .isBetween(moment().startOf('day'), moment().add(15, 'minutes'))
     )
 
     if (loading) return <Loading />

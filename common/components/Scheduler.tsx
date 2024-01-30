@@ -18,6 +18,8 @@ import { updateReferral } from '@/features/referrals/referralActions'
 const Scheduler = ({ referral }: { referral: Referral }) => {
     const showFollowUp = useAppSelector((s) => s.referrals.showScheduler)
     const [followUp, setFollowUp] = useState<Date>(new Date())
+    const [followUpType, setFollowUpType] =
+        useState<Referral['followUpType']>(null)
     const dispatch = useAppDispatch()
     const bgColor = useThemeColor('secondary')
     const btnColor = useThemeColor('background')
@@ -35,7 +37,8 @@ const Scheduler = ({ referral }: { referral: Referral }) => {
             dispatch(
                 updateReferral({
                     ...referral,
-                    followUpOn: followUp?.toISOString()
+                    followUpOn: followUp?.toISOString(),
+                    followUpType: followUpType || null
                 })
             )
             console.log('follow up scheduled', followUp.toISOString())

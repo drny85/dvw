@@ -264,21 +264,21 @@ const renderPayoutInfo = (
                     alignItems: 'center'
                 }}
             >
-                <Text fontFamily="QSLight" fontSize={16}>
+                <Text color="white" fontFamily="SFLight" fontSize={18}>
                     {refs.length <= TIERS.tier.tier1 &&
                         `Hey ${name}, let see how we can get you to Tier 2`}
                 </Text>
-                <Text fontFamily="QSRegular">
+                <Text color="white" fontFamily="QSRegular">
                     {refs.length >= TIERS.tier.tier2 &&
                         refs.length < TIERS.tier.tier3 &&
                         `Great ${name}, you are in Tier 2 now`}
                 </Text>
-                <Text fontFamily="QSRegular">
+                <Text color="white" fontFamily="QSRegular">
                     {refs.length >= TIERS.tier.tier3 &&
                         `Excellent ${name}, you are in Tier 3 now, why stop?`}
                 </Text>
-                <Text fontFamily="QSBold">
-                    Here is how much you have earned so far!
+                <Text color="white" fontFamily="QSBold" fontSize={18}>
+                    Earned so far!
                 </Text>
                 <View
                     style={{
@@ -286,7 +286,7 @@ const renderPayoutInfo = (
                         alignItems: 'center'
                     }}
                 >
-                    <Text fontSize={26} fontFamily="SFBold">
+                    <Text color="white" fontSize={26} fontFamily="SFBold">
                         ${amount}
                     </Text>
                     {/* <AnimatedNumbers

@@ -35,21 +35,21 @@ import moment from 'moment'
 
 import DataPickerModal from '@/common/components/DataPickerModal'
 import Loading from '@/common/components/Loading'
+import Congratulations from '@/common/components/referrals/Congratulations'
 import { useHelpers } from '@/common/hooks/referrals/useHelpers'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
 import {
     addReferral,
     updateReferral
 } from '@/features/referrals/referralActions'
-import { formatPhone } from '@/utils/formatPhone'
-import { isEmailValid } from '@/utils/isEmailValid'
-import { FlatList } from 'react-native-gesture-handler'
 import {
     setEditingReferral,
     setReferralState
 } from '@/features/referrals/referralsSlide'
 import { setSaleQuoteReferral } from '@/features/sales/salesSlide'
-import Congratulations from '@/common/components/referrals/Congratulations'
+import { formatPhone } from '@/utils/formatPhone'
+import { isEmailValid } from '@/utils/isEmailValid'
+import { FlatList } from 'react-native-gesture-handler'
 
 const GOOGLE_KEY = process.env.EXPO_PUBLIC_GOOGLE_KEY as string
 
@@ -103,6 +103,7 @@ const ReferralsScreen = () => {
         date_entered: new Date().toISOString(),
         isVerizonWirelessCustomer: isVZW,
         propertyName: '',
+        followUpType: null,
         mon: null,
         manager: null,
         package: {
@@ -249,6 +250,7 @@ const ReferralsScreen = () => {
             setAddress(editingReferral.address)
             setReferral(editingReferral)
             setMoveIn(referral.moveIn)
+            setIsVZW(referral.isVerizonWirelessCustomer)
             setIndex(3)
         }
 

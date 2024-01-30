@@ -53,16 +53,16 @@ const FollowUps = () => {
                         alignItems: 'center'
                     }}
                 >
-                    <Text>
+                    <Text color="white">
                         {' '}
                         {index + 1} - {item.name}
                     </Text>
 
-                    <Text fontSize={14} fontFamily="SFLight">
+                    <Text color="white" fontSize={14} fontFamily="SFLight">
                         {moment(item.followUpOn).fromNow()}
                     </Text>
                 </Row>
-                <Text center fontFamily="QSLight" fontSize={12}>
+                <Text color="white" center fontFamily="QSBold" fontSize={12}>
                     {moment(item.followUpOn).format('lll')}s
                 </Text>
             </TouchableOpacity>
