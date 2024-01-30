@@ -1,8 +1,9 @@
+import Loading from '@/common/components/Loading'
 import Row from '@/common/components/Row'
 import Screen from '@/common/components/Screen'
 import Text from '@/common/components/Text'
+import { useReferrals } from '@/common/hooks/referrals/useReferrals'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
-import useAppSelector from '@/common/hooks/useAppSelector'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import Styles from '@/constants/Styles'
@@ -14,10 +15,10 @@ import React from 'react'
 import { FlatList, ListRenderItem, TouchableOpacity } from 'react-native'
 
 const FollowUps = () => {
-    const referrals = useAppSelector((s) => s.referrals.referrals)
+    const { referrals, loading } = useReferrals()
     const bg = useThemeColor('accent')
     const dispatch = useAppDispatch()
-    const data = referrals.filter(
+    const data = referrals?.filter(
         (r) => r.followUpOn !== null && moment(r.followUpOn).isAfter(moment())
     )
 
@@ -67,6 +68,8 @@ const FollowUps = () => {
             </TouchableOpacity>
         )
     }
+
+    if (loading) return <Loading />
     return (
         <Screen>
             <Text center style={{ marginTop: SIZES.padding }}>
