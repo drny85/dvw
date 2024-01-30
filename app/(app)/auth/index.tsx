@@ -79,18 +79,21 @@ const Login = () => {
                 <Text fontSize={24} fontFamily="SFHeavy">
                     Welcome
                 </Text>
-                <TextInput
-                    placeholder="Email"
-                    autoCapitalize="none"
-                    onChangeText={setEmail}
-                    keyboardType="email-address"
-                    value={email}
-                />
+                <View style={{ width: '100%', maxWidth: 600 }}>
+                    <TextInput
+                        placeholder="Email"
+                        autoCapitalize="none"
+                        onChangeText={setEmail}
+                        keyboardType="email-address"
+                        value={email}
+                    />
+                </View>
                 <View
                     style={{
                         width: '100%',
                         justifyContent: 'center',
-                        alignItems: 'center'
+                        alignItems: 'center',
+                        maxWidth: 600
                     }}
                 >
                     <TextInput
@@ -166,9 +169,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         padding: SIZES.padding,
         gap: SIZES.padding * 2,
-        maxWidth: 600,
-        alignSelf: 'center',
+        // maxWidth: 600,
         width: '100%',
+        marginHorizontal: 'auto',
         flex: 1
     },
     btn: {

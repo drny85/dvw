@@ -125,7 +125,9 @@ const Settings = () => {
     }, [])
 
     return (
-        <Screen>
+        <Screen
+            style={{ paddingHorizontal: SIZES.width > 700 ? 60 : undefined }}
+        >
             <Row style={{ justifyContent: 'space-between' }}>
                 <ThemeSwitcher small />
                 <Row
@@ -148,7 +150,13 @@ const Settings = () => {
                 </Row>
             </Row>
 
-            <ScrollView style={{ ...Styles.flex, marginTop: SIZES.base }}>
+            <ScrollView
+                style={{
+                    ...Styles.flex,
+                    marginTop: SIZES.base
+                }}
+                showsVerticalScrollIndicator={false}
+            >
                 <Image
                     source={
                         user?.image
@@ -243,7 +251,7 @@ const Settings = () => {
                     )}
                 </View>
                 <Divider />
-                <View style={{ gap: SIZES.padding * 1.5, marginBottom: 10 }}>
+                <View style={{ gap: SIZES.padding * 2, marginBottom: 10 }}>
                     <TouchableOpacity
                         onPress={() =>
                             router.push(
