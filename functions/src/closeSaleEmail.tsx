@@ -26,10 +26,13 @@ export const SendCloseEmail = ({
     comment,
     moveIn,
     email,
+    package: service,
     referee,
     type
 }: Referral) => {
     const previewText = `This Sale Has Been Closed`
+
+    const services = generatePackage(service)
 
     return (
         <Html>
@@ -55,6 +58,8 @@ export const SendCloseEmail = ({
                             <Text className="font-bold">
                                 Due Date: {moment(due_date).format('ll')}
                             </Text>
+
+                            <Text>Services Ordered: {services}</Text>
 
                             <Text>Address: {address}</Text>
                             {apt && (
@@ -82,7 +87,7 @@ export const SendCloseEmail = ({
                         <Text className="font-bold">Comments / Notes</Text>
                         <Section className="shadow-md rounded-md bg-slate-300 px-4">
                             <Text className="text-black font-italic">
-                                Comment: {comment}
+                                {comment}
                             </Text>
                         </Section>
                     </Container>
@@ -93,3 +98,26 @@ export const SendCloseEmail = ({
 }
 
 export default SendCloseEmail
+
+const generatePackage = (serive: Referral['package']) => {
+    {
+        serive && serive.internet && serive.internet.name + ', '
+    }
+    {
+        serive && serive.tv && serive.tv.name + ', '
+    }
+    {
+        serive && serive.home && serive.home.name
+    }
+    if (!serive) {
+        return null
+    }
+    const i = serive && serive.internet ? serive.internet.name : ''
+    const tv = serive && serive.tv ? serive.tv.name : ''
+    const ph = serive && serive.home ? serive.home.name : ''
+    const wireless = serive && serive.wireless ? serive.wireless.name : ''
+
+    const final = i + ' ' + tv + ' ' + ph + ' ' + wireless
+
+    return final
+}

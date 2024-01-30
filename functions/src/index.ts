@@ -14,7 +14,6 @@ import { WirelessQuoteEmail } from './email'
 import {
     AppUser,
     Feed,
-    Helper,
     Message,
     NotificationData,
     Referral,
@@ -25,6 +24,7 @@ import { sendNotificationToAllUsers } from './sendNotificationToAllUsers'
 import IntroductionEmail, { IntroductionEmailProps } from './introductionEmail'
 import SendCloseEmail from './closeSaleEmail'
 import SendCloseEmailToReferee from './closeEmailToReferee'
+import { quotes } from './quotes'
 dotenv.config()
 
 const resend = new Resend(process.env.RESEND_API_KEY!)
@@ -245,21 +245,22 @@ exports.sendCloseEmail = onDocumentWritten(
     async (event: any) => {
         try {
             if (!event?.data.after.exists) return
-            const d = event?.data.before.data()
+            const d = event?.data.after.data()
             const data = d as Referral
+            console.log('Referral', data)
             if (data.status.id !== 'closed' || data.email_sent) return
             const refereeEmail = data.referee?.email
             const ceEmail = data.manager?.email
-            const helpersRef = (
-                await admin
-                    .firestore()
-                    .collection('helpers')
-                    .doc(data.userId!)
-                    .get()
-            ).data() as Helper[]
-            const coach = helpersRef.find((h) => h.type === 'coach')
+            const helpersRef = await admin
+                .firestore()
+                .collection('helpers')
+                .doc(data.userId!)
+                .collection('helpers')
+                .get()
+            const coaches = helpersRef.docs.map((s) => s.data())
+            const coach = coaches.find((h) => h.type === 'coach')
             const coachEmail = coach?.email || ''
-            console.log(refereeEmail, ceEmail, coachEmail)
+
             const userRef = await admin
                 .firestore()
                 .collection('users')
@@ -273,12 +274,16 @@ exports.sendCloseEmail = onDocumentWritten(
                 to: [coachEmail],
                 subject: 'Sale / Referral Closed',
                 reply_to: user.email,
-                bcc: [data.manager?.email!],
+                bcc: [data.manager?.email!, user.email!],
                 text: '',
                 react: Template(data)
             })
 
             if (data.isReferral && refereeEmail) {
+                let n = Math.floor(Math.random() * Math.floor(quotes.length))
+                let author = quotes[n].author
+                let quote = quotes[n].quote
+                const d = { ...data, author, quote }
                 const TemplateTwo: typeof SendCloseEmailToReferee =
                     SendCloseEmailToReferee
                 await resend.emails.send({
@@ -286,11 +291,22 @@ exports.sendCloseEmail = onDocumentWritten(
                     to: [refereeEmail],
                     subject: 'Congratulations! This Referral Has Been Closed',
                     reply_to: user.email,
-                    bcc: [data.manager?.email!, coachEmail],
+                    bcc: [ceEmail, coachEmail, user.email],
                     text: '',
-                    react: TemplateTwo(data)
+                    react: TemplateTwo(d)
                 })
             }
+
+            admin
+                .firestore()
+                .collection('referrals')
+                .doc(event.params.userId)
+                .collection('referrals')
+                .doc(event.params.referralId)
+                .update({
+                    email_sent: true,
+                    email_sent_on: new Date().toISOString()
+                })
         } catch (error) {
             const e = error as Error
             console.log(e.message)

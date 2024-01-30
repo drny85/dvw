@@ -13,7 +13,11 @@ import { Tailwind } from '@react-email/tailwind'
 
 import * as moment from 'moment'
 import { Referral } from './typing'
-
+type Quote = {
+    quote?: string
+    author?: string
+}
+type EmailRef = Referral & Quote
 export const CloseReferralEmailToReferee = ({
     name,
     due_date,
@@ -23,8 +27,10 @@ export const CloseReferralEmailToReferee = ({
     phone,
     moveIn,
     email,
-    referee
-}: Referral) => {
+    referee,
+    quote,
+    author
+}: EmailRef) => {
     const previewText = `Congratualtions ${
         referee?.name.split(' ')[0]
     }! This Referral Has Been Closed`
@@ -52,7 +58,7 @@ export const CloseReferralEmailToReferee = ({
                         <Section className="text-center my-3">
                             <Text className="font-semibold">
                                 Please if you have a moment and have some
-                                referrals, submit those now, why wait?
+                                referrals, submit those now, why wait!
                             </Text>
                             <Link
                                 href="https://www.verizonreferralrewards.com/"
@@ -63,7 +69,7 @@ export const CloseReferralEmailToReferee = ({
                             </Link>
                             <Text className="text-gray-600 font-semibold text-md italic">
                                 -- Do not forget that you can submit move outs,
-                                lease renewal or moing within the property --
+                                lease renewal or moving within the property --
                             </Text>
                         </Section>
                         <Hr className="h-[1px] bg-slate-400" />
@@ -98,12 +104,10 @@ export const CloseReferralEmailToReferee = ({
                             </Section>
                             <Section className="bg-slate-300 rounded-md p-3">
                                 <Text className="italic text-sm text-slate-600">
-                                    The happiest people seem to be those who
-                                    have no particular cause for being happy
-                                    except that they are so.
+                                    {quote}
                                 </Text>
-                                <Text className="text-right pt-3 italic font-slate-400 text-sm">
-                                    -- Willian Ortiz
+                                <Text className="text-right pt-3 italic font-slate-400 text-sm capitalize">
+                                    -- {author}
                                 </Text>
                             </Section>
                         </Container>

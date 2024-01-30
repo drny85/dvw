@@ -1,31 +1,26 @@
-import { Alert, StyleSheet, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
-import Screen from '@/common/components/Screen'
-import View from '@/common/components/View'
 import Header from '@/common/components/Header'
-import { router, useLocalSearchParams, useSegments } from 'expo-router'
-import { UserRole } from '@/features/auth/authSlice'
-import TextInput from '@/common/components/TextInput'
-import { Helper } from '@/types'
-import useAppSelector from '@/common/hooks/useAppSelector'
-import { formatPhone } from '@/utils/formatPhone'
-import { SIZES } from '@/constants/Sizes'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import Loading from '@/common/components/Loading'
+import Screen from '@/common/components/Screen'
 import Text from '@/common/components/Text'
+import TextInput from '@/common/components/TextInput'
+import View from '@/common/components/View'
+import useAppSelector from '@/common/hooks/useAppSelector'
 import useThemeColor from '@/common/hooks/useThemeColor'
+import { SIZES } from '@/constants/Sizes'
+import { UserRole } from '@/features/auth/authSlice'
+import { helpersCollection } from '@/lib/collections'
+import { Helper } from '@/types'
+import { formatPhone } from '@/utils/formatPhone'
 import { isEmailValid } from '@/utils/isEmailValid'
 import { isFullName } from '@/utils/isFullName'
-import Loading from '@/common/components/Loading'
+import { router, useLocalSearchParams } from 'expo-router'
 import { addDoc } from 'firebase/firestore'
-import { helpersCollection } from '@/lib/collections'
+import React, { useState } from 'react'
+import { Alert, StyleSheet, TouchableOpacity } from 'react-native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 const Person = () => {
     const { helper } = useLocalSearchParams<{ helper: UserRole }>()
-    const segment = useSegments()
-    console.log(segment)
-    if (segment.findIndex((s) => s === '(feeds)') === -1) {
-        console.log('redirect')
-    }
 
     const btn = useThemeColor('accent')
     const title =
