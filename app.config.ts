@@ -3,7 +3,7 @@ import { ExpoConfig } from 'expo/config'
 const config: ExpoConfig = {
     name: 'Drasco',
     slug: 'drasco',
-    version: '1.0.0',
+    version: '1.0.1',
     orientation: 'portrait',
     icon: './assets/images/icon.png',
     scheme: 'drasco',
@@ -17,7 +17,7 @@ const config: ExpoConfig = {
     ios: {
         supportsTablet: true,
         bundleIdentifier: 'net.robertdev.drasco-dvw',
-        buildNumber: '1',
+        buildNumber: '2',
         infoPlist: {
             LSApplicationQueriesSchemes: ['dvw', 'telprompt', 'tel'],
             EXUpdatesEnabled: true
@@ -29,7 +29,7 @@ const config: ExpoConfig = {
             backgroundColor: '#ffffff'
         },
         package: 'net.robertdev.drasco.dvw',
-        versionCode: 1
+        versionCode: 2
     },
     web: {
         bundler: 'metro',

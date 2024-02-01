@@ -4,11 +4,12 @@ import { useEffect, useRef } from 'react'
 import { Alert, Platform } from 'react-native'
 
 import { usersCollection } from '@/lib/collections'
-import { doc, setDoc } from '@firebase/firestore'
+
 import useAppSelector from './useAppSelector'
 import useThemeColor from './useThemeColor'
 import moment from 'moment'
 import { NotificationData } from '@/types'
+import { doc, setDoc } from 'firebase/firestore'
 
 Notifications.setNotificationHandler({
     handleNotification: async (notification) => {
