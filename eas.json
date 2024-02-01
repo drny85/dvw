@@ -7,7 +7,7 @@
             "developmentClient": true,
             "distribution": "internal",
             "ios": {
-                "resourceClass": "large",
+                "resourceClass": "medium",
                 "simulator": true
             }
         },
@@ -17,7 +17,7 @@
         "production": {
             "channel": "production",
             "ios": {
-                "resourceClass": "large"
+                "resourceClass": "medium"
             },
             "env": {
                 "APP_ENV": "production"

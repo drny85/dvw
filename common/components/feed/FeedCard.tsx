@@ -110,10 +110,19 @@ const FeedCard = ({
                         styles.image,
                         {
                             maxHeight: value.height * 0.3,
-                            height: value.height * 0.3
+                            height: value.height * 0.3,
+                            backgroundColor:
+                                feed.feedType === 'feed' &&
+                                feed.numberOfLines === 1
+                                    ? '#ffffff'
+                                    : undefined
                         }
                     ]}
-                    resizeMode="cover"
+                    resizeMode={
+                        feed.feedType === 'feed' && feed.numberOfLines === 1
+                            ? 'contain'
+                            : 'cover'
+                    }
                 >
                     {feed.feedType === 'quote' ||
                         (feed.numberOfLines > 0 && (
@@ -139,19 +148,47 @@ const FeedCard = ({
                                 padding: SIZES.base
                             }}
                         >
-                            <Text
-                                capitalize
-                                center
-                                color="white"
-                                fontSize={24}
-                                fontFamily="QSLight"
-                            >
-                                {feed.numberOfLines}{' '}
-                                {feed.numberOfLines === 1 ? 'line' : 'lines'}{' '}
-                                {feed.saleType === 'direct'
-                                    ? 'direct sale'
-                                    : 'click to call'}
-                            </Text>
+                            {feed.numberOfLines === 1 ? (
+                                <Text
+                                    capitalize
+                                    center
+                                    color="white"
+                                    fontSize={32}
+                                    fontFamily="QSLight"
+                                >
+                                    💵
+                                </Text>
+                            ) : feed.numberOfLines === 2 ? (
+                                <Text
+                                    capitalize
+                                    center
+                                    color="white"
+                                    fontSize={24}
+                                    fontFamily="QSLight"
+                                >
+                                    💵 💵
+                                </Text>
+                            ) : feed.numberOfLines === 3 ? (
+                                <Text
+                                    capitalize
+                                    center
+                                    color="white"
+                                    fontSize={32}
+                                    fontFamily="QSLight"
+                                >
+                                    💵 💵 💵
+                                </Text>
+                            ) : (
+                                <Text
+                                    capitalize
+                                    center
+                                    color="white"
+                                    fontSize={32}
+                                    fontFamily="QSLight"
+                                >
+                                    💵 💵 💵 💵
+                                </Text>
+                            )}
                         </View>
                     )}
                     {feed.feedType === 'quote' && (

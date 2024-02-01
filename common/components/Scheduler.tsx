@@ -5,7 +5,7 @@ import { Referral } from '@/types'
 import { FontAwesome } from '@expo/vector-icons'
 import { AnimatePresence, MotiView } from 'moti'
 import React, { useCallback, useState } from 'react'
-import { TouchableOpacity } from 'react-native'
+import { Alert, TouchableOpacity } from 'react-native'
 import useAppDispatch from '../hooks/useAppDispatch'
 import useAppSelector from '../hooks/useAppSelector'
 import { schedulePushNotification } from '../hooks/useNotification'
@@ -14,6 +14,7 @@ import DateTimePickerComponent from './DateTimePicker'
 import Text from './Text'
 import View from './View'
 import { updateReferral } from '@/features/referrals/referralActions'
+import ButtonRadio from './RadioButton'
 
 const Scheduler = ({ referral }: { referral: Referral }) => {
     const showFollowUp = useAppSelector((s) => s.referrals.showScheduler)
@@ -28,12 +29,18 @@ const Scheduler = ({ referral }: { referral: Referral }) => {
         try {
             if (!referral || !followUp) return
 
-            await schedulePushNotification({
+            if (!followUpType) {
+                Alert.alert('Please select a Follow Up Type')
+                return
+            }
+
+            const scheduled = await schedulePushNotification({
                 title: 'Follow Up',
                 data: { id: referral.id!, type: 'reminder' },
                 body: `Get in contact with ${referral.name}`,
                 date: followUp?.toISOString()
             })
+            if (!scheduled) return
             dispatch(
                 updateReferral({
                     ...referral,
@@ -46,7 +53,7 @@ const Scheduler = ({ referral }: { referral: Referral }) => {
         } catch (error) {
             console.log(error)
         }
-    }, [referral, followUp])
+    }, [referral, followUp, followUpType])
     return (
         <AnimatePresence>
             {showFollowUp && (
@@ -77,7 +84,7 @@ const Scheduler = ({ referral }: { referral: Referral }) => {
                             delay: 200
                         }}
                     >
-                        <Text center fontFamily="QSBold">
+                        <Text center fontFamily="QSBold" fontSize={18}>
                             Schedule Follow Up
                         </Text>
                         <View
@@ -106,8 +113,32 @@ const Scheduler = ({ referral }: { referral: Referral }) => {
                             }}
                             mode="datetime"
                             value={followUp}
+                            minuteInterval={5}
                             onVisibilityChange={() => {}}
                         />
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                justifyContent: 'space-around',
+                                alignItems: 'center',
+                                gap: SIZES.padding
+                            }}
+                        >
+                            <ButtonRadio
+                                title="Fios"
+                                selected={followUpType === 'fios'}
+                                onPress={() => {
+                                    setFollowUpType('fios')
+                                }}
+                            />
+                            <ButtonRadio
+                                title="Wireless"
+                                selected={followUpType === 'wireless'}
+                                onPress={() => {
+                                    setFollowUpType('wireless')
+                                }}
+                            />
+                        </View>
 
                         <TouchableOpacity
                             onPress={handleFollowUp}
