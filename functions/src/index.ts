@@ -247,7 +247,7 @@ exports.sendCloseEmail = onDocumentWritten(
             if (!event?.data.after.exists) return
             const d = event?.data.after.data()
             const data = d as Referral
-            console.log('Referral', data)
+
             if (data.status.id !== 'closed' || data.email_sent) return
             const refereeEmail = data.referee?.email
             const ceEmail = data.manager?.email
@@ -284,6 +284,7 @@ exports.sendCloseEmail = onDocumentWritten(
                 let author = quotes[n].author
                 let quote = quotes[n].quote
                 const d = { ...data, author, quote }
+                console.log('BCC', ceEmail, coachEmail, user.email)
                 const TemplateTwo: typeof SendCloseEmailToReferee =
                     SendCloseEmailToReferee
                 await resend.emails.send({
