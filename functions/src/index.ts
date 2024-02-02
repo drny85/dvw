@@ -247,7 +247,7 @@ exports.sendCloseEmail = onDocumentWritten(
             if (!event?.data.after.exists) return
             const d = event?.data.after.data()
             const data = d as Referral
-
+            console.log('DATE', new Date(), data.order_date)
             if (data.status.id !== 'closed' || data.email_sent) return
             const refereeEmail = data.referee?.email
             const ceEmail = data.manager?.email
@@ -284,7 +284,7 @@ exports.sendCloseEmail = onDocumentWritten(
                 let author = quotes[n].author
                 let quote = quotes[n].quote
                 const d = { ...data, author, quote }
-                console.log('BCC', ceEmail, coachEmail, user.email)
+
                 const TemplateTwo: typeof SendCloseEmailToReferee =
                     SendCloseEmailToReferee
                 await resend.emails.send({
@@ -308,6 +308,14 @@ exports.sendCloseEmail = onDocumentWritten(
                     email_sent: true,
                     email_sent_on: new Date().toISOString()
                 })
+
+            const sale: ReferralSold = {
+                customer: data.name,
+                seller: data.userName!,
+                date: new Date().toISOString(),
+                services: data.package
+            }
+            await admin.firestore().collection('sales').add(sale)
         } catch (error) {
             const e = error as Error
             console.log(e.message)
@@ -340,3 +348,14 @@ exports.sendCloseEmail = onDocumentWritten(
 //             console.log(error)
 //         }
 //     })
+type ReferralSold = {
+    id?: string
+    customer: string
+    seller: string
+    date: string
+    services: Referral['package']
+}
+
+exports.testing = onCall(() => {
+    console.log(new Date().toISOString())
+})

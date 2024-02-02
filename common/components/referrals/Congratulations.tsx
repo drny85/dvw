@@ -11,7 +11,7 @@ import View from '@/common/components/View'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
 import useAppSelector from '@/common/hooks/useAppSelector'
 import { SIZES } from '@/constants/Sizes'
-import { setGoToPlanRoute } from '@/features/referrals/referralsSlide'
+import { setShowScheduler } from '@/features/referrals/referralsSlide'
 import { setSaleQuoteReferral } from '@/features/sales/salesSlide'
 import { MotiView } from 'moti'
 
@@ -31,7 +31,7 @@ const Congratulations = ({ setShow }: Props) => {
     const goToPlan = () => {
         console.log('Go to plan')
         setShow(false)
-        dispatch(setGoToPlanRoute(true))
+        dispatch(setShowScheduler(true))
         // router.push('/(app)/(root)/(plan)')
         router.back()
     }

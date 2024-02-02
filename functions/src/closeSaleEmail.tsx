@@ -10,8 +10,9 @@ import {
     Text
 } from '@react-email/components'
 import { Tailwind } from '@react-email/tailwind'
-import * as moment from 'moment'
+import moment from 'moment'
 import { Referral } from './typing'
+moment.locale('en-us', {})
 
 export const SendCloseEmail = ({
     name,
@@ -53,10 +54,11 @@ export const SendCloseEmail = ({
                                 Moving Date: {moment(moveIn).format('ll')}
                             </Text>
                             <Text>
-                                Order Date: {moment(order_date).format('ll')}
+                                Order Date:{' '}
+                                {new Date(order_date!).toDateString()}
                             </Text>
                             <Text className="font-bold">
-                                Due Date: {moment(due_date).format('ll')}
+                                Due Date: {moment(due_date).format('L')}
                             </Text>
 
                             <Text>Services Ordered: {services}</Text>

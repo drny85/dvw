@@ -7,6 +7,7 @@ import {
     Helper,
     Message,
     Referral,
+    ReferralSold,
     WirelessQuote
 } from '@/types'
 
@@ -16,6 +17,7 @@ export const messagesCollection = createCollection<Message>('messages')
 export const wirelessQuotesCollection =
     createCollection<WirelessQuote>('quotes')
 export const followUpsCollection = createCollection<WirelessQuote>('followups')
+export const salesCollection = createCollection<ReferralSold>('sales')
 
 export const helpersCollection = (userId: string) =>
     createCollection<Helper>(`helpers/${userId}/helpers`)

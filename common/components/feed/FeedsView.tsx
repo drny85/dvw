@@ -1,29 +1,28 @@
+import { SIZES } from '@/constants/Sizes'
+import { MotiView, ScrollView } from 'moti'
+import React from 'react'
 import {
     StyleSheet,
     TouchableOpacity,
     TouchableWithoutFeedback
 } from 'react-native'
-import React from 'react'
-import { MotiView, ScrollView } from 'moti'
 import Text from '../Text'
-import { SIZES } from '@/constants/Sizes'
-import { useReferrals } from '@/common/hooks/referrals/useReferrals'
-import Loading from '../Loading'
+
+import useAppDispatch from '@/common/hooks/useAppDispatch'
+import useThemeColor from '@/common/hooks/useThemeColor'
+import { setReferralId } from '@/features/referrals/referralsSlide'
+import { Referral } from '@/types'
+import { FontAwesome } from '@expo/vector-icons'
+import { router } from 'expo-router'
 import moment from 'moment'
 import Row from '../Row'
 import View from '../View'
-import useThemeColor from '@/common/hooks/useThemeColor'
-import { FontAwesome } from '@expo/vector-icons'
-import { router } from 'expo-router'
-import useAppDispatch from '@/common/hooks/useAppDispatch'
-import { setReferralId } from '@/features/referrals/referralsSlide'
 
-const FeedsView = () => {
+const FeedsView = ({ referrals }: { referrals: Referral[] }) => {
     const dispatch = useAppDispatch()
     const background = useThemeColor('background')
     const textColor = useThemeColor('text')
     const errorColor = useThemeColor('error')
-    const { loading, referrals } = useReferrals()
 
     const movedYesterday = referrals.filter(
         (r) =>
@@ -33,6 +32,7 @@ const FeedsView = () => {
                 .startOf('day')
                 .isSame(moment().subtract(1, 'day').startOf('day'))
     )
+
     const todayOrders = referrals.filter(
         (r) =>
             r.status.id === 'closed' &&
@@ -59,7 +59,6 @@ const FeedsView = () => {
                 .isBetween(moment().startOf('day'), moment().add(15, 'minutes'))
     )
 
-    if (loading) return <Loading />
     return (
         <ScrollView
             contentContainerStyle={{ padding: SIZES.base, gap: SIZES.padding }}

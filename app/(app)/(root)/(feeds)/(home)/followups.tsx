@@ -2,6 +2,7 @@ import Loading from '@/common/components/Loading'
 import Row from '@/common/components/Row'
 import Screen from '@/common/components/Screen'
 import Text from '@/common/components/Text'
+import FeedsView from '@/common/components/feed/FeedsView'
 import { useReferrals } from '@/common/hooks/referrals/useReferrals'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
 import useThemeColor from '@/common/hooks/useThemeColor'
@@ -16,18 +17,20 @@ import { FlatList, ListRenderItem, TouchableOpacity } from 'react-native'
 
 const FollowUps = () => {
     const { referrals, loading } = useReferrals()
+    console.log(referrals.length)
+
     const bg = useThemeColor('accent')
     const dispatch = useAppDispatch()
     const data = referrals?.filter(
         (r) => r.followUpOn !== null && moment(r.followUpOn).isAfter(moment())
     )
 
-    if (data.length === 0)
-        return (
-            <Screen style={{ justifyContent: 'center', alignItems: 'center' }}>
-                <Text fontSize={20}>No Follow Ups</Text>
-            </Screen>
-        )
+    // if (data.length === 0 && )
+    //     return (
+    //         <Screen style={{ justifyContent: 'center', alignItems: 'center' }}>
+    //             <Text fontSize={20}>No Follow Ups</Text>
+    //         </Screen>
+    //     )
 
     const renderFollowUps: ListRenderItem<Referral> = ({ item, index }) => {
         return (
@@ -47,6 +50,15 @@ const FollowUps = () => {
                     }
                 ]}
             >
+                <Text
+                    color="white"
+                    center
+                    fontFamily="QSBold"
+                    fontSize={22}
+                    capitalize
+                >
+                    {item.followUpType}
+                </Text>
                 <Row
                     style={{
                         justifyContent: 'space-between',
@@ -83,6 +95,7 @@ const FollowUps = () => {
                 data={data}
                 keyExtractor={(item) => item.id!}
                 renderItem={renderFollowUps}
+                ListFooterComponent={<FeedsView referrals={referrals} />}
             />
         </Screen>
     )

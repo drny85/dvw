@@ -42,7 +42,7 @@ const ReferralDetails = () => {
     const dispatch = useAppDispatch()
     const { loading, referral } = useReferral(id!)
     const [sendingEmail, setSendingEmail] = useState(false)
-
+    console.log(referral?.moveIn)
     const [editComment, setEditComment] = useState(false)
     const [newComment, setNewComment] = useState('')
     const bgColor = useThemeColor('background')

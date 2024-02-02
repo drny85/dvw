@@ -175,6 +175,7 @@ export type Referral = {
     manager: Helper | null
     status: STATUS
     date_entered: string
+    userName?: string
     userId: string | null
     moveIn: string | null
     addedBy: string
@@ -301,6 +302,14 @@ export const TIERS = {
         wireless_referral: 60,
         wireless_direct: 125
     }
+}
+
+export type ReferralSold = {
+    id?: string
+    customer: string
+    seller: string
+    date: string
+    services: Referral['package']
 }
 
 export type ReferralsFilterType =

@@ -11,7 +11,7 @@ import {
 } from '@react-email/components'
 import { Tailwind } from '@react-email/tailwind'
 
-import * as moment from 'moment'
+import moment from 'moment'
 import { Referral } from './typing'
 type Quote = {
     quote?: string

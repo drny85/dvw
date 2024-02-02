@@ -27,7 +27,7 @@ const Coach = () => {
                         onPress={() =>
                             router.push('/(app)/(root)/(settings)/coach')
                         }
-                        style={{ marginRight: SIZES.padding }}
+                        style={{ padding: SIZES.padding }}
                     >
                         <FontAwesome name="plus" size={24} color={color} />
                     </TouchableOpacity>

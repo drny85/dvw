@@ -35,8 +35,9 @@ const HomeLayout = () => {
                 }
             }}
         >
-            <MaterialTopTabs.Screen name="index" options={{ title: 'Posts' }} />
             <MaterialTopTabs.Screen name="feeds" options={{ title: 'Feeds' }} />
+            <MaterialTopTabs.Screen name="index" options={{ title: 'Posts' }} />
+
             <MaterialTopTabs.Screen
                 name="followups"
                 options={{ title: 'Follow Ups' }}

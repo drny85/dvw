@@ -192,6 +192,7 @@ export type Referral = {
     userId: string | null
     moveIn: string | null
     addedBy: string
+    userName?: string
     updated: string | null
     isVerizonWirelessCustomer: boolean
     isReferral: boolean

@@ -118,6 +118,7 @@ const ReferralsScreen = () => {
         status: { id: 'new', name: 'New' },
         type: orderType,
         updated: null,
+        userName: user?.name!,
         userId: user?.id!,
         email: '',
         followUpOn: null
