@@ -2,7 +2,7 @@ import { Feed } from '@/types'
 import { onSnapshot } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import useAppSelector from '../useAppSelector'
-import { feedsColletion } from '@/lib/collections'
+import { feedsColletion } from '@/utils/collections'
 
 export const useFeeds = () => {
     const [loading, setLoading] = useState(true)

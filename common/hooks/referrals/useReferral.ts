@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import useAppSelector from '../useAppSelector'
 import { doc, onSnapshot } from 'firebase/firestore'
-import { referralssCollection } from '@/lib/collections'
+import { referralssCollection } from '@/utils/collections'
 import { Referral } from '@/types'
 export const useReferral = (referralId: string) => {
     const user = useAppSelector((s) => s.auth.user)

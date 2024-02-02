@@ -1,5 +1,5 @@
 import { Feed } from '@/types'
-import { feedsColletion } from '@/lib/collections'
+import { feedsColletion } from '@/utils/collections'
 import { doc, onSnapshot } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 

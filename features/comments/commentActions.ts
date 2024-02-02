@@ -1,6 +1,6 @@
 import { RootState } from '@/store/configureStore'
 import { Comment } from '@/types'
-import { commentsCollection } from '@/lib/collections'
+import { commentsCollection } from '@/utils/collections'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { addDoc, deleteDoc, doc, updateDoc } from 'firebase/firestore'
 

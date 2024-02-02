@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import useAppSelector from '../useAppSelector'
 import { onSnapshot } from 'firebase/firestore'
-import { propertiesCollection } from '@/lib/collections'
+import { propertiesCollection } from '@/utils/collections'
 
 export const useProperties = () => {
     const [loading, setLoading] = useState(true)

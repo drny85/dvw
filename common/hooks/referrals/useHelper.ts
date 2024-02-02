@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import useAppSelector from '../useAppSelector'
 import { doc, onSnapshot } from 'firebase/firestore'
-import { helpersCollection } from '@/lib/collections'
+import { helpersCollection } from '@/utils/collections'
 import { Helper } from '@/types'
 
 export const useHelper = (herlperId: string) => {

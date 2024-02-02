@@ -1,4 +1,4 @@
-import { wirelessQuotesCollection } from '@/lib/collections'
+import { wirelessQuotesCollection } from '@/utils/collections'
 import { WirelessQuote } from '@/types'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { addDoc, deleteDoc, doc, updateDoc } from 'firebase/firestore'

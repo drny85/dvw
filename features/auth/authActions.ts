@@ -3,7 +3,7 @@ import { AppUser } from './authSlice'
 
 import { auth } from '@/firebase'
 import { RootState } from '@/store/configureStore'
-import { usersCollection } from '@/lib/collections'
+import { usersCollection } from '@/utils/collections'
 import { signOut } from 'firebase/auth'
 import { doc, getDoc, updateDoc } from 'firebase/firestore'
 

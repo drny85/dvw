@@ -1,5 +1,5 @@
 import { Comment } from '@/types'
-import { commentsCollection } from '@/lib/collections'
+import { commentsCollection } from '@/utils/collections'
 import { onSnapshot } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 

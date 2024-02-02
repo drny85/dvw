@@ -1,4 +1,4 @@
-import { salesCollection } from '@/lib/collections'
+import { salesCollection } from '@/utils/collections'
 import { ReferralSold } from '@/types'
 import { onSnapshot } from 'firebase/firestore'
 import { useEffect, useState } from 'react'

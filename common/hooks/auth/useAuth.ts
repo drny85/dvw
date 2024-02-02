@@ -1,6 +1,6 @@
 import { AppUser, setAppUser } from '@/features/auth/authSlice'
 import { auth } from '@/firebase'
-import { usersCollection } from '@/lib/collections'
+import { usersCollection } from '@/utils/collections'
 import { doc, onSnapshot } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import useAppDispatch from '../useAppDispatch'

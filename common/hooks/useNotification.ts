@@ -3,7 +3,7 @@ import * as Notifications from 'expo-notifications'
 import { useEffect, useRef } from 'react'
 import { Alert, Platform } from 'react-native'
 
-import { usersCollection } from '@/lib/collections'
+import { usersCollection } from '@/utils/collections'
 
 import useAppSelector from './useAppSelector'
 import useThemeColor from './useThemeColor'

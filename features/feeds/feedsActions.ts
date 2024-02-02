@@ -1,5 +1,5 @@
 import { Feed } from '@/types'
-import { feedsColletion } from '@/lib/collections'
+import { feedsColletion } from '@/utils/collections'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { addDoc, deleteDoc, doc, updateDoc } from 'firebase/firestore'
 

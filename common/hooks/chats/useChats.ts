@@ -1,5 +1,5 @@
 import { Chat } from '@/types'
-import { chatsCollection } from '@/lib/collections'
+import { chatsCollection } from '@/utils/collections'
 import { onSnapshot, orderBy, query } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 

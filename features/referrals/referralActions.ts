@@ -1,4 +1,4 @@
-import { referralssCollection } from '@/lib/collections'
+import { referralssCollection } from '@/utils/collections'
 import { RootState } from '@/store/configureStore'
 import { Referral } from '@/types'
 import { createAsyncThunk } from '@reduxjs/toolkit'
