@@ -24,6 +24,7 @@ const firebaseConfig = {
     measurementId: process.env.EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID
 }
 
+
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp()
 
 export const db = initializeFirestore(app, {

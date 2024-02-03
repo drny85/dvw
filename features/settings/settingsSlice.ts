@@ -2,7 +2,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 // Define the possible themes as 'dark', 'light', or 'auto'
-export type Theme = 'dark' | 'light' | 'auto'
+export type Theme = 'dark' | 'light' | 'auto' | 'pink'
 
 export type SettingsState = {
     theme: Theme

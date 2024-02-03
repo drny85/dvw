@@ -31,8 +31,55 @@ const DateModal = ({
     const secondary = useThemeColor('placeholder')
     const textColor = useThemeColor('text')
     const bgColor = useThemeColor('background')
+
+    if (show && Platform.OS === 'android') {
+        return (
+            <DateTimePicker
+                locale="en_US"
+                accentColor={ascent}
+                textColor={textColor}
+                style={{
+                    width: '90%',
+                    alignSelf: 'center',
+                    height: '90%',
+                    backgroundColor: bgColor,
+                    borderRadius: SIZES.radius,
+                    overflow: 'hidden'
+                }}
+                testID="dateTimePicker"
+                value={
+                    date
+                        ? new Date(date)
+                        : new Date(moment().format('YYYY-MM-DD'))
+                }
+                minimumDate={
+                    minDate
+                        ? new Date(moment(minDate).format('YYYY-MM-DD'))
+                        : new Date(
+                              moment().subtract(3, 'weeks').format('YYYY-MM-DD')
+                          )
+                }
+                maximumDate={
+                    maxDate
+                        ? new Date(
+                              moment(maxDate).add(1, 'day').format('YYYY-MM-DD')
+                          )
+                        : new Date(
+                              moment().add(3, 'months').format('YYYY-MM-DD')
+                          )
+                }
+                mode={'date'}
+                display={'default'}
+                onChange={(event, date) => onChange(event, date)}
+            />
+        )
+    }
     return (
-        <Modal transparent animationType="slide" visible={show}>
+        <Modal
+            transparent
+            animationType="slide"
+            visible={show && Platform.OS !== 'android'}
+        >
             <TouchableHighlight
                 underlayColor={'#0e0d0d5c'}
                 onPress={setShow}
@@ -133,60 +180,6 @@ const DateModal = ({
                                     Platform.OS === 'ios' ? 'inline' : 'default'
                                 }
                                 onChange={onChange}
-                            />
-                        )}
-                        {Platform.OS === 'android' && show && (
-                            <DateTimePicker
-                                locale="en_US"
-                                accentColor={ascent}
-                                textColor={textColor}
-                                style={{
-                                    width: '90%',
-                                    alignSelf: 'center',
-                                    height: '90%',
-                                    backgroundColor: bgColor,
-                                    borderRadius: SIZES.radius,
-                                    overflow: 'hidden'
-                                }}
-                                testID="dateTimePicker"
-                                value={
-                                    date
-                                        ? new Date(date)
-                                        : new Date(
-                                              moment().format('YYYY-MM-DD')
-                                          )
-                                }
-                                minimumDate={
-                                    minDate
-                                        ? new Date(
-                                              moment(minDate).format(
-                                                  'YYYY-MM-DD'
-                                              )
-                                          )
-                                        : new Date(
-                                              moment()
-                                                  .subtract(3, 'weeks')
-                                                  .format('YYYY-MM-DD')
-                                          )
-                                }
-                                maximumDate={
-                                    maxDate
-                                        ? new Date(
-                                              moment(maxDate)
-                                                  .add(1, 'day')
-                                                  .format('YYYY-MM-DD')
-                                          )
-                                        : new Date(
-                                              moment()
-                                                  .add(3, 'months')
-                                                  .format('YYYY-MM-DD')
-                                          )
-                                }
-                                mode={'date'}
-                                display={'default'}
-                                onChange={(event, date) =>
-                                    onChange(event, date)
-                                }
                             />
                         )}
                     </View>

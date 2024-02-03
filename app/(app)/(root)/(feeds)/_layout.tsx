@@ -3,6 +3,7 @@ import { useReferrals } from '@/common/hooks/referrals/useReferrals'
 import useAppSelector from '@/common/hooks/useAppSelector'
 import useNotifications from '@/common/hooks/useNotification'
 import useThemeColor from '@/common/hooks/useThemeColor'
+import { SIZES } from '@/constants/Sizes'
 import { Ionicons } from '@expo/vector-icons'
 import { Stack, router } from 'expo-router'
 import React from 'react'
@@ -32,7 +33,12 @@ const _layout = () => {
                                 user?.image ||
                                 `https://ui-avatars.com/api/?background=0D8ABC&color=fff`
                         }}
-                        style={{ width: 40, height: 40, borderRadius: 20 }}
+                        style={{
+                            width: 40,
+                            height: 40,
+                            borderRadius: 20,
+                            marginRight: SIZES.padding
+                        }}
                         resizeMode="cover"
                     />
                 ),
