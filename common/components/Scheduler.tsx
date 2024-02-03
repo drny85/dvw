@@ -15,8 +15,15 @@ import Text from './Text'
 import View from './View'
 import { updateReferral } from '@/features/referrals/referralActions'
 import ButtonRadio from './RadioButton'
+import { router } from 'expo-router'
 
-const Scheduler = ({ referral }: { referral: Referral }) => {
+const Scheduler = ({
+    referral,
+    hide
+}: {
+    referral: Referral
+    hide?: boolean
+}) => {
     const showFollowUp = useAppSelector((s) => s.referrals.showScheduler)
     const [followUp, setFollowUp] = useState<Date>(new Date())
     const [followUpType, setFollowUpType] =
@@ -50,6 +57,9 @@ const Scheduler = ({ referral }: { referral: Referral }) => {
             )
             console.log('follow up scheduled', followUp.toISOString())
             dispatch(setShowScheduler(false))
+            if (hide) {
+                router.replace('/(app)/(root)/(sales)')
+            }
         } catch (error) {
             console.log(error)
         }

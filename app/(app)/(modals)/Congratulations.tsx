@@ -11,29 +11,25 @@ import View from '@/common/components/View'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
 import useAppSelector from '@/common/hooks/useAppSelector'
 import { SIZES } from '@/constants/Sizes'
-import { setShowScheduler } from '@/features/referrals/referralsSlide'
 import { setSaleQuoteReferral } from '@/features/sales/salesSlide'
 import { MotiView } from 'moti'
 
-type Props = {
-    setShow: (show: boolean) => void
-}
-const Congratulations = ({ setShow }: Props) => {
+const Congratulations = () => {
     const { saleQuote } = useAppSelector((s) => s.sales)
 
     const dispatch = useAppDispatch()
     const navigateBack = () => {
         dispatch(setSaleQuoteReferral(null))
-        setShow(false)
-        router.back()
+
+        router.push('/(app)/(root)/(sales)')
     }
 
     const goToPlan = () => {
-        console.log('Go to plan')
-        setShow(false)
-        dispatch(setShowScheduler(true))
+        console.log('Go to plan 2')
+
+        router.push('/(app)/(modals)/scheduleWireles')
         // router.push('/(app)/(root)/(plan)')
-        router.back()
+        // router.back()
     }
     return (
         <Screen style={Styles.flex}>

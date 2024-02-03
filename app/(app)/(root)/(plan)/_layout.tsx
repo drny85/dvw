@@ -7,7 +7,7 @@ export const unstable_settings = {
 
 const PlanLaypout = () => {
     return (
-        <Stack screenOptions={{ headerShown: false }}>
+        <Stack initialRouteName="index" screenOptions={{ headerShown: false }}>
             <Stack.Screen name="index" />
             <Stack.Screen name="filter" options={{ presentation: 'modal' }} />
 

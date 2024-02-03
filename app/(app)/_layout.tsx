@@ -66,7 +66,7 @@ function RootLayout() {
         >
             {/* Set the status bar style based on the color scheme */}
             <StatusBar
-                style={colorScheme === 'dark' ? 'light' : 'dark'}
+                style={colorScheme === 'light' ? 'dark' : 'light'}
                 backgroundColor={bg}
             />
             <Stack

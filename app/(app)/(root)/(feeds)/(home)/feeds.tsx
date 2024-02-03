@@ -19,7 +19,7 @@ const feeds = () => {
     const flatListRef = useRef<FlatList>(null)
     const scrollY = useRef(new Animated.Value(0)).current
     const { sales, loading } = useAllReferrals()
-    console.log(sales)
+
     const data = sales
         .filter((r) =>
             moment(r.date).isBetween(
@@ -47,7 +47,7 @@ const feeds = () => {
         const ph = serive && serive.home ? serive.home.name : ''
         const wireless = serive && serive.wireless ? serive.wireless.name : ''
 
-        const final = i + ' ' + tv + ' ' + ph + ' ' + wireless
+        const final = i + ' ,' + tv + '' + ph + '' + wireless
 
         return final
     }
@@ -63,7 +63,7 @@ const feeds = () => {
             >
                 <Text fontFamily="SFLight">
                     An order of {serv} was placed on{' '}
-                    {moment(item.date).format('lll')}
+                    {moment(item.date).format('lll')} by{' '}
                     <Text capitalize fontFamily="QSBold">
                         {item.seller || 'anonymous'}
                     </Text>

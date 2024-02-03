@@ -17,7 +17,6 @@ import { FlatList, ListRenderItem, TouchableOpacity } from 'react-native'
 
 const FollowUps = () => {
     const { referrals, loading } = useReferrals()
-    console.log(referrals.length)
 
     const bg = useThemeColor('accent')
     const dispatch = useAppDispatch()

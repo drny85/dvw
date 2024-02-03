@@ -8,7 +8,7 @@ export const unstable_settings = {
 
 const SalesPayout = () => {
     return (
-        <Stack screenOptions={{ headerShown: false }}>
+        <Stack initialRouteName="index" screenOptions={{ headerShown: false }}>
             <Stack.Screen name="index" />
 
             <Stack.Screen

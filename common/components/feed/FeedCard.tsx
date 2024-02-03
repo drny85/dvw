@@ -206,7 +206,7 @@ const FeedCard = ({
                                 style={{ lineHeight: 28 }}
                                 color="white"
                                 fontSize={20}
-                                fontFamily="QSBold"
+                                fontFamily="Lora"
                                 center
                             >
                                 {feed.message}

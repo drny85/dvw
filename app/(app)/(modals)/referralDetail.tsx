@@ -42,7 +42,7 @@ const ReferralDetails = () => {
     const dispatch = useAppDispatch()
     const { loading, referral } = useReferral(id!)
     const [sendingEmail, setSendingEmail] = useState(false)
-    console.log(referral?.moveIn)
+
     const [editComment, setEditComment] = useState(false)
     const [newComment, setNewComment] = useState('')
     const bgColor = useThemeColor('background')
@@ -420,6 +420,12 @@ const ReferralDetails = () => {
                             Order Date:{' '}
                             <Text>
                                 {moment(referral.order_date).format('LL')}
+                            </Text>
+                        </Text>
+                        <Text fontFamily="SFBold">
+                            Due Date:{' '}
+                            <Text>
+                                {moment(referral.due_date).format('LL')}
                             </Text>
                         </Text>
                         <Text fontFamily="SFBold">

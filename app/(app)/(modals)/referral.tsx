@@ -35,7 +35,7 @@ import moment from 'moment'
 
 import DataPickerModal from '@/common/components/DataPickerModal'
 import Loading from '@/common/components/Loading'
-import Congratulations from '@/common/components/referrals/Congratulations'
+import Congratulations from '@/app/(app)/(modals)/Congratulations'
 import { useHelpers } from '@/common/hooks/referrals/useHelpers'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
 import {
@@ -67,7 +67,6 @@ const ReferralsScreen = () => {
     const [animatePack, setAnimatePack] = React.useState(false)
     const googleRef = useRef<GooglePlacesAutocompleteRef>(null)
     const [isReferral, setIsReferral] = React.useState(true)
-    const [showCongratulations, setShowCongratulations] = React.useState(false)
     const [showMoveIn, setShowMoveIn] = React.useState(false)
     const [showStatus, setShowStatus] = React.useState(false)
     const [address, setAddress] = React.useState('')
@@ -101,7 +100,7 @@ const ReferralsScreen = () => {
         email_sent: false,
         email_sent_on: null,
         date_entered: new Date().toISOString(),
-        isVerizonWirelessCustomer: isVZW,
+        isVerizonWirelessCustomer: false,
         propertyName: '',
         followUpType: null,
         mon: null,
@@ -123,6 +122,7 @@ const ReferralsScreen = () => {
         email: '',
         followUpOn: null
     })
+
     const validateServicesOrdered = (): boolean => {
         if (
             referral.package?.home === null &&
@@ -219,24 +219,42 @@ const ReferralsScreen = () => {
                         referral.status.id === 'closed' &&
                         editingReferral.status.id !== 'closed'
                     ) {
-                        if (!referral.isVerizonWirelessCustomer) {
-                            dispatch(setSaleQuoteReferral(referral))
-                        }
-                        setShowCongratulations(true)
+                        dispatch(
+                            setSaleQuoteReferral({
+                                ...referral,
+                                isVerizonWirelessCustomer: isVZW
+                            })
+                        )
+
+                        router.push('/(app)/(modals)/Congratulations')
                     } else {
                         router.back()
                     }
                 } else {
                     if (referral.status.id === 'closed') {
-                        if (!referral.isVerizonWirelessCustomer) {
-                            dispatch(setSaleQuoteReferral(referral))
-                        }
-                        dispatch(addReferral(referral))
+                        dispatch(
+                            addReferral({
+                                ...referral,
+                                isVerizonWirelessCustomer: isVZW
+                            })
+                        )
+                        dispatch(
+                            setSaleQuoteReferral({
+                                ...referral,
+                                isVerizonWirelessCustomer: isVZW
+                            })
+                        )
 
-                        setShowCongratulations(true)
+                        // setShowCongratulations(true)
+                        router.push('/(app)/(modals)/Congratulations')
                         //router.push('/(app)/(root)/(sales)/congratulations')
                     } else {
-                        dispatch(addReferral(referral))
+                        dispatch(
+                            addReferral({
+                                ...referral,
+                                isVerizonWirelessCustomer: isVZW
+                            })
+                        )
                         router.back()
                     }
                 }
@@ -332,9 +350,7 @@ const ReferralsScreen = () => {
                         isReferral,
                         setIsReferral,
                         orderType,
-                        setOrderType,
-                        isVZW,
-                        setIsVZW
+                        setOrderType
                     )}
                 {index === 1 &&
                     SectionOne(
@@ -376,7 +392,9 @@ const ReferralsScreen = () => {
                         validateServicesOrdered,
                         setShowOrderDate,
                         setShowOrderDueDate,
-                        orderType
+                        orderType,
+                        isVZW,
+                        setIsVZW
                     )}
             </KeyboardAwareScrollView>
             <View style={{ padding: SIZES.padding }}>
@@ -594,13 +612,13 @@ const ReferralsScreen = () => {
                     })
                 }}
             />
-            <Modal
+            {/* <Modal
                 presentationStyle="overFullScreen"
                 visible={showCongratulations}
                 animationType="slide"
             >
                 <Congratulations setShow={setShowCongratulations} />
-            </Modal>
+            </Modal> */}
         </Screen>
     )
 }
@@ -648,7 +666,9 @@ function SectionThree(
     validateServicesOrdered: () => boolean,
     setShowOrderDate: React.Dispatch<React.SetStateAction<boolean>>,
     setShowOrderDueDate: React.Dispatch<React.SetStateAction<boolean>>,
-    orderType: ORDER_TYPE
+    orderType: ORDER_TYPE,
+    isVZW: boolean,
+    setIsVZW: React.Dispatch<React.SetStateAction<boolean>>
 ): React.ReactNode {
     return (
         <View>
@@ -1059,56 +1079,109 @@ function SectionThree(
                 )}
             </AnimatePresence>
             <AnimatePresence>
-                {referral.order_date && referral.status.id === 'closed' && (
+                {referral.order_date &&
+                    referral.status.id === 'closed' &&
+                    referral.mon &&
+                    validateServicesOrdered() && (
+                        <MotiView
+                            style={{ marginTop: SIZES.base }}
+                            from={{ opacity: 0, translateY: -20 }}
+                            animate={{ opacity: 1, translateY: 0 }}
+                            exit={{ opacity: 0, translateY: -20 }}
+                            transition={{ type: 'timing', duration: 300 }}
+                        >
+                            <View>
+                                <Text
+                                    fontFamily="SFBold"
+                                    style={{
+                                        margin: SIZES.base * 1.5
+                                    }}
+                                >
+                                    Due Date
+                                </Text>
+                                <Row
+                                    style={{
+                                        width: '100%',
+                                        ...Styles.boxShadow,
+                                        backgroundColor: placeholderColor,
+                                        padding: SIZES.base * 1.5,
+                                        borderRadius: SIZES.radius * 2
+                                    }}
+                                >
+                                    <FontAwesome
+                                        name="calendar"
+                                        color={'white'}
+                                        size={24}
+                                        style={{
+                                            marginHorizontal: SIZES.base
+                                        }}
+                                    />
+                                    <TouchableOpacity
+                                        onPress={() =>
+                                            setShowOrderDueDate(true)
+                                        }
+                                    >
+                                        <Text color="white" fontFamily="SFBold">
+                                            {referral.due_date
+                                                ? moment(
+                                                      referral.due_date
+                                                  ).format('dddd Do, MMM YYYY')
+                                                : 'Pick a Due Date'}
+                                        </Text>
+                                    </TouchableOpacity>
+                                </Row>
+                            </View>
+                        </MotiView>
+                    )}
+            </AnimatePresence>
+            <AnimatePresence>
+                {referral.status.id === 'closed' && referral.due_date && (
                     <MotiView
-                        style={{ marginTop: SIZES.base }}
                         from={{ opacity: 0, translateY: -20 }}
                         animate={{ opacity: 1, translateY: 0 }}
-                        exit={{ opacity: 0, translateY: -20 }}
-                        transition={{ type: 'timing', duration: 300 }}
+                        transition={{ type: 'timing', duration: 600 }}
                     >
-                        <View>
-                            <Text
-                                fontFamily="SFBold"
-                                style={{
-                                    margin: SIZES.base * 1.5
-                                }}
-                            >
-                                Due Date
+                        <View style={[Styles.boxShadow, { ...styles.row }]}>
+                            <Text fontFamily="SFBold">
+                                Is a Verizon Wireless Customer?
                             </Text>
                             <Row
                                 style={{
-                                    width: '100%',
-                                    ...Styles.boxShadow,
-                                    backgroundColor: placeholderColor,
-                                    padding: SIZES.base * 1.5,
-                                    borderRadius: SIZES.radius * 2
+                                    justifyContent: 'space-around',
+                                    width: '80%',
+                                    marginTop: SIZES.base
                                 }}
                             >
-                                <FontAwesome
-                                    name="calendar"
-                                    color={'white'}
-                                    size={24}
-                                    style={{
-                                        marginHorizontal: SIZES.base
+                                <ButtonRadio
+                                    selected={isVZW}
+                                    title="Yes"
+                                    onPress={() => {
+                                        //setIsVZW(true)
+                                        setIsVZW(true)
+                                        setReferral({
+                                            ...referral!,
+                                            isVerizonWirelessCustomer: true
+                                        })
                                     }}
                                 />
-                                <TouchableOpacity
-                                    onPress={() => setShowOrderDueDate(true)}
-                                >
-                                    <Text color="white" fontFamily="SFBold">
-                                        {referral.due_date
-                                            ? moment(referral.due_date).format(
-                                                  'dddd Do, MMM YYYY'
-                                              )
-                                            : 'Pick a Due Date'}
-                                    </Text>
-                                </TouchableOpacity>
+                                <ButtonRadio
+                                    selected={!isVZW}
+                                    title="No"
+                                    onPress={() => {
+                                        // setIsVZW(false)
+                                        setIsVZW(false)
+                                        setReferral({
+                                            ...referral!,
+                                            isVerizonWirelessCustomer: true
+                                        })
+                                    }}
+                                />
                             </Row>
                         </View>
                     </MotiView>
                 )}
             </AnimatePresence>
+
             {orderType === 'acp' && (
                 <View style={{ marginVertical: SIZES.base * 1.5 }}>
                     <Text
@@ -1532,9 +1605,7 @@ function mainInfo(
     isReferral: boolean,
     setIsReferral: React.Dispatch<React.SetStateAction<boolean>>,
     orderType: string,
-    setOrderType: React.Dispatch<React.SetStateAction<ORDER_TYPE>>,
-    isVZW: boolean,
-    setIsVZW: React.Dispatch<React.SetStateAction<boolean>>
+    setOrderType: React.Dispatch<React.SetStateAction<ORDER_TYPE>>
 ) {
     return (
         <View style={{ flex: 1, gap: SIZES.padding * 1.5 }}>
@@ -1605,36 +1676,7 @@ function mainInfo(
                     />
                 </Row>
             </View>
-            <View
-                style={[
-                    Styles.boxShadow,
-                    { ...styles.row, backgroundColor: bgColor }
-                ]}
-            >
-                <Text fontFamily="SFBold">Is a Verizon Wireless Customer?</Text>
-                <Row
-                    style={{
-                        justifyContent: 'space-around',
-                        width: '80%',
-                        marginTop: SIZES.base
-                    }}
-                >
-                    <ButtonRadio
-                        selected={isVZW}
-                        title="Yes"
-                        onPress={() => {
-                            setIsVZW(true)
-                        }}
-                    />
-                    <ButtonRadio
-                        selected={!isVZW}
-                        title="No"
-                        onPress={() => {
-                            setIsVZW(false)
-                        }}
-                    />
-                </Row>
-            </View>
+
             <Text fontSize={20} fontFamily="QSLight">{`This customer is ${
                 isReferral ? 'a Referral' : 'not a Referral'
             } and is ${
@@ -1643,7 +1685,7 @@ function mainInfo(
                     : orderType === 'move'
                     ? 'a moving customer'
                     : 'ACP customer'
-            } and a ${isVZW ? '' : 'Non-'}Verizon Wireless Customer`}</Text>
+            } `}</Text>
         </View>
     )
 }

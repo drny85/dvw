@@ -15,12 +15,11 @@ export const useHelpers = () => {
 
             return
         }
-        const sub = onSnapshot(helpersCollection(user.id), (res) => {
+        return onSnapshot(helpersCollection(user.id), (res) => {
             setHelpers(res.docs.map((d) => ({ id: d.id, ...d.data() })))
+
             setLoading(false)
         })
-
-        return sub
     }, [user])
 
     return { helpers, loading }
