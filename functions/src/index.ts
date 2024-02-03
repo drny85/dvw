@@ -14,6 +14,7 @@ import { WirelessQuoteEmail } from './email'
 import {
     AppUser,
     Feed,
+    Helper,
     Message,
     NotificationData,
     Referral,
@@ -181,13 +182,13 @@ exports.sendNewMessageNotification = onDocumentCreated(
             const message = messageData?.data() as Message
             const sender = message.sender.name
             const usersRef = await admin.firestore().collection('users').get()
-            const users = usersRef.docs.map((doc) => doc.data())
+            const users = usersRef.docs.map((doc: any) => doc.data())
             const data: NotificationData = {
                 id: message.chatId,
                 type: 'new-message'
             }
             const pushTokens: string[] = []
-            users.map((user) => {
+            users.map((user: AppUser) => {
                 if (user.pushToken && user.id !== message.sender.id)
                     pushTokens.push(user.pushToken)
             })
@@ -213,13 +214,13 @@ exports.sendNewPostNotification = onDocumentCreated(
             const quote = quoteData?.data() as Feed
             const sender = quote.user
             const usersRef = await admin.firestore().collection('users').get()
-            const users = usersRef.docs.map((doc) => doc.data())
+            const users = usersRef.docs.map((doc: any) => doc.data())
             const data: NotificationData = {
                 id: event.params.quoteId,
                 type: 'feed'
             }
             const pushTokens: string[] = []
-            users.map((user) => {
+            users.map((user: AppUser) => {
                 if (user.pushToken && user.id !== sender.id)
                     pushTokens.push(user.pushToken)
             })
@@ -240,7 +241,7 @@ exports.sendNewPostNotification = onDocumentCreated(
     }
 )
 
-exports.sendCloseEmail = onDocumentWritten(
+exports.sendClosedEmail = onDocumentWritten(
     'referrals/{userId}/referrals/{referralId}',
     async (event: any) => {
         try {
@@ -257,8 +258,8 @@ exports.sendCloseEmail = onDocumentWritten(
                 .doc(data.userId!)
                 .collection('helpers')
                 .get()
-            const coaches = helpersRef.docs.map((s) => s.data())
-            const coach = coaches.find((h) => h.type === 'coach')
+            const coaches = helpersRef.docs.map((s: any) => s.data())
+            const coach = coaches.find((h: Helper) => h.type === 'coach')
             const coachEmail = coach?.email || ''
 
             const userRef = await admin
@@ -355,7 +356,3 @@ type ReferralSold = {
     date: string
     services: Referral['package']
 }
-
-exports.testing = onCall(() => {
-    console.log(new Date().toISOString())
-})

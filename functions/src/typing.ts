@@ -219,6 +219,15 @@ export interface STATUS {
     name: 'New' | 'In Progress' | 'Closed' | 'Not Sold'
 }
 
+export type ReferralSold = {
+    id?: string
+    customer: string
+    seller: string
+    date: string
+    services: Referral['package']
+}
+
+
 export type NotificationType =
     | 'quote'
     | 'feed'
