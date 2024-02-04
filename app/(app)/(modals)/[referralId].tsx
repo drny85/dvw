@@ -8,7 +8,6 @@ import TextInput from '@/common/components/TextInput'
 import View from '@/common/components/View'
 import { useReferral } from '@/common/hooks/referrals/useReferral'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
-import useAppSelector from '@/common/hooks/useAppSelector'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import Styles from '@/constants/Styles'
@@ -26,7 +25,7 @@ import { sendIntroductionEmail } from '@/firebase'
 import { Referral } from '@/types'
 import { FontAwesome } from '@expo/vector-icons'
 import * as Linking from 'expo-linking'
-import { router } from 'expo-router'
+import { router, useLocalSearchParams } from 'expo-router'
 import moment from 'moment'
 import React, { useCallback, useEffect, useState } from 'react'
 import {
@@ -38,7 +37,7 @@ import {
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 const ReferralDetails = () => {
-    const id = useAppSelector((s) => s.referrals.referralId)
+    const { referralId: id } = useLocalSearchParams<{ referralId: string }>()
     const dispatch = useAppDispatch()
     const { loading, referral } = useReferral(id!)
     const [sendingEmail, setSendingEmail] = useState(false)

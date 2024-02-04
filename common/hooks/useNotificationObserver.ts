@@ -13,7 +13,7 @@ export function useNotificationObserver() {
                 router.push(`/(app)/(root)/(chats)/${data.id}`)
             }
             if (data.type === 'reminder') {
-                router.push('/(app)/(modals)/quotes')
+                router.push(`/(app)/(modals)/${data.id}`)
             }
             if (data.type === 'feed') {
                 router.push('/(app)/(root)/(feeds)/(home)')

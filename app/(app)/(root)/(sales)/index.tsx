@@ -23,7 +23,6 @@ import { AnimatePresence, MotiView } from 'moti'
 import ProgressCircle from '@/common/components/referrals/ProgressCircle'
 import Referrals from '@/common/components/referrals/Referrals'
 import { WIRELESS_MONTHLY_GOAL } from '@/constants'
-import { router } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import {
     FlatList,
@@ -47,7 +46,6 @@ const Sales = () => {
     const [view, setView] = useState<'sales' | 'referrals'>('referrals')
     const [data, setData] = useState<SaleData[]>([])
     const range = useAppSelector((s) => s.sales.range)
-    const saleQoute = useAppSelector((s) => s.sales.saleQuote)
     const [expand, setExpand] = useState<boolean>(false)
     const [saleId, setSaleId] = useState<string>()
 
@@ -93,12 +91,6 @@ const Sales = () => {
         const listData = formatedData(sales)
         setData(listData)
     }, [feeds.length, range])
-
-    useEffect(() => {
-        if (saleQoute) {
-            router.push('/(app)/(root)/(plan)')
-        }
-    }, [])
 
     if (loading) return <Loading />
 

@@ -29,7 +29,7 @@ const ReferralCard = ({ item, bgColor }: Props) => {
             ]}
             onPress={() => {
                 dispatch(setReferralId(item.id!))
-                router.push(`/(app)/(modals)/referralDetail`)
+                router.push(`/(app)/(modals)/${item.id}`)
             }}
         >
             <Text

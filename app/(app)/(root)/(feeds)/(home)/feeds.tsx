@@ -109,10 +109,10 @@ const feeds = () => {
                 }}
                 onContentSizeChange={(w, h) => {
                     if (flatListRef.current) {
-                        // flatListRef.current.scrollToOffset({
-                        //     offset: 0,
-                        //     animated: true
-                        // })
+                        flatListRef.current.scrollToOffset({
+                            offset: 0,
+                            animated: true
+                        })
                     }
                 }}
             />

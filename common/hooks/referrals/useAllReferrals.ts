@@ -11,7 +11,6 @@ export const useAllReferrals = () => {
         return onSnapshot(salesCollection, (snap) => {
             const data = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
             setReferrals(data)
-            console.log(data)
             setLoading(false)
         })
     }, [])

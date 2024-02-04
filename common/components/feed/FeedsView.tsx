@@ -196,9 +196,7 @@ const FeedsView = ({ referrals }: { referrals: Referral[] }) => {
                                 key={r.id}
                                 onPress={() => {
                                     dispatch(setReferralId(r.id!))
-                                    router.push(
-                                        '/(app)/(modals)/referralDetail'
-                                    )
+                                    router.push(`/(app)/(modals)/${r.id}`)
                                 }}
                             >
                                 <Row
