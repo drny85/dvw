@@ -1,7 +1,7 @@
 import Screen from '@/common/components/Screen'
 import Text from '@/common/components/Text'
 import React, { useEffect, useRef } from 'react'
-import { Alert, TextInput as Input, Modal, StyleSheet } from 'react-native'
+import { Alert, TextInput as Input, StyleSheet } from 'react-native'
 
 import ButtonRadio from '@/common/components/RadioButton'
 import Row from '@/common/components/Row'
@@ -35,7 +35,6 @@ import moment from 'moment'
 
 import DataPickerModal from '@/common/components/DataPickerModal'
 import Loading from '@/common/components/Loading'
-import Congratulations from '@/app/(app)/(modals)/Congratulations'
 import { useHelpers } from '@/common/hooks/referrals/useHelpers'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
 import {
@@ -64,7 +63,6 @@ const ReferralsScreen = () => {
     const scrollViewRef = useRef<KeyboardAwareScrollView>(null)
     const [index, setIndex] = React.useState(0)
     const monRef = useRef<Input>(null)
-    const [animatePack, setAnimatePack] = React.useState(false)
     const googleRef = useRef<GooglePlacesAutocompleteRef>(null)
     const [isReferral, setIsReferral] = React.useState(true)
     const [showMoveIn, setShowMoveIn] = React.useState(false)
@@ -104,6 +102,7 @@ const ReferralsScreen = () => {
         propertyName: '',
         followUpType: null,
         mon: null,
+        emailInstroductionSent: false,
         manager: null,
         package: {
             internet: null,
@@ -383,7 +382,6 @@ const ReferralsScreen = () => {
                         referral,
                         monRef,
                         setReferral,
-                        animatePack,
                         setShowInternetPicker,
                         secondaryColor,
                         setShowTvPicker,
@@ -657,7 +655,6 @@ function SectionThree(
     referral: Referral,
     monRef: React.RefObject<Input>,
     setReferral: React.Dispatch<React.SetStateAction<Referral>>,
-    animatePack: boolean,
     setShowInternetPicker: React.Dispatch<React.SetStateAction<boolean>>,
     secondaryColor: string,
     setShowTvPicker: React.Dispatch<React.SetStateAction<boolean>>,
@@ -769,11 +766,11 @@ function SectionThree(
                             animate={{
                                 opacity: 1,
                                 translateY: SIZES.padding,
-                                scale: animatePack ? [1, 1.1, 1] : 1
+                                scale: 1
                             }}
                             transition={{
                                 type: 'timing',
-                                repeat: animatePack ? -1 : 0,
+                                repeat: 0,
                                 duration: 300
                             }}
                             exit={{ opacity: 0 }}

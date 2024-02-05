@@ -109,8 +109,7 @@ exports.sendIntroductionEmail = onCall<{
             react: Template(info)
         })
         referralRef.ref.update({
-            email_sent: true,
-            email_sent_on: new Date().toISOString()
+            emailInstroductionSent: true
         })
 
         return { message: 'Email sent!' }

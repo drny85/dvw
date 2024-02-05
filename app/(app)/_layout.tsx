@@ -73,7 +73,10 @@ function RootLayout() {
                 screenOptions={{
                     headerShown: false,
                     navigationBarColor,
-                    animation: 'slide_from_bottom'
+                    animation: 'slide_from_bottom',
+                    contentStyle: {
+                        backgroundColor: bg
+                    }
                 }}
             />
         </ThemeProvider>

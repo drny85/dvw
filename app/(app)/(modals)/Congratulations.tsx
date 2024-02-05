@@ -38,7 +38,7 @@ const Congratulations = () => {
                     position: 'absolute',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    top: SIZES.padding * 3,
+                    top: SIZES.padding * 2,
                     left: 0,
                     right: 0
                 }}
@@ -50,7 +50,7 @@ const Congratulations = () => {
             <AnimatedLottieView
                 source={require('@/assets/animations/email-light.json')}
                 autoPlay
-                style={Styles.flex}
+                style={[Styles.flex, { marginBottom: 60 }]}
                 resizeMode="contain"
             />
             <MotiView
@@ -69,8 +69,8 @@ const Congratulations = () => {
                             Wireless
                         </Text>
                         <Text>
-                            Would you like to send a wireless quote based on
-                            your conversation?
+                            Would you like to schedule a follow up based on your
+                            conversation?
                         </Text>
                         <Row
                             style={{
@@ -79,13 +79,19 @@ const Congratulations = () => {
                             }}
                         >
                             <TouchableOpacity onPress={navigateBack}>
-                                <Text fontFamily="QSLight" fontSize={18}>
+                                <Text
+                                    fontFamily="QSBold"
+                                    fontSize={18}
+                                    color="tertiary"
+                                >
                                     No
                                 </Text>
                             </TouchableOpacity>
 
                             <TouchableOpacity onPress={goToPlan}>
-                                <Text fontFamily="SFBold">Yes</Text>
+                                <Text fontSize={20} fontFamily="SFBold">
+                                    Yes
+                                </Text>
                             </TouchableOpacity>
                         </Row>
                     </View>
@@ -116,6 +122,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         zIndex: 20,
+
         gap: SIZES.padding,
         padding: SIZES.padding
     }

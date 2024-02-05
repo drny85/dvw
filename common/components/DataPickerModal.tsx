@@ -40,7 +40,6 @@ const DataPickerModal: React.FC<Props> = ({
     const shadowColor = useThemeColor('accent')
     const textColor = useThemeColor('text')
     const renderItem: ListRenderItem<typeof data> = ({ index, item }) => {
-        console.log(item)
         return (
             <TouchableOpacity
                 onPress={() => onPress(item)}

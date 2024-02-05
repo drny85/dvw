@@ -50,7 +50,6 @@ export default function () {
             screenOptions={{
                 tabBarActiveTintColor,
                 headerShadowVisible: false,
-
                 headerShown: false,
                 headerTitleStyle: {
                     fontFamily: 'SFMedium'

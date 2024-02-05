@@ -194,6 +194,7 @@ export type Referral = {
     addedBy: string
     userName?: string
     updated: string | null
+    emailInstroductionSent: boolean
     isVerizonWirelessCustomer: boolean
     isReferral: boolean
     type: 'move' | 'new' | 'acp' | 'other'
@@ -226,7 +227,6 @@ export type ReferralSold = {
     date: string
     services: Referral['package']
 }
-
 
 export type NotificationType =
     | 'quote'

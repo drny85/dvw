@@ -52,7 +52,7 @@ const Feeds = () => {
             console.log('Error updating feed', error)
         }
     }
-    const renderFeeds: ListRenderItem<Feed> = ({ item }) => {
+    const renderFeeds: ListRenderItem<Feed> = useCallback(({ item }) => {
         return (
             <FeedCard
                 feed={item}
@@ -69,7 +69,7 @@ const Feeds = () => {
                 }}
             />
         )
-    }
+    }, [])
 
     useEffect(() => {
         if (feeds.length === 0) {

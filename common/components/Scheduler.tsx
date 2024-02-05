@@ -4,7 +4,7 @@ import { setShowScheduler } from '@/features/referrals/referralsSlide'
 import { Referral } from '@/types'
 import { FontAwesome } from '@expo/vector-icons'
 import { AnimatePresence, MotiView } from 'moti'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Alert, TouchableOpacity } from 'react-native'
 import useAppDispatch from '../hooks/useAppDispatch'
 import useAppSelector from '../hooks/useAppSelector'
@@ -58,15 +58,20 @@ const Scheduler = ({
             console.log('follow up scheduled', followUp.toISOString())
             dispatch(setShowScheduler(false))
             if (hide) {
-                router.replace('/(app)/(root)/(sales)')
+                router.replace('/(app)/(root)/(feeds)/(home)/followups')
             }
         } catch (error) {
             console.log(error)
         }
     }, [referral, followUp, followUpType])
+
+    useEffect(() => {
+        if (!hide) return
+        setFollowUpType('wireless')
+    }, [hide])
     return (
         <AnimatePresence>
-            {showFollowUp && (
+            {(showFollowUp || hide) && (
                 <>
                     <MotiView
                         style={{
@@ -104,9 +109,15 @@ const Scheduler = ({
                                 name="close"
                                 size={24}
                                 color={iconColor}
-                                onPress={() =>
-                                    dispatch(setShowScheduler(false))
-                                }
+                                onPress={() => {
+                                    if (hide) {
+                                        router.replace(
+                                            '/(app)/(root)/(feeds)/(home)/followups'
+                                        )
+                                    } else {
+                                        dispatch(setShowScheduler(false))
+                                    }
+                                }}
                             />
                         </View>
 

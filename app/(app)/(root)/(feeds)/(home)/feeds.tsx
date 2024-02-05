@@ -9,7 +9,7 @@ import { SIZES } from '@/constants/Sizes'
 import { ReferralSold } from '@/types'
 import moment from 'moment'
 import { MotiView } from 'moti'
-import React, { useRef } from 'react'
+import React, { useCallback, useRef } from 'react'
 import { Animated, FlatList, ListRenderItem } from 'react-native'
 
 const AnimatedFlatList = Animated.createAnimatedComponent(
@@ -23,7 +23,7 @@ const feeds = () => {
     const data = sales
         .filter((r) =>
             moment(r.date).isBetween(
-                moment(new Date()).subtract(2, 'days').startOf('day'),
+                moment(new Date()).startOf('day'),
                 moment(new Date()).endOf('day')
             )
         )
@@ -52,25 +52,28 @@ const feeds = () => {
         return final
     }
 
-    const renderData: ListRenderItem<ReferralSold> = ({ item, index }) => {
-        const serv = generatePackage(item.services)
-        return (
-            <MotiView
-                style={{ padding: SIZES.padding }}
-                from={{ opacity: 0, translateY: -20 }}
-                animate={{ opacity: 1, translateY: 0 }}
-                transition={{ type: 'timing', duration: index * 100 }}
-            >
-                <Text fontFamily="SFLight">
-                    An order of {serv} was placed on{' '}
-                    {moment(item.date).format('lll')} by{' '}
-                    <Text capitalize fontFamily="QSBold">
-                        {item.seller || 'anonymous'}
+    const renderData: ListRenderItem<ReferralSold> = useCallback(
+        ({ item, index }) => {
+            const serv = generatePackage(item.services)
+            return (
+                <MotiView
+                    style={{ padding: SIZES.padding }}
+                    from={{ opacity: 0, translateY: -20 }}
+                    animate={{ opacity: 1, translateY: 0 }}
+                    transition={{ type: 'timing', duration: index * 100 }}
+                >
+                    <Text fontFamily="SFLight">
+                        An order of {serv} was placed on{' '}
+                        {moment(item.date).format('lll')} by{' '}
+                        <Text capitalize fontFamily="QSBold">
+                            {item.seller || 'anonymous'}
+                        </Text>
                     </Text>
-                </Text>
-            </MotiView>
-        )
-    }
+                </MotiView>
+            )
+        },
+        []
+    )
     if (loading) return <Loading />
     return (
         <Screen>

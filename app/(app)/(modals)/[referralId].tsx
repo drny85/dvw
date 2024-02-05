@@ -75,7 +75,7 @@ const ReferralDetails = () => {
                 ...referral!,
                 comment: newComment
             }
-            console.log(newReferral.comment)
+
             dispatch(updateReferral(newReferral))
         } catch (error) {
             console.log(error)
@@ -288,8 +288,9 @@ const ReferralDetails = () => {
                                         color={textColor}
                                     />
                                 )}
-                                {!referral.email_sent &&
-                                    referral.status.id !== 'not_sold' && (
+                                {!referral.emailInstroductionSent &&
+                                    referral.status.id !== 'not_sold' &&
+                                    referral.status.id !== 'closed' && (
                                         <TouchableOpacity
                                             disabled={sendingEmail}
                                             onPress={() => {

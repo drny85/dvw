@@ -187,6 +187,7 @@ export type Referral = {
     mon: string | null
     email_sent: boolean
     email_sent_on: string | null
+    emailInstroductionSent: boolean
     comment: string | null
     followUpOn: string | null
 }

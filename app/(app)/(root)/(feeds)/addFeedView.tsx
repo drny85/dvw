@@ -163,7 +163,7 @@ const AddFeedModal = () => {
                             style={{
                                 padding: SIZES.padding,
                                 borderRadius: SIZES.radius * 3,
-                                backgroundColor: bgColor,
+                                backgroundColor: bgAccent,
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 ...Styles.boxShadow
@@ -172,7 +172,11 @@ const AddFeedModal = () => {
                                 setFeedType('feed')
                             }}
                         >
-                            <Text fontSize={18} fontFamily="SFBold">
+                            <Text
+                                color="white"
+                                fontSize={18}
+                                fontFamily="SFBold"
+                            >
                                 Wireless Sale
                             </Text>
                         </TouchableOpacity>
@@ -181,7 +185,7 @@ const AddFeedModal = () => {
                             style={{
                                 padding: SIZES.padding,
                                 borderRadius: SIZES.radius * 3,
-                                backgroundColor: bgColor,
+                                backgroundColor: bgAccent,
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 ...Styles.boxShadow
@@ -190,7 +194,11 @@ const AddFeedModal = () => {
                                 setFeedType('quote')
                             }}
                         >
-                            <Text fontSize={18} fontFamily="SFBold">
+                            <Text
+                                color="white"
+                                fontSize={18}
+                                fontFamily="SFBold"
+                            >
                                 Inspirational Quotes
                             </Text>
                         </TouchableOpacity>
