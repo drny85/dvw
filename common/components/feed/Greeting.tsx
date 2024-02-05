@@ -25,9 +25,12 @@ const Greeting: React.FC = () => {
     }, [])
 
     return (
-        <Animated.View entering={FadeInUp.duration(600)}>
+        <Animated.View
+            style={{ marginLeft: SIZES.padding }}
+            entering={FadeInUp.duration(600)}
+        >
             <Text fontFamily="OWRegelar" fontSize={20} center>
-                {greeting}, {user?.name.split(' ')[0]}!
+                {greeting}, {user?.name?.split(' ')[0] || ''}!
             </Text>
         </Animated.View>
     )

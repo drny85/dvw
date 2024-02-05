@@ -33,6 +33,7 @@ import Divider from '@/common/components/Divider'
 
 const Settings = () => {
     useAuth()
+
     const iconColor = useThemeColor('text')
     const deleteColor = useThemeColor('warning')
     const user = useAppSelector((state) => state.auth.user)

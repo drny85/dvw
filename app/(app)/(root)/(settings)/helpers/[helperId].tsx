@@ -24,7 +24,7 @@ const HelperInfo = () => {
 
     const { loading, helper } = useHelper(helperId)
     const { referrals, loading: lg } = useReferrals()
-    const data = referrals.filter((f) => f.referee?.id === helperId)
+    const data = referrals?.filter((f) => f.referee?.id === helperId)
     const lastReferral = data
         .filter((r) => r.status.id === 'closed')
         .sort(
@@ -56,6 +56,7 @@ const HelperInfo = () => {
                 }
                 hasRightIcon
             />
+
             <View style={styles.container}>
                 <Text center fontFamily="SFBold" fontSize={20}>
                     {helper?.name}
@@ -64,31 +65,38 @@ const HelperInfo = () => {
                     <Text>Phone: {helper?.phone}</Text>
                     <Text>Email: {helper?.email}</Text>
                 </View>
-                <View style={{ marginVertical: SIZES.padding }}>
-                    <Text center fontFamily="SFBold" fontSize={18}>
-                        Referee's Constribution
-                    </Text>
-                </View>
 
-                <HelperMetric data={data} allData={referrals} />
-                <Divider small height={SIZES.padding * 2} />
-                <View
-                    style={{
-                        marginVertical: SIZES.padding,
-                        gap: SIZES.padding
-                    }}
-                >
-                    <Text center fontFamily="QSBold">
-                        Last Referral Closed
-                    </Text>
-                    {lastReferral ? (
-                        <Text center fontFamily="QSLight">
-                            {moment(lastReferral.order_date).format('ll')}
-                        </Text>
-                    ) : (
-                        <Text center>Non Referral closed</Text>
-                    )}
-                </View>
+                {helper?.type === 'referee' && (
+                    <View>
+                        <View style={{ marginVertical: SIZES.padding }}>
+                            <Text center fontFamily="SFBold" fontSize={18}>
+                                Referee's Constribution
+                            </Text>
+                        </View>
+
+                        <HelperMetric data={data} allData={referrals} />
+                        <Divider small height={SIZES.padding * 2} />
+                        <View
+                            style={{
+                                marginVertical: SIZES.padding,
+                                gap: SIZES.padding
+                            }}
+                        >
+                            <Text center fontFamily="QSBold">
+                                Last Referral Closed
+                            </Text>
+                            {lastReferral ? (
+                                <Text center fontFamily="QSLight">
+                                    {moment(lastReferral.order_date).format(
+                                        'll'
+                                    )}
+                                </Text>
+                            ) : (
+                                <Text center>Non Referral closed</Text>
+                            )}
+                        </View>
+                    </View>
+                )}
             </View>
         </Screen>
     )
@@ -112,6 +120,8 @@ const HelperMetric = ({
 }) => {
     const accent = useThemeColor('accent')
     const text = useThemeColor('text')
+
+    if (!data || !allData) return null
 
     return (
         <View

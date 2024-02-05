@@ -21,7 +21,7 @@ import { usersCollection } from '@/utils/collections'
 import KeyboardScreen from '@/common/components/KeyboardScreen'
 import { FIREBASE_ERRORS } from '@/utils/firebaseErrorMessages'
 import { UserRole } from '@/features/auth/authSlice'
-import { isEmailValid } from '@/utils/isEmailValid'
+import { isEmailValid, isValidDrascoEmail } from '@/utils/isEmailValid'
 import { isFullName } from '@/utils/isFullName'
 import { FontAwesome } from '@expo/vector-icons'
 import Loading from '@/common/components/Loading'
@@ -55,7 +55,7 @@ const Signup = () => {
     const onSubmit = async (data: FormValues) => {
         try {
             const { email, password, name, phone } = data
-            if (!isEmailValid) {
+            if (!isValidDrascoEmail(email)) {
                 Alert.alert(
                     'Invaid Email',
                     'Your email is invalid or incomplete'

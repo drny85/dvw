@@ -18,9 +18,17 @@ import { addDoc } from 'firebase/firestore'
 import React, { useState } from 'react'
 import { Alert, StyleSheet, TouchableOpacity } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { useHelpers } from '@/common/hooks/referrals/useHelpers'
 
 const Person = () => {
+    const user = useAppSelector((s) => s.auth.user)
     const { helper } = useLocalSearchParams<{ helper: UserRole }>()
+    const { helpers, loading: ld } = useHelpers()
+
+    const disabled =
+        helpers?.filter(
+            (item) => item.type === 'coach' && item.userId === user?.id
+        ).length === 1
 
     const btn = useThemeColor('accent')
     const title =
@@ -29,7 +37,7 @@ const Person = () => {
             : helper === 'referee'
             ? 'Referee / LA'
             : 'Coach'
-    const user = useAppSelector((s) => s.auth.user)
+
     const [loading, setLoading] = useState(false)
     const [person, setPerson] = useState<Helper>({
         name: '',
@@ -41,6 +49,10 @@ const Person = () => {
     })
 
     const onAddPerson = async () => {
+        if (disabled) {
+            Alert.alert('Error', 'You can only have one Coach')
+            return
+        }
         try {
             if (person.name && person.phone && person.email) {
                 if (!isFullName(person.name)) {
@@ -79,7 +91,7 @@ const Person = () => {
             setLoading(false)
         }
     }
-    if (loading) return <Loading />
+    if (loading || ld) return <Loading />
     return (
         <Screen>
             <Header onPressBack={router.back} title={title} />
