@@ -482,7 +482,7 @@ const Selector = ({
         >
             <Text
                 fontFamily={selected ? 'SFBold' : 'SFRegular'}
-                color={selected ? 'white' : 'text'}
+                color={'white'}
             >
                 {title}
             </Text>
