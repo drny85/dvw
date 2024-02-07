@@ -8,7 +8,7 @@ import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import Styles from '@/constants/Styles'
 import { getUser } from '@/features/auth/authActions'
-import { auth } from '@/firebase'
+import { auth, sendMeATotificationWhenSomeoneLogin } from '@/firebase'
 
 import { FIREBASE_ERRORS } from '@/utils/firebaseErrorMessages'
 import { isEmailValid } from '@/utils/isEmailValid'
@@ -57,6 +57,8 @@ const Login = () => {
                 )
                 return
             }
+            const noti = sendMeATotificationWhenSomeoneLogin()
+            await noti({ userId: user.uid })
             dispatch(
                 getUser({ userId: user.uid, isVerified: user.emailVerified })
             )

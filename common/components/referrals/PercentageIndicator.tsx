@@ -11,7 +11,7 @@ interface Props {
     title: string
     size?: 'small' | 'medium' | 'large'
 }
-const PercentageIndicator = ({ percentage, value, title, size }: Props) => {
+const PercentageIndicator = ({ value, size }: Props) => {
     const textColor = useThemeColor('text')
     const accentColor = useThemeColor('accent')
     const radiusWith = () =>
@@ -24,6 +24,7 @@ const PercentageIndicator = ({ percentage, value, title, size }: Props) => {
             : size === 'large'
             ? radiusWith() / 3
             : radiusWith() / 5
+
     return (
         <View style={{ justifyContent: 'center', alignItems: 'center' }}>
             <ProgressCircle
@@ -31,7 +32,7 @@ const PercentageIndicator = ({ percentage, value, title, size }: Props) => {
                 radius={radius()}
                 duration={600}
                 strokeWidth={10}
-                max={value}
+                max={100}
                 color={accentColor}
                 textColor={textColor}
             />

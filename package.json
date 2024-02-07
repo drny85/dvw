@@ -27,6 +27,7 @@
     "@react-navigation/material-top-tabs": "^6.6.5",
     "@react-navigation/native": "^6.0.2",
     "@reduxjs/toolkit": "^1.9.5",
+    "@shopify/react-native-skia": "^0.1.237",
     "expo": "~50.0.5",
     "expo-asset": "~9.0.2",
     "expo-clipboard": "~5.0.1",

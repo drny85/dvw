@@ -12,10 +12,6 @@ const SalesPayout = () => {
             <Stack.Screen name="index" />
 
             <Stack.Screen
-                name="reports"
-                options={{ presentation: 'fullScreenModal' }}
-            />
-            <Stack.Screen
                 name="[filterType]"
                 // options={{ presentation: 'fullScreenModal' }}
             />
