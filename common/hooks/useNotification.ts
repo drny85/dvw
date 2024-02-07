@@ -97,7 +97,7 @@ const useNotifications = () => {
 
                     return
                 }
-
+                console.log(Device.modelId)
                 if (user?.pushToken) return
                 const token = (await Notifications.getExpoPushTokenAsync()).data
 

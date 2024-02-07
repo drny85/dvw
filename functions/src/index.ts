@@ -324,37 +324,34 @@ exports.sendClosedEmail = onDocumentWritten(
     }
 )
 
-exports.sendMeATotificationWhenSomeoneLogin = onCall<{ userId: string }, void>(
-    async (request) => {
-        try {
-            const token = 'ExponentPushToken[ecXzWYHq7TYbbrGPmXmZAN]'
-            const { userId } = request.data
-            console.log('USER ID', request.auth?.uid)
+exports.sendMeATotificationWhenSomeoneLogin = onCall(async (request) => {
+    try {
+        const token = 'ExponentPushToken[56L9ZMNqOzY8vRg4bXfYWv]'
 
-            const docRef = await db.collection('users').doc(userId).get()
-            const user = docRef.data() as AppUser
-            const { name } = user
-            if (!name) return
+        if (!request.auth) return
+        const docRef = await db.collection('users').doc(request.auth?.uid).get()
+        const user = docRef.data() as AppUser
+        const { name } = user
+        if (!name) return
 
-            const sent = await fetch('https://exp.host/--/api/v2/push/send', {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Accept-encoding': 'gzip, deflate',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    to: token,
-                    title: 'New User',
-                    body: `${name} just signed in`
-                })
+        const sent = await fetch('https://exp.host/--/api/v2/push/send', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Accept-encoding': 'gzip, deflate',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                to: token,
+                title: 'New User',
+                body: `${name} just signed in`
             })
-            console.log('SENT', sent.ok)
-        } catch (error) {
-            console.log(error)
-        }
+        })
+        console.log('SENT', sent.ok, token)
+    } catch (error) {
+        console.log(error)
     }
-)
+})
 // //const everyDayAt8Am = '0 8 * * *'
 // const everyTwoMinutes = '*/2 * * * *'
 // exports.scheduleTask = functions.pubsub

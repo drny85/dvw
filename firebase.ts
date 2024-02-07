@@ -39,10 +39,7 @@ export const firestore = getFirestore(app)
 export const deleteUserAccount = (name: string) =>
     httpsCallable<{ uid: string }, Response>(functions, name)
 export const sendMeATotificationWhenSomeoneLogin = () =>
-    httpsCallable<{ userId: string }, void>(
-        functions,
-        'sendMeATotificationWhenSomeoneLogin'
-    )
+    httpsCallable<{}, void>(functions, 'sendMeATotificationWhenSomeoneLogin')
 export const sendEmail = () =>
     httpsCallable<{ quoteId: string }>(functions, 'sendEmail')
 

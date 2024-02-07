@@ -58,7 +58,7 @@ const Login = () => {
                 return
             }
             const noti = sendMeATotificationWhenSomeoneLogin()
-            await noti({ userId: user.uid })
+            await noti()
             dispatch(
                 getUser({ userId: user.uid, isVerified: user.emailVerified })
             )
