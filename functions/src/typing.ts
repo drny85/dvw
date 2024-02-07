@@ -234,6 +234,7 @@ export type NotificationType =
     | 'quote-reply'
     | 'feed-reply'
     | 'new-message'
+    | 'new-signin'
 export type UserRole = 'admin' | 'em' | 'coach'
 export const BONUS_EXPIRATION_DATE = '12/31/2023'
 export const ULTIMATE_BYOD_VALUE = 540 / 36

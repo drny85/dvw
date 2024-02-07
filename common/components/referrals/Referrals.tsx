@@ -315,7 +315,7 @@ const renderPayoutInfo = (
                             borderRadius: SIZES.radius
                         }}
                         onPress={() => {
-                            router.push('/reports')
+                            router.push('/(app)/(modals)/reports')
                         }}
                     >
                         <Text color="white" fontSize={18} fontFamily="SFBold">

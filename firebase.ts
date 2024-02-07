@@ -24,7 +24,6 @@ const firebaseConfig = {
     measurementId: process.env.EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID
 }
 
-
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp()
 
 export const db = initializeFirestore(app, {
@@ -39,7 +38,11 @@ export const firestore = getFirestore(app)
 
 export const deleteUserAccount = (name: string) =>
     httpsCallable<{ uid: string }, Response>(functions, name)
-
+export const sendMeATotificationWhenSomeoneLogin = () =>
+    httpsCallable<{ userId: string }, void>(
+        functions,
+        'sendMeATotificationWhenSomeoneLogin'
+    )
 export const sendEmail = () =>
     httpsCallable<{ quoteId: string }>(functions, 'sendEmail')
 

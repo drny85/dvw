@@ -13,6 +13,7 @@ import Row from '../Row'
 import PercentageIndicator from './PercentageIndicator'
 import Text from '../Text'
 import useThemeColor from '@/common/hooks/useThemeColor'
+import CircularProgressBar from '../CircularProgressBar'
 
 const weeklyWirelessGoal = 2
 
@@ -170,11 +171,16 @@ const Metrics = () => {
                     scrollEnabled
                     contentContainerStyle={{
                         justifyContent: 'center',
-                        alignItems: 'center'
+                        alignItems: 'center',
+                        padding: SIZES.base
                     }}
                     style={{ width: SIZES.width }}
                 >
-                    <View style={{ width: SIZES.width }}>
+                    <View
+                        style={{
+                            width: SIZES.width
+                        }}
+                    >
                         <Row
                             style={{
                                 justifyContent: 'space-evenly',
@@ -197,6 +203,15 @@ const Metrics = () => {
                                             return v.toFixed(1) + '%'
                                         }}
                                     />
+                                    // <CircularProgressBar
+                                    //     radius={40}
+                                    //     key={index}
+                                    //     currentValue={
+                                    //         // (i[1] / totalInternetUnits()) * 100
+                                    //         i[1]
+                                    //     }
+                                    //     maxValue={totalInternetUnits()}
+                                    // />
                                 )
                             })}
                         </Row>

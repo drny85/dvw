@@ -130,6 +130,7 @@ export type NotificationType =
     | 'feed-reply'
     | 'new-message'
     | 'reminder'
+    | 'new-signin'
 
 export type NotificationData = {
     id: string

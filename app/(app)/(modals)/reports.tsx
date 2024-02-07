@@ -7,7 +7,14 @@ import Metrics from '@/common/components/referrals/Metrics'
 const reports = () => {
     return (
         <Screen>
-            <Header title="Earnings WTD" onPressBack={router.back} />
+            <Header
+                title="Earnings WTD"
+                onPressBack={() => {
+                    router.canGoBack()
+                        ? router.back()
+                        : router.replace('/(app)/(root)/(sales)')
+                }}
+            />
             <Metrics />
         </Screen>
     )

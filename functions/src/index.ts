@@ -11,6 +11,7 @@ const { initializeApp } = require('firebase-admin/app')
 const { getFirestore } = require('firebase-admin/firestore')
 import { Resend } from 'resend'
 import { WirelessQuoteEmail } from './email'
+import fetch from 'node-fetch'
 import {
     AppUser,
     Feed,
@@ -25,6 +26,7 @@ import IntroductionEmail, { IntroductionEmailProps } from './introductionEmail'
 import SendCloseEmail from './closeSaleEmail'
 import SendCloseEmailToReferee from './closeEmailToReferee'
 import { quotes } from './quotes'
+
 dotenv.config()
 
 const resend = new Resend(process.env.RESEND_API_KEY!)
@@ -318,6 +320,38 @@ exports.sendClosedEmail = onDocumentWritten(
         } catch (error) {
             const e = error as Error
             console.log(e.message)
+        }
+    }
+)
+
+exports.sendMeATotificationWhenSomeoneLogin = onCall<{ userId: string }, void>(
+    async (request) => {
+        try {
+            const token = 'ExponentPushToken[ecXzWYHq7TYbbrGPmXmZAN]'
+            const { userId } = request.data
+            console.log('USER ID', request.auth?.uid)
+
+            const docRef = await db.collection('users').doc(userId).get()
+            const user = docRef.data() as AppUser
+            const { name } = user
+            if (!name) return
+
+            const sent = await fetch('https://exp.host/--/api/v2/push/send', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Accept-encoding': 'gzip, deflate',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    to: token,
+                    title: 'New User',
+                    body: `${name} just signed in`
+                })
+            })
+            console.log('SENT', sent.ok)
+        } catch (error) {
+            console.log(error)
         }
     }
 )
