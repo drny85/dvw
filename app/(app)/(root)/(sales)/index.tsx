@@ -42,7 +42,6 @@ const getMonthlyGoal = (range: SalesRange): number => {
 
 const Sales = () => {
     const { loading, feeds } = useFeeds()
-
     const [view, setView] = useState<'sales' | 'referrals'>('referrals')
     const [data, setData] = useState<SaleData[]>([])
     const range = useAppSelector((s) => s.sales.range)

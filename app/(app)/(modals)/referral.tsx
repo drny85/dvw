@@ -49,11 +49,14 @@ import { setSaleQuoteReferral } from '@/features/sales/salesSlide'
 import { formatPhone } from '@/utils/formatPhone'
 import { isEmailValid } from '@/utils/isEmailValid'
 import { FlatList } from 'react-native-gesture-handler'
+import { useContacts } from '@/common/hooks/useContacts'
 
 const GOOGLE_KEY = process.env.EXPO_PUBLIC_GOOGLE_KEY as string
 
 const ReferralsScreen = () => {
     const dispatch = useAppDispatch()
+    useContacts()
+
     const user = useAppSelector((s) => s.auth.user)
     const { referral: editingReferral, editing } = useAppSelector(
         (s) => s.referrals

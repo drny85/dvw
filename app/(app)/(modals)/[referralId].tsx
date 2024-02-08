@@ -23,6 +23,7 @@ import {
 import { sendIntroductionEmail } from '@/firebase'
 
 import { Referral } from '@/types'
+import { deleteContact } from '@/utils/deleteContact'
 import { FontAwesome } from '@expo/vector-icons'
 import * as Linking from 'expo-linking'
 import { router, useLocalSearchParams } from 'expo-router'
@@ -95,9 +96,10 @@ const ReferralDetails = () => {
                     },
                     {
                         text: 'Yes, Delete it',
-                        onPress: () => {
+                        onPress: async () => {
                             if (!referral?.id) return
                             dispatch(deleteReferral(referral.id))
+                            //await deleteContact(referral.email)
                             router.back()
                         },
                         style: 'destructive'

@@ -8,6 +8,7 @@ const config: ExpoConfig = {
     icon: './assets/images/icon.png',
     scheme: 'drasco',
     userInterfaceStyle: 'automatic',
+    platforms: ['ios', 'android'],
     splash: {
         image: './assets/images/splash.png',
         resizeMode: 'contain',
@@ -46,6 +47,12 @@ const config: ExpoConfig = {
             {
                 photosPermission:
                     'The app accesses your photos to let you share them with your friends.'
+            }
+        ],
+        [
+            'expo-contacts',
+            {
+                contactsPermission: 'Allow Drasco App to access your contacts.'
             }
         ]
     ],

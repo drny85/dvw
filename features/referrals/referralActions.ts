@@ -1,6 +1,7 @@
-import { referralssCollection } from '@/utils/collections'
 import { RootState } from '@/store/configureStore'
 import { Referral } from '@/types'
+import { referralssCollection } from '@/utils/collections'
+import { saveContact } from '@/utils/saveContact'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { addDoc, deleteDoc, doc, updateDoc } from 'firebase/firestore'
 import { setId } from '../sales/salesSlide'
@@ -18,6 +19,13 @@ export const addReferral = createAsyncThunk(
             if (!user?.id) return null
             const res = await addDoc(referralssCollection(user.id), referral)
             dispatch(setId(res.id))
+            await saveContact({
+                name: referral.name.split(' ')[0],
+                lastName: referral.name.split(' ')[1],
+                note: `${referral.address}, ${referral.apt}`,
+                phone: referral.phone,
+                email: referral.email!
+            })
             return res.id
         } catch (error) {
             console.log(error)
@@ -41,6 +49,7 @@ export const updateReferral = createAsyncThunk(
             const ref = doc(referralssCollection(user.id), referral.id)
             await updateDoc(ref, referral)
             dispatch(setId(referral.id))
+
             return referral.id!
         } catch (error) {
             console.log('Error updating referral', error)
