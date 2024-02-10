@@ -50,7 +50,7 @@ const Congratulations = () => {
             <AnimatedLottieView
                 source={require('@/assets/animations/email-light.json')}
                 autoPlay
-                style={[Styles.flex, { marginBottom: 60 }]}
+                style={[Styles.flex, { marginBottom: 80 }]}
                 resizeMode="contain"
             />
             <MotiView
@@ -82,7 +82,7 @@ const Congratulations = () => {
                                 <Text
                                     fontFamily="QSBold"
                                     fontSize={18}
-                                    color="tertiary"
+                                    color="grey"
                                 >
                                     No
                                 </Text>

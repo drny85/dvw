@@ -23,7 +23,6 @@ import {
 import { sendIntroductionEmail } from '@/firebase'
 
 import { Referral } from '@/types'
-import { deleteContact } from '@/utils/deleteContact'
 import { FontAwesome } from '@expo/vector-icons'
 import * as Linking from 'expo-linking'
 import { router, useLocalSearchParams } from 'expo-router'

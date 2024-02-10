@@ -17,7 +17,7 @@ const Paginator: FC<Props> = ({ data, scrollX, bgColor }) => {
 
                 const dotWidth = scrollX.interpolate({
                     inputRange,
-                    outputRange: [10, 20, 10],
+                    outputRange: [10, 14, 10],
                     extrapolate: 'clamp'
                 })
                 const bg = scrollX.interpolate({
@@ -37,7 +37,7 @@ const Paginator: FC<Props> = ({ data, scrollX, bgColor }) => {
                         key={i.toString()}
                         style={{
                             height: 10,
-                            width: 10,
+                            width: dotWidth,
                             borderRadius: 5,
                             marginHorizontal: 8,
                             backgroundColor: bg,

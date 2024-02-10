@@ -20,9 +20,12 @@ const FollowUps = () => {
 
     const bg = useThemeColor('accent')
     const dispatch = useAppDispatch()
-    const data = referrals?.filter(
-        (r) => r.followUpOn !== null && moment(r.followUpOn).isAfter(moment())
-    )
+    const data = referrals
+        ?.filter(
+            (r) =>
+                r.followUpOn !== null && moment(r.followUpOn).isAfter(moment())
+        )
+        .sort((a, b) => moment(a.followUpOn).diff(moment(b.followUpOn)))
 
     // if (data.length === 0 && )
     //     return (

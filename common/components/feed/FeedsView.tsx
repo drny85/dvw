@@ -33,11 +33,15 @@ const FeedsView = ({ referrals }: { referrals: Referral[] }) => {
                 .isSame(moment().subtract(1, 'day').startOf('day'))
     )
 
-    const todayOrders = referrals.filter(
-        (r) =>
-            r.status.id === 'closed' &&
-            moment(r.order_date).startOf('day').isSame(moment().startOf('day'))
-    )
+    const todayOrders = referrals
+        .filter(
+            (r) =>
+                r.status.id === 'closed' &&
+                moment(r.order_date)
+                    .startOf('day')
+                    .isSame(moment().startOf('day'))
+        )
+        .sort((a, b) => moment(a.order_date).diff(moment(b.order_date)))
     const nonVerizonWirelessCustomer = movedYesterday.filter(
         (r) => !r.isVerizonWirelessCustomer
     )
@@ -261,9 +265,7 @@ const FeedsView = ({ referrals }: { referrals: Referral[] }) => {
                                 key={r.id}
                                 onPress={() => {
                                     dispatch(setReferralId(r.id!))
-                                    router.push(
-                                        '/(app)/(modals)/referralDetail'
-                                    )
+                                    router.push(`/(app)/(modals)/${r.id}`)
                                 }}
                             >
                                 <Row
