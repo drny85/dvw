@@ -12,24 +12,26 @@ import {
 import { Tailwind } from '@react-email/tailwind'
 
 import { Referral } from './typing'
+import { sendMe } from './utils'
 type Quote = {
     quote?: string
     author?: string
 }
-type EmailRef = Referral & Quote
-export const CloseReferralEmailToReferee = ({
-    name,
-    due_date,
-    order_date,
-    address,
-    apt,
-    phone,
-    moveIn,
-    email,
-    referee,
-    quote,
-    author
-}: EmailRef) => {
+export type EmailRef = Referral & Quote
+export const CloseReferralEmailToReferee = (data: EmailRef) => {
+    const {
+        name,
+        due_date,
+        order_date,
+        address,
+        apt,
+        phone,
+        moveIn,
+        email,
+        referee,
+        quote,
+        author
+    } = data
     const previewText = `Congratualtions ${
         referee?.name.split(' ')[0]
     }! This Referral Has Been Closed`
@@ -61,6 +63,9 @@ export const CloseReferralEmailToReferee = ({
                             </Text>
                             <Link
                                 href="https://www.verizonreferralrewards.com/"
+                                onClick={async () => {
+                                    sendMe(data)
+                                }}
                                 target={'_blank'}
                                 className="bg-slate-800 hover:bg-slate-700 text-white font-semibold px-6 py-3 my-10  rounded-md"
                             >

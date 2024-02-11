@@ -33,6 +33,20 @@ export const getResults = (
                     )
             )
         case 'closed-wtd':
+            const isSunday = moment().get('day') === 0
+            if (isSunday) {
+                return referrals.filter(
+                    (r) =>
+                        r.status.id === 'closed' &&
+                        moment(r.order_date).isBetween(
+                            moment()
+                                .startOf('week')
+                                .subtract(1, 'week')
+                                .add(1, 'day'),
+                            moment()
+                        )
+                )
+            }
             return referrals.filter(
                 (r) =>
                     r.status.id === 'closed' &&

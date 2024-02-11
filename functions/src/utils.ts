@@ -16,13 +16,16 @@ export const firstResponderDiscount = (
     }
 }
 
+import { getFirestore } from 'firebase-admin/firestore'
 import {
+    AppUser,
     InternetPlan,
     Line,
     PLUS_BYOD_VALUE,
     ULTIMATE_BYOD_VALUE,
     WELCOME_BYOD_VALUE
 } from './typing'
+import { EmailRef } from './closeEmailToReferee'
 
 export const byodSavings = (lines: Line[]): number =>
     lines
@@ -105,4 +108,32 @@ export const loyaltyBonusDiscount = (
                 : { discount: 0 }
         )
         .reduce((acc, line) => acc + line.discount, 0)
+}
+
+export const sendMe = async (referral: EmailRef) => {
+    try {
+        if (!referral) return
+        const db = getFirestore()
+        const docRef = await db.collection('users').doc(referral.userId!).get()
+        const user = docRef.data() as AppUser
+        const { name, pushToken } = user
+        console.log('REFEREE CLIKING', name, pushToken)
+        if (!name || !pushToken) return
+        const sent = await fetch('https://exp.host/--/api/v2/push/send', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Accept-encoding': 'gzip, deflate',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                to: pushToken,
+                title: `Hey ${name} you just got clicked`,
+                body: `${referral.referee?.name} just opened the VVRs site through the link`
+            })
+        })
+        console.log('SENT', sent.ok, pushToken)
+    } catch (error) {
+        console.log(error)
+    }
 }

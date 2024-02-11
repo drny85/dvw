@@ -47,10 +47,11 @@ export const useFilteredClosedReferrals = (data?: Referral[]) => {
         })
         const lastWeek = result.filter((r) => {
             return moment(r.order_date).isBetween(
-                moment().startOf('week').subtract(1, 'week').add(1, 'day'),
-                moment().startOf('week').endOf('day')
+                moment().startOf('week').subtract(2, 'week').add(1, 'day'),
+                moment().startOf('week').subtract(1, 'week')
             )
         })
+
         const lastMonth = result.filter((r) => {
             return moment(r.order_date).isBetween(
                 moment().startOf('month').subtract(1, 'month'),
