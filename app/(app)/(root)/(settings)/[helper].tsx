@@ -28,7 +28,7 @@ const Person = () => {
     const disabled =
         helpers?.filter(
             (item) => item.type === 'coach' && item.userId === user?.id
-        ).length === 1
+        ).length === 1 && helper === 'coach'
 
     const btn = useThemeColor('accent')
     const title =
@@ -155,7 +155,7 @@ const Person = () => {
                         }}
                         onPress={onAddPerson}
                     >
-                        <Text fontFamily="SFBold" fontSize={20}>
+                        <Text fontFamily="SFBold" fontSize={20} color="white">
                             Add {title}
                         </Text>
                     </TouchableOpacity>

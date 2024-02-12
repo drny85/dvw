@@ -29,6 +29,8 @@ const Metrics = () => {
     const [data, setData] = useState<Referral[]>([])
     const { internet, tv, wireless } = usePayout(data)
 
+    console.log(internet)
+
     const { wtd, mtd, lw, lm, loading, today } = useFilteredClosedReferrals(
         referrals.filter((s) => s.status.id === 'closed')
     )

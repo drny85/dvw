@@ -1,25 +1,21 @@
+import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import { Helper } from '@/types'
+import { FontAwesome } from '@expo/vector-icons'
+import { router } from 'expo-router'
 import React from 'react'
 import { FlatList, ListRenderItem, TouchableOpacity } from 'react-native'
 import Divider from '../Divider'
 import Row from '../Row'
 import Text from '../Text'
 import View from '../View'
-import { FontAwesome } from '@expo/vector-icons'
-import useThemeColor from '@/common/hooks/useThemeColor'
-import { router } from 'expo-router'
-import useAppSelector from '@/common/hooks/useAppSelector'
 
 type Props = {
     data: Helper[]
 }
 const PersonList = ({ data }: Props) => {
     const text = useThemeColor('text')
-    const user = useAppSelector((s) => s.auth.user)
-    const disabled =
-        data.filter((item) => item.type === 'coach' && item.userId === user?.id)
-            .length === 1
+
     const renderItem: ListRenderItem<Helper> = ({ index, item }) => {
         return (
             <TouchableOpacity

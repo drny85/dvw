@@ -11,11 +11,13 @@ import { useReferrals } from '@/common/hooks/referrals/useReferrals'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import { Referral } from '@/types'
+import { helpersCollection } from '@/utils/collections'
 import { FontAwesome } from '@expo/vector-icons'
-import { router, useLocalSearchParams } from 'expo-router'
+import { Link, router, useLocalSearchParams } from 'expo-router'
+import { deleteDoc, doc } from 'firebase/firestore'
 import moment from 'moment'
 import React from 'react'
-import { StyleSheet, TouchableOpacity } from 'react-native'
+import { Alert, StyleSheet, TouchableOpacity } from 'react-native'
 
 const HelperInfo = () => {
     const { helperId } = useLocalSearchParams<{ helperId: string }>()
@@ -32,6 +34,28 @@ const HelperInfo = () => {
                 new Date(b.order_date!).getTime() -
                 new Date(a.order_date!).getTime()
         )[0]
+
+    const onDeleteConfirmation = async () => {
+        try {
+            if (!helper?.userId) return
+            const helperRef = doc(helpersCollection(helper.userId), helperId)
+            await deleteDoc(helperRef)
+            router.back()
+        } catch (error) {
+            console.log(error)
+            Alert.alert('Error', 'Something went wrong')
+        }
+    }
+    const onDeletePress = () => {
+        Alert.alert('Delete', 'Are you sure you want to delete it?', [
+            { text: 'Cancel', style: 'cancel' },
+            {
+                text: 'Yes, Delete',
+                onPress: onDeleteConfirmation,
+                style: 'destructive'
+            }
+        ])
+    }
     if (loading || lg) return <Loading />
     return (
         <Screen>
@@ -46,11 +70,8 @@ const HelperInfo = () => {
                             marginRight: SIZES.padding
                         }}
                     >
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={onDeletePress}>
                             <FontAwesome name="trash" color={trash} size={28} />
-                        </TouchableOpacity>
-                        <TouchableOpacity>
-                            <FontAwesome name="pencil" color={edit} size={28} />
                         </TouchableOpacity>
                     </Row>
                 }
