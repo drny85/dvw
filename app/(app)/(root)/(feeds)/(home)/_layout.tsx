@@ -1,11 +1,17 @@
 import useThemeColor from '@/common/hooks/useThemeColor'
 import {
-    createMaterialTopTabNavigator,
+    isFirstTime,
+    resetFirstTime,
+    setNotFirstTime
+} from '@/utils/checkFirstTimeUser'
+import {
     MaterialTopTabNavigationEventMap,
-    MaterialTopTabNavigationOptions
+    MaterialTopTabNavigationOptions,
+    createMaterialTopTabNavigator
 } from '@react-navigation/material-top-tabs'
 import { ParamListBase, TabNavigationState } from '@react-navigation/native'
-import { withLayoutContext } from 'expo-router'
+import { router, withLayoutContext } from 'expo-router'
+import { useEffect } from 'react'
 const { Navigator } = createMaterialTopTabNavigator()
 export const MaterialTopTabs = withLayoutContext<
     MaterialTopTabNavigationOptions,
@@ -22,6 +28,26 @@ const HomeLayout = () => {
     const bgColor = useThemeColor('background')
     const acent = useThemeColor('accent')
     const text = useThemeColor('text')
+
+    useEffect(() => {
+        async function checkFirstTime() {
+            const isFirst = await isFirstTime()
+            if (isFirst) {
+                console.log(
+                    'Welcome! This is the first time the user opens the app.'
+                )
+                // Perform any first-time setup or welcome actions here
+                // For example, navigate to a welcome screen or show a tutorial
+                // Once the first-time actions are completed, set the user as not first time
+                // await setNotFirstTime()
+                router.replace('/(app)/(modals)/welcome')
+            } else {
+                console.log('Welcome back! The user has opened the app before.')
+                // Perform actions for returning users
+            }
+        }
+        checkFirstTime()
+    }, [])
     return (
         <MaterialTopTabs
             screenOptions={{
