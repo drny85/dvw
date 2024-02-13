@@ -36,6 +36,12 @@ const functions = getFunctions(app)
 
 export const firestore = getFirestore(app)
 
+export const sendWirelessClosedTemplate = () =>
+    httpsCallable<{ referralId: string }, boolean>(
+        functions,
+        'sendWirelessClosedTemplate'
+    )
+
 export const deleteUserAccount = (name: string) =>
     httpsCallable<{ uid: string }, Response>(functions, name)
 export const sendMeATotificationWhenSomeoneLogin = () =>

@@ -26,6 +26,9 @@ import IntroductionEmail, { IntroductionEmailProps } from './introductionEmail'
 import SendCloseEmail from './closeSaleEmail'
 import SendCloseEmailToReferee from './closeEmailToReferee'
 import { quotes } from './quotes'
+import WirelessClosedTemplate, {
+    WirelessClosedTemplateProps
+} from './wirelessClosedTemplate'
 
 dotenv.config()
 
@@ -352,6 +355,53 @@ exports.sendMeATotificationWhenSomeoneLogin = onCall(async (request) => {
         console.log(error)
     }
 })
+
+exports.sendWirelessClosedTemplate = onCall<{ referralId: string }>(
+    async (request): Promise<boolean> => {
+        try {
+            if (!request.auth) return false
+            const referralId = request.data.referralId
+            const docRef = await db
+                .collection('users')
+                .doc(request.auth?.uid)
+                .get()
+
+            const referralRef = await db
+                .collection('referrals')
+                .doc(request.auth.uid)
+                .collection('referrals')
+                .doc(referralId)
+                .get()
+            const referral = referralRef.data() as Referral
+            const user = docRef.data() as AppUser
+            const { name, email, phone } = user
+
+            const Template: typeof WirelessClosedTemplate =
+                WirelessClosedTemplate
+
+            const w: WirelessClosedTemplateProps = {
+                customerName: referral.name,
+                repName: name,
+                repPhone: phone || ''
+            }
+            const result = await resend.emails.send({
+                from: `${name} <melendez@robertdev.net>`,
+                to: [referral.email!],
+                subject: 'Helpful Information For Your Wireless Service',
+                reply_to: user.email,
+                bcc: [email!],
+                text: '',
+                react: Template(w)
+            })
+
+            console.log('Wireless Closed Template Sent', result.data?.id)
+            return true
+        } catch (error) {
+            console.log('Error sending wireless template', error)
+            return false
+        }
+    }
+)
 // //const everyDayAt8Am = '0 8 * * *'
 // const everyTwoMinutes = '*/2 * * * *'
 // exports.scheduleTask = functions.pubsub

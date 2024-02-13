@@ -20,7 +20,7 @@ import {
     setReferralState,
     setShowScheduler
 } from '@/features/referrals/referralsSlide'
-import { sendIntroductionEmail } from '@/firebase'
+import { sendIntroductionEmail, sendWirelessClosedTemplate } from '@/firebase'
 
 import { Referral } from '@/types'
 import { FontAwesome } from '@expo/vector-icons'
@@ -38,6 +38,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 const ReferralDetails = () => {
     const { referralId: id } = useLocalSearchParams<{ referralId: string }>()
+    const [sendingWirelessEmail, setSendingWirelessEmail] = useState(false)
     const dispatch = useAppDispatch()
     const { loading, referral } = useReferral(id!)
     const [sendingEmail, setSendingEmail] = useState(false)
@@ -131,6 +132,22 @@ const ReferralDetails = () => {
             .catch((error) => {
                 console.log(error)
             })
+    }
+
+    const sendWirelessT = async () => {
+        try {
+            if (!referral?.id) return
+            const func = sendWirelessClosedTemplate()
+            setSendingWirelessEmail(true)
+            const sent = await func({ referralId: referral?.id })
+            if (sent.data === true) {
+                Alert.alert('Email Sent')
+            }
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setSendingWirelessEmail(false)
+        }
     }
 
     useEffect(() => {
@@ -335,6 +352,44 @@ const ReferralDetails = () => {
                             </Text>
                         )}
                     </View>
+                    {sendingWirelessEmail ? (
+                        <ActivityIndicator size={'small'} />
+                    ) : (
+                        <TouchableOpacity
+                            onPress={() => {
+                                Alert.alert(
+                                    'Send Wireles Template',
+                                    `Would you like to send helpful wireless information to ${referral.name}?`,
+                                    [
+                                        { text: 'Cancel', style: 'cancel' },
+                                        {
+                                            text: 'Yes, Send it',
+                                            onPress: sendWirelessT
+                                        }
+                                    ]
+                                )
+                            }}
+                        >
+                            <Row
+                                style={{
+                                    justifyContent: 'space-between',
+                                    borderRadius: SIZES.radius,
+                                    padding: SIZES.base,
+                                    backgroundColor: 'gray'
+                                }}
+                            >
+                                <Text color="white" fontFamily="QSBold">
+                                    Send Wireless/Closed Info
+                                </Text>
+
+                                <FontAwesome
+                                    name="send-o"
+                                    size={22}
+                                    color={'white'}
+                                />
+                            </Row>
+                        </TouchableOpacity>
+                    )}
                 </View>
                 <View
                     style={[
@@ -389,6 +444,7 @@ const ReferralDetails = () => {
                             </Text>
                         </Text>
                     )}
+
                     {referral?.referee && (
                         <Text>
                             Referred By:{' '}
