@@ -41,8 +41,6 @@ const Metrics = () => {
         Object.values(internet).reduce((a, b) => a + b, 0) ?? 0
     const totalTvUnits = (): number =>
         Object.values(tv).reduce((a, b) => a + b, 0) ?? 0
-    const totalWirelessUnits = (): number =>
-        Object.values(wireless).reduce((a, b) => a + b, 0) ?? 0
 
     useEffect(() => {
         setData(
@@ -144,8 +142,13 @@ const Metrics = () => {
                 </View>
             </MotiView>
 
-            <View style={[styles.section, { backgroundColor: bgColor }]}>
-                <Text center fontFamily="SFBold">
+            <View
+                style={[
+                    styles.section,
+                    { backgroundColor: bgColor, marginTop: SIZES.padding }
+                ]}
+            >
+                <Text center fontFamily="SFBold" fontSize={20}>
                     Internet ({totalInternetUnits()})
                 </Text>
                 <Divider small />
@@ -187,33 +190,37 @@ const Metrics = () => {
                                 alignItems: 'center'
                             }}
                         >
-                            {Object.entries(internet).map((i, index) => {
-                                return (
-                                    <PercentageIndicator
-                                        value={
-                                            (i[1] / totalInternetUnits()) * 100
-                                        }
-                                        key={index}
-                                        title={INTERNETnames[i[0]]}
-                                        size="medium"
-                                        percentage={() => {
-                                            const v =
+                            {Object.entries(internet)
+                                .sort((a, b) => (a < b ? 1 : -1))
+                                .map((i, index) => {
+                                    return (
+                                        <PercentageIndicator
+                                            value={
                                                 (i[1] / totalInternetUnits()) *
                                                 100
-                                            return v.toFixed(1) + '%'
-                                        }}
-                                    />
-                                    // <CircularProgressBar
-                                    //     radius={40}
-                                    //     key={index}
-                                    //     currentValue={
-                                    //         // (i[1] / totalInternetUnits()) * 100
-                                    //         i[1]
-                                    //     }
-                                    //     maxValue={totalInternetUnits()}
-                                    // />
-                                )
-                            })}
+                                            }
+                                            key={index}
+                                            title={INTERNETnames[i[0]]}
+                                            size="medium"
+                                            percentage={() => {
+                                                const v =
+                                                    (i[1] /
+                                                        totalInternetUnits()) *
+                                                    100
+                                                return v.toFixed(1) + '%'
+                                            }}
+                                        />
+                                        // <CircularProgressBar
+                                        //     radius={40}
+                                        //     key={index}
+                                        //     currentValue={
+                                        //         // (i[1] / totalInternetUnits()) * 100
+                                        //         i[1]
+                                        //     }
+                                        //     maxValue={totalInternetUnits()}
+                                        // />
+                                    )
+                                })}
                         </Row>
                     </View>
                     <View
@@ -228,26 +235,28 @@ const Metrics = () => {
                                 alignItems: 'center'
                             }}
                         >
-                            {Object.entries(internet).map((i, index) => {
-                                return (
-                                    <View key={index}>
-                                        <Text
-                                            center
-                                            fontFamily="SFBold"
-                                            fontSize={16}
-                                        >
-                                            {INTERNETnames[i[0]]}
-                                        </Text>
-                                        <Text
-                                            center
-                                            fontFamily="SFBold"
-                                            fontSize={18}
-                                        >
-                                            {i[1]}
-                                        </Text>
-                                    </View>
-                                )
-                            })}
+                            {Object.entries(internet)
+                                .sort((a, b) => (a < b ? 1 : -1))
+                                .map((i, index) => {
+                                    return (
+                                        <View key={index}>
+                                            <Text
+                                                center
+                                                fontFamily="SFBold"
+                                                fontSize={16}
+                                            >
+                                                {INTERNETnames[i[0]]}
+                                            </Text>
+                                            <Text
+                                                center
+                                                fontFamily="SFBold"
+                                                fontSize={18}
+                                            >
+                                                {i[1]}
+                                            </Text>
+                                        </View>
+                                    )
+                                })}
                         </Row>
                     </View>
                 </ScrollView>
@@ -266,7 +275,7 @@ const Metrics = () => {
             </View>
 
             <View style={[styles.section, { backgroundColor: bgColor }]}>
-                <Text center fontFamily="SFBold">
+                <Text center fontFamily="SFBold" fontSize={20}>
                     TV / Video ({totalTvUnits()})
                 </Text>
                 <ScrollView
@@ -358,114 +367,6 @@ const Metrics = () => {
                     <Paginator
                         data={[{ id: '1' }, { id: '2' }]}
                         scrollX={scrollXTv}
-                    />
-                </View>
-            </View>
-
-            <View style={[styles.section, { backgroundColor: bgColor }]}>
-                <Text center fontFamily="SFBold">
-                    Wireless Sales ({totalWirelessUnits()})
-                </Text>
-                <Divider small />
-                <ScrollView
-                    onScroll={Animated.event(
-                        [
-                            {
-                                nativeEvent: {
-                                    contentOffset: {
-                                        x: scrollXWireless
-                                    }
-                                }
-                            }
-                        ],
-                        { useNativeDriver: false }
-                    )}
-                    pagingEnabled
-                    decelerationRate={0}
-                    showsHorizontalScrollIndicator={false}
-                    scrollEventThrottle={32}
-                    snapToAlignment="center"
-                    horizontal
-                    scrollEnabled
-                    contentContainerStyle={{
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}
-                    style={{ width: SIZES.width }}
-                >
-                    <View style={{ width: SIZES.width }}>
-                        <Row
-                            style={{
-                                justifyContent: 'space-evenly',
-                                alignItems: 'center'
-                            }}
-                        >
-                            {Object.entries(wireless)?.map((obj, i) => (
-                                <PercentageIndicator
-                                    key={i}
-                                    title={`Goal ${weeklyWirelessGoal}`}
-                                    value={
-                                        (totalWirelessUnits() /
-                                            weeklyWirelessGoal) *
-                                        100
-                                    }
-                                    size="medium"
-                                    percentage={() => {
-                                        const v =
-                                            (totalWirelessUnits() /
-                                                weeklyWirelessGoal) *
-                                            100
-                                        return v.toFixed(1) + '%'
-                                    }}
-                                />
-                            ))}
-                        </Row>
-                    </View>
-                    <View
-                        style={{
-                            width: SIZES.width,
-                            backgroundColor: accentColor
-                        }}
-                    >
-                        <Row
-                            style={{
-                                justifyContent: 'space-evenly',
-                                alignItems: 'center'
-                            }}
-                        >
-                            {Object.entries(wireless).map((i, index) => {
-                                return (
-                                    <View key={index}>
-                                        <Text
-                                            center
-                                            fontSize={16}
-                                            fontFamily="SFBold"
-                                        >
-                                            {WIRELESSnames[i[0]]}
-                                        </Text>
-                                        <Text
-                                            center
-                                            fontFamily="SFBold"
-                                            fontSize={18}
-                                        >
-                                            {i[1]}
-                                        </Text>
-                                    </View>
-                                )
-                            })}
-                        </Row>
-                    </View>
-                </ScrollView>
-                <View
-                    style={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        paddingVertical: 4
-                    }}
-                >
-                    <Paginator
-                        data={[{ id: '1' }, { id: '2' }]}
-                        scrollX={scrollXWireless}
                     />
                 </View>
             </View>
