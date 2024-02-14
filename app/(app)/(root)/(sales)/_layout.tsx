@@ -1,17 +1,62 @@
-import React from 'react'
-import { Stack } from 'expo-router'
+import useThemeColor from '@/common/hooks/useThemeColor'
+import { SIZES } from '@/constants/Sizes'
+import {
+    isFirstTime,
+    resetFirstTime,
+    setNotFirstTime
+} from '@/utils/checkFirstTimeUser'
+import {
+    MaterialTopTabNavigationEventMap,
+    MaterialTopTabNavigationOptions,
+    createMaterialTopTabNavigator
+} from '@react-navigation/material-top-tabs'
+import { ParamListBase, TabNavigationState } from '@react-navigation/native'
+import { withLayoutContext } from 'expo-router'
+
+const { Navigator } = createMaterialTopTabNavigator()
+export const MaterialTopTabs = withLayoutContext<
+    MaterialTopTabNavigationOptions,
+    typeof Navigator,
+    TabNavigationState<ParamListBase>,
+    MaterialTopTabNavigationEventMap
+>(Navigator)
 
 export const unstable_settings = {
-    // Ensure any route can link back to `/`
-    initialRouteName: '(sales)'
+    initialRouteName: '(feeds)'
 }
 
-const SalesPayout = () => {
+const HomeLayout = () => {
+    const bgColor = useThemeColor('background')
+    const acent = useThemeColor('accent')
+    const text = useThemeColor('text')
+
     return (
-        <Stack initialRouteName="index" screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="index" />
-        </Stack>
+        <MaterialTopTabs
+            screenOptions={{
+                tabBarStyle: {
+                    backgroundColor: bgColor,
+                    paddingTop: SIZES.statusBarHeight
+                },
+
+                tabBarActiveTintColor: text,
+                tabBarIndicatorStyle: { backgroundColor: acent, height: 4 },
+                tabBarLabelStyle: {
+                    textTransform: 'capitalize',
+                    fontWeight: 'bold',
+                    fontSize: 18
+                }
+            }}
+        >
+            <MaterialTopTabs.Screen
+                name="index"
+                options={{ title: 'Referrals' }}
+            />
+            <MaterialTopTabs.Screen
+                name="wireless"
+                options={{ title: 'Wireless' }}
+            />
+        </MaterialTopTabs>
     )
 }
 
-export default SalesPayout
+export default HomeLayout

@@ -53,7 +53,7 @@ const HomeLayout = () => {
             screenOptions={{
                 tabBarStyle: { backgroundColor: bgColor },
                 tabBarActiveTintColor: text,
-                tabBarIndicatorStyle: { backgroundColor: acent },
+                tabBarIndicatorStyle: { backgroundColor: acent, height: 3 },
                 tabBarLabelStyle: {
                     textTransform: 'capitalize',
                     fontWeight: 'bold',

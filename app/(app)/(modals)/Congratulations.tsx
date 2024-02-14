@@ -16,20 +16,15 @@ import { MotiView } from 'moti'
 
 const Congratulations = () => {
     const { saleQuote } = useAppSelector((s) => s.sales)
-
     const dispatch = useAppDispatch()
     const navigateBack = () => {
         dispatch(setSaleQuoteReferral(null))
 
-        router.push('/(app)/(root)/(feeds)/(home)/feeds')
+        router.push('/(app)/(root)/(sales)')
     }
 
     const goToPlan = () => {
-        console.log('Go to plan 2')
-
         router.push('/(app)/(modals)/scheduleWireles')
-        // router.push('/(app)/(root)/(plan)')
-        // router.back()
     }
     return (
         <Screen style={Styles.flex}>
