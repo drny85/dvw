@@ -8,6 +8,8 @@ import React from 'react'
 import { StyleSheet, TouchableOpacity } from 'react-native'
 import Text from '../Text'
 import { router } from 'expo-router'
+import useAppDispatch from '@/common/hooks/useAppDispatch'
+import { setFiltered } from '@/features/referrals/referralsSlide'
 
 type Props = {
     type: ReferralsFilterType
@@ -16,13 +18,17 @@ type Props = {
 const ReferralsMiniCard = ({ subtitle, type }: Props) => {
     const bg = useThemeColor('background')
     const shadow = useThemeColor('secondary')
+    const dispatch = useAppDispatch()
     const { loading, referrals } = useReferrals()
     if (loading) null
 
     return (
         <TouchableOpacity
             disabled={getResults(referrals, type).length === 0}
-            onPress={() => router.push(`/(app)/(root)/(sales)/${type}`)}
+            onPress={() => {
+                dispatch(setFiltered(type))
+                router.push('/(app)/(modals)/filtered')
+            }}
             style={[
                 Styles.boxShadow,
                 styles.container,

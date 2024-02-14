@@ -1,4 +1,4 @@
-import { Referral } from '@/types'
+import { Referral, ReferralsFilterType } from '@/types'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 type ReferralsState = {
@@ -10,6 +10,7 @@ type ReferralsState = {
     showScheduler: boolean
     hasWireless: boolean
     referralLines: number
+    filtered: ReferralsFilterType | null
 }
 const initialState: ReferralsState = {
     referral: null,
@@ -19,7 +20,8 @@ const initialState: ReferralsState = {
     showScheduler: false,
     referralId: null,
     hasWireless: false,
-    referralLines: 0
+    referralLines: 0,
+    filtered: null
 }
 
 const referralsSlide = createSlice({
@@ -50,6 +52,12 @@ const referralsSlide = createSlice({
         },
         setReferrralLines: (state, { payload }: PayloadAction<number>) => {
             state.referralLines = payload
+        },
+        setFiltered: (
+            state,
+            { payload }: PayloadAction<ReferralsFilterType | null>
+        ) => {
+            state.filtered = payload
         }
     }
 })
@@ -62,7 +70,8 @@ export const {
     setShowScheduler,
     setAllReferrals,
     setHasWireless,
-    setReferrralLines
+    setReferrralLines,
+    setFiltered
 } = referralsSlide.actions
 
 export default referralsSlide.reducer

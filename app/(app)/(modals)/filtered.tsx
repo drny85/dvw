@@ -4,30 +4,27 @@ import Screen from '@/common/components/Screen'
 import TextInput from '@/common/components/TextInput'
 import ReferralCard from '@/common/components/referrals/ReferralCard'
 import { useReferrals } from '@/common/hooks/referrals/useReferrals'
+import useAppSelector from '@/common/hooks/useAppSelector'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
-import { Referral, ReferralsFilterType } from '@/types'
+import { Referral } from '@/types'
 import { filterTitle } from '@/utils/filterTitle'
 import { getResults } from '@/utils/getReferralsFilterData'
 import { FontAwesome } from '@expo/vector-icons'
-import { router, useLocalSearchParams } from 'expo-router'
+import { router } from 'expo-router'
 import { AnimatePresence, MotiView } from 'moti'
 import React, { useState } from 'react'
 import { FlatList, ListRenderItem, TouchableOpacity } from 'react-native'
 
 const FilteredReferrals = () => {
-    const { filterType } = useLocalSearchParams<{
-        filterType: ReferralsFilterType
-    }>()
-
+    const filterType = useAppSelector((s) => s.referrals.filtered)
     const color = useThemeColor('text')
     const bgColor = useThemeColor('background')
     const [searching, setSearching] = useState(false)
     const { loading, referrals } = useReferrals()
     const [filtered, setFiltered] = useState<Referral[]>([])
-    if (loading) return <Loading />
 
-    const data = getResults(referrals, filterType)
+    const data = getResults(referrals, filterType!)
 
     const handleSearch = (value: string) => {
         if (value.length > 0) {
@@ -50,6 +47,8 @@ const FilteredReferrals = () => {
     const renderReferrals: ListRenderItem<Referral> = ({ item }) => {
         return <ReferralCard item={item} bgColor={bgColor} />
     }
+
+    if (loading || !filterType) return <Loading />
 
     return (
         <Screen>

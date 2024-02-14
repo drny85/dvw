@@ -10,8 +10,6 @@ const SalesPayout = () => {
     return (
         <Stack initialRouteName="index" screenOptions={{ headerShown: false }}>
             <Stack.Screen name="index" />
-
-            <Stack.Screen name="[filterType]" />
         </Stack>
     )
 }

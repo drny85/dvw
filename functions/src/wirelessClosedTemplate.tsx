@@ -30,7 +30,7 @@ export const WirelessClosedTemplate = ({
             <Preview>{previewText}</Preview>
             <Tailwind>
                 <Body className="bg-slate-200  my-auto mx-auto font-sans px-2">
-                    <Container className="border shadow-md border-solid border-[#eaeadd] rounded my-[40px] mx-auto p-[20px] max-w-[720px]">
+                    <Container className="border shadow-md border-solid border-[#eaea] rounded my-[40px] mx-auto p-[20px] max-w-[720px]">
                         <Text className="text-center text-xl font-bold">
                             Thank you for your Verizon Wireless Order
                         </Text>
@@ -59,8 +59,9 @@ export const WirelessClosedTemplate = ({
                             </Text>
                             <Text>
                                 2. To receive the Autopay Discount please ensure
-                                you are using a Debit Card or ACH from Checking
-                                account (Credit Cards not eligible). 
+                                you are using ACH from Checking account or
+                                Verizon Visa Card (Credit/Debit Cards Cars not
+                                eligible). 
                                 <Link
                                     target={'_blank'}
                                     href="https://www.verizon.com/support/how-to-set-up-auto-pay-video/#:~:text=Set%20up%20is%20quick%20and,and%20then%20click%20Auto%20Pay"
@@ -117,6 +118,16 @@ export const WirelessClosedTemplate = ({
                                     target={'_blank'}
                                 >
                                     Trade In Status
+                                </Link>
+                            </Text>
+                            <Text>
+                                7. If you are activating an eSIM phone and are
+                                having some issue, please click here.{' '}
+                                <Link
+                                    target="_blank"
+                                    href="https://www.verizon.com/support/knowledge-base-220955/"
+                                >
+                                    Activate eSIM
                                 </Link>
                             </Text>
                             <Text>
