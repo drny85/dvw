@@ -8,6 +8,8 @@ type ReferralsState = {
     editing: boolean
     goToPlan: boolean
     showScheduler: boolean
+    hasWireless: boolean
+    referralLines: number
 }
 const initialState: ReferralsState = {
     referral: null,
@@ -15,7 +17,9 @@ const initialState: ReferralsState = {
     editing: false,
     goToPlan: false,
     showScheduler: false,
-    referralId: null
+    referralId: null,
+    hasWireless: false,
+    referralLines: 0
 }
 
 const referralsSlide = createSlice({
@@ -40,6 +44,12 @@ const referralsSlide = createSlice({
         },
         setAllReferrals: (state, { payload }: PayloadAction<Referral[]>) => {
             state.referrals = payload
+        },
+        setHasWireless: (state, { payload }: PayloadAction<boolean>) => {
+            state.hasWireless = payload
+        },
+        setReferrralLines: (state, { payload }: PayloadAction<number>) => {
+            state.referralLines = payload
         }
     }
 })
@@ -50,7 +60,9 @@ export const {
     setGoToPlanRoute,
     setReferralId,
     setShowScheduler,
-    setAllReferrals
+    setAllReferrals,
+    setHasWireless,
+    setReferrralLines
 } = referralsSlide.actions
 
 export default referralsSlide.reducer

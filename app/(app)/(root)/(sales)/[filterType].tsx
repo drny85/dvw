@@ -54,7 +54,7 @@ const FilteredReferrals = () => {
     return (
         <Screen>
             <Header
-                onPressBack={router.back}
+                onPressBack={() => router.back()}
                 title={filterTitle(filterType)}
                 hasRightIcon
                 rightIcon={

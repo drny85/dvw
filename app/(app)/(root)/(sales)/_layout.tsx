@@ -11,10 +11,7 @@ const SalesPayout = () => {
         <Stack initialRouteName="index" screenOptions={{ headerShown: false }}>
             <Stack.Screen name="index" />
 
-            <Stack.Screen
-                name="[filterType]"
-                // options={{ presentation: 'fullScreenModal' }}
-            />
+            <Stack.Screen name="[filterType]" />
         </Stack>
     )
 }

@@ -21,7 +21,7 @@ const Congratulations = () => {
     const navigateBack = () => {
         dispatch(setSaleQuoteReferral(null))
 
-        router.push('/(app)/(root)/(sales)')
+        router.push('/(app)/(root)/(feeds)/(home)/feeds')
     }
 
     const goToPlan = () => {

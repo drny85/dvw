@@ -14,7 +14,7 @@ interface Props {
 const ButtonRadio = ({ selected, title, onPress }: Props) => {
     const accent = useThemeColor('accent')
     const textColor = useThemeColor('text')
-    const btnColor = useThemeColor('secondary')
+
     return (
         <TouchableOpacity style={{ marginVertical: 10 }} onPress={onPress}>
             <Row style={{ alignItems: 'center' }}>

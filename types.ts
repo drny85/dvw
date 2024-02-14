@@ -191,6 +191,7 @@ export type Referral = {
     emailInstroductionSent: boolean
     comment: string | null
     followUpOn: string | null
+    referralLines: number
 }
 
 export interface STATUS {

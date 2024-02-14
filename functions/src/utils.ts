@@ -22,6 +22,7 @@ import {
     InternetPlan,
     Line,
     PLUS_BYOD_VALUE,
+    Referral,
     ULTIMATE_BYOD_VALUE,
     WELCOME_BYOD_VALUE
 } from './typing'
@@ -135,5 +136,24 @@ export const sendMe = async (referral: EmailRef) => {
         console.log('SENT', sent.ok, pushToken)
     } catch (error) {
         console.log(error)
+    }
+}
+
+export const handleWirelessFeeAndTemplate = async (
+    referral: Referral,
+    userId: string
+) => {
+    try {
+        const db = getFirestore()
+        const docRef = await db.collection('users').doc(userId).get()
+        const user = docRef.data() as AppUser
+        console.log(
+            'HANDLE WIRELESS FEE AND TEMPLATE',
+            referral.package?.wireless,
+            referral.referralLines,
+            user.name
+        )
+    } catch (error) {
+        console.log('Error handling template', error)
     }
 }

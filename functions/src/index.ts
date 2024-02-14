@@ -1,17 +1,24 @@
-import { onCall } from 'firebase-functions/v2/https'
 import {
+    DocumentSnapshot,
+    FirestoreEvent,
     onDocumentCreated,
+    Change,
     onDocumentWritten
 } from 'firebase-functions/v2/firestore'
+import { onCall } from 'firebase-functions/v2/https'
 
 // import * as functions from 'firebase-functions'
 // import * as moment from 'moment'
+import * as dotenv from 'dotenv'
 import * as admin from 'firebase-admin'
-const { initializeApp } = require('firebase-admin/app')
-const { getFirestore } = require('firebase-admin/firestore')
-import { Resend } from 'resend'
-import { WirelessQuoteEmail } from './email'
 import fetch from 'node-fetch'
+import { Resend } from 'resend'
+import SendCloseEmailToReferee from './closeEmailToReferee'
+import SendCloseEmail from './closeSaleEmail'
+import { WirelessQuoteEmail } from './email'
+import IntroductionEmail, { IntroductionEmailProps } from './introductionEmail'
+import { quotes } from './quotes'
+import { sendNotificationToAllUsers } from './sendNotificationToAllUsers'
 import {
     AppUser,
     Feed,
@@ -20,15 +27,12 @@ import {
     Referral,
     WirelessQuote
 } from './typing'
-import * as dotenv from 'dotenv'
-import { sendNotificationToAllUsers } from './sendNotificationToAllUsers'
-import IntroductionEmail, { IntroductionEmailProps } from './introductionEmail'
-import SendCloseEmail from './closeSaleEmail'
-import SendCloseEmailToReferee from './closeEmailToReferee'
-import { quotes } from './quotes'
 import WirelessClosedTemplate, {
     WirelessClosedTemplateProps
 } from './wirelessClosedTemplate'
+
+const { initializeApp } = require('firebase-admin/app')
+const { getFirestore } = require('firebase-admin/firestore')
 
 dotenv.config()
 
@@ -246,13 +250,47 @@ exports.sendNewPostNotification = onDocumentCreated(
 
 exports.sendClosedEmail = onDocumentWritten(
     'referrals/{userId}/referrals/{referralId}',
-    async (event: any) => {
+    async (
+        event: FirestoreEvent<
+            Change<DocumentSnapshot> | undefined,
+            { userId: string; referralId: string }
+        >
+    ) => {
         try {
-            if (!event?.data.after.exists) return
+            if (!event?.data?.after.exists) return
             const d = event?.data.after.data()
+            // const before = event.data.before.data() as Referral
             const data = d as Referral
+
+            // if (before !== undefined || before !== null) {
+            //     if (
+            //         before.status.id === 'closed' &&
+            //         data.status.id === 'closed'
+            //     ) {
+            //         if (
+            //             before.package?.wireless === null &&
+            //             data.package?.wireless
+            //         ) {
+            //             //ADD WIRELESS FEE AND SEND TEMPLATE
+            //             console.log('ADD TEMPLATE')
+            //             handleWirelessFeeAndTemplate(data, data.userId!)
+            //         } else {
+            //             console.log('NO TEMPLATE')
+            //         }
+            //         return
+            //     }
+            // }
+
             console.log('DATE', new Date(), data.order_date)
             if (data.status.id !== 'closed' || data.email_sent) return
+
+            const userRef = await admin
+                .firestore()
+                .collection('users')
+                .doc(data.userId!)
+                .get()
+
+            const user = userRef.data() as AppUser
             const refereeEmail = data.referee?.email
             const ceEmail = data.manager?.email
             const helpersRef = await admin
@@ -265,12 +303,6 @@ exports.sendClosedEmail = onDocumentWritten(
             const coach = coaches.find((h) => h.type === 'coach')
             const coachEmail = coach?.email || ''
 
-            const userRef = await admin
-                .firestore()
-                .collection('users')
-                .doc(data.userId!)
-                .get()
-            const user = userRef.data() as AppUser
             const Template: typeof SendCloseEmail = SendCloseEmail
             //SEND EMAIL TO LA
             await resend.emails.send({
@@ -282,6 +314,12 @@ exports.sendClosedEmail = onDocumentWritten(
                 text: '',
                 react: Template(data)
             })
+
+            // if (!before && data.package?.wireless !== null) {
+            //     //   //ADD WIRELESS FEE AND SEND TEMPLATE
+            //     console.log('ADD 2ND TEMPLATE')
+            //     handleWirelessFeeAndTemplate(data, data.userId!)
+            // }
 
             if (data.isReferral && refereeEmail) {
                 let n = Math.floor(Math.random() * Math.floor(quotes.length))

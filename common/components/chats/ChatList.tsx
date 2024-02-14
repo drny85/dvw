@@ -9,6 +9,7 @@ import Row from '../Row'
 import Text from '../Text'
 import View from '../View'
 import { AnimatePresence, MotiView } from 'moti'
+import { useMessages } from '@/common/hooks/chats/useMessages'
 
 type Props = {
     setOpened: React.Dispatch<React.SetStateAction<string | null>>
@@ -31,6 +32,10 @@ const ChatList = ({
 }: Props) => {
     const user = useAppSelector((s) => s.auth.user)
     const show = showDelete && user?.id === item.user.id
+    const { loading, messages } = useMessages(item.id!)
+    const lastMessage = messages.at(-1)
+    if (loading) return null
+
     return (
         <Row>
             <AnimatePresence>
@@ -74,6 +79,19 @@ const ChatList = ({
                             <Text fontFamily="SFBold" fontSize={20}>
                                 {item.name}
                             </Text>
+                            {lastMessage && (
+                                <View style={{ padding: SIZES.base }}>
+                                    <Text fontFamily="QSBold" fontSize={14}>
+                                        {lastMessage?.sender.name}
+                                    </Text>
+                                    <Text fontSize={14} fontFamily="QSLight">
+                                        {lastMessage?.body.slice(0, 80)}{' '}
+                                        {lastMessage?.body.length > 80 && (
+                                            <Text>...</Text>
+                                        )}
+                                    </Text>
+                                </View>
+                            )}
                             <Row
                                 style={{
                                     justifyContent: 'space-between',

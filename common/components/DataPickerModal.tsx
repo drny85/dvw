@@ -1,22 +1,28 @@
 import {
-    Modal,
-    StyleSheet,
     FlatList,
     ListRenderItem,
+    Modal,
+    StyleSheet,
     TouchableOpacity
 } from 'react-native'
-import React from 'react'
 import Text from './Text'
 
-import Row from './Row'
 import Divider from './Divider'
+import Row from './Row'
 
-import { MotiView } from 'moti'
+import { SIZES } from '@/constants/Sizes'
+import {
+    setHasWireless,
+    setReferrralLines
+} from '@/features/referrals/referralsSlide'
+import { Helper, SERVICE, STATUS } from '@/types'
 import { FontAwesome } from '@expo/vector-icons'
+import { MotiView } from 'moti'
+import useAppDispatch from '../hooks/useAppDispatch'
+import useAppSelector from '../hooks/useAppSelector'
 import useThemeColor from '../hooks/useThemeColor'
 import View from './View'
-import { SIZES } from '@/constants/Sizes'
-import { Helper, SERVICE, STATUS } from '@/types'
+import LineSetter from './myPlan/LineSetter'
 
 interface Props {
     visisble: boolean
@@ -39,7 +45,12 @@ const DataPickerModal: React.FC<Props> = ({
     const bgColor = useThemeColor('background')
     const shadowColor = useThemeColor('accent')
     const textColor = useThemeColor('text')
+    const isWireless = useAppSelector((s) => s.referrals.hasWireless)
+    const referralLines = useAppSelector((s) => s.referrals.referralLines)
+    const dispatch = useAppDispatch()
+
     const renderItem: ListRenderItem<typeof data> = ({ index, item }) => {
+        if (isWireless && referralLines === 0) return null
         return (
             <TouchableOpacity
                 onPress={() => onPress(item)}
@@ -103,7 +114,13 @@ const DataPickerModal: React.FC<Props> = ({
                     >
                         <TouchableOpacity
                             style={{ paddingHorizontal: SIZES.base }}
-                            onPress={onCancel}
+                            onPress={() => {
+                                if (isWireless) {
+                                    dispatch(setReferrralLines(0))
+                                    dispatch(setHasWireless(false))
+                                }
+                                onCancel && onCancel()
+                            }}
                         >
                             <Text color="white">Cancel</Text>
                         </TouchableOpacity>
@@ -131,6 +148,48 @@ const DataPickerModal: React.FC<Props> = ({
                         alignSelf: 'center'
                     }}
                     ItemSeparatorComponent={() => <Divider />}
+                    ListHeaderComponent={
+                        isWireless ? (
+                            <View
+                                style={{
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
+                                }}
+                            >
+                                <Text fontFamily="SFBold">Number of Lines</Text>
+                                <View style={{ marginVertical: SIZES.padding }}>
+                                    <LineSetter
+                                        data={referralLines}
+                                        onAddLine={() => {
+                                            dispatch(
+                                                setReferrralLines(
+                                                    referralLines + 1
+                                                )
+                                            )
+                                        }}
+                                        onRemoveLine={() => {
+                                            if (referralLines > 0) {
+                                                dispatch(
+                                                    setReferrralLines(
+                                                        referralLines - 1
+                                                    )
+                                                )
+                                            }
+                                        }}
+                                    />
+                                </View>
+                                {referralLines > 0 && (
+                                    <Text
+                                        center
+                                        fontFamily="QSBold"
+                                        fontSize={18}
+                                    >
+                                        Sale Type
+                                    </Text>
+                                )}
+                            </View>
+                        ) : undefined
+                    }
                     data={data}
                     keyExtractor={(item) => item.id!}
                     renderItem={renderItem}

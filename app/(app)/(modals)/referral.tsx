@@ -43,12 +43,15 @@ import {
 } from '@/features/referrals/referralActions'
 import {
     setEditingReferral,
-    setReferralState
+    setHasWireless,
+    setReferralState,
+    setReferrralLines
 } from '@/features/referrals/referralsSlide'
 import { setSaleQuoteReferral } from '@/features/sales/salesSlide'
 import { formatPhone } from '@/utils/formatPhone'
 import { isEmailValid } from '@/utils/isEmailValid'
 import { FlatList } from 'react-native-gesture-handler'
+import { Dispatch } from '@reduxjs/toolkit'
 
 const GOOGLE_KEY = process.env.EXPO_PUBLIC_GOOGLE_KEY as string
 
@@ -59,6 +62,7 @@ const ReferralsScreen = () => {
     const { referral: editingReferral, editing } = useAppSelector(
         (s) => s.referrals
     )
+    const referralLines = useAppSelector((s) => s.referrals.referralLines)
 
     const { loading, helpers } = useHelpers()
     const scrollViewRef = useRef<KeyboardAwareScrollView>(null)
@@ -120,7 +124,8 @@ const ReferralsScreen = () => {
         userName: user?.name!,
         userId: user?.id!,
         email: '',
-        followUpOn: null
+        followUpOn: null,
+        referralLines: referralLines || 0
     })
 
     const validateServicesOrdered = (): boolean => {
@@ -212,7 +217,8 @@ const ReferralsScreen = () => {
 
             try {
                 if (editing && editingReferral) {
-                    dispatch(updateReferral(referral))
+                    const r = { ...referral, referralLines }
+                    dispatch(updateReferral(r))
                     dispatch(setEditingReferral(false))
                     setReferralState(null)
                     if (
@@ -235,7 +241,8 @@ const ReferralsScreen = () => {
                         dispatch(
                             addReferral({
                                 ...referral,
-                                isVerizonWirelessCustomer: isVZW
+                                isVerizonWirelessCustomer: isVZW,
+                                referralLines
                             })
                         )
                         dispatch(
@@ -252,7 +259,8 @@ const ReferralsScreen = () => {
                         dispatch(
                             addReferral({
                                 ...referral,
-                                isVerizonWirelessCustomer: isVZW
+                                isVerizonWirelessCustomer: isVZW,
+                                referralLines
                             })
                         )
                         router.back()
@@ -260,6 +268,8 @@ const ReferralsScreen = () => {
                 }
             } catch (error) {
                 console.log(error)
+            } finally {
+                dispatch(setReferrralLines(0))
             }
         }
     }
@@ -393,7 +403,9 @@ const ReferralsScreen = () => {
                         setShowOrderDueDate,
                         orderType,
                         isVZW,
-                        setIsVZW
+                        setIsVZW,
+                        dispatch,
+                        referralLines
                     )}
             </KeyboardAwareScrollView>
             <View style={{ padding: SIZES.padding }}>
@@ -608,7 +620,8 @@ const ReferralsScreen = () => {
                             ...referral.package!,
                             wireless: wireless_serv as SERVICE
                         }
-                    })
+                    }),
+                        dispatch(setHasWireless(false))
                 }}
             />
             {/* <Modal
@@ -666,7 +679,9 @@ function SectionThree(
     setShowOrderDueDate: React.Dispatch<React.SetStateAction<boolean>>,
     orderType: ORDER_TYPE,
     isVZW: boolean,
-    setIsVZW: React.Dispatch<React.SetStateAction<boolean>>
+    setIsVZW: React.Dispatch<React.SetStateAction<boolean>>,
+    dispatch: Dispatch,
+    referralLines: number
 ): React.ReactNode {
     return (
         <View>
@@ -966,9 +981,10 @@ function SectionThree(
 
                                 <View>
                                     <TouchableOpacity
-                                        onPress={() =>
+                                        onPress={() => {
+                                            dispatch(setHasWireless(true))
                                             setShowWirelessPicker(true)
-                                        }
+                                        }}
                                         style={[
                                             styles.choice,
                                             {
@@ -990,7 +1006,9 @@ function SectionThree(
                                             }
                                         >
                                             {referral.package?.wireless
-                                                ? referral.package.wireless.name
+                                                ? referralLines +
+                                                  ' ' +
+                                                  referral.package.wireless.name
                                                 : 'Wireless'}
                                         </Text>
                                     </TouchableOpacity>
@@ -1139,8 +1157,17 @@ function SectionThree(
                         animate={{ opacity: 1, translateY: 0 }}
                         transition={{ type: 'timing', duration: 600 }}
                     >
-                        <View style={[Styles.boxShadow, { ...styles.row }]}>
-                            <Text fontFamily="SFBold">
+                        <View
+                            style={[
+                                Styles.boxShadow,
+                                {
+                                    ...styles.row,
+                                    backgroundColor: placeholderColor,
+                                    marginTop: SIZES.base * 1.5
+                                }
+                            ]}
+                        >
+                            <Text fontFamily="SFBold" color="white">
                                 Is a Verizon Wireless Customer?
                             </Text>
                             <Row

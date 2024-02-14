@@ -204,6 +204,7 @@ export type Referral = {
     email_sent_on: string | null
     comment: string | null
     followUpOn: string | null
+    referralLines: number
 }
 
 export interface Helper {
