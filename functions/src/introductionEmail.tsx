@@ -42,14 +42,14 @@ const IntroductionEmail = ({
                         <Text className="text-lg">
                             This is {myName}, your dedicated Verizon
                             representative for {propertyName}. I wanted to
-                            personally welcome you to the building and offer my
-                            assistance with any Verizon-related services or
-                            questions you may have. Whether it's about setting
-                            up new connections, troubleshooting, or optimizing
-                            your services, I'm here to ensure you have a
-                            seamless experience. As your dedicated Verizon
-                            contact working in close collaboration with the
-                            property, my goal is to make your experience as
+                            personally welcome you and offer my assistance with
+                            any Verizon-related services or questions you may
+                            have. Whether it's about setting up new connections,
+                            moving your current service, troubleshooting, or
+                            optimizing your services, I'm here to ensure you
+                            have a seamless experience. As your dedicated
+                            Verizon contact working in close collaboration with
+                            the property, my goal is to make your experience as
                             convenient as possible
                         </Text>
                         <Text className="text-lg">

@@ -1,9 +1,5 @@
 import useThemeColor from '@/common/hooks/useThemeColor'
-import {
-    isFirstTime,
-    resetFirstTime,
-    setNotFirstTime
-} from '@/utils/checkFirstTimeUser'
+import { isFirstTime } from '@/utils/checkFirstTimeUser'
 import {
     MaterialTopTabNavigationEventMap,
     MaterialTopTabNavigationOptions,
@@ -33,17 +29,11 @@ const HomeLayout = () => {
         async function checkFirstTime() {
             const isFirst = await isFirstTime()
             if (isFirst) {
-                console.log(
-                    'Welcome! This is the first time the user opens the app.'
-                )
                 // Perform any first-time setup or welcome actions here
                 // For example, navigate to a welcome screen or show a tutorial
                 // Once the first-time actions are completed, set the user as not first time
                 // await setNotFirstTime()
                 router.replace('/(app)/(modals)/welcome')
-            } else {
-                console.log('Welcome back! The user has opened the app before.')
-                // Perform actions for returning users
             }
         }
         checkFirstTime()

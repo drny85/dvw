@@ -36,6 +36,7 @@ const Settings = () => {
 
     const iconColor = useThemeColor('text')
     const deleteColor = useThemeColor('warning')
+    const donateColor = useThemeColor('accent')
     const user = useAppSelector((state) => state.auth.user)
     const [updatePhone, setUpdatePhone] = React.useState('')
     const [showPhone, setShowPhone] = React.useState(false)
@@ -362,6 +363,32 @@ const Settings = () => {
                         </Row>
                     </TouchableOpacity>
                 </View>
+                {/* <TouchableOpacity
+                    style={[
+                        {
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            ...Styles.boxShadow,
+                            backgroundColor: donateColor,
+                            borderRadius: SIZES.radius,
+                            paddingVertical: SIZES.base,
+                            maxWidth: '60%',
+                            alignSelf: 'center',
+                            marginLeft: 10,
+                            paddingHorizontal: SIZES.padding * 3
+                        }
+                    ]}
+                    onPress={() =>
+                        router.push('/(app)/(root)/(settings)/donate')
+                    }
+                >
+                    <Row style={{ gap: SIZES.base }}>
+                        <FontAwesome name="dollar" size={20} color={'white'} />
+                        <Text fontFamily="SFBold" capitalize color="white">
+                            Contribute
+                        </Text>
+                    </Row>
+                </TouchableOpacity> */}
                 <Row
                     style={{
                         marginVertical: 20,
@@ -375,36 +402,6 @@ const Settings = () => {
                         paddingHorizontal: SIZES.base
                     }}
                 >
-                    {/* <TouchableOpacity
-                        style={[
-                            {
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                ...Styles.boxShadow,
-                                backgroundColor: donateColor,
-                                borderRadius: SIZES.radius,
-                                paddingVertical: SIZES.base,
-                                maxWidth: '60%',
-                                alignSelf: 'center',
-
-                                paddingHorizontal: SIZES.padding * 3
-                            }
-                        ]}
-                        onPress={() =>
-                            router.push('/(app)/(root)/(settings)/donate')
-                        }
-                    >
-                        <Row style={{ gap: SIZES.base }}>
-                            <FontAwesome
-                                name="dollar"
-                                size={20}
-                                color={'white'}
-                            />
-                            <Text fontFamily="SFBold" capitalize color="white">
-                                Contribute
-                            </Text>
-                        </Row>
-                    </TouchableOpacity> */}
                     <Row>
                         <Text color="grey">Delete My Account</Text>
                         <TouchableOpacity

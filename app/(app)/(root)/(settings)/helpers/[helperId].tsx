@@ -22,7 +22,6 @@ import { Alert, StyleSheet, TouchableOpacity } from 'react-native'
 const HelperInfo = () => {
     const { helperId } = useLocalSearchParams<{ helperId: string }>()
     const trash = useThemeColor('warning')
-    const edit = useThemeColor('accent')
 
     const { loading, helper } = useHelper(helperId)
     const { referrals, loading: lg } = useReferrals()

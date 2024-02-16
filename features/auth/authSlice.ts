@@ -14,6 +14,7 @@ export type AppUser = {
     createdAt?: string
     acceptedEULA: boolean
     blockedUsers: string[]
+    coach: AppUser | null
 }
 
 export type UserRole = 'admin' | 'em' | 'coach' | 'ce' | 'referee' | 'ceo'

@@ -157,3 +157,15 @@ export const handleWirelessFeeAndTemplate = async (
         console.log('Error handling template', error)
     }
 }
+
+export const increaseEmailSentForUser = (userId: string): Promise<boolean> => {
+    try {
+        const db = getFirestore()
+        const docRef = db.collection('users').doc(userId).collection('emails')
+        docRef.add({ timestamp: new Date().toISOString() })
+        return Promise.resolve(true)
+    } catch (error) {
+        console.log('Error increasing email sent', error)
+        return Promise.resolve(false)
+    }
+}

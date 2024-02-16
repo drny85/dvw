@@ -30,6 +30,7 @@ import {
 import WirelessClosedTemplate, {
     WirelessClosedTemplateProps
 } from './wirelessClosedTemplate'
+import { increaseEmailSentForUser } from './utils'
 
 const { initializeApp } = require('firebase-admin/app')
 const { getFirestore } = require('firebase-admin/firestore')
@@ -121,6 +122,8 @@ exports.sendIntroductionEmail = onCall<{
             emailInstroductionSent: true
         })
 
+        await increaseEmailSentForUser(auth.uid)
+
         return { message: 'Email sent!' }
     } catch (error) {
         const err = error as Error
@@ -168,6 +171,7 @@ exports.sendEmail = onCall<{ quoteId: string }>(
                 sent: true,
                 sentOn: new Date().toISOString()
             })
+            await increaseEmailSentForUser(auth.uid)
 
             return {
                 message: 'Email sent'
@@ -358,6 +362,7 @@ exports.sendClosedEmail = onDocumentWritten(
                 services: data.package
             }
             await admin.firestore().collection('sales').add(sale)
+            await increaseEmailSentForUser(event.params.userId)
         } catch (error) {
             const e = error as Error
             console.log(e.message)
@@ -433,6 +438,7 @@ exports.sendWirelessClosedTemplate = onCall<{ referralId: string }>(
             })
 
             console.log('Wireless Closed Template Sent', result.data?.id)
+            await increaseEmailSentForUser(request.auth.uid)
             return true
         } catch (error) {
             console.log('Error sending wireless template', error)

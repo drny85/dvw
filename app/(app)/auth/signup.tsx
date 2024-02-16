@@ -1,31 +1,31 @@
-import { Alert, StyleSheet, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
+import Header from '@/common/components/Header'
+import KeyboardScreen from '@/common/components/KeyboardScreen'
+import Loading from '@/common/components/Loading'
 import Screen from '@/common/components/Screen'
 import Text from '@/common/components/Text'
-import Header from '@/common/components/Header'
-import { router } from 'expo-router'
-import { z } from 'zod'
-import { Controller, useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
 import TextInput from '@/common/components/TextInput'
 import View from '@/common/components/View'
-import { SIZES } from '@/constants/Sizes'
 import useThemeColor from '@/common/hooks/useThemeColor'
+import { SIZES } from '@/constants/Sizes'
+import { UserRole } from '@/features/auth/authSlice'
+import { auth } from '@/firebase'
+import { usersCollection } from '@/utils/collections'
+import { FIREBASE_ERRORS } from '@/utils/firebaseErrorMessages'
+import { formatPhone } from '@/utils/formatPhone'
+import { isValidDrascoEmail } from '@/utils/isEmailValid'
+import { isFullName } from '@/utils/isFullName'
+import { FontAwesome } from '@expo/vector-icons'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { router } from 'expo-router'
 import {
     createUserWithEmailAndPassword,
     sendEmailVerification
 } from 'firebase/auth'
-import { auth } from '@/firebase'
 import { doc, setDoc } from 'firebase/firestore'
-import { usersCollection } from '@/utils/collections'
-import KeyboardScreen from '@/common/components/KeyboardScreen'
-import { FIREBASE_ERRORS } from '@/utils/firebaseErrorMessages'
-import { UserRole } from '@/features/auth/authSlice'
-import { isEmailValid, isValidDrascoEmail } from '@/utils/isEmailValid'
-import { isFullName } from '@/utils/isFullName'
-import { FontAwesome } from '@expo/vector-icons'
-import Loading from '@/common/components/Loading'
-import { formatPhone } from '@/utils/formatPhone'
+import React, { useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { Alert, StyleSheet, TouchableOpacity } from 'react-native'
+import { z } from 'zod'
 
 const scheme = z
     .object({
@@ -92,7 +92,8 @@ const Signup = () => {
                 emailVerified: user.emailVerified,
                 createdAt: new Date().toISOString(),
                 acceptedEULA: false,
-                blockedUsers: []
+                blockedUsers: [],
+                coach: null
             })
             94
             reset()
