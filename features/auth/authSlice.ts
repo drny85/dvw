@@ -1,23 +1,9 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { getUser, logoutUser } from './authActions'
+import { AppUser } from '@/types'
 
 // Define the type for the authentication state
-export type AppUser = {
-    id: string
-    name: string
-    email?: string
-    emailVerified: boolean
-    role?: UserRole
-    image?: string
-    phone?: string | null
-    pushToken?: string
-    createdAt?: string
-    acceptedEULA: boolean
-    blockedUsers: string[]
-    coach: AppUser | null
-}
 
-export type UserRole = 'admin' | 'em' | 'coach' | 'ce' | 'referee' | 'ceo'
 export type AuthState = {
     user: AppUser | null
     loading: boolean // Indicates if the user is logged in

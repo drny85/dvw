@@ -1,4 +1,4 @@
-import { AppUser } from '@/features/auth/authSlice'
+import { AppUser } from '@/types'
 import { usersCollection } from '@/utils/collections'
 import { getDocs, query, where } from 'firebase/firestore'
 import { useEffect, useState } from 'react'

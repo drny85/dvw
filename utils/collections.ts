@@ -1,6 +1,6 @@
-import { AppUser } from '@/features/auth/authSlice'
 import { createCollection } from '@/firebase'
 import {
+    AppUser,
     Chat,
     Comment,
     Feed,

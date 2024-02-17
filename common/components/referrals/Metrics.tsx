@@ -20,14 +20,12 @@ const weeklyWirelessGoal = 2
 const Metrics = () => {
     // const { weeklyWirelessGoal } = useAppSelector((state) => state.settings)
     const bgColor = useThemeColor('background')
-    const accentColor = useThemeColor('accent')
     const scrollXInternet = useRef(new Animated.Value(0)).current
     const scrollXTv = useRef(new Animated.Value(0)).current
-    const scrollXWireless = useRef(new Animated.Value(0)).current
     const { referrals, loading: loadingRefs } = useReferrals()
 
     const [data, setData] = useState<Referral[]>([])
-    const { internet, tv, wireless } = usePayout(data)
+    const { internet, tv } = usePayout(data)
 
     const { wtd, mtd, lw, lm, loading, today } = useFilteredClosedReferrals(
         referrals.filter((s) => s.status.id === 'closed')

@@ -9,7 +9,7 @@ export const addReferral = createAsyncThunk(
     'referrals/add',
     async (
         referral: Referral,
-        { rejectWithValue, getState, dispatch }
+        { getState, dispatch }
     ): Promise<string | null> => {
         try {
             const {
@@ -19,10 +19,10 @@ export const addReferral = createAsyncThunk(
             const res = await addDoc(referralssCollection(user.id), referral)
             dispatch(setId(res.id))
 
-            return res.id
+            return Promise.resolve(res.id)
         } catch (error) {
             console.log(error)
-            return null
+            return Promise.reject(null)
         }
     }
 )
@@ -31,7 +31,7 @@ export const updateReferral = createAsyncThunk(
     'referrals/update',
     async (
         referral: Referral,
-        { rejectWithValue, getState, dispatch }
+        { getState, dispatch }
     ): Promise<string | null> => {
         try {
             const {

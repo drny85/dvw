@@ -13,8 +13,8 @@ import useAppSelector from '@/common/hooks/useAppSelector'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import { updateUser } from '@/features/auth/authActions'
-import { AppUser } from '@/features/auth/authSlice'
-import { Helper } from '@/types'
+
+import { AppUser, Helper } from '@/types'
 import { helpersCollection } from '@/utils/collections'
 import { formatPhone } from '@/utils/formatPhone'
 import { FontAwesome } from '@expo/vector-icons'
@@ -22,14 +22,16 @@ import { router } from 'expo-router'
 import { addDoc } from 'firebase/firestore'
 import { Image } from 'moti'
 import { TouchableOpacity } from 'react-native'
+import { useUser } from '@/common/hooks/auth/useUser'
+import { set } from 'react-hook-form'
 
 const Coach = () => {
     const { loading, coaches } = useCoachess()
     const user = useAppSelector((s) => s.auth.user)
     const dispatch = useAppDispatch()
-    const [selectedCoach, setSelectCoach] = useState<
-        AppUser | null | undefined
-    >(user?.coach)
+    const [selected, setSelected] = useState<string>(user?.coachId!)
+    const { loading: loadingCoach, user: selectedCoach } = useUser(selected)
+
     const color = useThemeColor('text')
     const bgColor = useThemeColor('accent')
 
@@ -80,7 +82,8 @@ const Coach = () => {
             }
 
             await addDoc(helpersCollection(user?.id), { ...h })
-            dispatch(updateUser({ ...user, coach: selectedCoach }))
+            dispatch(updateUser({ ...user, coachId: selectedCoach.id }))
+            //router.back()
         } catch (error) {
             console.log(error)
             Alert.alert('Error', 'Something went wrong')
@@ -96,7 +99,7 @@ const Coach = () => {
                     backgroundColor:
                         selectedCoach?.id === item.id ? bgColor : undefined
                 }}
-                onPress={() => setSelectCoach(item)}
+                onPress={() => setSelected(item.id)}
             >
                 <Text
                     fontFamily={
@@ -111,15 +114,17 @@ const Coach = () => {
         )
     }
 
-    if (loading) return <Loading />
+    if (loading || loadingCoach) return <Loading />
     return (
         <Screen>
             <Header
-                title={user?.coach ? 'My Coach' : 'Select Your Coach'}
+                title={
+                    selectedCoach?.coachId ? 'My Coach' : 'Select Your Coach'
+                }
                 onPressBack={router.back}
                 hasRightIcon
                 rightIcon={
-                    user?.coach ? (
+                    user?.coachId ? (
                         <View />
                     ) : (
                         <TouchableOpacity
@@ -134,7 +139,7 @@ const Coach = () => {
             {/* <PersonList
                 data={coaches}
             /> */}
-            {user?.coach && (
+            {user?.coachId && selectedCoach && (
                 <View
                     style={{
                         flex: 1,
@@ -156,19 +161,19 @@ const Coach = () => {
                         animate={{ opacity: 1, rotateX: '360deg' }}
                         transition={{ type: 'timing', duration: 800 }}
                         source={
-                            user.coach.image
-                                ? { uri: user.coach.image }
+                            selectedCoach.image
+                                ? { uri: selectedCoach.image }
                                 : require('@/assets/images/profile.jpg')
                         }
                     />
                     <Text capitalize fontFamily="SFBold" fontSize={22}>
-                        {user.coach.name}
+                        {selectedCoach.name}
                     </Text>
-                    <Text capitalize>{user.coach.phone}</Text>
-                    <Text>{user.coach.email}</Text>
+                    <Text capitalize>{selectedCoach.phone}</Text>
+                    <Text>{selectedCoach.email}</Text>
                 </View>
             )}
-            {!user?.coach && (
+            {!user?.coachId && (
                 <FlatList
                     keyExtractor={(item) => item.id!}
                     renderItem={renderCoaches}

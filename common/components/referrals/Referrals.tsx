@@ -40,14 +40,11 @@ const Referrals = () => {
     const show =
         coaches.length > 0 && managers.length > 0 && referees.length > 0
     const { wtd, loading: ld } = useFilteredClosedReferrals()
-    const { internetAmount, tvAmount, homeAmount, wirelessAmount } =
-        usePayout(wtd)
+    const { internetAmount, tvAmount, homeAmount } = usePayout(wtd)
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            setAnimateInternetAmount(
-                internetAmount + tvAmount + wirelessAmount + homeAmount
-            )
+            setAnimateInternetAmount(internetAmount + tvAmount + homeAmount)
         }, 800)
 
         return () => {

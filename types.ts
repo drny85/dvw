@@ -1,5 +1,3 @@
-import { AppUser, UserRole } from './features/auth/authSlice'
-
 export type Feed = {
     id?: string
     title: string
@@ -29,6 +27,24 @@ export type Comment = {
     liked?: boolean
     replies?: Comment[]
 }
+
+export type AppUser = {
+    id: string
+    name: string
+    email?: string
+    emailVerified: boolean
+    role?: UserRole
+    image?: string
+    phone?: string | null
+    pushToken?: string
+    createdAt?: string
+    acceptedEULA: boolean
+    blockedUsers: string[]
+    coachId: string | null
+}
+
+export type UserRole = 'admin' | 'em' | 'coach' | 'ce' | 'referee' | 'ceo'
+
 export type SaleType = 'direct' | 'c2c'
 export type SalesRange = 'today' | 'wtd' | 'mtd' | 'ytd' | 'all'
 

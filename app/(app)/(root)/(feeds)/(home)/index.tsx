@@ -12,12 +12,11 @@ import useAppSelector from '@/common/hooks/useAppSelector'
 import { SIZES } from '@/constants/Sizes'
 
 import { deleteFeed, updateFeed } from '@/features/feeds/feedsActions'
-import { setView } from '@/features/feeds/feedsSlide'
 
 import { Feed } from '@/types'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { router } from 'expo-router'
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useRef } from 'react'
 
 import { Button, FlatList, ListRenderItem, StyleSheet } from 'react-native'
 
@@ -70,12 +69,6 @@ const Feeds = () => {
             />
         )
     }, [])
-
-    useEffect(() => {
-        if (feeds.length === 0) {
-            dispatch(setView('feeds'))
-        }
-    }, [feeds.length])
 
     if (loading) return <Loading />
 

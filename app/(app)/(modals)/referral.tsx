@@ -52,6 +52,12 @@ import { formatPhone } from '@/utils/formatPhone'
 import { isEmailValid } from '@/utils/isEmailValid'
 import { FlatList } from 'react-native-gesture-handler'
 import { Dispatch } from '@reduxjs/toolkit'
+import Animated, {
+    SlideInLeft,
+    SlideInRight,
+    SlideOutLeft,
+    SlideOutRight
+} from 'react-native-reanimated'
 
 const GOOGLE_KEY = process.env.EXPO_PUBLIC_GOOGLE_KEY as string
 
@@ -263,6 +269,7 @@ const ReferralsScreen = () => {
                                 referralLines
                             })
                         )
+
                         router.back()
                     }
                 }
@@ -684,7 +691,10 @@ function SectionThree(
     referralLines: number
 ): React.ReactNode {
     return (
-        <View>
+        <Animated.View
+            exiting={SlideOutLeft.duration(600)}
+            entering={SlideInRight.duration(600)}
+        >
             <View>
                 <Text
                     fontFamily="SFBold"
@@ -1251,7 +1261,7 @@ function SectionThree(
                     }
                 />
             </View>
-        </View>
+        </Animated.View>
     )
 }
 
@@ -1271,10 +1281,12 @@ const SectionOne = (
     moveIn: string | null
 ): React.ReactNode => {
     return (
-        <View
+        <Animated.View
+            entering={SlideInLeft.duration(600)}
+            exiting={SlideOutRight.duration(500)}
             style={{
                 flex: 1,
-                // marginTop: SIZES.padding,
+
                 padding: SIZES.base,
                 gap: SIZES.padding
             }}
@@ -1499,7 +1511,7 @@ const SectionOne = (
                     </MotiView>
                 )}
             </AnimatePresence>
-        </View>
+        </Animated.View>
     )
 }
 
@@ -1510,7 +1522,11 @@ function SectionTwo(
     placeholderColor: string
 ): React.ReactNode {
     return (
-        <View style={Styles.flex}>
+        <Animated.View
+            exiting={SlideOutLeft.duration(600)}
+            entering={SlideInRight.duration(600)}
+            style={Styles.flex}
+        >
             <View>
                 <Text
                     fontFamily="SFBold"
@@ -1621,7 +1637,7 @@ function SectionTwo(
                     </Row>
                 </View>
             </View>
-        </View>
+        </Animated.View>
     )
 }
 
@@ -1633,7 +1649,11 @@ function mainInfo(
     setOrderType: React.Dispatch<React.SetStateAction<ORDER_TYPE>>
 ) {
     return (
-        <View style={{ flex: 1, gap: SIZES.padding * 1.5 }}>
+        <Animated.View
+            entering={SlideInLeft.duration(600)}
+            exiting={SlideOutRight.duration(600)}
+            style={{ flex: 1, gap: SIZES.padding * 1.5 }}
+        >
             <View
                 style={[
                     Styles.boxShadow,
@@ -1711,6 +1731,6 @@ function mainInfo(
                     ? 'a moving customer'
                     : 'ACP customer'
             } `}</Text>
-        </View>
+        </Animated.View>
     )
 }

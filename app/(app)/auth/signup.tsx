@@ -7,8 +7,8 @@ import TextInput from '@/common/components/TextInput'
 import View from '@/common/components/View'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
-import { UserRole } from '@/features/auth/authSlice'
 import { auth } from '@/firebase'
+import { UserRole } from '@/types'
 import { usersCollection } from '@/utils/collections'
 import { FIREBASE_ERRORS } from '@/utils/firebaseErrorMessages'
 import { formatPhone } from '@/utils/formatPhone'
@@ -93,7 +93,7 @@ const Signup = () => {
                 createdAt: new Date().toISOString(),
                 acceptedEULA: false,
                 blockedUsers: [],
-                coach: null
+                coachId: null
             })
             94
             reset()

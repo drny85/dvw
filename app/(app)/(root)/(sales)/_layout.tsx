@@ -55,6 +55,7 @@ const HomeLayout = () => {
                 name="wireless"
                 options={{ title: 'Wireless' }}
             />
+            <MaterialTopTabs.Screen name="teams" options={{ title: 'Teams' }} />
         </MaterialTopTabs>
     )
 }
