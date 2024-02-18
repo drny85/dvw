@@ -39,7 +39,7 @@ const Referrals = () => {
         managers.length === 0 || referees.length === 0 || coaches.length === 0
     const show =
         coaches.length > 0 && managers.length > 0 && referees.length > 0
-    const { wtd, loading: ld } = useFilteredClosedReferrals()
+    const { wtd, loading: ld } = useFilteredClosedReferrals(user?.id!)
     const { internetAmount, tvAmount, homeAmount } = usePayout(wtd)
 
     useEffect(() => {
@@ -50,9 +50,9 @@ const Referrals = () => {
         return () => {
             clearTimeout(timer)
         }
-    }, [internetAmount])
+    }, [internetAmount, user])
 
-    if (loading || ld) return <Loading />
+    if (loading || ld || !user) return <Loading />
 
     return (
         <Screen>

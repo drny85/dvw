@@ -3,11 +3,12 @@ import Screen from '@/common/components/Screen'
 import Text from '@/common/components/Text'
 import { TouchableOpacity } from 'react-native'
 import { SIZES } from '@/constants/Sizes'
-import { router } from 'expo-router'
+import { router, useLocalSearchParams } from 'expo-router'
 import useThemeColor from '@/common/hooks/useThemeColor'
 
 const EmailVerification = () => {
     const btnColor = useThemeColor('accent')
+    const { email } = useLocalSearchParams<{ email: string }>()
     return (
         <Screen
             style={{
@@ -19,8 +20,8 @@ const EmailVerification = () => {
             }}
         >
             <Text style={{ fontSize: 16, fontWeight: 'bold', lineHeight: 30 }}>
-                Email was sent to your email address. Please check your inbox or
-                junk folder and verify your email address.
+                Email was sent to {email}, Please check your inbox or junk
+                folder and verify your email address.
             </Text>
 
             <TouchableOpacity

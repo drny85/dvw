@@ -1,19 +1,21 @@
 import moment from 'moment'
 import { useEffect, useState } from 'react'
 
-import { useReferrals } from './useReferrals'
-import useAppSelector from '../useAppSelector'
 import { Referral } from '@/types'
+import { useReferrals } from './useReferrals'
 
-export const useFilteredClosedReferrals = (data?: Referral[]) => {
-    const user = useAppSelector((state) => state.auth.user)
+export const useFilteredClosedReferrals = (
+    userId?: string,
+    data?: Referral[]
+) => {
     const [loading, setLoading] = useState(true)
     const [today, setToday] = useState<Referral[]>([])
     const [lw, setLastWeek] = useState<Referral[]>([])
     const [lm, setLastMonth] = useState<Referral[]>([])
     const [wtd, setWtd] = useState<Referral[]>([])
     const [mtd, setMtd] = useState<Referral[]>([])
-    const { referrals, loading: load } = useReferrals()
+
+    const { referrals, loading: load } = useReferrals(userId!)
 
     const result: Referral[] = data
         ? data
@@ -64,7 +66,7 @@ export const useFilteredClosedReferrals = (data?: Referral[]) => {
         setLastWeek(lastWeek)
         setMtd(thisMonth)
         setLoading(false)
-    }, [load, referrals.length, user])
+    }, [load, referrals.length])
 
     return { loading, today, wtd, mtd, lw, lm, referrals }
 }

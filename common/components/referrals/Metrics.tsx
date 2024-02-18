@@ -1,33 +1,35 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { Animated, StyleSheet, TouchableOpacity, View } from 'react-native'
-import { MotiView, ScrollView } from 'moti'
-import Paginator from './Paginator'
 import { useFilteredClosedReferrals } from '@/common/hooks/referrals/useFilteredClosedReferrals'
 import { usePayout } from '@/common/hooks/referrals/usePayout'
 import { useReferrals } from '@/common/hooks/referrals/useReferrals'
+import useAppSelector from '@/common/hooks/useAppSelector'
+import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
-import { INTERNETnames, Referral, TVnames, WIRELESSnames } from '@/types'
+import { INTERNETnames, Referral, TVnames } from '@/types'
+import { calculateDRR } from '@/utils/calculateDRR'
+import { MotiView, ScrollView } from 'moti'
+import React, { useEffect, useRef, useState } from 'react'
+import { Animated, StyleSheet, TouchableOpacity, View } from 'react-native'
 import Divider from '../Divider'
 import Loading from '../Loading'
 import Row from '../Row'
-import PercentageIndicator from './PercentageIndicator'
 import Text from '../Text'
-import useThemeColor from '@/common/hooks/useThemeColor'
-import CircularProgressBar from '../CircularProgressBar'
-
-const weeklyWirelessGoal = 2
+import Paginator from './Paginator'
+import PercentageIndicator from './PercentageIndicator'
 
 const Metrics = () => {
     // const { weeklyWirelessGoal } = useAppSelector((state) => state.settings)
+    const user = useAppSelector((s) => s.auth.user)
     const bgColor = useThemeColor('background')
     const scrollXInternet = useRef(new Animated.Value(0)).current
     const scrollXTv = useRef(new Animated.Value(0)).current
-    const { referrals, loading: loadingRefs } = useReferrals()
+    const { referrals, loading: loadingRefs } = useReferrals(user?.id!)
+    const [drr, setDRR] = useState(0)
 
     const [data, setData] = useState<Referral[]>([])
     const { internet, tv } = usePayout(data)
 
     const { wtd, mtd, lw, lm, loading, today } = useFilteredClosedReferrals(
+        user?.id!,
         referrals.filter((s) => s.status.id === 'closed')
     )
 
@@ -60,7 +62,15 @@ const Metrics = () => {
         setData(wtd)
     }, [wtd.length])
 
-    if (loading || loadingRefs) return <Loading />
+    useEffect(() => {
+        const d = calculateDRR(
+            Object.values(internet).reduce((c, v) => c + v, 0) +
+                Object.values(tv).reduce((c, v) => c + v, 0)
+        )
+        setDRR(d)
+    }, [internet, tv])
+
+    if (loading || loadingRefs || !user) return <Loading />
 
     return (
         <ScrollView
@@ -367,6 +377,25 @@ const Metrics = () => {
                         scrollX={scrollXTv}
                     />
                 </View>
+            </View>
+            <View style={{ gap: SIZES.padding }}>
+                <Text center fontFamily="SFBold">
+                    WTD, Daily Run Rate <Text> (DRR)</Text>
+                </Text>
+                <Text
+                    center
+                    color={
+                        drr < 2
+                            ? 'error'
+                            : drr >= 2 && drr < 3
+                            ? 'warning'
+                            : 'success'
+                    }
+                    fontFamily="SFHeavy"
+                    fontSize={30}
+                >
+                    {drr}
+                </Text>
             </View>
         </ScrollView>
     )

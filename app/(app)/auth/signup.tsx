@@ -98,7 +98,7 @@ const Signup = () => {
             94
             reset()
             setLoading(false)
-            router.replace('/auth/verify')
+            router.replace(`/(app)/auth/${user.email}`)
         } catch (error) {
             console.log('Error =>', error)
             const err = error as Error

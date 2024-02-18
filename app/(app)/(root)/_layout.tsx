@@ -19,7 +19,8 @@ function TabBarIcon(props: {
 }
 
 LogBox.ignoreLogs([
-    'Require cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle.'
+    'Require cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle.',
+    'Sending `onAnimatedValueUpdate` with no listeners registered'
 ])
 
 export const unstable_settings = {

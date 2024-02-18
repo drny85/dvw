@@ -1,23 +1,21 @@
-import { referralssCollection } from '@/utils/collections'
-import { Referral } from '@/types'
-import { onSnapshot, query, where } from 'firebase/firestore'
-import { useEffect, useState } from 'react'
-import useAppSelector from '../useAppSelector'
-import useAppDispatch from '../useAppDispatch'
 import { setAllReferrals } from '@/features/referrals/referralsSlide'
+import { Referral } from '@/types'
+import { referralssCollection } from '@/utils/collections'
+import { onSnapshot, query, where } from 'firebase/firestore'
 import moment from 'moment'
-export const useReferrals = () => {
-    const user = useAppSelector((s) => s.auth.user)
+import { useEffect, useState } from 'react'
+import useAppDispatch from '../useAppDispatch'
+export const useReferrals = (userId: string) => {
     const [referrals, setReferrals] = useState<Referral[]>([])
     const [loading, setLoading] = useState(true)
     const dispatch = useAppDispatch()
     useEffect(() => {
-        if (!user) {
+        if (!userId) {
             setLoading(false)
             return
         }
         const q = query(
-            referralssCollection(user.id),
+            referralssCollection(userId),
             where('moveIn', '>=', moment().startOf('year').toISOString())
         )
         const sub = onSnapshot(q, (snap) => {
@@ -31,7 +29,7 @@ export const useReferrals = () => {
         })
 
         return sub
-    }, [user])
+    }, [userId])
 
     return { referrals, loading }
 }

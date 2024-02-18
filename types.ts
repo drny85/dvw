@@ -42,7 +42,7 @@ export type AppUser = {
     blockedUsers: string[]
     coachId: string | null
 }
-
+export type UserData = Pick<AppUser, 'id' | 'name'>[]
 export type UserRole = 'admin' | 'em' | 'coach' | 'ce' | 'referee' | 'ceo'
 
 export type SaleType = 'direct' | 'c2c'

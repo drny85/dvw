@@ -14,7 +14,10 @@ import { FIREBASE_ERRORS } from '@/utils/firebaseErrorMessages'
 import { isEmailValid } from '@/utils/isEmailValid'
 import { FontAwesome } from '@expo/vector-icons'
 import { router } from 'expo-router'
-import { signInWithEmailAndPassword } from 'firebase/auth'
+import {
+    sendEmailVerification,
+    signInWithEmailAndPassword
+} from 'firebase/auth'
 
 import { useState } from 'react'
 import { Alert, StyleSheet, TouchableOpacity } from 'react-native'
@@ -53,7 +56,17 @@ const Login = () => {
             if (user && !user.emailVerified) {
                 Alert.alert(
                     'Please verify your email',
-                    'There is an account with this email but it has not been verified. \n Please check your inbox and spam folder'
+                    'There is an account with this email but it has not been verified. \n Please check your inbox and spam folder',
+                    [
+                        { text: 'Cancel', style: 'cancel' },
+                        {
+                            text: 'Re-send Email',
+                            onPress: async () => {
+                                await sendEmailVerification(user)
+                                router.replace(`/(app)/auth/${user.email}`)
+                            }
+                        }
+                    ]
                 )
                 return
             }

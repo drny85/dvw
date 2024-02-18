@@ -10,6 +10,7 @@ import Text from '../Text'
 import { router } from 'expo-router'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
 import { setFiltered } from '@/features/referrals/referralsSlide'
+import useAppSelector from '@/common/hooks/useAppSelector'
 
 type Props = {
     type: ReferralsFilterType
@@ -17,10 +18,11 @@ type Props = {
 }
 const ReferralsMiniCard = ({ subtitle, type }: Props) => {
     const bg = useThemeColor('background')
+    const user = useAppSelector((s) => s.auth.user)
     const shadow = useThemeColor('secondary')
     const dispatch = useAppDispatch()
-    const { loading, referrals } = useReferrals()
-    if (loading) null
+    const { loading, referrals } = useReferrals(user?.id!)
+    if (loading || !user) null
 
     return (
         <TouchableOpacity

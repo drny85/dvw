@@ -22,6 +22,7 @@ import { Button, FlatList, ListRenderItem, StyleSheet } from 'react-native'
 
 const Feeds = () => {
     useAuth()
+
     const bottomSheetModalRef = useRef<BottomSheetModal>(null)
     const { feeds, loading } = useFeeds()
     const [feed, setFeed] = React.useState<Feed | null>(null)

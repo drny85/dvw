@@ -14,16 +14,14 @@ import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import { updateUser } from '@/features/auth/authActions'
 
+import { useUser } from '@/common/hooks/auth/useUser'
 import { AppUser, Helper } from '@/types'
 import { helpersCollection } from '@/utils/collections'
-import { formatPhone } from '@/utils/formatPhone'
 import { FontAwesome } from '@expo/vector-icons'
 import { router } from 'expo-router'
 import { addDoc } from 'firebase/firestore'
 import { Image } from 'moti'
 import { TouchableOpacity } from 'react-native'
-import { useUser } from '@/common/hooks/auth/useUser'
-import { set } from 'react-hook-form'
 
 const Coach = () => {
     const { loading, coaches } = useCoachess()
@@ -35,45 +33,12 @@ const Coach = () => {
     const color = useThemeColor('text')
     const bgColor = useThemeColor('accent')
 
-    const onSave = () => {
-        if (!selectedCoach || !user) return
-        if (!selectedCoach.phone) {
-            Alert.prompt(
-                'Phone number',
-                'Type your coach phone number',
-                [
-                    { text: 'Cancel', style: 'cancel' },
-                    {
-                        text: 'Save',
-                        onPress: async (value) => {
-                            if (!value) return
-                            if (value.length !== 10) {
-                                Alert.alert('Error', 'Invalid phone number')
-                                return
-                            }
-                            const phone = formatPhone(value)
-                            await saveSuccess(phone)
-                            // const user = useAppSelector((s) => s.auth.user)
-                            // if (!user) return
-                            // dispatch(updateUser({ ...user, phone }))
-                        }
-                    }
-                ],
-                'plain-text',
-                '',
-                'number-pad'
-            )
-        } else {
-            saveSuccess(selectedCoach.phone)
-        }
-    }
-
-    const saveSuccess = async (phone: string) => {
+    const saveSuccess = async () => {
         try {
             if (!selectedCoach || !user) return
             const h: Helper = {
                 name: selectedCoach.name,
-                phone: selectedCoach.phone || phone,
+                phone: selectedCoach.phone || '',
                 email: selectedCoach.email || '',
                 id: selectedCoach.id,
                 addedOn: new Date().toISOString(),
@@ -128,7 +93,7 @@ const Coach = () => {
                         <View />
                     ) : (
                         <TouchableOpacity
-                            onPress={onSave}
+                            onPress={saveSuccess}
                             style={{ padding: SIZES.padding }}
                         >
                             <FontAwesome name="save" size={24} color={color} />
@@ -169,7 +134,9 @@ const Coach = () => {
                     <Text capitalize fontFamily="SFBold" fontSize={22}>
                         {selectedCoach.name}
                     </Text>
-                    <Text capitalize>{selectedCoach.phone}</Text>
+                    {selectedCoach?.phone && (
+                        <Text capitalize>{selectedCoach.phone}</Text>
+                    )}
                     <Text>{selectedCoach.email}</Text>
                 </View>
             )}
