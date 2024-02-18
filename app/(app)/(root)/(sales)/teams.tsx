@@ -9,7 +9,7 @@ import { useCoachess } from '@/common/hooks/auth/useCoaches'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import { UserData } from '@/types'
-import React from 'react'
+import React, { useMemo, useState } from 'react'
 import { FlatList, ListRenderItem } from 'react-native'
 import Animated, { FadeInLeft } from 'react-native-reanimated'
 
@@ -39,12 +39,14 @@ const Teams = () => {
             }
         })
     })
-    const teams = Object.entries(data).map(([key, value]) => {
-        return {
-            name: key,
-            users: value
-        }
-    })
+    const teams = useMemo(() => {
+        return Object.entries(data).map(([key, value]) => {
+            return {
+                name: key,
+                users: value
+            }
+        })
+    }, [data])
 
     const renderTeams: ListRenderItem<Team> = ({ index, item }) => {
         return (
