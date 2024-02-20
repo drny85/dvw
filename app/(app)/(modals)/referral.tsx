@@ -764,6 +764,7 @@ function SectionThree(
                             placeholder="MON or Order Number"
                             maxLength={13}
                             ref={monRef}
+                            autoComplete="off"
                             autoCorrect={false}
                             value={referral.mon!}
                             onChangeText={(text) =>

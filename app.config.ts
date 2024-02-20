@@ -8,7 +8,7 @@ const config: ExpoConfig = {
     icon: './assets/images/icon.png',
     scheme: 'drasco',
     userInterfaceStyle: 'automatic',
-    platforms: ['ios', 'android'],
+    platforms: ['ios'],
     splash: {
         image: './assets/images/splash.png',
         resizeMode: 'contain',

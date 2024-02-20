@@ -1,3 +1,4 @@
+import useAppSelector from '@/common/hooks/useAppSelector'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import {
@@ -29,6 +30,7 @@ const HomeLayout = () => {
     const bgColor = useThemeColor('background')
     const acent = useThemeColor('accent')
     const text = useThemeColor('text')
+    const user = useAppSelector((state) => state.auth.user)
 
     return (
         <MaterialTopTabs
@@ -49,7 +51,9 @@ const HomeLayout = () => {
         >
             <MaterialTopTabs.Screen
                 name="index"
-                options={{ title: 'Referrals' }}
+                options={{
+                    title: 'Referrals'
+                }}
             />
             <MaterialTopTabs.Screen
                 name="wireless"

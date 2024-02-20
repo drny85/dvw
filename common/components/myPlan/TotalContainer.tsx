@@ -23,7 +23,7 @@ const TotalContainer = forwardRef(({ index }: Props, ref: any) => {
                 <TotalView
                     showResetAll
                     onClickSave={() => {
-                        router.push('/(app)/(root)/(plan)/saveQuote')
+                        router.push(`/(app)/(root)/(plan)/saveQuote`)
                     }}
                 />
             </BottomSheetView>

@@ -15,7 +15,7 @@ import { Animated, FlatList, ListRenderItem } from 'react-native'
 const AnimatedFlatList = Animated.createAnimatedComponent(
     FlatList<ReferralSold>
 )
-const feeds = () => {
+const AllFeeds = () => {
     const flatListRef = useRef<FlatList>(null)
     const scrollY = useRef(new Animated.Value(0)).current
     const { sales, loading } = useAllReferrals()
@@ -123,4 +123,4 @@ const feeds = () => {
     )
 }
 
-export default feeds
+export default AllFeeds

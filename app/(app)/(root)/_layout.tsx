@@ -10,7 +10,7 @@ import { onFetchUpdateAsync } from '@/utils/checkUpdates'
 import React from 'react'
 import { LogBox } from 'react-native'
 
-function TabBarIcon(props: {
+export function TabBarIcon(props: {
     name: React.ComponentProps<typeof FontAwesome>['name']
     color: string
     size?: React.ComponentProps<typeof FontAwesome>['size']

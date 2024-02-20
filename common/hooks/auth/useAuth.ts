@@ -1,9 +1,10 @@
-import { AppUser, setAppUser } from '@/features/auth/authSlice'
 import { auth } from '@/firebase'
 import { usersCollection } from '@/utils/collections'
 import { doc, onSnapshot } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import useAppDispatch from '../useAppDispatch'
+import { AppUser } from '@/types'
+import { setAppUser } from '@/features/auth/authSlice'
 
 export const useAuth = () => {
     const user = auth.currentUser

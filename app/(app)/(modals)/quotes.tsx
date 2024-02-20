@@ -6,6 +6,7 @@ import Screen from '@/common/components/Screen'
 import Text from '@/common/components/Text'
 import View from '@/common/components/View'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
+import useAppSelector from '@/common/hooks/useAppSelector'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { useWirelessQuotes } from '@/common/hooks/wirelessQuotes/useWirelessQuotes'
 import { SIZES } from '@/constants/Sizes'
@@ -29,7 +30,6 @@ import { totalPerksCount } from '@/utils/perksCount'
 import { FontAwesome } from '@expo/vector-icons'
 import { router } from 'expo-router'
 import moment from 'moment'
-import Animated, { FadeOutLeft } from 'react-native-reanimated'
 import React from 'react'
 import {
     Alert,
@@ -39,7 +39,7 @@ import {
     StyleSheet,
     TouchableOpacity
 } from 'react-native'
-import useAppSelector from '@/common/hooks/useAppSelector'
+import Animated, { FadeOutLeft } from 'react-native-reanimated'
 
 const MyQuotes = () => {
     const { loading, quotes } = useWirelessQuotes()
@@ -62,8 +62,6 @@ const MyQuotes = () => {
             console.log(error)
             const err = error as Error
             Alert.alert('Email Error', err.message)
-        } finally {
-            setLoadingQuote(false)
         }
     }
     const onPressQuote = (quote: WirelessQuote) => {

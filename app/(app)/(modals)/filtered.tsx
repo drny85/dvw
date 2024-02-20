@@ -18,10 +18,11 @@ import { FlatList, ListRenderItem, TouchableOpacity } from 'react-native'
 
 const FilteredReferrals = () => {
     const filterType = useAppSelector((s) => s.referrals.filtered)
+    const user = useAppSelector((s) => s.auth.user)
     const color = useThemeColor('text')
     const bgColor = useThemeColor('background')
     const [searching, setSearching] = useState(false)
-    const { loading, referrals } = useReferrals()
+    const { loading, referrals } = useReferrals(user?.id!)
     const [filtered, setFiltered] = useState<Referral[]>([])
 
     const data = getResults(referrals, filterType!)
