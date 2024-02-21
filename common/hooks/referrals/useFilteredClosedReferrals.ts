@@ -14,6 +14,7 @@ export const useFilteredClosedReferrals = (
     const [lm, setLastMonth] = useState<Referral[]>([])
     const [wtd, setWtd] = useState<Referral[]>([])
     const [mtd, setMtd] = useState<Referral[]>([])
+    const [twb, setTwb] = useState<Referral[]>([])
 
     const { referrals, loading: load } = useReferrals(userId!)
 
@@ -49,8 +50,15 @@ export const useFilteredClosedReferrals = (
         })
         const lastWeek = result.filter((r) => {
             return moment(r.order_date).isBetween(
+                moment().startOf('week').subtract(1, 'week').add(1, 'day'),
+                moment().startOf('week').add(1, 'day')
+            )
+        })
+
+        const twbData = result.filter((r) => {
+            return moment(r.order_date).isBetween(
                 moment().startOf('week').subtract(2, 'week').add(1, 'day'),
-                moment().startOf('week').subtract(1, 'week')
+                moment().startOf('week').subtract(1, 'week').add(1, 'day')
             )
         })
 
@@ -65,8 +73,9 @@ export const useFilteredClosedReferrals = (
         setLastMonth(lastMonth)
         setLastWeek(lastWeek)
         setMtd(thisMonth)
+        setTwb(twbData)
         setLoading(false)
     }, [load, referrals.length])
 
-    return { loading, today, wtd, mtd, lw, lm, referrals }
+    return { loading, today, wtd, mtd, lw, lm, twb, referrals }
 }

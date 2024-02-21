@@ -46,7 +46,15 @@ export type UserData = Pick<AppUser, 'id' | 'name'>[]
 export type UserRole = 'admin' | 'em' | 'coach' | 'ce' | 'referee' | 'ceo'
 
 export type SaleType = 'direct' | 'c2c'
-export type SalesRange = 'today' | 'wtd' | 'mtd' | 'ytd' | 'all'
+export type SalesRange =
+    | 'today'
+    | 'wtd'
+    | 'mtd'
+    | 'ytd'
+    | 'all'
+    | 'lw'
+    | 'twb'
+    | 'lm'
 
 export interface Line {
     id: string

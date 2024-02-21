@@ -5,6 +5,7 @@ import Text from '@/common/components/Text'
 import FeedsView from '@/common/components/feed/FeedsView'
 import { useReferrals } from '@/common/hooks/referrals/useReferrals'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
+import useAppSelector from '@/common/hooks/useAppSelector'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import Styles from '@/constants/Styles'
@@ -16,7 +17,8 @@ import React from 'react'
 import { FlatList, ListRenderItem, TouchableOpacity } from 'react-native'
 
 const FollowUps = () => {
-    const { referrals, loading } = useReferrals()
+    const user = useAppSelector((s) => s.auth.user)
+    const { referrals, loading } = useReferrals(user?.id!)
 
     const bg = useThemeColor('accent')
     const dispatch = useAppDispatch()
@@ -46,7 +48,7 @@ const FollowUps = () => {
                     {
                         backgroundColor: bg,
                         borderRadius: SIZES.radius * 0.5,
-                        padding: SIZES.padding,
+                        padding: SIZES.base,
                         gap: SIZES.base,
                         justifyContent: 'center'
                     }

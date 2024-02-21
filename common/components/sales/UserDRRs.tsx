@@ -40,7 +40,8 @@ const UserDRRs = ({ id, name }: Props) => {
         setDRR(
             calculateDRR(
                 Object.values(internet).reduce((c, v) => c + v, 0) +
-                    Object.values(tv).reduce((c, v) => c + v, 0)
+                    Object.values(tv).reduce((c, v) => c + v, 0),
+                'wtd'
             )
         )
     }, [internet, tv])

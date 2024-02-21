@@ -4,7 +4,7 @@ import { useReferrals } from '@/common/hooks/referrals/useReferrals'
 import useAppSelector from '@/common/hooks/useAppSelector'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
-import { INTERNETnames, Referral, TVnames } from '@/types'
+import { INTERNETnames, Referral, SalesRange, TVnames } from '@/types'
 import { calculateDRR } from '@/utils/calculateDRR'
 import { MotiView, ScrollView } from 'moti'
 import React, { useEffect, useRef, useState } from 'react'
@@ -26,16 +26,17 @@ const Metrics = () => {
     const [drr, setDRR] = useState(0)
 
     const [data, setData] = useState<Referral[]>([])
+    const [dataDDR, setDataDDR] = useState<Referral[]>([])
     const { internet, tv } = usePayout(data)
+    const { internet: wifi, tv: video } = usePayout(dataDDR)
 
-    const { wtd, mtd, lw, lm, loading, today } = useFilteredClosedReferrals(
-        user?.id!,
-        referrals.filter((s) => s.status.id === 'closed')
-    )
+    const { wtd, mtd, lw, lm, loading, today, twb } =
+        useFilteredClosedReferrals(
+            user?.id!,
+            referrals.filter((s) => s.status.id === 'closed')
+        )
 
-    const [period, setPeriod] = useState<
-        'lw' | 'today' | 'wtd' | 'mtd' | 'lm' | 'all'
-    >('wtd')
+    const [period, setPeriod] = useState<SalesRange>('wtd')
 
     const totalInternetUnits = (): number =>
         Object.values(internet).reduce((a, b) => a + b, 0) ?? 0
@@ -54,18 +55,22 @@ const Metrics = () => {
                 ? today
                 : period === 'lm'
                 ? lm
+                : period === 'twb'
+                ? twb
                 : wtd
         )
     }, [period])
 
     useEffect(() => {
+        setDataDDR(wtd)
         setData(wtd)
     }, [wtd.length])
 
     useEffect(() => {
         const d = calculateDRR(
             Object.values(internet).reduce((c, v) => c + v, 0) +
-                Object.values(tv).reduce((c, v) => c + v, 0)
+                Object.values(tv).reduce((c, v) => c + v, 0),
+            period
         )
         setDRR(d)
     }, [internet, tv])
@@ -122,12 +127,20 @@ const Metrics = () => {
                             selected={period === 'wtd'}
                         />
                         <Selector
-                            title="Last Week"
+                            title="LW"
                             onPress={() => {
                                 setPeriod('lw')
                                 setData(lw)
                             }}
                             selected={period === 'lw'}
+                        />
+                        <Selector
+                            title="TWB"
+                            onPress={() => {
+                                setPeriod('twb')
+                                setData(twb)
+                            }}
+                            selected={period === 'twb'}
                         />
 
                         <Selector
@@ -139,7 +152,7 @@ const Metrics = () => {
                             selected={period === 'mtd'}
                         />
                         <Selector
-                            title="Last Month"
+                            title="LM"
                             onPress={() => {
                                 setPeriod('lm')
                                 setData(lm)
@@ -419,7 +432,7 @@ const Selector = ({
             style={[
                 styles.pick,
                 {
-                    backgroundColor: selected ? 'grey' : accentColor
+                    backgroundColor: !selected ? 'grey' : accentColor
                 }
             ]}
         >
