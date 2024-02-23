@@ -12,8 +12,9 @@ import View from '../View'
 
 type Props = {
     data: Helper[]
+    scrollEnabled?: boolean
 }
-const PersonList = ({ data }: Props) => {
+const PersonList = ({ data, scrollEnabled }: Props) => {
     const text = useThemeColor('text')
 
     const renderItem: ListRenderItem<Helper> = ({ index, item }) => {
@@ -48,6 +49,7 @@ const PersonList = ({ data }: Props) => {
                 width: SIZES.isSmallDevice ? '100%' : SIZES.width * 0.85,
                 alignSelf: 'center'
             }}
+            scrollEnabled={scrollEnabled}
             ItemSeparatorComponent={() => <Divider />}
             data={data}
             keyExtractor={(item) => item.id!}

@@ -24,11 +24,8 @@ const Metrics = () => {
     const scrollXTv = useRef(new Animated.Value(0)).current
     const { referrals, loading: loadingRefs } = useReferrals(user?.id!)
     const [drr, setDRR] = useState(0)
-
     const [data, setData] = useState<Referral[]>([])
-    const [dataDDR, setDataDDR] = useState<Referral[]>([])
     const { internet, tv } = usePayout(data)
-    const { internet: wifi, tv: video } = usePayout(dataDDR)
 
     const { wtd, mtd, lw, lm, loading, today, twb } =
         useFilteredClosedReferrals(
@@ -62,7 +59,6 @@ const Metrics = () => {
     }, [period])
 
     useEffect(() => {
-        setDataDDR(wtd)
         setData(wtd)
     }, [wtd.length])
 
@@ -393,7 +389,16 @@ const Metrics = () => {
             </View>
             <View style={{ gap: SIZES.padding }}>
                 <Text center fontFamily="SFBold">
-                    WTD, Daily Run Rate <Text> (DRR)</Text>
+                    <Text uppercase fontFamily="QSBold">
+                        {period === 'lw'
+                            ? 'Last Week'
+                            : period === 'lm'
+                            ? 'Last Month'
+                            : period === 'twb'
+                            ? 'The Week Before LW'
+                            : period}
+                    </Text>
+                    , Daily Run Rate <Text> (DRR)</Text>
                 </Text>
                 <Text
                     center

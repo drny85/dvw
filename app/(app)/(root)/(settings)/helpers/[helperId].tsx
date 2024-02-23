@@ -8,12 +8,13 @@ import View from '@/common/components/View'
 import ProgressCircle from '@/common/components/referrals/ProgressCircle'
 import { useHelper } from '@/common/hooks/referrals/useHelper'
 import { useReferrals } from '@/common/hooks/referrals/useReferrals'
+import useAppSelector from '@/common/hooks/useAppSelector'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import { Referral } from '@/types'
 import { helpersCollection } from '@/utils/collections'
 import { FontAwesome } from '@expo/vector-icons'
-import { Link, router, useLocalSearchParams } from 'expo-router'
+import { router, useLocalSearchParams } from 'expo-router'
 import { deleteDoc, doc } from 'firebase/firestore'
 import moment from 'moment'
 import React from 'react'
@@ -22,9 +23,9 @@ import { Alert, StyleSheet, TouchableOpacity } from 'react-native'
 const HelperInfo = () => {
     const { helperId } = useLocalSearchParams<{ helperId: string }>()
     const trash = useThemeColor('warning')
-
+    const user = useAppSelector((s) => s.auth.user)
     const { loading, helper } = useHelper(helperId)
-    const { referrals, loading: lg } = useReferrals()
+    const { referrals, loading: lg } = useReferrals(user?.id!)
     const data = referrals?.filter((f) => f.referee?.id === helperId)
     const lastReferral = data
         .filter((r) => r.status.id === 'closed')

@@ -1,16 +1,14 @@
-import Header from '@/common/components/Header'
 import Row from '@/common/components/Row'
-import Screen from '@/common/components/Screen'
 import Text from '@/common/components/Text'
 import View from '@/common/components/View'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import { CONTACT_NUMBERS } from '@/utils/contactsData'
 import { FontAwesome } from '@expo/vector-icons'
-import { router } from 'expo-router'
 import React from 'react'
-import { ScrollView, TouchableOpacity } from 'react-native'
+import { Alert, ScrollView, TouchableOpacity } from 'react-native'
 import Communications from 'react-native-communications'
+import * as Clipboard from 'expo-clipboard'
 
 const UsefulNumbers = () => {
     const onPressCall = async (number: string) => {
@@ -20,28 +18,38 @@ const UsefulNumbers = () => {
             console.log(error)
         }
     }
+    const bgColor = useThemeColor('background')
 
     return (
-        <Screen>
-            <Header title="Useful Numbers" onPressBack={router.back} />
+        <View style={{ flex: 1, backgroundColor: bgColor }}>
             <ScrollView
                 contentContainerStyle={{
+                    marginTop: SIZES.padding * 1.5,
                     padding: SIZES.padding,
                     gap: SIZES.padding
                 }}
             >
-                {CONTACT_NUMBERS.map((c) => (
-                    <CallLine
-                        key={c.name}
-                        title={c.name}
-                        number={c.number}
-                        onPress={() =>
-                            onPressCall(c.number.replace(/[^0-9]/g, ''))
-                        }
-                    />
-                ))}
+                {CONTACT_NUMBERS.sort((a, b) => (a.name > b.name ? 1 : -1)).map(
+                    (c) => (
+                        <TouchableOpacity
+                            key={c.name}
+                            onLongPress={async () => {
+                                await Clipboard.setStringAsync(c.number)
+                                Alert.alert('Copied to clipboard')
+                            }}
+                        >
+                            <CallLine
+                                title={c.name}
+                                number={c.number}
+                                onPress={() =>
+                                    onPressCall(c.number.replace(/[^0-9]/g, ''))
+                                }
+                            />
+                        </TouchableOpacity>
+                    )
+                )}
             </ScrollView>
-        </Screen>
+        </View>
     )
 }
 
