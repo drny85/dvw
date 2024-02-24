@@ -85,7 +85,7 @@ const Referees = () => {
     if (loading) return <Loading />
     return (
         <View style={{ flex: 1, backgroundColor: bgColor }}>
-            <ScrollView contentContainerStyle={{ marginTop: SIZES.base }}>
+            <ScrollView contentInsetAdjustmentBehavior="automatic">
                 <PersonList
                     scrollEnabled={false}
                     data={referees.sort((a, b) => (a.name > b.name ? 1 : -1))}

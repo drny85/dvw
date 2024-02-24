@@ -93,14 +93,14 @@ const ChatList = ({
                                 {lastMessage && (
                                     <View style={{ padding: SIZES.base }}>
                                         <Text fontFamily="QSBold" fontSize={14}>
-                                            {lastMessage?.sender.name}
+                                            {lastMessage?.user.name}
                                         </Text>
                                         <Text
                                             fontSize={14}
                                             fontFamily="QSLight"
                                         >
-                                            {lastMessage?.body.slice(0, 80)}{' '}
-                                            {lastMessage?.body.length > 80 && (
+                                            {lastMessage?.text?.slice(0, 80)}{' '}
+                                            {lastMessage?.text?.length > 80 && (
                                                 <Text>...</Text>
                                             )}
                                         </Text>

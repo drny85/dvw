@@ -8,21 +8,28 @@ export const unstable_settings = {
 
 const ChatLayout = () => {
     return (
-        <Stack initialRouteName="chat" screenOptions={{ headerShown: false }}>
+        <Stack initialRouteName="index">
+            <Stack.Screen name="index" />
             <Stack.Screen name="chat" options={{ headerShown: false }} />
             <Stack.Screen
                 name="eula"
+                options={{
+                    presentation: 'fullScreenModal',
+                    headerShown: false
+                }}
+            />
+
+            <Stack.Screen
+                name="[chatId]"
                 options={{
                     presentation: 'fullScreenModal'
                 }}
             />
 
             <Stack.Screen
-                name="[chatId]"
-                options={{ presentation: 'fullScreenModal' }}
+                name="newChat"
+                options={{ presentation: 'modal', headerShown: false }}
             />
-
-            <Stack.Screen name="newChat" options={{ presentation: 'modal' }} />
         </Stack>
     )
 }

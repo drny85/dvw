@@ -26,7 +26,8 @@ const Colors = {
         tabIconDefault: '#808080',
         tabIconSelected: brandColor,
         grey: '#808080',
-        placeholder: '#748cab'
+        placeholder: '#748cab',
+        black: '#212121'
     },
     dark: {
         background: '#14213d',
@@ -45,7 +46,8 @@ const Colors = {
         tabIconDefault: '#808080',
         tabIconSelected: brandColor,
         grey: '#808080',
-        placeholder: '#748cab'
+        placeholder: '#748cab',
+        black: '#212121'
     },
     pink: {
         background: '#14213d',
@@ -64,14 +66,17 @@ const Colors = {
         tabIconDefault: '#808080',
         tabIconSelected: brandColor,
         grey: '#808080',
-        placeholder: '#748cab'
+        placeholder: '#748cab',
+        black: '#212121'
     }
 }
 
 /**
  * Type alias for color names, allowing easy access to color keys.
  */
-export type ColorName = keyof typeof Colors.light & keyof typeof Colors.dark  & keyof typeof Colors.pink
+export type ColorName = keyof typeof Colors.light &
+    keyof typeof Colors.dark &
+    keyof typeof Colors.pink
 
 /**
  * Export the customizable color palette for use throughout your application.

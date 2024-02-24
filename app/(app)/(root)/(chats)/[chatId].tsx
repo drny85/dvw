@@ -1,154 +1,92 @@
-import Header from '@/common/components/Header'
 import Loading from '@/common/components/Loading'
-import Row from '@/common/components/Row'
 import Screen from '@/common/components/Screen'
-import SwipeableItem from '@/common/components/Swipeable'
 import Text from '@/common/components/Text'
-import TextInput from '@/common/components/TextInput'
-import View from '@/common/components/View'
-import MessageRow from '@/common/components/chats/MessageRow'
+import GiftedChatScreen from '@/common/components/chats/GiftedChatScreen'
 import { useChat } from '@/common/hooks/chats/useChat'
-import { useMessages } from '@/common/hooks/chats/useMessages'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
-import useAppSelector from '@/common/hooks/useAppSelector'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
-import { deleteMessage, sendMessage } from '@/features/chats/chatsActions'
-import { Message } from '@/types'
-import { analyzeTextForToxicity } from '@/utils/moderateMessage'
-import { FontAwesome, Ionicons } from '@expo/vector-icons'
-import { router, useLocalSearchParams } from 'expo-router'
-import { AnimatePresence, MotiView } from 'moti'
-import React, { useRef, useState } from 'react'
+import { deleteMessage } from '@/features/chats/chatsActions'
+import { FontAwesome } from '@expo/vector-icons'
+import { router, useLocalSearchParams, useNavigation } from 'expo-router'
+import React, { useLayoutEffect } from 'react'
 import {
-    Alert,
-    FlatList,
-    Keyboard,
     KeyboardAvoidingView,
-    ListRenderItem,
-    Platform,
+    ScrollView,
     StyleSheet,
-    TouchableOpacity,
-    TouchableWithoutFeedback
+    TouchableOpacity
 } from 'react-native'
 
 const Chat = () => {
-    const flatListRef = useRef<FlatList>(null)
     const { chatId } = useLocalSearchParams<{ chatId: string }>()
-    const [opened, setOpened] = useState<string | null>(null)
-    let rowRefs = new Map()
-    const disabled = useAppSelector((s) => s.chats.loading)
-    const user = useAppSelector((s) => s.auth.user)
+    const navigation = useNavigation()
     const { chat, loading } = useChat(chatId)
-    const { loading: loadingMessages, messages } = useMessages(chatId)
-    const [message, setMessage] = useState('')
-    const [replyMessage, setReplyMessage] = useState<Message | null>(null)
-    const [isReply, setIsReply] = useState(false)
+    const bgColor = useThemeColor('background')
     const iconColor = useThemeColor('text')
     const dispatch = useAppDispatch()
-
-    const handleSendMessage = async (body?: string) => {
-        try {
-            const res = await analyzeTextForToxicity(message)
-            console.log('toxicity', res)
-            if (res) {
-                Alert.alert('Message might not be appropriate')
-                return
-            }
-
-            const newMessage: Message = {
-                body: body || message,
-                createdAt: new Date().toISOString(),
-                chatId: chatId,
-                isReply: isReply,
-                reply: isReply && replyMessage ? replyMessage : null,
-                sender: user!,
-                storagePath: null
-            }
-            dispatch(sendMessage(newMessage))
-            setMessage('')
-            if (isReply && replyMessage) {
-                await closeRow(replyMessage?.id!)
-                setIsReply(false)
-            }
-        } catch (error) {
-            console.log('Error sending message', error)
-        }
-    }
-
-    const closeRow = async (id: string) => {
-        if (!id) return
-        await rowRefs.get(id).close(true)
-        rowRefs.delete(id)
-        setOpened(null)
-        setReplyMessage(null)
-        setIsReply(false)
-    }
-
     const onDeleteMessage = async (id: string) => {
         try {
             if (!id) return
             console.log('deleted message', id)
             dispatch(deleteMessage(id))
-            await rowRefs.get(id).close(true)
-            rowRefs.delete(id)
-            setOpened(null)
-            flatListRef.current?.scrollToEnd({ animated: true })
+            // await rowRefs.get(id).close(true)
+            // rowRefs.delete(id)
+            // setOpened(null)
+            // flatListRef.current?.scrollToEnd({ animated: true })
         } catch (error) {
             console.log('Error deleting message', error)
         }
     }
-    const renderMessages: ListRenderItem<Message> = ({ item }) => {
-        return (
-            <MotiView
-                from={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0 }}
-                transition={{ type: 'timing', duration: 300 }}
-            >
-                <SwipeableItem
-                    onRightIconPress={() => {
-                        onDeleteMessage(item.id!)
-                    }}
-                    onReplyPress={() => {
-                        setIsReply(true)
-                        setOpened(null)
-                        rowRefs.delete(item.id)
-                        setReplyMessage(item)
-                    }}
-                    onSwipeableClose={() => {
-                        setReplyMessage(null)
-                        setIsReply(false)
-                        setOpened(null)
-                    }}
-                    isReplying={item.sender.id !== user?.id}
-                    rigthIconName={
-                        item.sender.id === user?.id ? 'trash' : undefined
-                    }
-                    ref={(ref: any) => {
-                        if (ref && !rowRefs.get(item.id)) {
-                            rowRefs.set(item.id, ref)
-                        }
-                    }}
-                    onSwipeableWillOpen={() => {
-                        setOpened(item.id!)
-                        ;[...rowRefs.entries()].forEach(([key, ref]) => {
-                            if (key !== item.id && ref) ref.close()
-                        })
-                    }}
-                >
-                    <MessageRow item={item} />
-                </SwipeableItem>
-            </MotiView>
-        )
-    }
 
-    if (loading || loadingMessages) return <Loading />
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerTitle: () => (
+                <Text fontFamily="QSBold" fontSize={22}>
+                    {chat?.name}
+                </Text>
+            ),
+            headerStyle: {
+                backgroundColor: bgColor
+            },
+            headerLeft: () => {
+                return (
+                    <TouchableOpacity
+                        onPress={() => router.back()}
+                        style={{ padding: SIZES.base }}
+                    >
+                        <FontAwesome
+                            name="chevron-left"
+                            size={24}
+                            color={iconColor}
+                        />
+                    </TouchableOpacity>
+                )
+            }
+        })
+    }, [navigation, chat?.name, bgColor])
+
+    if (loading) return <Loading />
 
     // const { topic, createdAt, messages }
     return (
         <Screen>
-            <Header title={chat?.name} onPressBack={router.back} />
+            <KeyboardAvoidingView
+                behavior="padding"
+                style={{ flex: 1 }}
+                keyboardVerticalOffset={110}
+            >
+                <GiftedChatScreen
+                    chatId={chatId}
+                    // messages={[...messagees]}
+                    // onSend={(messages) => {
+                    //     const { _id, text, createdAt } = messages[0]
+                    //     setMessages((prev) => [messages[0], ...prev])
+                    //     //handleSendMessage(text, _id, createdAt)
+                    // }}
+                />
+            </KeyboardAvoidingView>
+
+            {/* <Header title={chat?.name} onPressBack={router.back} />
             <KeyboardAvoidingView
                 style={{ flex: 1 }}
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -312,29 +250,9 @@ const Chat = () => {
                         </View>
                     </>
                 </TouchableWithoutFeedback>
-            </KeyboardAvoidingView>
+            </KeyboardAvoidingView> */}
         </Screen>
     )
 }
 
 export default Chat
-
-const styles = StyleSheet.create({
-    message: {
-        borderRadius: SIZES.radius,
-        width: SIZES.width * 0.6,
-        padding: SIZES.base
-    },
-
-    timestamp: {
-        //position: 'absolute',
-
-        alignSelf: 'flex-end',
-        marginTop: SIZES.base
-    },
-    senderName: {
-        position: 'absolute',
-        top: -20,
-        left: 6
-    }
-})

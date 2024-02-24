@@ -1,4 +1,5 @@
-import { Chat, Message } from '@/types'
+import { Msg } from '@/common/components/chats/GiftedChatScreen'
+import { Chat } from '@/types'
 import { chatsCollection, messagesCollection } from '@/utils/collections'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { addDoc, deleteDoc, doc } from 'firebase/firestore'
@@ -19,8 +20,9 @@ export const createChat = createAsyncThunk(
 
 export const sendMessage = createAsyncThunk(
     'chats/sendMessage',
-    async (data: Message) => {
+    async (data: Msg) => {
         try {
+            console.log('DATA', data)
             await addDoc(messagesCollection, data)
         } catch (error) {
             console.log(error)

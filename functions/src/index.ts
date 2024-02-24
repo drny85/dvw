@@ -189,6 +189,7 @@ exports.sendNewMessageNotification = onDocumentCreated(
     'messages/{messageId}',
     async (event) => {
         try {
+            return
             const messageData = event.data
             const message = messageData?.data() as Message
             const sender = message.sender.name

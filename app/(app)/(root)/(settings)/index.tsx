@@ -14,7 +14,6 @@ import useAppDispatch from '@/common/hooks/useAppDispatch'
 import useAppSelector from '@/common/hooks/useAppSelector'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { logoutUser, updateUser } from '@/features/auth/authActions'
-import { AppUser } from '@/features/auth/authSlice'
 import { deleteUserAccount } from '@/firebase'
 import { isFullName } from '@/utils/isFullName'
 import * as Clipboard from 'expo-clipboard'
@@ -30,6 +29,7 @@ import {
 } from 'react-native'
 import { formatPhone } from '@/utils/formatPhone'
 import Divider from '@/common/components/Divider'
+import { AppUser } from '@/types'
 
 const Settings = () => {
     useAuth()

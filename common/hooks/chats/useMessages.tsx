@@ -1,10 +1,10 @@
 import { messagesCollection } from '@/utils/collections'
-import { Message } from '@/types'
 import { onSnapshot, orderBy, query, where } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
+import { Msg } from '@/common/components/chats/GiftedChatScreen'
 
 export const useMessages = (chatId: string) => {
-    const [messages, setMessages] = useState<Message[]>([])
+    const [messages, setMessages] = useState<Msg[]>([])
     const [loading, setLoading] = useState(true)
     useEffect(() => {
         if (!chatId) {
@@ -13,11 +13,19 @@ export const useMessages = (chatId: string) => {
         }
         const sortedQuery = query(
             messagesCollection,
-            orderBy('createdAt', 'asc'),
+            orderBy('createdAt', 'desc'),
             where('chatId', '==', chatId)
         )
         const sub = onSnapshot(sortedQuery, (snap) => {
-            setMessages(snap.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+            setMessages(
+                snap.docs.map((doc) => ({
+                    ...doc.data(),
+                    id: doc.id,
+                    //@ts-ignore
+                    createdAt: doc.data().createdAt.toDate()
+                }))
+            )
+
             setLoading(false)
         })
 

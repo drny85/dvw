@@ -1,3 +1,4 @@
+import { Msg } from '@/common/components/chats/GiftedChatScreen'
 import { createCollection } from '@/firebase'
 import {
     AppUser,
@@ -5,7 +6,6 @@ import {
     Comment,
     Feed,
     Helper,
-    Message,
     Referral,
     ReferralSold,
     WirelessQuote
@@ -13,7 +13,7 @@ import {
 
 export const feedsColletion = createCollection<Feed>('feeds')
 export const chatsColletion = createCollection<Chat>('chats')
-export const messagesCollection = createCollection<Message>('messages')
+export const messagesCollection = createCollection<Msg>('messages')
 export const wirelessQuotesCollection =
     createCollection<WirelessQuote>('quotes')
 export const followUpsCollection = createCollection<WirelessQuote>('followups')

@@ -1,3 +1,5 @@
+import { Msg } from './common/components/chats/GiftedChatScreen'
+
 export type Feed = {
     id?: string
     title: string
@@ -138,13 +140,9 @@ export type ContactNumber = {
 
 export type Message = {
     id?: string
-    body: string
-    createdAt: string
-    reply: Message | null
+    text: string
+    replyMessage: Msg | null
     chatId: string
-    isReply: boolean
-    sender: AppUser
-    storagePath: string | null
 }
 
 export type NotificationType =

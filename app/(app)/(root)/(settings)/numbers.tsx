@@ -23,8 +23,8 @@ const UsefulNumbers = () => {
     return (
         <View style={{ flex: 1, backgroundColor: bgColor }}>
             <ScrollView
+                contentInsetAdjustmentBehavior="automatic"
                 contentContainerStyle={{
-                    marginTop: SIZES.padding * 1.5,
                     padding: SIZES.padding,
                     gap: SIZES.padding
                 }}

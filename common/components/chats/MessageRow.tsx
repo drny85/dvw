@@ -1,121 +1,163 @@
-import { Image, StyleSheet } from 'react-native'
-import React from 'react'
-import Row from '../Row'
-import { Message } from '@/types'
-import useAppSelector from '@/common/hooks/useAppSelector'
-import { SIZES } from '@/constants/Sizes'
 import useThemeColor from '@/common/hooks/useThemeColor'
-import View from '../View'
-import Text from '../Text'
-import moment from 'moment'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import React from 'react'
+import { Animated, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler'
+import { IMessage, Message, MessageProps } from 'react-native-gifted-chat'
+import { isSameDay, isSameUser } from 'react-native-gifted-chat/lib/utils'
+import { Msg } from './GiftedChatScreen'
 
-type Props = {
-    item: Message
-}
+type ChatMessageBoxProps = {
+    setReplyOnSwipeOpen: (message: Msg | null) => void
+    updateRowRef: (ref: any) => void
+    onDeleteSwipe: () => void
+    onDeletePress: (messsageId: string | number) => void
+} & MessageProps<IMessage>
 
-const MessageRow = ({ item }: Props) => {
-    const user = useAppSelector((s) => s.auth.user)
-    const receiverColor = useThemeColor('grey')
-    const bgColor = useThemeColor('background')
-    return (
-        <Row
-            style={{
-                alignSelf:
-                    item.sender.id === user?.id ? 'flex-end' : 'flex-start'
-            }}
-        >
-            <Image
-                source={
-                    item.sender.image
-                        ? { uri: item.sender.image }
-                        : require('@/assets/images/profile.jpg')
-                }
-                style={{
-                    width: 60,
-                    height: 60,
-                    borderRadius: 30,
-                    resizeMode: 'cover',
-                    marginRight: SIZES.base
-                }}
-            />
-            <View
+const ChatMessageBox = ({
+    setReplyOnSwipeOpen,
+    updateRowRef,
+    onDeleteSwipe,
+    onDeletePress,
+    ...props
+}: ChatMessageBoxProps) => {
+    const isNextMyMessage =
+        props.currentMessage &&
+        props.nextMessage &&
+        isSameUser(props.currentMessage, props.nextMessage) &&
+        isSameDay(props.currentMessage, props.nextMessage)
+    const textColor = useThemeColor('text')
+    const warningColor = useThemeColor('warning')
+
+    const renderLeftAction = (
+        progressAnimatedValue: Animated.AnimatedInterpolation<any>
+    ) => {
+        const size = progressAnimatedValue.interpolate({
+            inputRange: [0, 1, 100],
+            outputRange: [0, 1, 1]
+        })
+        const trans = progressAnimatedValue.interpolate({
+            inputRange: [0, 1, 2],
+            outputRange: [0, 12, 20]
+        })
+
+        return (
+            <Animated.View
                 style={[
-                    styles.message,
-                    {
-                        backgroundColor:
-                            item.sender.id === user?.id
-                                ? '#0077b6'
-                                : receiverColor
-                    }
+                    styles.container,
+                    { transform: [{ scale: size }, { translateX: trans }] },
+                    isNextMyMessage
+                        ? styles.defaultBottomOffset
+                        : styles.bottomOffsetNext,
+                    props.position === 'right' && styles.leftOffsetValue
                 ]}
             >
-                <View style={[styles.senderName]}>
-                    <Text
-                        style={{ opacity: 0.6 }}
-                        fontFamily="SFBold"
-                        fontSize={12}
+                <View style={styles.replyImageWrapper}>
+                    <MaterialCommunityIcons
+                        name="reply-circle"
+                        size={24}
+                        color={textColor}
+                    />
+                </View>
+            </Animated.View>
+        )
+    }
+    const renderRightAction = (
+        progressAnimatedValue: Animated.AnimatedInterpolation<any>
+    ) => {
+        const size = progressAnimatedValue.interpolate({
+            inputRange: [0, 1, 120],
+            outputRange: [0, 1, 1]
+        })
+        const trans = progressAnimatedValue.interpolate({
+            inputRange: [0, 1, 2],
+            outputRange: [0, -10, -20]
+        })
+
+        return (
+            <Animated.View
+                style={[
+                    styles.container,
+                    { transform: [{ scale: size }, { translateX: trans }] }
+                ]}
+            >
+                <View
+                    style={[
+                        styles.replyImageWrapper,
+                        {
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginTop: 10
+                        }
+                    ]}
+                >
+                    <TouchableOpacity
+                        onPress={() =>
+                            onDeletePress(props.currentMessage?._id!)
+                        }
                     >
-                        {item.sender.id === user?.id ? 'Me' : item.sender.name}
-                    </Text>
+                        <MaterialCommunityIcons
+                            name="trash-can-outline"
+                            size={24}
+                            color={warningColor}
+                        />
+                    </TouchableOpacity>
                 </View>
-                {item.isReply && (
-                    <View>
-                        <Text fontFamily="QSBold" fontSize={12} color="white">
-                            {item.sender.name}
-                        </Text>
-                        <View
-                            style={{
-                                padding: SIZES.base,
-                                borderWidth: 1,
-                                marginVertical: SIZES.base,
-                                borderColor: 'grey',
-                                backgroundColor: bgColor,
-                                borderRadius: SIZES.radius
-                            }}
-                        >
-                            <Text fontSize={16} color={'text'}>
-                                {item.reply?.body}
-                            </Text>
-                        </View>
+            </Animated.View>
+        )
+    }
 
-                        <Text fontSize={16} color={'white'}>
-                            {item.body}
-                        </Text>
-                    </View>
-                )}
+    const onSwipeOpenAction = () => {
+        if (props.currentMessage) {
+            setReplyOnSwipeOpen({ ...(props.currentMessage as Msg) })
+        }
+    }
 
-                <Text fontSize={16} color={'white'}>
-                    {item.body}
-                </Text>
-
-                <View style={styles.timestamp}>
-                    <Text fontSize={10} color="white">
-                        {moment(item.createdAt).format('lll')}
-                    </Text>
-                </View>
-            </View>
-        </Row>
+    return (
+        <GestureHandlerRootView>
+            <Swipeable
+                ref={updateRowRef}
+                friction={2}
+                rightThreshold={40}
+                leftThreshold={40}
+                renderRightActions={renderRightAction}
+                renderLeftActions={renderLeftAction}
+                onSwipeableOpen={(d) => {
+                    if (d === 'right' && props.currentMessage) {
+                        onDeleteSwipe()
+                    } else if (d === 'left') {
+                        onSwipeOpenAction()
+                    }
+                }}
+            >
+                <Message {...props} />
+            </Swipeable>
+        </GestureHandlerRootView>
     )
 }
 
-export default MessageRow
-
 const styles = StyleSheet.create({
-    message: {
-        borderRadius: SIZES.radius,
-        width: SIZES.width * 0.6,
-        padding: SIZES.base
+    container: {
+        width: 40
     },
-
-    timestamp: {
-        //position: 'absolute',
-
-        alignSelf: 'flex-end',
-        marginTop: SIZES.base
+    replyImageWrapper: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
-    senderName: {
-        position: 'absolute',
-        top: -20,
-        left: 6
+    replyImage: {
+        width: 20,
+        height: 20
+    },
+    defaultBottomOffset: {
+        marginBottom: 2
+    },
+    bottomOffsetNext: {
+        marginBottom: 10
+    },
+    leftOffsetValue: {
+        marginLeft: 16
     }
 })
+
+export default ChatMessageBox
