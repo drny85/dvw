@@ -15,26 +15,22 @@ import useAppSelector from '../../hooks/useAppSelector'
 import { useMessages } from '@/common/hooks/chats/useMessages'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
 import useColorScheme from '@/common/hooks/useColorScheme'
+import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
-import { sendMessage } from '@/features/chats/chatsActions'
+import { deleteMessage, sendMessage } from '@/features/chats/chatsActions'
 import { analyzeTextForToxicity } from '@/utils/moderateMessage'
-import { Alert, StyleSheet, ScrollView } from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
+import { Alert, StyleSheet } from 'react-native'
 import { Swipeable } from 'react-native-gesture-handler'
+import Animated, { FadeInLeft, FadeInRight } from 'react-native-reanimated'
 import Loading from '../Loading'
 import Text from '../Text'
 import View from '../View'
 import ReplyMessageBar from './MessageReplyBar'
 import ChatMessageBox from './MessageRow'
-import { Ionicons } from '@expo/vector-icons'
-import useThemeColor from '@/common/hooks/useThemeColor'
-import Animated, { FadeInLeft, FadeInRight } from 'react-native-reanimated'
 
 export type Msg = Message & IMessage
 
-// type Props = {
-//     messages: Msg[]
-//     onSend: (messages: Msg[]) => void
-// }
 const GiftedChatScreen = ({ chatId }: { chatId: string }) => {
     const user = useAppSelector((s) => s.auth.user)
     const theme = useColorScheme()
@@ -46,6 +42,14 @@ const GiftedChatScreen = ({ chatId }: { chatId: string }) => {
     const { messages, loading } = useMessages(chatId)
 
     const clearReplyMessage = () => setReplyMessage(null)
+
+    const onDelete = async (id: string) => {
+        try {
+            dispatch(deleteMessage(id))
+        } catch (error) {
+            console.log('Error deleting message', error)
+        }
+    }
 
     const onSend = useCallback(
         async (messages: Msg[] = []) => {
@@ -106,7 +110,11 @@ const GiftedChatScreen = ({ chatId }: { chatId: string }) => {
 
     const renderMessageBox = (props: MessageProps<any>) => (
         <Animated.View
-            entering={props.position === 'left' ? FadeInLeft : FadeInRight}
+            entering={
+                props.position === 'left'
+                    ? FadeInLeft.duration(300)
+                    : FadeInRight
+            }
         >
             <ChatMessageBox
                 {...props}
@@ -120,7 +128,7 @@ const GiftedChatScreen = ({ chatId }: { chatId: string }) => {
                 }}
                 setReplyOnSwipeOpen={setReplyMessage}
                 onDeleteSwipe={() => {}}
-                onDeletePress={(id) => console.log(id)}
+                onDeletePress={(id) => onDelete(id as string)}
                 updateRowRef={updateRowRef}
             />
         </Animated.View>

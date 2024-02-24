@@ -13,7 +13,6 @@ import { useMessages } from '@/common/hooks/chats/useMessages'
 import Animated, { FadeInLeft, FadeOutLeft } from 'react-native-reanimated'
 
 type Props = {
-    setOpened: React.Dispatch<React.SetStateAction<string | null>>
     item: Chat
     rowRefs: Map<any, any>
     onDelete: (id: string) => Promise<void>
@@ -23,7 +22,6 @@ type Props = {
 }
 
 const ChatList = ({
-    setOpened,
     item,
     rowRefs,
     onDelete,

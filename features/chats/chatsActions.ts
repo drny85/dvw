@@ -22,7 +22,7 @@ export const sendMessage = createAsyncThunk(
     'chats/sendMessage',
     async (data: Msg) => {
         try {
-            console.log('DATA', data)
+            if (!data) return
             await addDoc(messagesCollection, data)
         } catch (error) {
             console.log(error)
@@ -34,6 +34,7 @@ export const deleteMessage = createAsyncThunk(
     'chats/deleteMessage',
     async (id: string) => {
         try {
+            if (!id) return
             const messageRef = doc(messagesCollection, id)
             await deleteDoc(messageRef)
         } catch (error) {

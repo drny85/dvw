@@ -6,6 +6,7 @@ import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler'
 import { IMessage, Message, MessageProps } from 'react-native-gifted-chat'
 import { isSameDay, isSameUser } from 'react-native-gifted-chat/lib/utils'
 import { Msg } from './GiftedChatScreen'
+import useAppSelector from '@/common/hooks/useAppSelector'
 
 type ChatMessageBoxProps = {
     setReplyOnSwipeOpen: (message: Msg | null) => void
@@ -28,7 +29,7 @@ const ChatMessageBox = ({
         isSameDay(props.currentMessage, props.nextMessage)
     const textColor = useThemeColor('text')
     const warningColor = useThemeColor('warning')
-
+    const user = useAppSelector((s) => s.auth.user)
     const renderLeftAction = (
         progressAnimatedValue: Animated.AnimatedInterpolation<any>
     ) => {
@@ -65,6 +66,13 @@ const ChatMessageBox = ({
     const renderRightAction = (
         progressAnimatedValue: Animated.AnimatedInterpolation<any>
     ) => {
+        const isAuth =
+            props.currentMessage && props.currentMessage.user._id === user?.id
+
+        if (!isAuth) {
+            return null
+        }
+
         const size = progressAnimatedValue.interpolate({
             inputRange: [0, 1, 120],
             outputRange: [0, 1, 1]
@@ -93,7 +101,8 @@ const ChatMessageBox = ({
                 >
                     <TouchableOpacity
                         onPress={() =>
-                            onDeletePress(props.currentMessage?._id!)
+                            //@ts-ignore
+                            onDeletePress(props.currentMessage?.id)
                         }
                     >
                         <MaterialCommunityIcons
@@ -120,10 +129,19 @@ const ChatMessageBox = ({
                 friction={2}
                 rightThreshold={40}
                 leftThreshold={40}
-                renderRightActions={renderRightAction}
+                renderRightActions={
+                    props.currentMessage &&
+                    props.currentMessage.user._id === user?.id
+                        ? renderRightAction
+                        : undefined
+                }
                 renderLeftActions={renderLeftAction}
                 onSwipeableOpen={(d) => {
-                    if (d === 'right' && props.currentMessage) {
+                    if (
+                        d === 'right' &&
+                        props.currentMessage &&
+                        props.currentMessage.user._id === user?.id
+                    ) {
                         onDeleteSwipe()
                     } else if (d === 'left') {
                         onSwipeOpenAction()
