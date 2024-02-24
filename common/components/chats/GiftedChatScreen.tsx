@@ -1,9 +1,8 @@
-import { Message } from '@/types'
+import { Msg } from '@/types'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import {
     BubbleProps,
     GiftedChat,
-    IMessage,
     InputToolbar,
     InputToolbarProps,
     MessageProps,
@@ -28,8 +27,6 @@ import Text from '../Text'
 import View from '../View'
 import ReplyMessageBar from './MessageReplyBar'
 import ChatMessageBox from './MessageRow'
-
-export type Msg = Message & IMessage
 
 const GiftedChatScreen = ({ chatId }: { chatId: string }) => {
     const user = useAppSelector((s) => s.auth.user)

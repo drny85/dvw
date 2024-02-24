@@ -1,4 +1,3 @@
-import { Msg } from '@/common/components/chats/GiftedChatScreen'
 import { createCollection } from '@/firebase'
 import {
     AppUser,
@@ -6,6 +5,7 @@ import {
     Comment,
     Feed,
     Helper,
+    Msg,
     Referral,
     ReferralSold,
     WirelessQuote

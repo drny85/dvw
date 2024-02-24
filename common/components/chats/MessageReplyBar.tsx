@@ -4,8 +4,9 @@ import React from 'react'
 import { StyleSheet, TouchableOpacity } from 'react-native'
 import Text from '../Text'
 import View from '../View'
-import { Msg } from './GiftedChatScreen'
+
 import { SIZES } from '@/constants/Sizes'
+import { Msg } from '@/types'
 
 type ReplyMessageBarProps = {
     clearReply: () => void

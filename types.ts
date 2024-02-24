@@ -1,4 +1,4 @@
-import { Msg } from './common/components/chats/GiftedChatScreen'
+import { IMessage } from 'react-native-gifted-chat'
 
 export type Feed = {
     id?: string
@@ -29,6 +29,7 @@ export type Comment = {
     liked?: boolean
     replies?: Comment[]
 }
+export type Msg = Message & IMessage
 
 export type AppUser = {
     id: string

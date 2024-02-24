@@ -5,8 +5,8 @@ import { Animated, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler'
 import { IMessage, Message, MessageProps } from 'react-native-gifted-chat'
 import { isSameDay, isSameUser } from 'react-native-gifted-chat/lib/utils'
-import { Msg } from './GiftedChatScreen'
 import useAppSelector from '@/common/hooks/useAppSelector'
+import { Msg } from '@/types'
 
 type ChatMessageBoxProps = {
     setReplyOnSwipeOpen: (message: Msg | null) => void

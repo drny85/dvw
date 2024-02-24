@@ -1,7 +1,7 @@
+import { Msg } from '@/types'
 import { messagesCollection } from '@/utils/collections'
 import { onSnapshot, orderBy, query, where } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
-import { Msg } from '@/common/components/chats/GiftedChatScreen'
 
 export const useMessages = (chatId: string) => {
     const [messages, setMessages] = useState<Msg[]>([])

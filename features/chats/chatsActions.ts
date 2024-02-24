@@ -1,5 +1,4 @@
-import { Msg } from '@/common/components/chats/GiftedChatScreen'
-import { Chat } from '@/types'
+import { Chat, Msg } from '@/types'
 import { chatsCollection, messagesCollection } from '@/utils/collections'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { addDoc, deleteDoc, doc } from 'firebase/firestore'
