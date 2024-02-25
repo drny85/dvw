@@ -6,15 +6,24 @@ import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import { INTERNETnames, Referral, SalesRange, TVnames } from '@/types'
 import { calculateDRR } from '@/utils/calculateDRR'
-import { MotiView, ScrollView } from 'moti'
-import React, { useEffect, useRef, useState } from 'react'
-import { Animated, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { FontAwesome } from '@expo/vector-icons'
+import { AnimatePresence, MotiView, ScrollView } from 'moti'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import {
+    Animated,
+    StyleSheet,
+    Switch,
+    TouchableOpacity,
+    View
+} from 'react-native'
 import Divider from '../Divider'
 import Loading from '../Loading'
 import Row from '../Row'
 import Text from '../Text'
 import Paginator from './Paginator'
 import PercentageIndicator from './PercentageIndicator'
+
+const INTERNET = ['1GB', '500', '300']
 
 const Metrics = () => {
     // const { weeklyWirelessGoal } = useAppSelector((state) => state.settings)
@@ -25,7 +34,14 @@ const Metrics = () => {
     const { referrals, loading: loadingRefs } = useReferrals(user?.id!)
     const [drr, setDRR] = useState(0)
     const [data, setData] = useState<Referral[]>([])
-    const { internet, tv } = usePayout(data)
+    const [showSampleData, setShowSampleData] = useState(false)
+    const [sampleData, setSampleData] = useState<Referral[]>([])
+    const { internet, tv } = usePayout(showSampleData ? sampleData : data)
+    const {
+        homeAmount: h,
+        internetAmount: i,
+        tvAmount: t
+    } = usePayout(showSampleData ? sampleData : data)
 
     const { wtd, mtd, lw, lm, loading, today, twb } =
         useFilteredClosedReferrals(
@@ -34,6 +50,49 @@ const Metrics = () => {
         )
 
     const [period, setPeriod] = useState<SalesRange>('wtd')
+
+    const addFakeInternet = useCallback(
+        (internet: '300' | '500' | '1GB') => {
+            const newData: Referral = data[0]
+            newData.package = {
+                internet: null,
+                tv: null,
+                home: null,
+                wireless: null
+            }
+
+            newData.package = {
+                internet: {
+                    id:
+                        internet === '300'
+                            ? 'internet_300'
+                            : internet === '500'
+                            ? 'internet_500'
+                            : internet === '1GB'
+                            ? 'one_gig'
+                            : internet === '2GB'
+                            ? 'two_gig'
+                            : 'internet_300',
+                    name:
+                        internet === '300'
+                            ? '300 Mbps'
+                            : internet === '500'
+                            ? '500 Mbps'
+                            : internet === '1GB'
+                            ? '1 Gigabit'
+                            : internet === '2GB'
+                            ? '2 Gigabit'
+                            : '300 Mbps'
+                },
+                tv: null,
+                wireless: null,
+                home: null
+            }
+
+            setSampleData((prev) => [...prev, newData])
+        },
+        [sampleData]
+    )
 
     const totalInternetUnits = (): number =>
         Object.values(internet).reduce((a, b) => a + b, 0) ?? 0
@@ -60,6 +119,7 @@ const Metrics = () => {
 
     useEffect(() => {
         setData(wtd)
+        setSampleData(wtd)
     }, [wtd.length])
 
     useEffect(() => {
@@ -415,6 +475,92 @@ const Metrics = () => {
                     {drr}
                 </Text>
             </View>
+            {period === 'wtd' && (
+                <View
+                    style={{
+                        padding: SIZES.padding,
+                        marginTop: SIZES.padding,
+                        backgroundColor: bgColor,
+                        shadowOffset: {
+                            height: 2,
+                            width: 2
+                        },
+                        shadowOpacity: 0.6,
+                        shadowColor: 'grey',
+                        alignSelf: 'center',
+                        width: SIZES.width * 0.9,
+                        borderRadius: SIZES.radius
+                    }}
+                >
+                    <Row style={{ justifyContent: 'space-evenly' }}>
+                        <Text center fontFamily="SFBold" fontSize={22}>
+                            What If!
+                        </Text>
+                        <Row
+                            style={{ gap: SIZES.padding, alignItems: 'center' }}
+                        >
+                            <Text fontFamily="QSBold">Simulate</Text>
+                            <Switch
+                                // trackColor={{ false: thumbColor, true: trackColor }}
+                                // thumbColor={value ? thumbColor : 'grey'}
+                                ios_backgroundColor={bgColor}
+                                onChange={() => {
+                                    setShowSampleData((p) => {
+                                        if (p) {
+                                            setSampleData([])
+                                        }
+                                        return !p
+                                    })
+                                }}
+                                value={showSampleData}
+                            />
+                        </Row>
+                    </Row>
+                    <View>
+                        <Text center fontFamily="SFBold" fontSize={28}>
+                            ${t + i + h}
+                        </Text>
+                    </View>
+                    <AnimatePresence>
+                        {showSampleData && (
+                            <MotiView
+                                from={{ opacity: 0, translateY: -20 }}
+                                animate={{ opacity: 1, translateY: 0 }}
+                                exit={{ opacity: 0, translateY: -20 }}
+                                transition={{ type: 'timing' }}
+                            >
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        justifyContent: 'space-around',
+                                        paddingVertical: SIZES.padding
+                                    }}
+                                >
+                                    {INTERNET.map((i) => (
+                                        <View
+                                            key={i}
+                                            style={{ gap: SIZES.base }}
+                                        >
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    addFakeInternet(i as any)
+                                                }}
+                                            >
+                                                <FontAwesome
+                                                    name="chevron-up"
+                                                    size={24}
+                                                    color={'grey'}
+                                                />
+                                            </TouchableOpacity>
+                                            <Text fontFamily="SFBold">{i}</Text>
+                                        </View>
+                                    ))}
+                                </View>
+                            </MotiView>
+                        )}
+                    </AnimatePresence>
+                </View>
+            )}
         </ScrollView>
     )
 }

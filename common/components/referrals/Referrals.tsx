@@ -50,7 +50,7 @@ const Referrals = () => {
         return () => {
             clearTimeout(timer)
         }
-    }, [internetAmount, user])
+    }, [internetAmount, tvAmount, homeAmount, user])
 
     if (loading || ld || !user) return <Loading />
 
