@@ -22,7 +22,7 @@ import { sendNotificationToAllUsers } from './sendNotificationToAllUsers'
 import {
     AppUser,
     Feed,
-    Message,
+    Msg,
     NotificationData,
     Referral,
     WirelessQuote
@@ -189,10 +189,9 @@ exports.sendNewMessageNotification = onDocumentCreated(
     'messages/{messageId}',
     async (event) => {
         try {
-            return
             const messageData = event.data
-            const message = messageData?.data() as Message
-            const sender = message.sender.name
+            const message = messageData?.data() as Msg
+            const sender = message.user.name
             const usersRef = await admin.firestore().collection('users').get()
             const users = usersRef.docs.map((doc) => doc.data())
             const data: NotificationData = {
@@ -201,13 +200,13 @@ exports.sendNewMessageNotification = onDocumentCreated(
             }
             const pushTokens: string[] = []
             users.map((user) => {
-                if (user.pushToken && user.id !== message.sender.id)
+                if (user.pushToken && user.id !== message.user._id)
                     pushTokens.push(user.pushToken)
             })
 
             return await sendNotificationToAllUsers(
                 'New Message',
-                'From ' + sender + ': ' + message.body,
+                'From ' + sender + ': ' + message.text,
 
                 data,
                 pushTokens

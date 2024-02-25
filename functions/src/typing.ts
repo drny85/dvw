@@ -19,6 +19,20 @@ export interface WirelessQuote {
 
 export type InternetPlan = '300' | '500' | 'one_gig' | 'two_gig' | undefined
 
+export interface MessageUser {
+    _id: string | number
+    name?: string
+    avatar?: string | number
+}
+
+export type IMessage = {
+    _id: string | number
+    text: string
+    createdAt: Date | number
+    user: MessageUser
+}
+export type Msg = Message & IMessage
+
 export type Feed = {
     id?: string
     title: string
