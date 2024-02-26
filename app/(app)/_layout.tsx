@@ -3,6 +3,7 @@ import useThemeColor from '@/common/hooks/useThemeColor'
 import Fonts from '@/constants/Fonts'
 import Styles from '@/constants/Styles'
 import { persistor, store } from '@/store/configureStore'
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import {
     DarkTheme,
     DefaultTheme,
@@ -16,7 +17,6 @@ import { useCallback, useState } from 'react'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 
 export const unstable_settings = {
     initialRouteName: '(root)'

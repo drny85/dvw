@@ -15,6 +15,7 @@ export default function () {
     const loggedIn = useAppSelector((state) => state.auth.user)
     useNotifications()
     const dispatch = useAppDispatch()
+
     useAuth()
 
     useEffect(() => {
@@ -35,7 +36,7 @@ export default function () {
 
     // If the user is logged in, redirect to the home page
     if (loggedIn && loggedIn.emailVerified) {
-        return <Redirect href={'/'} />
+        return <Redirect href={'/(app)/(root)/(feeds)/(home)/feeds'} />
     }
 
     return (
