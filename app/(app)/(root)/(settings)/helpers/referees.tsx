@@ -44,7 +44,11 @@ const Referees = () => {
             headerBlurEffect: 'regular',
             headerTransparent: true,
             headerStyle: {
-                backgroundColor: bgColor
+                backgroundColor: bgColor,
+                textColor: color
+            },
+            headerTitleStyle: {
+                color: color
             },
             headerLeft: () => {
                 return (
@@ -75,12 +79,13 @@ const Referees = () => {
 
             headerSearchBarOptions: {
                 placeholder: 'Search Referee',
+                barTintColor: 'lightgrey',
                 onChangeText(e: any) {
                     setSearchValue(e.nativeEvent.text)
                 }
             }
         })
-    }, [navigation])
+    }, [navigation, color])
 
     if (loading) return <Loading />
     return (

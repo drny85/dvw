@@ -11,8 +11,9 @@ import { deleteChat } from '@/features/chats/chatsActions'
 import { Chat } from '@/types'
 import { FontAwesome } from '@expo/vector-icons'
 import { router, useNavigation } from 'expo-router'
-import React, { useLayoutEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import {
+    Alert,
     FlatList,
     ListRenderItem,
     ScrollView,
@@ -28,11 +29,26 @@ const ChatScreen = () => {
     const user = useAppSelector((s) => s.auth.user)
 
     const { chats, loading } = useChats()
+    const [data, setData] = useState<Chat[]>([])
+    const [search, setSearch] = useState<string>('')
     const [showDelete, setShowDelete] = useState<boolean>(false)
     let rowRefs = new Map()
     const onDelete = async (id: string) => {
         try {
-            dispatch(deleteChat(id))
+            Alert.alert(
+                'Delete Chat',
+                'Are you sure that you want to delete this chat?',
+                [
+                    { text: 'Cancel', style: 'cancel' },
+                    {
+                        text: 'Yes, Delete it',
+                        style: 'destructive',
+                        onPress: async () => {
+                            dispatch(deleteChat(id))
+                        }
+                    }
+                ]
+            )
         } catch (error) {
             console.log(error)
         } finally {
@@ -102,12 +118,25 @@ const ChatScreen = () => {
 
             headerSearchBarOptions: {
                 placeholder: 'Search',
+                barTintColor: 'lightgrey',
                 onChangeText(e: any) {
-                    // setSearchValue(e.nativeEvent.text)
+                    setSearch(e.nativeEvent.text)
                 }
             }
         })
     }, [navigation, showDelete, bgColor])
+
+    useEffect(() => {
+        if (search) {
+            setData(
+                chats.filter((chat) =>
+                    chat.name.toLowerCase().includes(search.toLowerCase())
+                )
+            )
+        } else {
+            setData(chats)
+        }
+    }, [navigation, search])
 
     if (loading) return <Loading />
 
@@ -117,7 +146,7 @@ const ChatScreen = () => {
             contentInsetAdjustmentBehavior="automatic"
         >
             <FlatList
-                data={chats}
+                data={data}
                 scrollEnabled={false}
                 renderItem={renderChats}
                 showsVerticalScrollIndicator={false}

@@ -27,6 +27,7 @@ const Chat = () => {
             headerStyle: {
                 backgroundColor: bgColor
             },
+
             headerLeft: () => {
                 return (
                     <TouchableOpacity
@@ -52,7 +53,7 @@ const Chat = () => {
             <KeyboardAvoidingView
                 behavior="padding"
                 style={{ flex: 1 }}
-                keyboardVerticalOffset={110}
+                keyboardVerticalOffset={98}
             >
                 <GiftedChatScreen chatId={chatId} />
             </KeyboardAvoidingView>

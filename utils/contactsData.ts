@@ -2,6 +2,10 @@ import { ContactNumber } from '@/types'
 
 export const CONTACT_NUMBERS: ContactNumber[] = [
     {
+        name: 'ACSC',
+        number: '1-877-871-9563'
+    },
+    {
         name: '1-800-VERIZON',
         number: '1-800-837-4966'
     },

@@ -18,6 +18,15 @@ const UsefulNumbers = () => {
             console.log(error)
         }
     }
+
+    const onPaste = async (n: string) => {
+        try {
+            await Clipboard.setStringAsync(n)
+            Alert.alert('Copied to clipboard')
+        } catch (error) {
+            console.log(error)
+        }
+    }
     const bgColor = useThemeColor('background')
 
     return (
@@ -31,21 +40,15 @@ const UsefulNumbers = () => {
             >
                 {CONTACT_NUMBERS.sort((a, b) => (a.name > b.name ? 1 : -1)).map(
                     (c) => (
-                        <TouchableOpacity
+                        <CallLine
+                            onPaste={() => onPaste(c.number)}
                             key={c.name}
-                            onLongPress={async () => {
-                                await Clipboard.setStringAsync(c.number)
-                                Alert.alert('Copied to clipboard')
-                            }}
-                        >
-                            <CallLine
-                                title={c.name}
-                                number={c.number}
-                                onPress={() =>
-                                    onPressCall(c.number.replace(/[^0-9]/g, ''))
-                                }
-                            />
-                        </TouchableOpacity>
+                            title={c.name}
+                            number={c.number}
+                            onPress={() =>
+                                onPressCall(c.number.replace(/[^0-9]/g, ''))
+                            }
+                        />
                     )
                 )}
             </ScrollView>
@@ -57,10 +60,11 @@ export default UsefulNumbers
 
 type Props = {
     onPress: () => void
+    onPaste: () => void
     title: string
     number: string
 }
-const CallLine = ({ onPress, title, number }: Props) => {
+const CallLine = ({ onPress, onPaste, title, number }: Props) => {
     const iconColor = useThemeColor('text')
     return (
         <Row style={{ alignItems: 'center', justifyContent: 'space-between' }}>
@@ -70,9 +74,20 @@ const CallLine = ({ onPress, title, number }: Props) => {
                     {number}
                 </Text>
             </View>
-            <TouchableOpacity style={{ padding: SIZES.base }} onPress={onPress}>
-                <FontAwesome name="phone" size={24} color={iconColor} />
-            </TouchableOpacity>
+            <Row style={{ gap: SIZES.base }}>
+                <TouchableOpacity
+                    style={{ padding: SIZES.base * 1.5 }}
+                    onPress={onPaste}
+                >
+                    <FontAwesome name="copy" size={24} color={iconColor} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={{ padding: SIZES.base }}
+                    onPress={onPress}
+                >
+                    <FontAwesome name="phone" size={24} color={iconColor} />
+                </TouchableOpacity>
+            </Row>
         </Row>
     )
 }

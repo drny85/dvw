@@ -4,6 +4,7 @@ import { referralssCollection } from '@/utils/collections'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { addDoc, deleteDoc, doc, updateDoc } from 'firebase/firestore'
 import { setId } from '../sales/salesSlide'
+import { ContactPerson, saveContact } from '@/utils/saveContact'
 
 export const addReferral = createAsyncThunk(
     'referrals/add',
@@ -18,7 +19,13 @@ export const addReferral = createAsyncThunk(
             if (!user?.id) return null
             const res = await addDoc(referralssCollection(user.id), referral)
             dispatch(setId(res.id))
-
+            const c: ContactPerson = {
+                firstName: referral.name,
+                note: referral.address,
+                phone: referral.phone,
+                email: referral.email!
+            }
+            await saveContact(c)
             return Promise.resolve(res.id)
         } catch (error) {
             console.log(error)

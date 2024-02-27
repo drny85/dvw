@@ -20,8 +20,14 @@ import {
 } from 'firebase/auth'
 
 import { useState } from 'react'
-import { Alert, StyleSheet, TouchableOpacity } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import {
+    Alert,
+    Keyboard,
+    KeyboardAvoidingView,
+    StyleSheet,
+    TouchableOpacity,
+    TouchableWithoutFeedback
+} from 'react-native'
 
 // Define the AuthScreen component, intended as a starting point for authentication
 const Login = () => {
@@ -87,91 +93,94 @@ const Login = () => {
     return (
         <Screen style={Styles.flex}>
             <ThemeSwitcher small />
-            <KeyboardAwareScrollView
-                contentContainerStyle={styles.container}
-                keyboardDismissMode="on-drag"
-            >
-                <Text fontSize={24} fontFamily="SFHeavy">
-                    Welcome
-                </Text>
-                <View style={{ width: '100%', maxWidth: 600 }}>
-                    <TextInput
-                        placeholder="Email"
-                        autoCapitalize="none"
-                        onChangeText={setEmail}
-                        keyboardType="email-address"
-                        value={email}
-                    />
-                </View>
-                <View
-                    style={{
-                        width: '100%',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        maxWidth: 600
-                    }}
+            <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+                <KeyboardAvoidingView
+                    behavior="padding"
+                    style={styles.container}
+                    //contentContainerStyle={styles.container}
                 >
-                    <TextInput
-                        placeholder="Password"
-                        autoCapitalize="none"
-                        secureTextEntry={!showPassword}
-                        onChangeText={setPassword}
-                        value={password}
-                    />
-                    <FontAwesome
-                        style={{
-                            position: 'absolute',
-                            right: SIZES.padding
-                        }}
-                        onPress={() => setShowPassword(!showPassword)}
-                        color={textColor}
-                        name={showPassword ? 'eye' : 'eye-slash'}
-                        size={20}
-                    />
-                </View>
-
-                <TouchableOpacity
-                    style={[
-                        styles.btn,
-                        {
-                            backgroundColor: btnColor
-                            //opacity: disabled ? 0.5 : 1
-                        }
-                    ]}
-                    onPress={handleLogin}
-                    // disabled={disabled}
-                >
-                    <Text
-                        center
-                        color="white"
-                        fontSize={24}
-                        fontFamily="SFBold"
-                    >
-                        Login
+                    <Text fontSize={26} fontFamily="Lora">
+                        Welcome
                     </Text>
-                </TouchableOpacity>
-                <View style={styles.reset}>
-                    <TouchableOpacity
-                        onPress={() => router.push('/auth/signup')}
+                    <View style={{ width: '100%', maxWidth: 600 }}>
+                        <TextInput
+                            placeholder="Email"
+                            autoCapitalize="none"
+                            onChangeText={setEmail}
+                            keyboardType="email-address"
+                            value={email}
+                        />
+                    </View>
+                    <View
+                        style={{
+                            width: '100%',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            maxWidth: 600
+                        }}
                     >
-                        <Text center fontSize={16} fontFamily="SFMedium">
-                            Create Account?
-                        </Text>
-                    </TouchableOpacity>
+                        <TextInput
+                            placeholder="Password"
+                            autoCapitalize="none"
+                            secureTextEntry={!showPassword}
+                            onChangeText={setPassword}
+                            value={password}
+                        />
+                        <FontAwesome
+                            style={{
+                                position: 'absolute',
+                                right: SIZES.padding
+                            }}
+                            onPress={() => setShowPassword(!showPassword)}
+                            color={textColor}
+                            name={showPassword ? 'eye' : 'eye-slash'}
+                            size={20}
+                        />
+                    </View>
+
                     <TouchableOpacity
-                        onPress={() => router.push('/auth/passwordReset')}
+                        style={[
+                            styles.btn,
+                            {
+                                backgroundColor: btnColor
+                                //opacity: disabled ? 0.5 : 1
+                            }
+                        ]}
+                        onPress={handleLogin}
+                        // disabled={disabled}
                     >
                         <Text
-                            color="warning"
                             center
-                            fontSize={16}
-                            fontFamily="SFMedium"
+                            color="white"
+                            fontSize={22}
+                            fontFamily="SFBold"
                         >
-                            Forgot Password?
+                            Login
                         </Text>
                     </TouchableOpacity>
-                </View>
-            </KeyboardAwareScrollView>
+                    <View style={styles.reset}>
+                        <TouchableOpacity
+                            onPress={() => router.push('/auth/signup')}
+                        >
+                            <Text center fontSize={16} fontFamily="SFMedium">
+                                Create Account?
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => router.push('/auth/passwordReset')}
+                        >
+                            <Text
+                                color="warning"
+                                center
+                                fontSize={16}
+                                fontFamily="SFMedium"
+                            >
+                                Forgot Password?
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                </KeyboardAvoidingView>
+            </TouchableWithoutFeedback>
         </Screen>
     )
 }
@@ -182,8 +191,8 @@ const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
         justifyContent: 'center',
-        padding: SIZES.padding,
-        gap: SIZES.padding * 2,
+        padding: SIZES.padding * 2,
+        gap: SIZES.padding * 1.5,
         // maxWidth: 600,
         width: '100%',
         marginHorizontal: 'auto',

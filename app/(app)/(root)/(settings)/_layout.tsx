@@ -24,6 +24,7 @@ const SettingsLayout = () => {
                     headerStyle: {
                         backgroundColor: bgColor
                     },
+
                     headerRight: () => {
                         return (
                             <TouchableOpacity onPress={router.back}>
