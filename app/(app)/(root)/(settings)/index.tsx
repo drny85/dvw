@@ -160,11 +160,11 @@ const Settings = () => {
                 showsVerticalScrollIndicator={false}
             >
                 <Image
-                    source={
-                        user?.image
-                            ? { uri: user.image }
-                            : require('@/assets/images/profile.jpg')
-                    }
+                    source={{
+                        uri:
+                            user?.image ||
+                            'https://www.edigitalagency.com.au/wp-content/uploads/verizon-red-icon-black-1200x1200.png'
+                    }}
                     style={styles.image}
                 />
                 <View style={styles.info}>

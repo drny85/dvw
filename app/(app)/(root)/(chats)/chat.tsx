@@ -136,7 +136,7 @@ const ChatScreen = () => {
         } else {
             setData(chats)
         }
-    }, [navigation, search])
+    }, [navigation, search, chats.length])
 
     if (loading) return <Loading />
 

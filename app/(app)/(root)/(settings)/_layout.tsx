@@ -24,13 +24,15 @@ const SettingsLayout = () => {
                     headerStyle: {
                         backgroundColor: bgColor
                     },
-
+                    headerTitleStyle: {
+                        color: iconColor
+                    },
                     headerRight: () => {
                         return (
                             <TouchableOpacity onPress={router.back}>
                                 <Ionicons
                                     name="close-circle"
-                                    size={26}
+                                    size={30}
                                     color={iconColor}
                                 />
                             </TouchableOpacity>

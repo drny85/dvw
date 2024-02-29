@@ -17,6 +17,7 @@ import {
 import { router } from 'expo-router'
 import { AnimatePresence, MotiView } from 'moti'
 import React from 'react'
+import { TouchableOpacity } from 'react-native'
 
 const filter = () => {
     const {
@@ -116,6 +117,25 @@ const filter = () => {
                         </MotiView>
                     )}
                 </AnimatePresence>
+                <View
+                    style={{
+                        padding: SIZES.padding,
+                        marginTop: SIZES.padding,
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }}
+                >
+                    <TouchableOpacity
+                        onPress={() => {
+                            router.back()
+                            router.push('/nova')
+                        }}
+                    >
+                        <Text fontFamily="QSBold">
+                            Nova Credit Countries List
+                        </Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </Screen>
     )

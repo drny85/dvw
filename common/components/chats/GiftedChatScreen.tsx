@@ -152,7 +152,13 @@ const GiftedChatScreen = ({ chatId }: { chatId: string }) => {
         props.currentMessage.replyMessage && (
             <View style={styles.replyMessageContainer}>
                 <Text
-                    color={theme === 'light' ? 'black' : 'text'}
+                    color={
+                        theme === 'light' && props.position === 'left'
+                            ? 'black'
+                            : props.position === 'left'
+                            ? 'black'
+                            : 'white'
+                    }
                     fontFamily="QSLight"
                 >
                     {props.currentMessage.replyMessage.text}

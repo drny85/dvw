@@ -15,6 +15,7 @@ const PlanLaypout = () => {
                 name="saveQuote"
                 options={{ presentation: 'modal' }}
             />
+            <Stack.Screen name="nova" options={{ presentation: 'modal' }} />
             <Stack.Screen
                 name="emailSent"
                 options={{

@@ -53,7 +53,7 @@ const Chat = () => {
             <KeyboardAvoidingView
                 behavior="padding"
                 style={{ flex: 1 }}
-                keyboardVerticalOffset={98}
+                keyboardVerticalOffset={100}
             >
                 <GiftedChatScreen chatId={chatId} />
             </KeyboardAvoidingView>

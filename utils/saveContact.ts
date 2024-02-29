@@ -11,7 +11,7 @@ export interface ContactPerson {
 export async function saveContact(contact: ContactPerson): Promise<void> {
     try {
         console.log('DEVICE', deviceName)
-        if (deviceName !== 'iPhone SE') {
+        if (!deviceName?.includes('SE')) {
             console.log('Not work iPhone')
             return
         }
