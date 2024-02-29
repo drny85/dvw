@@ -1,5 +1,5 @@
 // Import necessary modules and type for ViewProps.
-import { Platform, ViewProps, SafeAreaView } from 'react-native'
+import { ViewProps, SafeAreaView } from 'react-native'
 import useThemeColor from '../hooks/useThemeColor'
 import View from './View'
 import { PropsWithChildren } from 'react'

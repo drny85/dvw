@@ -9,7 +9,7 @@ import { SIZES } from '@/constants/Sizes'
 import { Ionicons } from '@expo/vector-icons'
 import { Stack, router } from 'expo-router'
 import React from 'react'
-import { Image } from 'react-native'
+import { Image, TouchableHighlight } from 'react-native'
 
 export const unstable_settings = {
     initialRouteName: '(feeds)'
@@ -19,8 +19,9 @@ const _layout = () => {
     const bgColor = useThemeColor('background')
     const accent = useThemeColor('accent')
     const textColor = useThemeColor('text')
-    useReferrals()
     const user = useAppSelector((s) => s.auth.user)
+    useReferrals(user?.id!)
+
     useNotifications()
     return (
         <Stack
@@ -32,54 +33,66 @@ const _layout = () => {
                 headerLeft: () => {
                     if (!user?.image) {
                         return (
-                            <View
-                                style={{
-                                    height: 46,
-                                    width: 46,
-                                    borderRadius: 23,
-                                    backgroundColor: accent,
-                                    justifyContent: 'center',
-                                    alignItems: 'center'
-                                }}
+                            <TouchableHighlight
+                                activeOpacity={0.3}
+                                underlayColor={'transparent'}
+                                onPress={() => router.push('/spark')}
                             >
-                                {user && user.name ? (
-                                    <Text
-                                        uppercase
-                                        fontFamily="QSBold"
-                                        color="white"
-                                        center
-                                    >
-                                        {user.name[0]}
-                                        {user.name.split(' ')[1][0]}
-                                    </Text>
-                                ) : (
-                                    <Text
-                                        uppercase
-                                        fontFamily="QSBold"
-                                        color="white"
-                                        center
-                                    >
-                                        UN
-                                    </Text>
-                                )}
-                            </View>
+                                <View
+                                    style={{
+                                        height: 46,
+                                        width: 46,
+                                        borderRadius: 23,
+                                        backgroundColor: accent,
+                                        justifyContent: 'center',
+                                        alignItems: 'center'
+                                    }}
+                                >
+                                    {user && user.name ? (
+                                        <Text
+                                            uppercase
+                                            fontFamily="QSBold"
+                                            color="white"
+                                            center
+                                        >
+                                            {user.name[0]}
+                                            {user.name.split(' ')[1][0]}
+                                        </Text>
+                                    ) : (
+                                        <Text
+                                            uppercase
+                                            fontFamily="QSBold"
+                                            color="white"
+                                            center
+                                        >
+                                            UN
+                                        </Text>
+                                    )}
+                                </View>
+                            </TouchableHighlight>
                         )
                     }
                     return (
-                        <Image
-                            source={{
-                                uri:
-                                    user?.image ||
-                                    `https://ui-avatars.com/api/?background=0D8ABC&color=fff`
-                            }}
-                            style={{
-                                width: 40,
-                                height: 40,
-                                borderRadius: 20,
-                                marginRight: SIZES.padding
-                            }}
-                            resizeMode="cover"
-                        />
+                        <TouchableHighlight
+                            activeOpacity={0.3}
+                            underlayColor={'transparent'}
+                            onPress={() => router.push('/spark')}
+                        >
+                            <Image
+                                source={{
+                                    uri:
+                                        user?.image ||
+                                        `https://ui-avatars.com/api/?background=0D8ABC&color=fff`
+                                }}
+                                style={{
+                                    width: 40,
+                                    height: 40,
+                                    borderRadius: 20,
+                                    marginRight: SIZES.padding
+                                }}
+                                resizeMode="cover"
+                            />
+                        </TouchableHighlight>
                     )
                 },
 

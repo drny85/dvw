@@ -1,11 +1,11 @@
-import React, { useState, FC } from 'react'
-import { View, Button, Platform } from 'react-native'
-import DateTimePicker, {
-    DateTimePickerEvent,
-    BaseProps
-} from '@react-native-community/datetimepicker'
-import useThemeColor from '../hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
+import DateTimePicker, {
+    BaseProps,
+    DateTimePickerEvent
+} from '@react-native-community/datetimepicker'
+import React, { FC } from 'react'
+import { Button, Platform, View } from 'react-native'
+import useThemeColor from '../hooks/useThemeColor'
 
 type IOSMode = 'date' | 'time' | 'datetime' | 'countdown'
 type TimeOptions = {
@@ -17,6 +17,8 @@ interface Props extends Base {
     mode: IOSMode
     value: Date
     onDateChange: (date: Date) => void
+    minimumDate?: Date
+    maximumDate?: Date
     isVisible: boolean
     onVisibilityChange: (visible: boolean) => void
     is24Hrs?: boolean
@@ -28,6 +30,8 @@ const DateTimePickerComponent: FC<Props> = ({
     onDateChange,
     isVisible,
     onVisibilityChange,
+    minimumDate,
+    maximumDate,
     is24Hrs
 }) => {
     const textColor = useThemeColor('text')
@@ -48,14 +52,16 @@ const DateTimePickerComponent: FC<Props> = ({
                 <DateTimePicker
                     value={value}
                     mode={mode}
-                    minimumDate={new Date()}
+                    minimumDate={minimumDate ? minimumDate : new Date()}
+                    maximumDate={maximumDate ? maximumDate : undefined}
                     minuteInterval={5}
                     display="default"
                     onChange={handleDateChange}
                     textColor={textColor}
                     style={{
                         backgroundColor: bgColor,
-                        borderRadius: SIZES.radius
+                        borderRadius: SIZES.radius,
+                        overflow: 'hidden'
                     }}
                 />
             )}
