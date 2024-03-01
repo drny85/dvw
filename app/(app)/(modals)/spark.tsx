@@ -63,7 +63,7 @@ const Spark = () => {
 
             setGenerating(true)
 
-            await shareCSV(d, 'myWirelessLeads')
+            await shareCSV(d, 'myWirelessLeads_' + new Date().toDateString())
         } catch (error) {
             console.log(error)
         } finally {
@@ -236,6 +236,20 @@ const Spark = () => {
                         >
                             Select a Range
                         </Text>
+                        <TouchableOpacity
+                            onPress={() => setFilter(false)}
+                            style={{
+                                position: 'absolute',
+                                top: SIZES.padding,
+                                right: SIZES.padding
+                            }}
+                        >
+                            <FontAwesome
+                                name="close"
+                                size={26}
+                                color={'#ffffff'}
+                            />
+                        </TouchableOpacity>
                         <View
                             style={{
                                 padding: SIZES.padding,
