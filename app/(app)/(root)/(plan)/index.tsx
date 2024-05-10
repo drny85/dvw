@@ -8,6 +8,7 @@ import useAppDispatch from '@/common/hooks/useAppDispatch'
 import useAppSelector from '@/common/hooks/useAppSelector'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import {
+    LOYALTY_EXPIRATION_DATE,
     PLUS_BYOD_VALUE,
     ULTIMATE_BYOD_VALUE,
     WELCOME_BYOD_VALUE
@@ -26,12 +27,12 @@ import { Line, LineName } from '@/types'
 import { AntDesign } from '@expo/vector-icons'
 import BottomSheet from '@gorhom/bottom-sheet'
 import { router } from 'expo-router'
+import moment from 'moment'
 import { AnimatePresence, MotiView } from 'moti'
 
 import React, { useCallback, useEffect, useRef } from 'react'
 
 import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
-import uuid from 'react-native-uuid'
 
 const MyPlan = () => {
     const iconColor = useThemeColor('text')
@@ -62,11 +63,12 @@ const MyPlan = () => {
     const onAddLine = () => {
         if (lines.length < 10) {
             const newLine: Line = {
-                id: uuid.v4() as string,
+                id: new Date().getTime().toString(),
                 name: 'Unlimited Welcome',
                 price: 75 - expressAutoPay,
                 byod: false,
-                perks: [...perks]
+                perks: [...perks],
+                originalPrice: 75
             }
 
             dispatch(setLinesData([...lines, newLine]))
@@ -164,14 +166,23 @@ const MyPlan = () => {
 
     const onSwitchLine = (id: string, name: LineName) => {
         const line = lines.find((line) => line.id === id)!
-        const n = {
+        const n: Line = {
             ...line,
+            originalPrice:
+                name === 'Unlimited Ultimate'
+                    ? 100
+                    : name === 'Unlimited Plus'
+                    ? 90
+                    : name === 'Unlimited Welcome'
+                    ? 75
+                    : 0,
             name: name
         }
         const perkChecked =
             name === 'Unlimited Ultimate'
                 ? {
                       ...n,
+
                       perks: [
                           ...perks.filter((p) => p.name !== '3 TravelPass Days')
                       ]
@@ -226,6 +237,7 @@ const MyPlan = () => {
         line: Line,
         internet: typeof expressInternet
     ): number => {
+        if (moment().isAfter(LOYALTY_EXPIRATION_DATE)) return 0
         if (!expressHasFios || lines.length === 0) return 0
         const gig = internet === 'one_gig' || internet === 'two_gig'
         if (

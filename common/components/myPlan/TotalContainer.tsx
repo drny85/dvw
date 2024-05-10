@@ -7,7 +7,10 @@ import { router } from 'expo-router'
 
 type Props = { index?: number }
 const TotalContainer = forwardRef(({ index }: Props, ref: any) => {
-    const snapPoints = useMemo(() => ['1%', '10%', '30%', '50%', '60%'], [])
+    const snapPoints = useMemo(
+        () => ['1%', '10%', '30%', '50%', '60%', '75%'],
+        []
+    )
     const bgColor = useThemeColor('background')
     const handleColor = useThemeColor('secondary')
 

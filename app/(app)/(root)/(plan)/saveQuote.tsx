@@ -95,7 +95,7 @@ const SaveQuote = () => {
 
     const onSaveQuote = async () => {
         const quote: WirelessQuote = {
-            id: v4(),
+            id: new Date().getTime().toString(),
             lines,
             userId: user?.id!,
             createdAt: new Date().toISOString(),
@@ -113,13 +113,7 @@ const SaveQuote = () => {
         }
         try {
             setLoading(true)
-            dispatch(saveWirelessQuote(quote))
 
-            setName('')
-            setEmail('')
-            setPhone('')
-            setMessage('')
-            Alert.alert('Quote Saved', 'Your quote has been saved')
             const noti: NotificationBody = {
                 body: `Get in touch with ${quote.customerName}`,
                 date: quote.scheduledOn!,
@@ -128,15 +122,24 @@ const SaveQuote = () => {
             }
             const saved = await schedulePushNotification(noti)
 
-            setLoading(false)
             if (saved) {
+                dispatch(saveWirelessQuote(quote))
                 if (saleQuote) {
                     dispatch(setSaleQuoteReferral(null))
                 }
+                setName('')
+                setEmail('')
+                setPhone('')
+                setMessage('')
+                Alert.alert('Quote Saved', 'Your quote has been saved')
+            } else {
+                return
             }
+
             router.back()
         } catch (error) {
             console.log(error)
+        } finally {
             setLoading(false)
         }
     }

@@ -73,6 +73,7 @@ export interface Line {
     price: number
     byod: boolean
     perks: Perk[]
+    originalPrice: number
 }
 export type SaleData = Pick<
     Feed,

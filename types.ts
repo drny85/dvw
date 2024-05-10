@@ -64,6 +64,7 @@ export interface Line {
     name: LineName
     price: number
     byod: boolean
+    originalPrice: number
     perks: Perk[]
 }
 export type SaleData = Pick<

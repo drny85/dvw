@@ -285,7 +285,6 @@ exports.sendClosedEmail = onDocumentWritten(
             //     }
             // }
 
-            console.log('DATE', new Date(), data.order_date)
             if (data.status.id !== 'closed' || data.email_sent) return
 
             const userRef = await admin
@@ -314,7 +313,7 @@ exports.sendClosedEmail = onDocumentWritten(
                 to: [coachEmail],
                 subject: 'Sale / Referral Closed',
                 reply_to: user.email,
-                bcc: [data.manager?.email!, user.email!],
+                bcc: data.isReferral ? [ceEmail!, user.email!] : [user.email!],
                 text: '',
                 react: Template(data)
             })

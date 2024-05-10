@@ -147,6 +147,7 @@ export async function schedulePushNotification(
             trigger: { date: new Date(values.date) },
             identifier: 'reminder'
         })
+        console.log(noti)
 
         return true
     } catch (error) {

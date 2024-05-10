@@ -155,6 +155,7 @@ const ReferralsScreen = () => {
             })
         }
     }
+    console.log(JSON.stringify(referral, null, 2))
 
     const onPressNext = async () => {
         if (index === 0) {
@@ -285,9 +286,10 @@ const ReferralsScreen = () => {
         if (editingReferral && editing) {
             setAddress(editingReferral.address)
             setReferral(editingReferral)
-            setMoveIn(referral.moveIn)
-            setIsVZW(referral.isVerizonWirelessCustomer)
+            setMoveIn(editingReferral.moveIn)
+            setIsVZW(editingReferral.isVerizonWirelessCustomer)
             setIndex(3)
+            setIsReferral(editingReferral.isReferral)
         }
 
         return () => {
@@ -388,6 +390,7 @@ const ReferralsScreen = () => {
                 {index === 2 &&
                     SectionTwo(
                         referral,
+                        isReferral,
                         setReferral,
                         setShowManagers,
                         placeholderColor
@@ -1518,10 +1521,12 @@ const SectionOne = (
 
 function SectionTwo(
     referral: Referral,
+    isReferral: boolean,
     setReferral: React.Dispatch<React.SetStateAction<Referral>>,
     setShowManagers: React.Dispatch<React.SetStateAction<boolean>>,
     placeholderColor: string
 ): React.ReactNode {
+    console.log(isReferral)
     return (
         <Animated.View
             exiting={SlideOutLeft.duration(600)}
@@ -1589,55 +1594,57 @@ function SectionTwo(
                     }
                 />
             </View>
-            <View>
+            {isReferral && (
                 <View>
-                    <Text
-                        fontFamily="SFBold"
-                        style={{
-                            margin: SIZES.base
-                        }}
-                    >
-                        Account Manager / CE
-                    </Text>
-                    <Row
-                        style={{
-                            width: '100%',
-                            ...Styles.boxShadow,
-                            backgroundColor: placeholderColor,
-                            padding: SIZES.base * 1.5,
-                            borderRadius: SIZES.radius * 2
-                        }}
-                    >
-                        <FontAwesome
-                            name="user-o"
-                            color={'white'}
-                            size={24}
+                    <View>
+                        <Text
+                            fontFamily="SFBold"
                             style={{
-                                marginHorizontal: SIZES.base
-                            }}
-                        />
-                        <View
-                            style={{
-                                borderRadius: SIZES.radius,
-                                overflow: 'hidden',
-                                marginLeft: SIZES.padding
+                                margin: SIZES.base
                             }}
                         >
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setShowManagers(true)
+                            Account Manager / CE
+                        </Text>
+                        <Row
+                            style={{
+                                width: '100%',
+                                ...Styles.boxShadow,
+                                backgroundColor: placeholderColor,
+                                padding: SIZES.base * 1.5,
+                                borderRadius: SIZES.radius * 2
+                            }}
+                        >
+                            <FontAwesome
+                                name="user-o"
+                                color={'white'}
+                                size={24}
+                                style={{
+                                    marginHorizontal: SIZES.base
+                                }}
+                            />
+                            <View
+                                style={{
+                                    borderRadius: SIZES.radius,
+                                    overflow: 'hidden',
+                                    marginLeft: SIZES.padding
                                 }}
                             >
-                                <Text fontFamily="SFBold" color="white">
-                                    {referral.manager
-                                        ? referral.manager.name
-                                        : ' Pick a Manager or CE'}
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    </Row>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        setShowManagers(true)
+                                    }}
+                                >
+                                    <Text fontFamily="SFBold" color="white">
+                                        {referral.manager
+                                            ? referral.manager.name
+                                            : ' Pick a Manager or CE'}
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        </Row>
+                    </View>
                 </View>
-            </View>
+            )}
         </Animated.View>
     )
 }

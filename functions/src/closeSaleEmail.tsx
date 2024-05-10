@@ -43,7 +43,7 @@ export const SendCloseEmail = ({
                         <Heading className="text-black  text-2xl font-bold text-center capitalize p-0 my-[30px] mx-0">
                             This Sale has been closed
                         </Heading>
-                        <Text className="text-black text-center text-xl capitalize">
+                        <Text className="text-black text-center text-xl font-bold capitalize">
                             {name}
                         </Text>
                         <Section>

@@ -20,6 +20,7 @@ import Text from '../Text'
 import View from '../View'
 import { useRouter } from 'expo-router'
 import { LOYALTY_EXPIRATION_DATE } from '@/constants'
+import moment from 'moment'
 
 type Props = {
     showResetAll?: boolean
@@ -97,6 +98,7 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
     }
 
     const loyaltyBonusDiscount = (): number => {
+        if (moment().isAfter(LOYALTY_EXPIRATION_DATE)) return 0
         return lines
             .map((line) =>
                 (line.name === 'Unlimited Welcome' ||
@@ -158,7 +160,8 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
             >
                 {showResetAll && (
                     <Text fontFamily="SFLight" fontSize={12}>
-                        Note: ${lines.length * 35} activation fee will be waived
+                        Note: ${lines.length * 35} activation fee will be
+                        included in the first bill
                     </Text>
                 )}
                 <TouchableOpacity
@@ -193,7 +196,7 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
             </RowView>
             <RowView show={perksTotal() > 0}>
                 <Text>Perks ({totalPerksCount(lines)})</Text>
-                <Text fontFamily="SFLight">
+                <Text fontFamily="SFLight" color="grey" fontSize={13}>
                     savings $({perksSavings().toFixed(2)})
                 </Text>
                 <Text>${perksTotal()}</Text>

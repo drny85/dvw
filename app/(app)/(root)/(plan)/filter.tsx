@@ -45,7 +45,6 @@ const filter = () => {
                     value={expressFirstResponder}
                     title="First Responder"
                     onValueChange={() => {
-                        if (expressHasFios && !expressFirstResponder) return
                         dispatch(
                             setExpressFirstResponder(!expressFirstResponder)
                         )
@@ -57,9 +56,6 @@ const filter = () => {
                     onValueChange={() => {
                         if (expressHasFios) {
                             dispatch(setExpressInternet())
-                        }
-                        if (expressFirstResponder) {
-                            dispatch(setExpressFirstResponder(false))
                         }
 
                         dispatch(setExpressHasFios(!expressHasFios))
