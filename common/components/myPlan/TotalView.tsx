@@ -209,7 +209,12 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
                 <Text>M + H Discount</Text>
                 <Text>-${mobilePlusHomeDiscount()}</Text>
             </RowView>
-            <RowView show={loyaltyBonusDiscount() > 0}>
+            <RowView
+                show={
+                    loyaltyBonusDiscount() > 0 &&
+                    moment().isAfter(LOYALTY_EXPIRATION_DATE)
+                }
+            >
                 <Text>Loyalty Discount</Text>
                 <Text fontSize={14} color="error">
                     ends ({LOYALTY_EXPIRATION_DATE})

@@ -237,34 +237,34 @@ const MyPlan = () => {
         line: Line,
         internet: typeof expressInternet
     ): number => {
-        if (moment().isAfter(LOYALTY_EXPIRATION_DATE)) return 0
-        if (!expressHasFios || lines.length === 0) return 0
-        const gig = internet === 'one_gig' || internet === 'two_gig'
-        if (
-            line.name === 'Unlimited Plus' ||
-            line.name === 'Unlimited Ultimate'
-        ) {
-            if (gig) {
-                return lines.length === 1 ? 25 : lines.length === 2 ? 15 : 0
-            }
-            return lines.length === 1
-                ? 30
-                : lines.length === 2
-                ? 20
-                : lines.length === 3
-                ? 5
-                : 0
-        } else if (line.name === 'Unlimited Welcome') {
-            return lines.length === 1
-                ? 30
-                : lines.length === 2
-                ? 20
-                : lines.length === 3
-                ? 5
-                : 0
-        } else {
-            return 0
-        }
+        return 0
+        // if (!expressHasFios || lines.length === 0) return 0
+        // const gig = internet === 'one_gig' || internet === 'two_gig'
+        // if (
+        //     line.name === 'Unlimited Plus' ||
+        //     line.name === 'Unlimited Ultimate'
+        // ) {
+        //     if (gig) {
+        //         return lines.length === 1 ? 25 : lines.length === 2 ? 15 : 0
+        //     }
+        //     return lines.length === 1
+        //         ? 30
+        //         : lines.length === 2
+        //         ? 20
+        //         : lines.length === 3
+        //         ? 5
+        //         : 0
+        // } else if (line.name === 'Unlimited Welcome') {
+        //     return lines.length === 1
+        //         ? 30
+        //         : lines.length === 2
+        //         ? 20
+        //         : lines.length === 3
+        //         ? 5
+        //         : 0
+        // } else {
+        //     return 0
+        // }
     }
 
     useEffect(() => {

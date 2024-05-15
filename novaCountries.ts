@@ -6,7 +6,7 @@ export const novaCountries: { name: string }[] = [
     { name: 'Great Britain, UK' },
     { name: 'India' },
     { name: 'Kenya' },
-    { name: 'Mexixo' },
+    { name: 'Mexico' },
     { name: 'Nigeria' },
     { name: 'Philippines' },
     { name: 'South Korea' },

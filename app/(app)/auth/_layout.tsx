@@ -15,9 +15,7 @@ export default function () {
     const loggedIn = useAppSelector((state) => state.auth.user)
     useNotifications()
     const dispatch = useAppDispatch()
-
     useAuth()
-    x
     useEffect(() => {
         return onAuthStateChanged(auth, async (user) => {
             if (!user) {
