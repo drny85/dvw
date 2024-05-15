@@ -123,8 +123,8 @@ const filter = () => {
                 >
                     <TouchableOpacity
                         onPress={() => {
-                            router.back()
-                            router.push('/nova')
+                            //router.back()
+                            router.push('/(app)/(nova)/nova')
                         }}
                     >
                         <Text fontFamily="QSBold">

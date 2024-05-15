@@ -1,3 +1,4 @@
+import CircularProgressBar from '@/common/components/CircularProgressBar'
 import Divider from '@/common/components/Divider'
 import Header from '@/common/components/Header'
 import Loading from '@/common/components/Loading'
@@ -5,7 +6,7 @@ import Row from '@/common/components/Row'
 import Screen from '@/common/components/Screen'
 import Text from '@/common/components/Text'
 import View from '@/common/components/View'
-import ProgressCircle from '@/common/components/referrals/ProgressCircle'
+
 import { useHelper } from '@/common/hooks/referrals/useHelper'
 import { useReferrals } from '@/common/hooks/referrals/useReferrals'
 import useAppSelector from '@/common/hooks/useAppSelector'
@@ -95,7 +96,9 @@ const HelperInfo = () => {
                             </Text>
                         </View>
 
-                        <HelperMetric data={data} allData={referrals} />
+                        {data && referrals && (
+                            <HelperMetric data={data} allData={referrals} />
+                        )}
                         <Divider small height={SIZES.padding * 2} />
                         <View
                             style={{
@@ -132,6 +135,8 @@ const styles = StyleSheet.create({
     }
 })
 
+const RADIUS = 46
+
 const HelperMetric = ({
     data,
     allData
@@ -158,7 +163,7 @@ const HelperMetric = ({
                     alignItems: 'center'
                 }}
             >
-                <ProgressCircle
+                {/* <ProgressCircle
                     percentage={
                         (data.filter((r) => r.status.id === 'closed').length /
                             data.length) *
@@ -170,6 +175,20 @@ const HelperMetric = ({
                     max={100}
                     color={accent}
                     textColor={text}
+                /> */}
+                <CircularProgressBar
+                    maxValue={100}
+                    radius={RADIUS}
+                    strokeWidth={10}
+                    currentValue={
+                        (data.filter(
+                            (r) =>
+                                r.status.id === 'new' ||
+                                r.status.id === 'in_progress'
+                        ).length /
+                            data.length) *
+                            100 || 0
+                    }
                 />
 
                 <Text center>Closed</Text>
@@ -181,7 +200,7 @@ const HelperMetric = ({
                     alignItems: 'center'
                 }}
             >
-                <ProgressCircle
+                {/* <ProgressCircle
                     percentage={
                         (data.filter(
                             (r) =>
@@ -197,8 +216,21 @@ const HelperMetric = ({
                     max={100}
                     color={accent}
                     textColor={text}
+                /> */}
+                <CircularProgressBar
+                    maxValue={100}
+                    radius={RADIUS}
+                    strokeWidth={10}
+                    currentValue={
+                        (data.filter(
+                            (r) =>
+                                r.status.id === 'new' ||
+                                r.status.id === 'in_progress'
+                        ).length /
+                            data.length) *
+                            100 || 0
+                    }
                 />
-
                 <Text center>Pending</Text>
             </View>
             <View
@@ -207,7 +239,7 @@ const HelperMetric = ({
                     alignItems: 'center'
                 }}
             >
-                <ProgressCircle
+                {/* <ProgressCircle
                     percentage={(data.length / allData.length) * 100}
                     radius={40}
                     duration={600}
@@ -215,8 +247,13 @@ const HelperMetric = ({
                     max={100}
                     color={accent}
                     textColor={text}
+                /> */}
+                <CircularProgressBar
+                    maxValue={100}
+                    radius={RADIUS}
+                    strokeWidth={10}
+                    currentValue={(data.length / allData.length) * 100 || 0}
                 />
-
                 <Text center>Overall</Text>
             </View>
         </View>

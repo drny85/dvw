@@ -55,7 +55,7 @@ const UserDRRs = ({ id, name }: Props) => {
                     paddingRight: SIZES.base
                 }}
             >
-                <Text>{name}</Text>
+                <Text capitalize>{name}</Text>
 
                 <Text
                     center

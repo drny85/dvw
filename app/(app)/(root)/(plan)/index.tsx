@@ -343,7 +343,8 @@ const MyPlan = () => {
                 <TouchableOpacity
                     onPress={() => {
                         // router.back();
-                        router.push('/(app)/(root)/(plan)/filter')
+                        // router.push('/(app)/(root)/(plan)/filter')
+                        router.push('/(app)/(nova)/filter')
                     }}
                 >
                     <AntDesign name="menu-fold" size={32} color={iconColor} />

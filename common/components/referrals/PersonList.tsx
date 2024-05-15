@@ -53,6 +53,13 @@ const PersonList = ({ data, scrollEnabled }: Props) => {
             ItemSeparatorComponent={() => <Divider />}
             data={data}
             keyExtractor={(item) => item.id!}
+            ListEmptyComponent={
+                <View>
+                    <Text fontFamily="SFBold" fontSize={16}>
+                        No data found
+                    </Text>
+                </View>
+            }
             renderItem={renderItem}
             ListFooterComponent={
                 <View style={{ height: SIZES.statusBarHeight }} />

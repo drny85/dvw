@@ -6,7 +6,6 @@ import { ColorName } from '@/constants/Colors'
 import useThemeColor from '../hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import View from './View'
-import { FontAwesome } from '@expo/vector-icons'
 
 // Define props for the custom TextInput component, including customizable text styling properties and backgroundColor option
 type InputError = {
@@ -103,6 +102,7 @@ const styles = StyleSheet.create({
     input: {
         borderRadius: SIZES.radius * 3,
         width: '100%',
+        height: 46,
         paddingHorizontal: SIZES.padding,
         paddingVertical: SIZES.base * 1.5,
         fontSize: SIZES.font * 1.5

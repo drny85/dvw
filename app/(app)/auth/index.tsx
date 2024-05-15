@@ -34,7 +34,7 @@ const Login = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false)
-
+    const [loading, setLoading] = useState(false)
     const dispatch = useAppDispatch()
     const btnColor = useThemeColor('accent')
     const textColor = useThemeColor('text')
@@ -51,7 +51,7 @@ const Login = () => {
 
                 return
             }
-
+            setLoading(true)
             const { user } = await signInWithEmailAndPassword(
                 auth,
                 email,
@@ -86,6 +86,8 @@ const Login = () => {
 
             console.log('Error =>', err.message)
             Alert.alert('Error', FIREBASE_ERRORS[err.message] || err.message)
+        } finally {
+            setLoading(false)
         }
     }
 

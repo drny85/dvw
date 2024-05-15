@@ -113,6 +113,7 @@ exports.sendIntroductionEmail = onCall<{
         await resend.emails.send({
             from: `${user.name} <melendez@robertdev.net>`,
             to: [referral.email!],
+            reply_to: user.email,
             subject: `Your Dedicated Verizon Specialist at ${referral.propertyName}`,
             bcc: [user.email!],
             text: '',

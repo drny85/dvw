@@ -155,7 +155,6 @@ const ReferralsScreen = () => {
             })
         }
     }
-    console.log(JSON.stringify(referral, null, 2))
 
     const onPressNext = async () => {
         if (index === 0) {

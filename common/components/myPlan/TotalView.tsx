@@ -98,7 +98,7 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
     }
 
     const loyaltyBonusDiscount = (): number => {
-        if (moment().isAfter(LOYALTY_EXPIRATION_DATE)) return 0
+        return 0
         return lines
             .map((line) =>
                 (line.name === 'Unlimited Welcome' ||
@@ -164,21 +164,19 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
                         included in the first bill
                     </Text>
                 )}
-                <TouchableOpacity
-                    style={{
-                        width: '100%'
-                    }}
-                    onPress={onClickSave}
-                >
-                    <Text
-                        center={!showResetAll}
-                        fontFamily="SFHeavy"
-                        color="success"
-                    >
-                        {showResetAll ? 'Summary' : 'Save Wireless Quote'}
-                    </Text>
-                </TouchableOpacity>
             </Row>
+            <TouchableOpacity
+                style={{
+                    width: '100%',
+                    alignSelf: 'center',
+                    marginVertical: SIZES.base
+                }}
+                onPress={onClickSave}
+            >
+                <Text center={true} fontFamily="SFHeavy" color="success">
+                    {showResetAll ? 'Summary' : 'Save Wireless Quote'}
+                </Text>
+            </TouchableOpacity>
 
             <Divider />
             <RowView show={lines.length > 0}>

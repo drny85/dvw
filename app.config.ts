@@ -20,7 +20,13 @@ const config: ExpoConfig = {
         bundleIdentifier: 'net.robertdev.drasco-dvw',
         buildNumber: '5',
         infoPlist: {
-            LSApplicationQueriesSchemes: ['dvw', 'telprompt', 'tel'],
+            LSApplicationQueriesSchemes: [
+                'dvw',
+                'telprompt',
+                'tel',
+                'mailto',
+                'sms'
+            ],
             EXUpdatesEnabled: true
         }
     },

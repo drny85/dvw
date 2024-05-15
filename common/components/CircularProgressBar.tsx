@@ -8,7 +8,6 @@ import {
     withTiming
 } from 'react-native-reanimated'
 import useThemeColor from '../hooks/useThemeColor'
-import { SIZES } from '@/constants/Sizes'
 
 const RADIUS = 60
 const STROKE_WIDTH = RADIUS * 0.2
@@ -32,7 +31,10 @@ const CircularProgressBar = ({
     const percentage = useSharedValue(0)
     const end = useSharedValue(0)
     const innerRadius = radius - strokeWidth / 2
-    const font = useFont(require('../../assets/fonts/Lora.ttf'), radius * 0.4)
+    const font = useFont(
+        require('../../assets/fonts/sf-pro-text-semibold.ttf'),
+        radius * 0.4
+    )
     const path = Skia.Path.Make()
     path.addCircle(radius, radius, innerRadius)
 

@@ -9,13 +9,7 @@ const PlanLaypout = () => {
     return (
         <Stack initialRouteName="index" screenOptions={{ headerShown: false }}>
             <Stack.Screen name="index" />
-            <Stack.Screen name="filter" options={{ presentation: 'modal' }} />
 
-            <Stack.Screen
-                name="saveQuote"
-                options={{ presentation: 'modal' }}
-            />
-            <Stack.Screen name="nova" options={{ presentation: 'modal' }} />
             <Stack.Screen
                 name="emailSent"
                 options={{

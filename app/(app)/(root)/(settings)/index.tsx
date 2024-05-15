@@ -341,6 +341,26 @@ const Settings = () => {
                         </Row>
                     </TouchableOpacity>
                     <TouchableOpacity
+                        onPress={() => router.push('/(app)/(nova)/directory')}
+                    >
+                        <Row
+                            style={{
+                                paddingHorizontal: SIZES.padding,
+                                justifyContent: 'space-between'
+                            }}
+                        >
+                            <Text fontFamily="SFBold" capitalize>
+                                Directory
+                            </Text>
+
+                            <FontAwesome
+                                name="chevron-right"
+                                size={20}
+                                color={iconColor}
+                            />
+                        </Row>
+                    </TouchableOpacity>
+                    <TouchableOpacity
                         onPress={() =>
                             router.push('/(app)/(root)/(settings)/blocked')
                         }
