@@ -190,6 +190,7 @@ const GiftedChatScreen = ({ chatId }: { chatId: string }) => {
             renderInputToolbar={renderCustomInputToolbar}
             renderAccessory={renderAccessory}
             renderSend={renderSend}
+            renderUsernameOnMessage
             messagesContainerStyle={styles.messagesContainer}
             renderMessage={renderMessageBox}
             renderCustomView={renderReplyMessageView}

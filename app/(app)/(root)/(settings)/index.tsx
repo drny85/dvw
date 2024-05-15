@@ -235,7 +235,7 @@ const Settings = () => {
                                 fontFamily="SFLight"
                                 style={{ lineHeight: 26, marginTop: 20 }}
                             >
-                                Please send me a spark email to get your profile
+                                Please send me a Spark email to get your profile
                                 picture and update it accordingly
                             </Text>
                             <Row>

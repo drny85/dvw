@@ -12,6 +12,7 @@ import { auth, sendMeATotificationWhenSomeoneLogin } from '@/firebase'
 
 import { FIREBASE_ERRORS } from '@/utils/firebaseErrorMessages'
 import { isEmailValid } from '@/utils/isEmailValid'
+import { sendMe } from '@/utils/sendMeANotification'
 import { FontAwesome } from '@expo/vector-icons'
 import { router } from 'expo-router'
 import {
@@ -76,6 +77,7 @@ const Login = () => {
                 )
                 return
             }
+            await sendMe(user.email!)
             const noti = sendMeATotificationWhenSomeoneLogin()
             await noti()
             dispatch(

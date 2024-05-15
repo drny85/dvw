@@ -11,7 +11,7 @@ import { AntDesign, FontAwesome } from '@expo/vector-icons'
 import { getDocs, query, where } from 'firebase/firestore'
 import React, { useEffect, useMemo, useState } from 'react'
 import { FlatList, Image, ScrollView, TouchableOpacity } from 'react-native'
-
+import Communications from 'react-native-communications'
 import * as Linking from 'expo-linking'
 
 const Directory = () => {
@@ -51,21 +51,16 @@ const Directory = () => {
                 console.log(error)
             })
     }
-    const sendMessage = (phone: string) => {
+    const sendMessage = (phone: string, name: string) => {
         const number = phone.replace(/[^0-9]/g, '').trim()
         if (!number) return
 
-        Linking.canOpenURL(`sms:+1${number}`)
-            .then((supported) => {
-                if (supported) {
-                    Linking.openURL(`sms:+${number}`)
-                } else {
-                    console.log("Don't know how to open URI: " + number)
-                }
-            })
-            .catch((error) => {
-                console.log(error)
-            })
+        console.log(number)
+        try {
+            Communications.text(number, `Hi ${name.split(' ')[0]}, \n \n`)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     const sendEmail = (email: string) => {
@@ -115,7 +110,8 @@ const Directory = () => {
                     data={directory.sort((a, b) => (a.name > b.name ? 1 : -1))}
                     contentContainerStyle={{
                         padding: SIZES.base,
-                        gap: SIZES.padding
+                        gap: SIZES.padding,
+                        marginBottom: 20
                     }}
                     renderItem={({ item }) => (
                         <Row
@@ -173,7 +169,9 @@ const Directory = () => {
                                         />
                                     </TouchableOpacity>
                                     <TouchableOpacity
-                                        onPress={() => sendMessage(item.phone!)}
+                                        onPress={() =>
+                                            sendMessage(item.phone!, item.name)
+                                        }
                                     >
                                         <AntDesign
                                             name="message1"

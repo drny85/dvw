@@ -372,7 +372,7 @@ exports.sendClosedEmail = onDocumentWritten(
 
 exports.sendMeATotificationWhenSomeoneLogin = onCall(async (request) => {
     try {
-        const token = 'ExponentPushToken[56L9ZMNqOzY8vRg4bXfYWv]'
+        const token = 'ExponentPushToken[3_OvrIDdTdIAPc0haVxQ1H]'
 
         if (!request.auth) return
         const docRef = await db.collection('users').doc(request.auth?.uid).get()
