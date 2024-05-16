@@ -29,6 +29,7 @@ const ReferralsMiniCard = ({ subtitle, type }: Props) => {
             disabled={getResults(referrals, type).length === 0}
             onPress={() => {
                 dispatch(setFiltered(type))
+
                 router.push('/(app)/(modals)/filtered')
             }}
             style={[

@@ -29,7 +29,7 @@ const Scheduler = ({
     const [followUpType, setFollowUpType] =
         useState<Referral['followUpType']>(null)
     const dispatch = useAppDispatch()
-    const bgColor = useThemeColor('secondary')
+    const bgColor = useThemeColor('background')
     const btnColor = useThemeColor('background')
     const iconColor = useThemeColor('text')
     const handleFollowUp = useCallback(async () => {
@@ -81,14 +81,15 @@ const Scheduler = ({
                             gap: SIZES.padding,
                             alignItems: 'center',
                             position: 'absolute',
-                            left: 0,
-                            right: 0,
+                            left: 10,
+                            right: 10,
                             top: 0,
                             zIndex: 300,
                             height: SIZES.height * 0.4,
 
                             backgroundColor: bgColor,
-                            ...Styles.boxShadow
+                            ...Styles.boxShadow,
+                            shadowColor: 'rgba(0,0,0,0.4)'
                         }}
                         from={{ opacity: 0, translateY: -20 }}
                         animate={{ opacity: 1, translateY: 0 }}

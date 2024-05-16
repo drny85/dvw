@@ -8,7 +8,7 @@ import { SIZES } from '@/constants/Sizes'
 import { AppUser } from '@/types'
 import { usersCollection } from '@/utils/collections'
 import { AntDesign, FontAwesome } from '@expo/vector-icons'
-import { getDocs, query, where } from 'firebase/firestore'
+import { getDocs, onSnapshot, query, where } from 'firebase/firestore'
 import React, { useEffect, useMemo, useState } from 'react'
 import {
     Alert,
@@ -20,11 +20,13 @@ import {
 import Communications from 'react-native-communications'
 import * as Linking from 'expo-linking'
 import * as Clipboard from 'expo-clipboard'
+import useAppSelector from '@/common/hooks/useAppSelector'
 
 const Directory = () => {
     const ascent = useThemeColor('accent')
     const background = useThemeColor('background')
     const secondary = useThemeColor('white')
+    const user = useAppSelector((s) => s.auth.user)
     const [users, setUsers] = useState<AppUser[]>([])
 
     const [loading, setLoading] = useState<boolean>(true)
@@ -102,22 +104,18 @@ const Directory = () => {
     }
 
     useEffect(() => {
-        const getUsers = async () => {
-            try {
-                const docQuery = query(
-                    usersCollection,
-                    where('emailVerified', '==', true)
-                )
-                const d = await getDocs(docQuery)
-                const results = d.docs.map((doc) => ({ ...doc.data() }))
-                setUsers(results)
-            } catch (error) {
-                console.log(error)
-            } finally {
-                setLoading(false)
-            }
-        }
-        getUsers()
+        const docQuery = query(
+            usersCollection,
+            where('emailVerified', '==', true)
+        )
+
+        return onSnapshot(docQuery, (d) => {
+            const results = d.docs
+                .filter((u) => u.id !== user?.id)
+                .map((doc) => ({ ...doc.data() }))
+            setUsers(results)
+            setLoading(false)
+        })
     }, [])
 
     if (loading) return <Loading />
@@ -129,7 +127,9 @@ const Directory = () => {
             >
                 <FlatList
                     scrollEnabled={false}
-                    data={directory.sort((a, b) => (a.name > b.name ? 1 : -1))}
+                    data={directory.sort((a, b) =>
+                        a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
+                    )}
                     contentContainerStyle={{
                         padding: SIZES.base,
                         gap: SIZES.padding,
