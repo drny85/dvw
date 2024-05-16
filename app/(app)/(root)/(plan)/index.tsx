@@ -8,7 +8,6 @@ import useAppDispatch from '@/common/hooks/useAppDispatch'
 import useAppSelector from '@/common/hooks/useAppSelector'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import {
-    LOYALTY_EXPIRATION_DATE,
     PLUS_BYOD_VALUE,
     ULTIMATE_BYOD_VALUE,
     WELCOME_BYOD_VALUE
@@ -27,7 +26,6 @@ import { Line, LineName } from '@/types'
 import { AntDesign } from '@expo/vector-icons'
 import BottomSheet from '@gorhom/bottom-sheet'
 import { router } from 'expo-router'
-import moment from 'moment'
 import { AnimatePresence, MotiView } from 'moti'
 
 import React, { useCallback, useEffect, useRef } from 'react'
@@ -301,9 +299,9 @@ const MyPlan = () => {
                 bottomShetRef.current?.close()
             }
             if (lines.length > 0) {
-                if (lines.length > 0 && lines.length <= 4) {
+                if (lines.length > 0 && lines.length <= 3) {
                     bottomShetRef.current?.snapToIndex(3)
-                } else if (lines.length >= 5 && lines.length <= 7) {
+                } else if (lines.length >= 4 && lines.length <= 7) {
                     bottomShetRef.current?.snapToIndex(2)
                 } else {
                     bottomShetRef.current?.snapToIndex(1)

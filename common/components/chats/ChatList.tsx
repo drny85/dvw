@@ -71,7 +71,10 @@ const ChatList = ({
                                 user.acceptedEULA &&
                                 user.acceptedEULA === true
                             ) {
-                                router.push(`/(app)/(root)/(chats)/${item.id}`)
+                                router.push({
+                                    pathname: '/(app)/(nova)/chat',
+                                    params: { chatId: item.id! }
+                                })
                             } else {
                                 console.log('EULA not accepted')
                                 router.push('/eula')

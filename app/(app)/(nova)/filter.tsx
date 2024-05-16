@@ -12,7 +12,8 @@ import {
     setExpressAutoPay,
     setExpressFirstResponder,
     setExpressHasFios,
-    setExpressInternet
+    setExpressInternet,
+    toggleIsWelcomeQualified
 } from '@/features/wireless/wirelessSlide'
 import { router } from 'expo-router'
 import { AnimatePresence, MotiView } from 'moti'
@@ -24,7 +25,8 @@ const filter = () => {
         expressAutoPay,
         expressFirstResponder,
         expressHasFios,
-        expressInternet
+        expressInternet,
+        isWelcome
     } = useAppSelector((s) => s.wireless)
 
     const dispatch = useAppDispatch()
@@ -59,6 +61,13 @@ const filter = () => {
                         }
 
                         dispatch(setExpressHasFios(!expressHasFios))
+                    }}
+                />
+                <Switcher
+                    value={isWelcome}
+                    title="Welcome Unlimited Offer"
+                    onValueChange={() => {
+                        dispatch(toggleIsWelcomeQualified())
                     }}
                 />
                 <AnimatePresence>

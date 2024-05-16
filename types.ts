@@ -44,6 +44,7 @@ export type AppUser = {
     acceptedEULA: boolean
     blockedUsers: string[]
     coachId: string | null
+    isOnline?: boolean
 }
 export type UserData = Pick<AppUser, 'id' | 'name'>[]
 export type UserRole = 'admin' | 'em' | 'coach' | 'ce' | 'referee' | 'ceo'

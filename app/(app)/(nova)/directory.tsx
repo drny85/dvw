@@ -10,9 +10,16 @@ import { usersCollection } from '@/utils/collections'
 import { AntDesign, FontAwesome } from '@expo/vector-icons'
 import { getDocs, query, where } from 'firebase/firestore'
 import React, { useEffect, useMemo, useState } from 'react'
-import { FlatList, Image, ScrollView, TouchableOpacity } from 'react-native'
+import {
+    Alert,
+    FlatList,
+    Image,
+    ScrollView,
+    TouchableOpacity
+} from 'react-native'
 import Communications from 'react-native-communications'
 import * as Linking from 'expo-linking'
+import * as Clipboard from 'expo-clipboard'
 
 const Directory = () => {
     const ascent = useThemeColor('accent')
@@ -58,6 +65,21 @@ const Directory = () => {
         console.log(number)
         try {
             Communications.text(number, `Hi ${name.split(' ')[0]}, \n \n`)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const onPaste = async (email: string, name: string) => {
+        try {
+            if (!email || !name) return
+            await Clipboard.setStringAsync(email)
+            Alert.alert(
+                'Email Copied',
+                `${
+                    name.split(' ')[0]
+                }'s email was copied, go ahead and paste it as your email recipient`
+            )
         } catch (error) {
             console.log(error)
         }
@@ -132,6 +154,16 @@ const Directory = () => {
                             }}
                         >
                             <Row>
+                                <View
+                                    style={{
+                                        width: 12,
+                                        height: 12,
+                                        borderRadius: 6,
+                                        backgroundColor: item.isOnline
+                                            ? 'green'
+                                            : '#e63946'
+                                    }}
+                                />
                                 <Image
                                     source={{
                                         uri:
@@ -143,11 +175,12 @@ const Directory = () => {
                                     height={50}
                                     style={{
                                         borderRadius: 25,
-                                        marginRight: SIZES.base
+                                        marginHorizontal: SIZES.base
                                     }}
                                 />
                                 <Text capitalize>{item.name}</Text>
                             </Row>
+
                             <View>
                                 <Row
                                     style={{
@@ -155,12 +188,22 @@ const Directory = () => {
                                         flex: 0.4
                                     }}
                                 >
+                                    {item.phone && (
+                                        <TouchableOpacity
+                                            onPress={() =>
+                                                makeCall(item.phone!)
+                                            }
+                                        >
+                                            <FontAwesome
+                                                name="phone"
+                                                size={22}
+                                            />
+                                        </TouchableOpacity>
+                                    )}
                                     <TouchableOpacity
-                                        onPress={() => makeCall(item.phone!)}
-                                    >
-                                        <FontAwesome name="phone" size={22} />
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
+                                        onLongPress={() =>
+                                            onPaste(item.email!, item.name)
+                                        }
                                         onPress={() => sendEmail(item.email!)}
                                     >
                                         <FontAwesome

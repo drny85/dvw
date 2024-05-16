@@ -171,6 +171,11 @@ const Spark = () => {
                         : -1
                 )}
                 keyExtractor={(item) => item.id!}
+                ListEmptyComponent={
+                    <View>
+                        <Text center>No Data</Text>
+                    </View>
+                }
                 contentContainerStyle={{ marginTop: SIZES.base }}
                 renderItem={({ item, index }) => (
                     <View

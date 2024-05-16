@@ -1,3 +1,4 @@
+import Loading from '@/common/components/Loading'
 import Screen from '@/common/components/Screen'
 import Text from '@/common/components/Text'
 import TextInput from '@/common/components/TextInput'
@@ -93,7 +94,7 @@ const Login = () => {
         }
     }
 
-    //if (loading) return <Loading />
+    if (loading) return <Loading />
     return (
         <Screen style={Styles.flex}>
             <ThemeSwitcher small />
@@ -110,7 +111,9 @@ const Login = () => {
                         <TextInput
                             placeholder="Email"
                             autoCapitalize="none"
-                            onChangeText={setEmail}
+                            onChangeText={(text) =>
+                                setEmail(text.toLowerCase())
+                            }
                             keyboardType="email-address"
                             value={email}
                         />

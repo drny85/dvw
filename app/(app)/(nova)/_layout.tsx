@@ -20,6 +20,7 @@ const NovaLayout = () => {
                     headerShown: false
                 }}
             />
+            <Stack.Screen name="chat" />
             <Stack.Screen
                 name="saveQuote"
                 options={{

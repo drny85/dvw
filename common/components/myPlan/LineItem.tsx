@@ -128,7 +128,7 @@ const LineItem = ({
                     </Text>
                     <Switch
                         value={line.byod}
-                        trackColor={{ false: thumbColor, true: trackColor }}
+                        trackColor={{ false: thumbColor, true: '#8d99ae' }}
                         thumbColor={line.byod ? thumbColor : 'grey'}
                         ios_backgroundColor={bgColor}
                         onChange={() => onBYOD(line.id)}
@@ -144,7 +144,7 @@ const LineItem = ({
                         {' '}
                         {totalPerksCount([], line) > 0
                             ? `Perks ${totalPerksCount([], line)}`
-                            : 'No Perks'}
+                            : 'Perks'}
                     </Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => onDelete(line.id)}>

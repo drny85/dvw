@@ -6,14 +6,15 @@ import {
     setExpressFirstResponder,
     setExpressHasFios,
     setExpressInternet,
-    setLinesData
+    setLinesData,
+    toggleIsWelcomeQualified
 } from '@/features/wireless/wirelessSlide'
 import { byodSavings } from '@/utils/byodSavings'
 import { firstResponderDiscount } from '@/utils/firstResponderDiscount'
 import { totalPerksCount } from '@/utils/perksCount'
 import { AnimatePresence, MotiView } from 'moti'
 import React from 'react'
-import { TouchableOpacity } from 'react-native'
+import { Switch, TouchableOpacity } from 'react-native'
 import Divider from '../Divider'
 import Row from '../Row'
 import Text from '../Text'
@@ -21,6 +22,7 @@ import View from '../View'
 import { useRouter } from 'expo-router'
 import { LOYALTY_EXPIRATION_DATE } from '@/constants'
 import moment from 'moment'
+import useThemeColor from '@/common/hooks/useThemeColor'
 
 type Props = {
     showResetAll?: boolean
@@ -29,7 +31,10 @@ type Props = {
 const TotalView = ({ onClickSave, showResetAll }: Props) => {
     const router = useRouter()
     const lines = useAppSelector((s) => s.wireless.lines)
+    const isWelcome = useAppSelector((s) => s.wireless.isWelcome)
     const dispatch = useAppDispatch()
+    const thumbColor = useThemeColor('accent')
+    const bgColor = useThemeColor('background')
 
     const {
         expressFirstResponder,
@@ -37,6 +42,23 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
         expressHasFios,
         expressInternet
     } = useAppSelector((s) => s.wireless)
+    const welcomeTotal = lines.filter(
+        (l) => l.name === 'Unlimited Welcome'
+    ).length
+
+    const welcomeOfferBonus = (): number => {
+        if (welcomeTotal === 0) return 0
+        if (!isWelcome) return 0
+        return welcomeTotal === 1
+            ? 10
+            : welcomeTotal === 2
+            ? 15
+            : welcomeTotal === 3
+            ? 20
+            : welcomeTotal === 0
+            ? 0
+            : 0
+    }
 
     const byod = byodSavings(lines)
     const firstResponder = (): number =>
@@ -44,7 +66,8 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
 
     const total = (): number =>
         lines.reduce((acc, line) => acc + line.price, 0) -
-        firstResponderDiscount(lines.length, expressFirstResponder)
+        firstResponderDiscount(lines.length, expressFirstResponder) -
+        welcomeOfferBonus()
 
     const mobilePlusHomeDiscount = (): number => {
         return lines
@@ -177,7 +200,21 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
                     {showResetAll ? 'Summary' : 'Save Wireless Quote'}
                 </Text>
             </TouchableOpacity>
-
+            {/* <Row style={{ alignSelf: 'center', gap: 8 }}>
+                <Text color="tertiary" fontFamily={'SFRegular'}>
+                    Welcome Offer (NY & MA)
+                </Text>
+                <Switch
+                    value={isWelcome}
+                    trackColor={{ false: thumbColor, true: '#8d99ae' }}
+                    thumbColor={isWelcome ? thumbColor : 'grey'}
+                    ios_backgroundColor={bgColor}
+                    onChange={() => {
+                        dispatch(toggleIsWelcomeQualified())
+                    }}
+                    //onChange={() => dispatch(toggleIsWelcomeQualified())}
+                />
+            </Row> */}
             <Divider />
             <RowView show={lines.length > 0}>
                 <Text fontFamily="SFBold" fontSize={18}>
@@ -226,6 +263,10 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
             <RowView show={byod > 0}>
                 <Text>BYOD Savings</Text>
                 <Text>-${byod}</Text>
+            </RowView>
+            <RowView show={welcomeTotal > 0 && isWelcome && lines.length <= 3}>
+                <Text>LGPO</Text>
+                <Text>-${welcomeOfferBonus()}</Text>
             </RowView>
             <RowView show={lines.length > 0}>
                 <Text fontFamily="SFHeavy" fontSize={22}>

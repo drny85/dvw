@@ -235,7 +235,9 @@ const Signup = () => {
                                             onBlur={() => {
                                                 onBlur()
                                             }}
-                                            onChangeText={onChange}
+                                            onChangeText={(text) =>
+                                                onChange(text.toLowerCase())
+                                            }
                                             error={
                                                 errors.email &&
                                                 errors.email.message

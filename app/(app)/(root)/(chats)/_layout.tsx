@@ -19,13 +19,6 @@ const ChatLayout = () => {
             />
 
             <Stack.Screen
-                name="[chatId]"
-                options={{
-                    presentation: 'fullScreenModal'
-                }}
-            />
-
-            <Stack.Screen
                 name="newChat"
                 options={{ presentation: 'modal', headerShown: false }}
             />

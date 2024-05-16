@@ -9,6 +9,7 @@ import { useAuth } from '@/common/hooks/auth/useAuth'
 import { onFetchUpdateAsync } from '@/utils/checkUpdates'
 import React from 'react'
 import { LogBox } from 'react-native'
+import { useUserStatus } from '@/common/hooks/useUserStatus'
 
 export function TabBarIcon(props: {
     name: React.ComponentProps<typeof FontAwesome>['name']
@@ -32,6 +33,7 @@ export default function () {
     // Check if the user is logged in using Redux state
     const { loading } = useAuth()
     onFetchUpdateAsync()
+    useUserStatus()
 
     const { user, loading: ld } = useAppSelector((state) => state.auth)
     const tabBarActiveTintColor = useThemeColor('accent')

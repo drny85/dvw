@@ -23,7 +23,7 @@ import {
 import { sendIntroductionEmail, sendWirelessClosedTemplate } from '@/firebase'
 
 import { Referral } from '@/types'
-import { FontAwesome } from '@expo/vector-icons'
+import { Entypo, FontAwesome } from '@expo/vector-icons'
 import * as Linking from 'expo-linking'
 import { router, useLocalSearchParams } from 'expo-router'
 import moment from 'moment'
@@ -240,32 +240,10 @@ const ReferralDetails = () => {
                         { backgroundColor: bgColor }
                     ]}
                 >
-                    <Row
-                        style={{
-                            justifyContent: 'space-between',
-                            alignItems: 'center'
-                        }}
-                    >
-                        <Text />
-                        <Text center fontSize={22} fontFamily="SFBold">
-                            {referral?.name}
-                        </Text>
-                        {!referral.followUpOn ? (
-                            <TouchableOpacity
-                                onPress={() => {
-                                    dispatch(setShowScheduler(true))
-                                }}
-                            >
-                                <FontAwesome
-                                    name="calendar-o"
-                                    color={textColor}
-                                    size={24}
-                                />
-                            </TouchableOpacity>
-                        ) : (
-                            <Text />
-                        )}
-                    </Row>
+                    <Text center fontSize={22} fontFamily="SFBold">
+                        {referral?.name}
+                    </Text>
+
                     {!referral.propertyName.includes(referral.address) && (
                         <Text color="grey" fontSize={16} fontFamily="QSBold">
                             {referral.propertyName}
@@ -287,13 +265,6 @@ const ReferralDetails = () => {
                             <Text fontFamily="QSLight">
                                 Phone: {referral?.phone}
                             </Text>
-                            <TouchableOpacity onPress={makeCall}>
-                                <FontAwesome
-                                    name="phone"
-                                    size={22}
-                                    color={textColor}
-                                />
-                            </TouchableOpacity>
                         </Row>
                         {referral?.email && (
                             <Row style={{ justifyContent: 'space-between' }}>
@@ -306,37 +277,6 @@ const ReferralDetails = () => {
                                         color={textColor}
                                     />
                                 )}
-                                {!referral.emailInstroductionSent &&
-                                    referral.status.id !== 'not_sold' &&
-                                    referral.status.id !== 'closed' && (
-                                        <TouchableOpacity
-                                            disabled={sendingEmail}
-                                            onPress={() => {
-                                                Alert.alert(
-                                                    'Send Email',
-                                                    'This will send an email introduction to the customer \n Would you like to send it?',
-                                                    [
-                                                        {
-                                                            text: 'Cancel',
-                                                            style: 'cancel'
-                                                        },
-                                                        {
-                                                            text: 'Send',
-                                                            onPress:
-                                                                sendIntroEmail,
-                                                            style: 'destructive'
-                                                        }
-                                                    ]
-                                                )
-                                            }}
-                                        >
-                                            <FontAwesome
-                                                name="envelope"
-                                                size={22}
-                                                color={textColor}
-                                            />
-                                        </TouchableOpacity>
-                                    )}
                             </Row>
                         )}
                         {referral?.followUpOn && (
@@ -352,44 +292,97 @@ const ReferralDetails = () => {
                             </Text>
                         )}
                     </View>
-                    {sendingWirelessEmail ? (
-                        <ActivityIndicator size={'small'} />
-                    ) : (
-                        <TouchableOpacity
-                            onPress={() => {
-                                Alert.alert(
-                                    'Send Wireles Template',
-                                    `Would you like to send helpful wireless information to ${referral.name}?`,
-                                    [
-                                        { text: 'Cancel', style: 'cancel' },
-                                        {
-                                            text: 'Yes, Send it',
-                                            onPress: sendWirelessT
-                                        }
-                                    ]
-                                )
-                            }}
-                        >
-                            <Row
-                                style={{
-                                    justifyContent: 'space-between',
-                                    borderRadius: SIZES.radius,
-                                    padding: SIZES.base,
-                                    backgroundColor: 'gray'
+
+                    <Row
+                        style={{
+                            justifyContent: 'center',
+                            gap: SIZES.padding * 3,
+                            marginTop: SIZES.base
+                        }}
+                    >
+                        {!referral.followUpOn && (
+                            <TouchableOpacity
+                                onPress={() => {
+                                    dispatch(setShowScheduler(true))
                                 }}
                             >
-                                <Text color="white" fontFamily="QSBold">
-                                    Send Wireless/Closed Info
-                                </Text>
-
                                 <FontAwesome
-                                    name="send-o"
-                                    size={22}
-                                    color={'white'}
+                                    name="calendar-o"
+                                    color={textColor}
+                                    size={24}
                                 />
-                            </Row>
+                            </TouchableOpacity>
+                        )}
+                        {!referral.emailInstroductionSent &&
+                            referral.status.id !== 'not_sold' &&
+                            referral.status.id !== 'closed' && (
+                                <TouchableOpacity
+                                    disabled={sendingEmail}
+                                    onPress={() => {
+                                        Alert.alert(
+                                            'Send Email',
+                                            'This will send an email introduction to the customer \n Would you like to send it?',
+                                            [
+                                                {
+                                                    text: 'Cancel',
+                                                    style: 'cancel'
+                                                },
+                                                {
+                                                    text: 'Send',
+                                                    onPress: sendIntroEmail,
+                                                    style: 'destructive'
+                                                }
+                                            ]
+                                        )
+                                    }}
+                                >
+                                    <FontAwesome
+                                        name="envelope"
+                                        size={24}
+                                        color={textColor}
+                                    />
+                                </TouchableOpacity>
+                            )}
+                        <TouchableOpacity onPress={makeCall}>
+                            <FontAwesome
+                                name="phone"
+                                size={24}
+                                color={textColor}
+                            />
                         </TouchableOpacity>
-                    )}
+                        {sendingWirelessEmail ? (
+                            <ActivityIndicator size={'small'} />
+                        ) : (
+                            <TouchableOpacity
+                                onPress={() => {
+                                    Alert.alert(
+                                        'Send Wireless Template',
+                                        `Would you like to send helpful wireless information to ${referral.name}?`,
+                                        [
+                                            { text: 'Cancel', style: 'cancel' },
+                                            {
+                                                text: 'Yes, Send it',
+                                                onPress: sendWirelessT
+                                            }
+                                        ]
+                                    )
+                                }}
+                            >
+                                <Row style={{ gap: 4 }}>
+                                    <Entypo
+                                        name="email"
+                                        size={24}
+                                        color={textColor}
+                                    />
+                                    <FontAwesome
+                                        name="mobile"
+                                        size={26}
+                                        color={textColor}
+                                    />
+                                </Row>
+                            </TouchableOpacity>
+                        )}
+                    </Row>
                 </View>
                 <View
                     style={[

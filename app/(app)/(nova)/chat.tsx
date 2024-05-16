@@ -14,16 +14,22 @@ const Chat = () => {
     const { chatId } = useLocalSearchParams<{ chatId: string }>()
     const navigation = useNavigation()
     const { chat, loading } = useChat(chatId)
-    const bgColor = useThemeColor('background')
-    const iconColor = useThemeColor('text')
+    const bgColor = useThemeColor('accent')
 
     useLayoutEffect(() => {
         navigation.setOptions({
             headerTitle: () => (
-                <Text fontFamily="QSBold" fontSize={22}>
+                <Text
+                    fontFamily="QSBold"
+                    color="white"
+                    ellipsizeMode="tail"
+                    numberOfLines={1}
+                    fontSize={22}
+                >
                     {chat?.name}
                 </Text>
             ),
+
             headerStyle: {
                 backgroundColor: bgColor
             },
@@ -37,7 +43,7 @@ const Chat = () => {
                         <FontAwesome
                             name="chevron-left"
                             size={24}
-                            color={iconColor}
+                            color={'#ffffff'}
                         />
                     </TouchableOpacity>
                 )
