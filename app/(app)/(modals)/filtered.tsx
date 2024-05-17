@@ -10,7 +10,7 @@ import { Referral } from '@/types'
 import { filterTitle } from '@/utils/filterTitle'
 import { getResults } from '@/utils/getReferralsFilterData'
 import { useNavigation } from 'expo-router'
-import React, { useLayoutEffect, useMemo, useState } from 'react'
+import React, { useLayoutEffect, useMemo } from 'react'
 import { FlatList, ListRenderItem, ScrollView } from 'react-native'
 
 const FilteredReferrals = () => {
@@ -23,7 +23,11 @@ const FilteredReferrals = () => {
     const data = getResults(referrals, filterType!)
     const search = useNavigationSearch({
         searchBarOptions: {
-            placeholder: 'Search by name, email or phone'
+            placeholder: 'Search by name, email or phone',
+            hintTextColor: color,
+            textColor: color,
+            tintColor: color,
+            barTintColor: '#ffffff80'
         }
     })
 
@@ -59,7 +63,7 @@ const FilteredReferrals = () => {
     if (loading || !filterType) return <Loading />
 
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, backgroundColor: bgColor }}>
             <ScrollView
                 style={{ flex: 1 }}
                 contentInsetAdjustmentBehavior="automatic"

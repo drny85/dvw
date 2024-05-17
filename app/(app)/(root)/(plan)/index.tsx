@@ -19,7 +19,8 @@ import {
     setExpressFirstResponder,
     setExpressHasFios,
     setExpressInternet,
-    setLinesData
+    setLinesData,
+    toogleShake
 } from '@/features/wireless/wirelessSlide'
 import { perks } from '@/perks'
 import { Line, LineName } from '@/types'
@@ -30,7 +31,7 @@ import { AnimatePresence, MotiView } from 'moti'
 
 import React, { useCallback, useEffect, useRef } from 'react'
 
-import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
+import { Alert, ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
 
 const MyPlan = () => {
     const iconColor = useThemeColor('text')
@@ -349,7 +350,12 @@ const MyPlan = () => {
                 </TouchableOpacity>
             </View>
             <View style={{ marginVertical: SIZES.base, zIndex: 190 }}>
-                <LineSetter onRemoveLine={() => {}} onAddLine={onAddLine} />
+                <LineSetter
+                    onRemoveLine={() => {
+                        dispatch(toogleShake(true))
+                    }}
+                    onAddLine={onAddLine}
+                />
             </View>
 
             <ScrollView showsVerticalScrollIndicator={false}>

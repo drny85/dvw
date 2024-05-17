@@ -89,8 +89,8 @@ const wirelessSlide = createSlice({
         setQuotes: (state, { payload }: PayloadAction<WirelessQuote[]>) => {
             state.quotes = payload
         },
-        toogleShake: (state) => {
-            state.shake = !state.shake
+        toogleShake: (state, { payload }: PayloadAction<boolean>) => {
+            state.shake = payload
         },
         toggleIsWelcomeQualified: (state) => {
             state.isWelcome = !state.isWelcome

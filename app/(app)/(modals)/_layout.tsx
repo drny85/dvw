@@ -1,9 +1,12 @@
+import useThemeColor from '@/common/hooks/useThemeColor'
 import { StackScreenWithSearchBar } from '@/constants/layout'
 import { FontAwesome } from '@expo/vector-icons'
 import { router, Stack } from 'expo-router'
 import { TouchableOpacity } from 'react-native'
 
 const ModalLaout = () => {
+    const textColor = useThemeColor('text')
+    const bgColor = useThemeColor('background')
     return (
         <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="referral" />
@@ -13,9 +16,20 @@ const ModalLaout = () => {
                 options={{
                     headerShown: true,
                     ...StackScreenWithSearchBar,
+                    headerStyle: {
+                        backgroundColor: bgColor
+                    },
+                    headerTitleStyle: {
+                        fontSize: 18
+                    },
+
                     headerLeft: () => (
                         <TouchableOpacity onPress={router.back}>
-                            <FontAwesome name="chevron-left" size={22} />
+                            <FontAwesome
+                                name="chevron-left"
+                                size={22}
+                                color={textColor}
+                            />
                         </TouchableOpacity>
                     )
                 }}

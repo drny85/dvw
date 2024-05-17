@@ -27,7 +27,6 @@ import { saveWirelessQuote } from '@/features/wirelessQuotes/wirelessQuoteAction
 import { WirelessQuote } from '@/types'
 import { onlyLetters } from '@/utils/onlyLetters'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { v4 } from 'uuid'
 import DateTimePickerComponent from '@/common/components/DateTimePicker'
 import moment from 'moment'
 import {

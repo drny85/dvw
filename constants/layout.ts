@@ -13,8 +13,8 @@ export const StackScreenWithSearchBar: NativeStackNavigationOptions = {
     headerSearchBarOptions: {
         hintTextColor: Colors.light.secondary,
         tintColor: Colors.light.white,
-        barTintColor: Colors.light.accent,
-        textColor: 'red'
+        barTintColor: Colors.light.white,
+        textColor: '#212121'
     },
 
     headerTintColor: Colors.light.accent,

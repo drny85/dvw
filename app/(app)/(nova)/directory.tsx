@@ -2,14 +2,18 @@ import Loading from '@/common/components/Loading'
 import Row from '@/common/components/Row'
 import Text from '@/common/components/Text'
 import View from '@/common/components/View'
+import useAppSelector from '@/common/hooks/useAppSelector'
 import { useNavigationSearch } from '@/common/hooks/useNavigationSearch'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import { AppUser } from '@/types'
 import { usersCollection } from '@/utils/collections'
 import { AntDesign, FontAwesome } from '@expo/vector-icons'
-import { getDocs, onSnapshot, query, where } from 'firebase/firestore'
-import React, { useEffect, useMemo, useState } from 'react'
+import * as Clipboard from 'expo-clipboard'
+import * as Linking from 'expo-linking'
+import { useNavigation } from 'expo-router'
+import { onSnapshot, query, where } from 'firebase/firestore'
+import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import {
     Alert,
     FlatList,
@@ -18,23 +22,24 @@ import {
     TouchableOpacity
 } from 'react-native'
 import Communications from 'react-native-communications'
-import * as Linking from 'expo-linking'
-import * as Clipboard from 'expo-clipboard'
-import useAppSelector from '@/common/hooks/useAppSelector'
 
 const Directory = () => {
+    const navigation = useNavigation()
     const ascent = useThemeColor('accent')
     const background = useThemeColor('background')
     const secondary = useThemeColor('white')
+    const textColor = useThemeColor('text')
     const user = useAppSelector((s) => s.auth.user)
     const [users, setUsers] = useState<AppUser[]>([])
 
     const [loading, setLoading] = useState<boolean>(true)
     const search = useNavigationSearch({
         searchBarOptions: {
-            placeholder: 'Search',
-            tintColor: secondary,
-            barTintColor: background
+            placeholder: 'Search user',
+            tintColor: textColor,
+
+            textColor: textColor,
+            barTintColor: '#ffffff80'
         }
     })
     const directory = useMemo(() => {
@@ -118,14 +123,29 @@ const Directory = () => {
         })
     }, [])
 
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerStyle: {
+                backgroundColor: background
+            },
+            headerLargeStyle: {
+                backgroundColor: background
+            },
+            headerLargeTitleStyle: {
+                color: textColor
+            }
+        })
+    }, [navigation, background, textColor])
+
     if (loading) return <Loading />
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, backgroundColor: background }}>
             <ScrollView
                 style={{ flex: 1 }}
                 contentInsetAdjustmentBehavior="automatic"
             >
                 <FlatList
+                    ListEmptyComponent={<Text center>No EM Found</Text>}
                     scrollEnabled={false}
                     data={directory.sort((a, b) =>
                         a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1

@@ -29,6 +29,7 @@ const ChatScreen = () => {
     const user = useAppSelector((s) => s.auth.user)
 
     const { chats, loading } = useChats()
+
     const [data, setData] = useState<Chat[]>([])
     const [search, setSearch] = useState<string>('')
     const [showDelete, setShowDelete] = useState<boolean>(false)
@@ -84,8 +85,12 @@ const ChatScreen = () => {
                 color
             },
             headerLeft: () => {
+                const disabled =
+                    chats.findIndex((c) => c.user.id === user?.id) === -1
+
                 return (
                     <TouchableOpacity
+                        disabled={disabled}
                         onPress={() => {
                             setShowDelete((p) => !p)
                         }}
@@ -117,7 +122,7 @@ const ChatScreen = () => {
             },
 
             headerSearchBarOptions: {
-                placeholder: 'Search',
+                placeholder: 'Search chat by name or title',
                 barTintColor: 'lightgrey',
                 onChangeText(e: any) {
                     setSearch(e.nativeEvent.text)

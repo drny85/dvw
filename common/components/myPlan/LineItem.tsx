@@ -5,11 +5,14 @@ import { Line, LineName } from '@/types'
 import { totalPerksCount } from '@/utils/perksCount'
 import { FontAwesome } from '@expo/vector-icons'
 import { MotiView } from 'moti'
-import React from 'react'
-import { StyleSheet, Switch, TouchableOpacity } from 'react-native'
+import React, { useEffect } from 'react'
+import { StyleSheet, Switch, TouchableOpacity, Animated } from 'react-native'
 import { Menu, MenuDivider, MenuItem } from 'react-native-material-menu'
 import Text from '../Text'
 import View from '../View'
+import useAppSelector from '@/common/hooks/useAppSelector'
+import useAppDispatch from '@/common/hooks/useAppDispatch'
+import { toogleShake } from '@/features/wireless/wirelessSlide'
 
 type Props = {
     index: number
@@ -28,18 +31,49 @@ const LineItem = ({
     index
 }: Props) => {
     const ascent = useThemeColor('placeholder')
+    const shake = useAppSelector((s) => s.wireless.shake)
+    const dispatch = useAppDispatch()
     const text = useThemeColor('text')
     const warning = useThemeColor('warning')
-
-    const trackColor = useThemeColor('accent')
     const thumbColor = useThemeColor('success')
     const bgColor = useThemeColor('background')
+    const animation = new Animated.Value(0)
+    const shakeDelete = () => {
+        Animated.sequence([
+            Animated.timing(animation, {
+                toValue: 6,
+                duration: 100,
+                useNativeDriver: true
+            }),
+            Animated.timing(animation, {
+                toValue: -6,
+                duration: 100,
+                useNativeDriver: true
+            }),
+            Animated.timing(animation, {
+                toValue: 6,
+                duration: 100,
+                useNativeDriver: true
+            }),
+            Animated.timing(animation, {
+                toValue: 0,
+                duration: 100,
+                useNativeDriver: true
+            })
+        ]).start(() => {
+            dispatch(toogleShake(false))
+        })
+    }
 
     const [linePressed, setLinePressed] = React.useState(false)
     const onPressLineName = (name: LineName) => {
         setLinePressed(false)
         onSwitchLine(line.id, name)
     }
+
+    useEffect(() => {
+        if (shake) shakeDelete()
+    }, [shake])
 
     return (
         <>
@@ -147,9 +181,18 @@ const LineItem = ({
                             : 'Perks'}
                     </Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => onDelete(line.id)}>
-                    <FontAwesome name="trash-o" size={26} color={warning} />
-                </TouchableOpacity>
+                <Animated.View
+                    style={{ transform: [{ translateX: animation }] }}
+                >
+                    <TouchableOpacity
+                        onPress={() => {
+                            onDelete(line.id)
+                            //shake()
+                        }}
+                    >
+                        <FontAwesome name="trash-o" size={26} color={warning} />
+                    </TouchableOpacity>
+                </Animated.View>
             </MotiView>
         </>
     )
