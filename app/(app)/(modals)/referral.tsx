@@ -1,6 +1,6 @@
 import Screen from '@/common/components/Screen'
 import Text from '@/common/components/Text'
-import React, { useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { Alert, TextInput as Input, StyleSheet } from 'react-native'
 
 import ButtonRadio from '@/common/components/RadioButton'
@@ -44,6 +44,7 @@ import {
     updateReferral
 } from '@/features/referrals/referralActions'
 import {
+    setComment,
     setEditingReferral,
     setHasWireless,
     setReferralState,
@@ -54,22 +55,26 @@ import { formatPhone } from '@/utils/formatPhone'
 import { isEmailValid } from '@/utils/isEmailValid'
 import { Dispatch } from '@reduxjs/toolkit'
 import { FlatList } from 'react-native-gesture-handler'
+import BottomSheet, { BottomSheetModal } from '@gorhom/bottom-sheet'
 import Animated, {
     SlideInLeft,
     SlideInRight,
     SlideOutLeft,
     SlideOutRight
 } from 'react-native-reanimated'
+import NotesModal from '@/common/components/referrals/NotesModal'
 
 const GOOGLE_KEY = process.env.EXPO_PUBLIC_GOOGLE_KEY as string
 
 const ReferralsScreen = () => {
     const dispatch = useAppDispatch()
-    const [showComment, setShowComment] = React.useState(false)
+    const bottomSheetRef = useRef<BottomSheetModal>(null)
     const user = useAppSelector((s) => s.auth.user)
-    const { referral: editingReferral, editing } = useAppSelector(
-        (s) => s.referrals
-    )
+    const {
+        referral: editingReferral,
+        editing,
+        comment: newComment
+    } = useAppSelector((s) => s.referrals)
     const referralLines = useAppSelector((s) => s.referrals.referralLines)
 
     const { loading, helpers } = useHelpers()
@@ -79,6 +84,7 @@ const ReferralsScreen = () => {
 
     const googleRef = useRef<GooglePlacesAutocompleteRef>(null)
     const [isReferral, setIsReferral] = React.useState(true)
+    const [showComment, setShowComment] = React.useState(false)
     const [showMoveIn, setShowMoveIn] = React.useState(false)
     const [showStatus, setShowStatus] = React.useState(false)
     const [address, setAddress] = React.useState('')
@@ -99,6 +105,7 @@ const ReferralsScreen = () => {
     const secondaryColor = useThemeColor('secondary')
     const textColor = useThemeColor('text')
     const placeholderColor = useThemeColor('placeholder')
+
     const [referral, setReferral] = React.useState<Referral>({
         name: '',
         address: address,
@@ -156,18 +163,6 @@ const ReferralsScreen = () => {
                 }
                 return prev - 1
             })
-        }
-    }
-    const updateComment = async (newComment: string) => {
-        try {
-            const newReferral: Referral = {
-                ...referral!,
-                comment: newComment
-            }
-
-            dispatch(updateReferral(newReferral))
-        } catch (error) {
-            console.log(error)
         }
     }
 
@@ -325,342 +320,349 @@ const ReferralsScreen = () => {
     if (loading) return <Loading />
 
     return (
-        <Screen style={{ flex: 1 }}>
-            <Row
-                style={{
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    paddingHorizontal: SIZES.padding,
-                    marginVertical: SIZES.base
-                }}
-            >
-                {index === 0 ? (
-                    <TouchableOpacity
-                        onPress={() => {
-                            router.back()
-                        }}
-                    >
-                        <FontAwesome
-                            name="chevron-left"
-                            size={26}
-                            color={textColor}
-                        />
-                    </TouchableOpacity>
-                ) : (
-                    <Text />
-                )}
-                <Text center fontFamily="SFBold" fontSize={18}>
-                    {index === 0
-                        ? 'Main Info'
-                        : index === 2
-                        ? "Customer's Info"
-                        : 'Referral Info'}
-                </Text>
-                {index !== 0 ? (
-                    <TouchableOpacity onPress={router.back}>
-                        <FontAwesome name="close" size={26} color={textColor} />
-                    </TouchableOpacity>
-                ) : (
-                    <Text />
-                )}
-            </Row>
-
-            <KeyboardAwareScrollView
-                ref={scrollViewRef}
-                contentContainerStyle={{
-                    padding: SIZES.padding,
-                    gap: SIZES.padding
-                }}
-                scrollEventThrottle={30}
-                keyboardDismissMode="on-drag"
-                automaticallyAdjustKeyboardInsets
-                keyboardShouldPersistTaps="handled"
-                extraHeight={60}
-            >
-                {index === 0 &&
-                    mainInfo(
-                        bgColor,
-                        isReferral,
-                        setIsReferral,
-                        orderType,
-                        setOrderType
-                    )}
-                {index === 1 &&
-                    SectionOne(
-                        googleRef,
-                        bgColor,
-                        placeholderColor,
-                        textColor,
-                        setAddress,
-                        address,
-                        referral,
-                        setReferral,
-                        setShowMoveIn,
-                        editing,
-                        setShowReferees,
-                        isReferral,
-                        moveIn
-                    )}
-                {index === 2 &&
-                    SectionTwo(
-                        referral,
-                        isReferral,
-                        setReferral,
-                        setShowManagers,
-                        placeholderColor
-                    )}
-
-                {index === 3 &&
-                    SectionThree(
-                        setShowStatus,
-                        placeholderColor,
-                        referral,
-                        monRef,
-                        setReferral,
-                        setShowInternetPicker,
-                        secondaryColor,
-                        setShowTvPicker,
-                        setShowHomePicker,
-                        setShowWirelessPicker,
-                        validateServicesOrdered,
-                        setShowOrderDate,
-                        setShowOrderDueDate,
-                        orderType,
-                        isVZW,
-                        setIsVZW,
-                        dispatch,
-                        referralLines,
-                        setShowComment
-                    )}
-            </KeyboardAwareScrollView>
-            <View style={{ padding: SIZES.padding }}>
-                <Row style={{ justifyContent: 'space-between' }}>
+        <>
+            <Screen style={{ flex: 1 }}>
+                <Row
+                    style={{
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        paddingHorizontal: SIZES.padding,
+                        marginVertical: SIZES.base
+                    }}
+                >
                     {index === 0 ? (
-                        <Text />
-                    ) : (
                         <TouchableOpacity
-                            disabled={index === 0}
-                            onPress={onPressPrev}
+                            onPress={() => {
+                                router.back()
+                            }}
                         >
+                            <FontAwesome
+                                name="chevron-left"
+                                size={26}
+                                color={textColor}
+                            />
+                        </TouchableOpacity>
+                    ) : (
+                        <Text />
+                    )}
+                    <Text center fontFamily="SFBold" fontSize={18}>
+                        {index === 0
+                            ? 'Main Info'
+                            : index === 2
+                            ? "Customer's Info"
+                            : 'Referral Info'}
+                    </Text>
+                    {index !== 0 ? (
+                        <TouchableOpacity onPress={router.back}>
+                            <FontAwesome
+                                name="close"
+                                size={26}
+                                color={textColor}
+                            />
+                        </TouchableOpacity>
+                    ) : (
+                        <Text />
+                    )}
+                </Row>
+
+                <KeyboardAwareScrollView
+                    ref={scrollViewRef}
+                    contentContainerStyle={{
+                        padding: SIZES.padding,
+                        gap: SIZES.padding
+                    }}
+                    scrollEventThrottle={30}
+                    keyboardDismissMode="on-drag"
+                    automaticallyAdjustKeyboardInsets
+                    keyboardShouldPersistTaps="handled"
+                    extraHeight={60}
+                >
+                    {index === 0 &&
+                        mainInfo(
+                            bgColor,
+                            isReferral,
+                            setIsReferral,
+                            orderType,
+                            setOrderType
+                        )}
+                    {index === 1 &&
+                        SectionOne(
+                            googleRef,
+                            bgColor,
+                            placeholderColor,
+                            textColor,
+                            setAddress,
+                            address,
+                            referral,
+                            setReferral,
+                            setShowMoveIn,
+                            editing,
+                            setShowReferees,
+                            isReferral,
+                            moveIn
+                        )}
+                    {index === 2 &&
+                        SectionTwo(
+                            referral,
+                            isReferral,
+                            setReferral,
+                            setShowManagers,
+                            placeholderColor
+                        )}
+
+                    {index === 3 &&
+                        SectionThree(
+                            setShowStatus,
+                            placeholderColor,
+                            referral,
+                            monRef,
+                            setReferral,
+                            setShowInternetPicker,
+                            secondaryColor,
+                            setShowTvPicker,
+                            setShowHomePicker,
+                            setShowWirelessPicker,
+                            validateServicesOrdered,
+                            setShowOrderDate,
+                            setShowOrderDueDate,
+                            orderType,
+                            isVZW,
+                            setIsVZW,
+                            dispatch,
+                            referralLines,
+                            setShowComment
+                        )}
+                </KeyboardAwareScrollView>
+                <View style={{ padding: SIZES.padding }}>
+                    <Row style={{ justifyContent: 'space-between' }}>
+                        {index === 0 ? (
+                            <Text />
+                        ) : (
+                            <TouchableOpacity
+                                disabled={index === 0}
+                                onPress={onPressPrev}
+                            >
+                                <Row style={{ gap: SIZES.base }}>
+                                    <FontAwesome
+                                        name="chevron-left"
+                                        size={24}
+                                        color={textColor}
+                                    />
+
+                                    <Text>Prev</Text>
+                                </Row>
+                            </TouchableOpacity>
+                        )}
+                        <TouchableOpacity onPress={onPressNext}>
                             <Row style={{ gap: SIZES.base }}>
+                                <Text
+                                    fontFamily={
+                                        index === 3 ? 'SFBold' : 'SFRegular'
+                                    }
+                                >
+                                    {index === 3 ? 'Save Referral' : 'Next'}
+                                </Text>
+
                                 <FontAwesome
-                                    name="chevron-left"
+                                    name="chevron-right"
                                     size={24}
                                     color={textColor}
                                 />
-
-                                <Text>Prev</Text>
                             </Row>
                         </TouchableOpacity>
-                    )}
-                    <TouchableOpacity onPress={onPressNext}>
-                        <Row style={{ gap: SIZES.base }}>
-                            <Text
-                                fontFamily={
-                                    index === 3 ? 'SFBold' : 'SFRegular'
-                                }
-                            >
-                                {index === 3 ? 'Save Referral' : 'Next'}
-                            </Text>
+                    </Row>
+                </View>
 
-                            <FontAwesome
-                                name="chevron-right"
-                                size={24}
-                                color={textColor}
-                            />
-                        </Row>
-                    </TouchableOpacity>
-                </Row>
-            </View>
-
-            <DateModal
-                maxDate={moment().format('YYYY-MM-DD')}
-                minDate={moment().subtract(2, 'weeks').format('YYYY-MM-DD')}
-                date={
-                    referral.order_date
-                        ? referral.order_date
-                        : new Date().toISOString()
-                }
-                onChange={(e, date) => {
-                    if (date) {
-                        setReferral({
-                            ...referral!,
-                            order_date: date.toISOString()
-                        })
-                        setShowOrderDate(false)
+                <DateModal
+                    maxDate={moment().format('YYYY-MM-DD')}
+                    minDate={moment().subtract(2, 'weeks').format('YYYY-MM-DD')}
+                    date={
+                        referral.order_date
+                            ? referral.order_date
+                            : new Date().toISOString()
                     }
-                }}
-                show={showOrderDate}
-                setShow={() => setShowOrderDate(false)}
-            />
-            <DateModal
-                maxDate={moment().add(3, 'months').format('YYYY-MM-DD')}
-                minDate={moment().format('YYYY-MM-DD')}
-                date={
-                    referral.due_date
-                        ? referral.due_date
-                        : new Date().toISOString()
-                }
-                onChange={(e, date) => {
-                    if (date) {
-                        setReferral({
-                            ...referral!,
-                            due_date: date.toISOString()
-                        })
-                        setShowOrderDueDate(false)
-                        scrollViewRef.current?.scrollToEnd()
+                    onChange={(e, date) => {
+                        if (date) {
+                            setReferral({
+                                ...referral!,
+                                order_date: date.toISOString()
+                            })
+                            setShowOrderDate(false)
+                        }
+                    }}
+                    show={showOrderDate}
+                    setShow={() => setShowOrderDate(false)}
+                />
+                <DateModal
+                    maxDate={moment().add(3, 'months').format('YYYY-MM-DD')}
+                    minDate={moment().format('YYYY-MM-DD')}
+                    date={
+                        referral.due_date
+                            ? referral.due_date
+                            : new Date().toISOString()
                     }
-                }}
-                show={showOrderDueDate}
-                setShow={() => setShowOrderDueDate(false)}
-            />
+                    onChange={(e, date) => {
+                        if (date) {
+                            setReferral({
+                                ...referral!,
+                                due_date: date.toISOString()
+                            })
+                            setShowOrderDueDate(false)
+                            scrollViewRef.current?.scrollToEnd()
+                        }
+                    }}
+                    show={showOrderDueDate}
+                    setShow={() => setShowOrderDueDate(false)}
+                />
 
-            <DateModal
-                date={moveIn ? moveIn : new Date().toISOString()}
-                onChange={(event, date) => {
-                    if (date) {
-                        setMoveIn(date?.toISOString())
-                        setShowMoveIn(false)
+                <DateModal
+                    date={moveIn ? moveIn : new Date().toISOString()}
+                    onChange={(event, date) => {
+                        if (date) {
+                            setMoveIn(date?.toISOString())
+                            setShowMoveIn(false)
+                            setReferral({
+                                ...referral!,
+                                moveIn: date.toISOString()
+                            })
+                        }
+                    }}
+                    show={showMoveIn}
+                    setShow={() => setShowMoveIn(false)}
+                />
+
+                <DataPickerModal
+                    title="Status"
+                    onPress={(status: STATUS) => {
                         setReferral({
-                            ...referral!,
-                            moveIn: date.toISOString()
+                            ...referral,
+                            status: status,
+                            order_date:
+                                status.id === 'closed'
+                                    ? new Date().toISOString()
+                                    : null
                         })
-                    }
-                }}
-                show={showMoveIn}
-                setShow={() => setShowMoveIn(false)}
-            />
+                        setShowStatus(false)
+                    }}
+                    onCancel={() => setShowStatus(false)}
+                    visisble={showStatus}
+                    data={statuses}
+                />
 
-            <DataPickerModal
-                title="Status"
-                onPress={(status: STATUS) => {
-                    setReferral({
-                        ...referral,
-                        status: status,
-                        order_date:
-                            status.id === 'closed'
-                                ? new Date().toISOString()
-                                : null
-                    })
-                    setShowStatus(false)
-                }}
-                onCancel={() => setShowStatus(false)}
-                visisble={showStatus}
-                data={statuses}
-            />
+                <DataPickerModal
+                    title="Referees / LA"
+                    onPress={(referee) => {
+                        setReferral({
+                            ...referral,
+                            referee: referee
+                        })
+                        setShowReferees(false)
+                    }}
+                    onCancel={() => setShowReferees(false)}
+                    visisble={showReferees}
+                    onAdd={() => {
+                        setShowReferees(false)
+                        router.back()
+                        router.push('/(app)/(root)/(settings)/referee')
+                    }}
+                    data={helpers
+                        .filter((h) => h.type === 'referee')
+                        .sort((a, b) => (a.name > b.name ? 1 : -1))}
+                />
 
-            <DataPickerModal
-                title="Referees / LA"
-                onPress={(referee) => {
-                    setReferral({
-                        ...referral,
-                        referee: referee
-                    })
-                    setShowReferees(false)
-                }}
-                onCancel={() => setShowReferees(false)}
-                visisble={showReferees}
-                onAdd={() => {
-                    setShowReferees(false)
-                    router.back()
-                    router.push('/(app)/(root)/(settings)/referee')
-                }}
-                data={helpers
-                    .filter((h) => h.type === 'referee')
-                    .sort((a, b) => (a.name > b.name ? 1 : -1))}
-            />
+                <DataPickerModal
+                    title="Manager or CE"
+                    onPress={(manager) => {
+                        setReferral({
+                            ...referral,
+                            manager: manager
+                        })
+                        setShowManagers(false)
+                    }}
+                    onCancel={() => setShowManagers(false)}
+                    visisble={showManagers}
+                    data={helpers.filter((h) => h.type === 'ce')}
+                />
 
-            <DataPickerModal
-                title="Manager or CE"
-                onPress={(manager) => {
+                <DataPickerModal
+                    onCancel={() => setShowInternetPicker(false)}
+                    data={services[0].internet}
+                    visisble={showInternetPicker}
+                    title="Internet"
+                    onPress={(int_serv: SERVICE) => {
+                        setShowInternetPicker(false)
+                        setReferral({
+                            ...referral,
+                            package: {
+                                ...referral.package!,
+                                internet: int_serv as SERVICE
+                            }
+                        })
+                    }}
+                />
+                <DataPickerModal
+                    onCancel={() => setShowTvPicker(false)}
+                    data={services[1].tv}
+                    visisble={showTvPicker}
+                    title="TV"
+                    onPress={(tv_serv) => {
+                        setShowTvPicker(false)
+                        setReferral({
+                            ...referral,
+                            package: {
+                                ...referral.package!,
+                                tv: tv_serv as SERVICE
+                            }
+                        })
+                    }}
+                />
+                <DataPickerModal
+                    onCancel={() => setShowHomePicker(false)}
+                    data={services[2].phone}
+                    visisble={showHomePicker}
+                    title="Home Phone"
+                    onPress={(home_serv) => {
+                        setShowHomePicker(false)
+                        setReferral({
+                            ...referral,
+                            package: {
+                                ...referral.package!,
+                                home: home_serv as SERVICE
+                            }
+                        })
+                    }}
+                />
+                <DataPickerModal
+                    data={services[3].wireless}
+                    visisble={showWirelessPicker}
+                    title="Wireless"
+                    onCancel={() => setShowWirelessPicker(false)}
+                    onPress={(wireless_serv) => {
+                        setShowWirelessPicker(false)
+                        setReferral({
+                            ...referral,
+                            package: {
+                                ...referral.package!,
+                                wireless: wireless_serv as SERVICE
+                            }
+                        }),
+                            dispatch(setHasWireless(false))
+                    }}
+                />
+            </Screen>
+            <NotesModal
+                show={showComment}
+                setShow={setShowComment}
+                onDone={() => {
                     setReferral({
-                        ...referral,
-                        manager: manager
+                        ...referral!,
+                        comment: newComment
                     })
-                    setShowManagers(false)
-                }}
-                onCancel={() => setShowManagers(false)}
-                visisble={showManagers}
-                data={helpers.filter((h) => h.type === 'ce')}
-            />
-
-            <DataPickerModal
-                onCancel={() => setShowInternetPicker(false)}
-                data={services[0].internet}
-                visisble={showInternetPicker}
-                title="Internet"
-                onPress={(int_serv: SERVICE) => {
-                    setShowInternetPicker(false)
-                    setReferral({
-                        ...referral,
-                        package: {
-                            ...referral.package!,
-                            internet: int_serv as SERVICE
-                        }
-                    })
-                }}
-            />
-            <DataPickerModal
-                onCancel={() => setShowTvPicker(false)}
-                data={services[1].tv}
-                visisble={showTvPicker}
-                title="TV"
-                onPress={(tv_serv) => {
-                    setShowTvPicker(false)
-                    setReferral({
-                        ...referral,
-                        package: {
-                            ...referral.package!,
-                            tv: tv_serv as SERVICE
-                        }
-                    })
-                }}
-            />
-            <DataPickerModal
-                onCancel={() => setShowHomePicker(false)}
-                data={services[2].phone}
-                visisble={showHomePicker}
-                title="Home Phone"
-                onPress={(home_serv) => {
-                    setShowHomePicker(false)
-                    setReferral({
-                        ...referral,
-                        package: {
-                            ...referral.package!,
-                            home: home_serv as SERVICE
-                        }
-                    })
-                }}
-            />
-            <DataPickerModal
-                data={services[3].wireless}
-                visisble={showWirelessPicker}
-                title="Wireless"
-                onCancel={() => setShowWirelessPicker(false)}
-                onPress={(wireless_serv) => {
-                    setShowWirelessPicker(false)
-                    setReferral({
-                        ...referral,
-                        package: {
-                            ...referral.package!,
-                            wireless: wireless_serv as SERVICE
-                        }
-                    }),
-                        dispatch(setHasWireless(false))
-                }}
-            />
-
-            <NotesBottomSheet
-                isVisible={showComment}
-                comment={referral.comment || ''}
-                onClose={() => {
+                    dispatch(setComment(null))
                     setShowComment(false)
                 }}
-                onUpdate={(newComment) => {
-                    setReferral({ ...referral!, comment: newComment })
-                }}
             />
-        </Screen>
+        </>
     )
 }
 
@@ -1268,7 +1270,7 @@ function SectionThree(
             <View style={{ marginTop: SIZES.padding * 1.5 }}>
                 <CommentsOrNotes
                     comment={referral.comment || ''}
-                    setVisible={() => setShowComment(true)}
+                    onOpen={() => setShowComment(true)}
                 />
             </View>
         </Animated.View>

@@ -1,7 +1,7 @@
 import CommentsOrNotes from '@/common/components/CommentsOrNotes'
 import Header from '@/common/components/Header'
 import Loading from '@/common/components/Loading'
-import NotesBottomSheet from '@/common/components/NotesBottomSheet'
+import NotesModal from '@/common/components/referrals/NotesModal'
 import Row from '@/common/components/Row'
 import Scheduler from '@/common/components/Scheduler'
 import Screen from '@/common/components/Screen'
@@ -9,6 +9,7 @@ import Text from '@/common/components/Text'
 import View from '@/common/components/View'
 import { useReferral } from '@/common/hooks/referrals/useReferral'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
+import useAppSelector from '@/common/hooks/useAppSelector'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import Styles from '@/constants/Styles'
@@ -17,6 +18,7 @@ import {
     updateReferral
 } from '@/features/referrals/referralActions'
 import {
+    setComment,
     setEditingReferral,
     setReferralState,
     setShowScheduler
@@ -40,8 +42,9 @@ import {
 
 const ReferralDetails = () => {
     const { referralId: id } = useLocalSearchParams<{ referralId: string }>()
-    const [visible, setVisible] = useState(false)
+    const comment = useAppSelector((s) => s.referrals.comment)
     const [sendingWirelessEmail, setSendingWirelessEmail] = useState(false)
+    const [show, setShow] = useState(false)
     const dispatch = useAppDispatch()
     const { loading, referral } = useReferral(id!)
     const [sendingEmail, setSendingEmail] = useState(false)
@@ -67,9 +70,8 @@ const ReferralDetails = () => {
         }
     }, [id])
 
-    const updateComment = async (newComment: string) => {
+    const updateComment = async (newComment: string | null) => {
         try {
-            if (!newComment) return
             if (referral?.comment === newComment) return
 
             const newReferral: Referral = {
@@ -78,7 +80,7 @@ const ReferralDetails = () => {
             }
 
             dispatch(updateReferral(newReferral))
-            setVisible(false)
+            dispatch(setComment(null))
         } catch (error) {
             console.log(error)
         }
@@ -517,18 +519,26 @@ const ReferralDetails = () => {
 
                     <CommentsOrNotes
                         comment={referral.comment || ''}
-                        setVisible={setVisible}
+                        onOpen={() => {
+                            dispatch(setComment(referral.comment))
+                            setShow(true)
+                        }}
                     />
                 </ScrollView>
-                <NotesBottomSheet
-                    isVisible={visible}
-                    comment={referral.comment || ''}
-                    onClose={() => {
-                        setVisible(false)
-                    }}
-                    onUpdate={updateComment}
-                />
             </KeyboardAvoidingView>
+            {/* <NotesBottomSheet
+                ref={bottomSheetRef}
+                onClose={handlePresentModalClose}
+                onUpdate={updateComment}
+            /> */}
+            <NotesModal
+                show={show}
+                setShow={setShow}
+                onDone={() => {
+                    updateComment(comment)
+                    setShow(false)
+                }}
+            />
         </Screen>
     )
 }

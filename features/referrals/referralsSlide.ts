@@ -11,6 +11,7 @@ type ReferralsState = {
     hasWireless: boolean
     referralLines: number
     filtered: ReferralsFilterType | null
+    comment: string | null
 }
 const initialState: ReferralsState = {
     referral: null,
@@ -21,7 +22,8 @@ const initialState: ReferralsState = {
     referralId: null,
     hasWireless: false,
     referralLines: 0,
-    filtered: null
+    filtered: null,
+    comment: null
 }
 
 const referralsSlide = createSlice({
@@ -58,6 +60,9 @@ const referralsSlide = createSlice({
             { payload }: PayloadAction<ReferralsFilterType | null>
         ) => {
             state.filtered = payload
+        },
+        setComment: (state, { payload }: PayloadAction<string | null>) => {
+            state.comment = payload
         }
     }
 })
@@ -71,7 +76,8 @@ export const {
     setAllReferrals,
     setHasWireless,
     setReferrralLines,
-    setFiltered
+    setFiltered,
+    setComment
 } = referralsSlide.actions
 
 export default referralsSlide.reducer

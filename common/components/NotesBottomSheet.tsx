@@ -2,123 +2,131 @@ import { Button, Keyboard } from 'react-native'
 
 import BottomSheet, {
     BottomSheetBackdrop,
+    BottomSheetModal,
     BottomSheetTextInput
 } from '@gorhom/bottom-sheet'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { forwardRef, useCallback, useMemo, useState } from 'react'
 
 import { SIZES } from '@/constants/Sizes'
 import useThemeColor from '../hooks/useThemeColor'
 import Text from './Text'
 import View from './View'
+import useAppSelector from '../hooks/useAppSelector'
+import useAppDispatch from '../hooks/useAppDispatch'
+import { setComment } from '@/features/referrals/referralsSlide'
 
 type Props = {
-    isVisible: boolean
-    comment: string
     onClose: () => void
     onUpdate: (newComment: string) => void
 }
-const NotesBottomSheet = ({ isVisible, comment, onClose, onUpdate }: Props) => {
-    const bottomSheetRef = useRef<BottomSheet>(null)
-    const backgroundColor = useThemeColor('primary')
-    const warningColor = useThemeColor('warning')
-    const ascent = useThemeColor('accent')
-    const snapPoints = useMemo(() => ['50%'], [])
-    const [newComment, setNewComment] = useState(comment)
+const NotesBottomSheet = forwardRef<BottomSheetModal, Props>(
+    ({ onClose, onUpdate }: Props, ref: any) => {
+        const dispatch = useAppDispatch()
+        const backgroundColor = useThemeColor('primary')
+        const warningColor = useThemeColor('warning')
+        const ascent = useThemeColor('accent')
+        const snapPoints = useMemo(() => ['40%', '60%'], [])
+        const comment = useAppSelector((s) => s.referrals.comment)
 
-    const renderBackdrop = useCallback(
-        (props: any) => (
-            <BottomSheetBackdrop
-                {...props}
-                disappearsOnIndex={-1}
-                appearsOnIndex={0}
-            />
-        ),
-        []
-    )
-
-    const handleUpdate = () => {
-        onUpdate(newComment)
-        onClose()
-        Keyboard.dismiss()
-    }
-
-    useEffect(() => {
-        if (isVisible) {
-            bottomSheetRef.current?.snapToIndex(0)
-        } else {
-            bottomSheetRef.current?.close()
-        }
-    }, [isVisible])
-    return (
-        <BottomSheet
-            backgroundStyle={{
-                backgroundColor: backgroundColor
-            }}
-            index={-1}
-            ref={bottomSheetRef}
-            snapPoints={snapPoints}
-            backdropComponent={renderBackdrop}
-            overDragResistanceFactor={5}
-            handleIndicatorStyle={{ backgroundColor: ascent }}
-            handleStyle={{ backgroundColor }}
-            onClose={() => {
-                Keyboard.dismiss()
-                onClose()
-            }}
-        >
-            <View
-                style={{
-                    padding: SIZES.base,
-                    marginTop: 20
-                }}
-            >
-                <Text fontFamily="QSBold">Notes or Comments</Text>
-                <BottomSheetTextInput
-                    style={{
-                        marginTop: 10,
-                        marginBottom: 10,
-                        borderRadius: 10,
-                        minHeight: 70,
-                        fontSize: 16,
-                        lineHeight: 20,
-                        padding: SIZES.base,
-                        backgroundColor: 'rgba(151, 151, 151, 0.25)'
-                    }}
-                    placeholder="Comments or Notes about this referral"
-                    value={newComment}
-                    multiline
-                    autoFocus
-                    maxLength={160}
-                    onChangeText={setNewComment}
-                    //placeholderTextColor={theme.TEXT_COLOR + 90}
+        const renderBackdrop = useCallback(
+            (props: any) => (
+                <BottomSheetBackdrop
+                    {...props}
+                    disappearsOnIndex={-1}
+                    appearsOnIndex={0}
                 />
+            ),
+            []
+        )
+
+        const handleChange = useCallback(
+            (text: string) => {
+                dispatch(setComment(text))
+                //Keyboard.dismiss()
+                //onClose()
+            },
+            [comment]
+        )
+
+        // useEffect(() => {
+        //     if (isVisible) {
+        //         bottomSheetRef.current?.snapToIndex(0)
+        //     } else {
+        //         bottomSheetRef.current?.close()
+        //     }
+        // }, [isVisible])
+        return (
+            <BottomSheetModal
+                backgroundStyle={{
+                    backgroundColor: backgroundColor
+                }}
+                index={0}
+                topInset={SIZES.statusBarHeight + SIZES.padding + 80}
+                ref={ref}
+                snapPoints={snapPoints}
+                backdropComponent={renderBackdrop}
+                overDragResistanceFactor={5}
+                handleIndicatorStyle={{ backgroundColor: ascent }}
+                handleStyle={{ backgroundColor }}
+                // onClose={() => {
+                //     Keyboard.dismiss()
+                //     onClose()
+                // }}
+            >
                 <View
                     style={{
-                        width: '60%',
-                        alignSelf: 'center',
-                        flexDirection: 'row',
-                        justifyContent: 'space-around'
+                        padding: SIZES.base,
+                        marginTop: 20
                     }}
                 >
-                    <Button
-                        color={warningColor}
-                        title={'Cancel'}
-                        onPress={() => {
-                            Keyboard.dismiss()
-                            onClose()
+                    <Text fontFamily="QSBold">Notes or Comments</Text>
+                    <BottomSheetTextInput
+                        style={{
+                            marginTop: 10,
+                            marginBottom: 10,
+                            borderRadius: 10,
+                            minHeight: 70,
+                            fontSize: 16,
+                            lineHeight: 20,
+                            padding: SIZES.base,
+                            backgroundColor: 'rgba(151, 151, 151, 0.25)'
                         }}
+                        placeholder="Comments or Notes about this referral"
+                        value={comment || ''}
+                        multiline
+                        autoFocus
+                        maxLength={160}
+                        onChangeText={handleChange}
                     />
-                    <Button
-                        title={'Done'}
-                        onPress={() => {
-                            Keyboard.dismiss()
-                            handleUpdate()
+
+                    <View
+                        style={{
+                            width: '60%',
+                            alignSelf: 'center',
+                            flexDirection: 'row',
+                            justifyContent: 'space-around'
                         }}
-                    />
+                    >
+                        <Button
+                            color={warningColor}
+                            title={'Cancel'}
+                            onPress={() => {
+                                Keyboard.dismiss()
+                                onClose()
+                            }}
+                        />
+                        <Button
+                            title={'Done'}
+                            onPress={() => {
+                                Keyboard.dismiss()
+                                onUpdate(comment!)
+                            }}
+                        />
+                    </View>
                 </View>
-            </View>
-        </BottomSheet>
-    )
-}
+            </BottomSheetModal>
+        )
+    }
+)
 
 export default NotesBottomSheet

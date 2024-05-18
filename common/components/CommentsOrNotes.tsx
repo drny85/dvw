@@ -11,10 +11,11 @@ import Row from './Row'
 
 type Props = {
     comment: string
-    setVisible: (visible: boolean) => void
+    onOpen: () => void
+    // setVisible: (visible: boolean) => void
 }
 
-const CommentsOrNotes = ({ comment, setVisible }: Props) => {
+const CommentsOrNotes = ({ comment, onOpen }: Props) => {
     const backgroundColor = useThemeColor('background')
     const textColor = useThemeColor('text')
 
@@ -22,23 +23,14 @@ const CommentsOrNotes = ({ comment, setVisible }: Props) => {
         <View style={[Styles.boxShadow, styles.container, { backgroundColor }]}>
             <Row style={{ justifyContent: 'space-between' }}>
                 <Text>Comments Or Notes</Text>
-                <TouchableOpacity
-                    onPress={() => {
-                        setVisible(true)
-                    }}
-                >
+                <TouchableOpacity onPress={onOpen}>
                     <Row style={{ gap: SIZES.base }}>
                         <Text style={{ marginLeft: SIZES.base }}>Edit</Text>
                         <FontAwesome name="edit" size={22} color={textColor} />
                     </Row>
                 </TouchableOpacity>
             </Row>
-            <TouchableOpacity
-                style={styles.comment}
-                onPress={() => {
-                    setVisible(true)
-                }}
-            >
+            <TouchableOpacity style={styles.comment} onPress={onOpen}>
                 <Text>{comment || ''}</Text>
             </TouchableOpacity>
         </View>

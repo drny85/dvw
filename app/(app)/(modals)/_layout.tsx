@@ -24,7 +24,10 @@ const ModalLaout = () => {
                     },
 
                     headerLeft: () => (
-                        <TouchableOpacity onPress={router.back}>
+                        <TouchableOpacity
+                            style={{ padding: 8 }}
+                            onPress={router.back}
+                        >
                             <FontAwesome
                                 name="chevron-left"
                                 size={22}

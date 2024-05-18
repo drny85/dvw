@@ -384,7 +384,7 @@ exports.sendMeATotificationWhenSomeoneLogin = onCall(async (request) => {
         const { name } = user
         if (!name) return
 
-        const sent = await fetch('https://exp.host/--/api/v2/push/send', {
+        await fetch('https://exp.host/--/api/v2/push/send', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -397,7 +397,6 @@ exports.sendMeATotificationWhenSomeoneLogin = onCall(async (request) => {
                 body: `${name} just signed in`
             })
         })
-        console.log('SENT', sent.ok, token)
     } catch (error) {
         console.log(error)
     }
