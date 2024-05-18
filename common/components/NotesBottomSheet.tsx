@@ -24,6 +24,7 @@ const NotesBottomSheet = ({ isVisible, comment, onClose, onUpdate }: Props) => {
     const ascent = useThemeColor('accent')
     const snapPoints = useMemo(() => ['50%'], [])
     const [newComment, setNewComment] = useState(comment)
+    console.log('NEW C', newComment)
 
     const renderBackdrop = useCallback(
         (props: any) => (

@@ -1,13 +1,13 @@
+import { SIZES } from '@/constants/Sizes'
+import React from 'react'
 import { StyleSheet, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
+import useThemeColor from '../hooks/useThemeColor'
 import Text from './Text'
 import View from './View'
-import { SIZES } from '@/constants/Sizes'
-import useThemeColor from '../hooks/useThemeColor'
 
-import Row from './Row'
-import { FontAwesome } from '@expo/vector-icons'
 import Styles from '@/constants/Styles'
+import { FontAwesome } from '@expo/vector-icons'
+import Row from './Row'
 
 type Props = {
     comment: string
@@ -17,6 +17,7 @@ type Props = {
 const CommentsOrNotes = ({ comment, setVisible }: Props) => {
     const backgroundColor = useThemeColor('background')
     const textColor = useThemeColor('text')
+
     return (
         <View style={[Styles.boxShadow, styles.container, { backgroundColor }]}>
             <Row style={{ justifyContent: 'space-between' }}>
@@ -32,9 +33,14 @@ const CommentsOrNotes = ({ comment, setVisible }: Props) => {
                     </Row>
                 </TouchableOpacity>
             </Row>
-            <View style={styles.comment}>
+            <TouchableOpacity
+                style={styles.comment}
+                onPress={() => {
+                    setVisible(true)
+                }}
+            >
                 <Text>{comment || ''}</Text>
-            </View>
+            </TouchableOpacity>
         </View>
     )
 }

@@ -6,7 +6,6 @@ import Row from '@/common/components/Row'
 import Scheduler from '@/common/components/Scheduler'
 import Screen from '@/common/components/Screen'
 import Text from '@/common/components/Text'
-import TextInput from '@/common/components/TextInput'
 import View from '@/common/components/View'
 import { useReferral } from '@/common/hooks/referrals/useReferral'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
@@ -26,11 +25,10 @@ import { sendIntroductionEmail, sendWirelessClosedTemplate } from '@/firebase'
 
 import { Referral } from '@/types'
 import { Entypo, FontAwesome } from '@expo/vector-icons'
-import BottomSheet from '@gorhom/bottom-sheet'
 import * as Linking from 'expo-linking'
 import { router, useLocalSearchParams } from 'expo-router'
 import moment from 'moment'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import {
     ActivityIndicator,
     Alert,
