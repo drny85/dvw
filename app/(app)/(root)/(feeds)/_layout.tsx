@@ -35,6 +35,9 @@ const _layout = () => {
                         return (
                             <TouchableHighlight
                                 activeOpacity={0.3}
+                                onLongPress={() =>
+                                    router.push('/(app)/(nova)/directory')
+                                }
                                 underlayColor={'transparent'}
                                 onPress={() => router.push('/spark')}
                             >

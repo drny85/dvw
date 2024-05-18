@@ -1,5 +1,7 @@
+import CommentsOrNotes from '@/common/components/CommentsOrNotes'
 import Header from '@/common/components/Header'
 import Loading from '@/common/components/Loading'
+import NotesBottomSheet from '@/common/components/NotesBottomSheet'
 import Row from '@/common/components/Row'
 import Scheduler from '@/common/components/Scheduler'
 import Screen from '@/common/components/Screen'
@@ -24,32 +26,31 @@ import { sendIntroductionEmail, sendWirelessClosedTemplate } from '@/firebase'
 
 import { Referral } from '@/types'
 import { Entypo, FontAwesome } from '@expo/vector-icons'
+import BottomSheet from '@gorhom/bottom-sheet'
 import * as Linking from 'expo-linking'
 import { router, useLocalSearchParams } from 'expo-router'
 import moment from 'moment'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import {
     ActivityIndicator,
     Alert,
+    KeyboardAvoidingView,
+    ScrollView,
     StyleSheet,
     TouchableOpacity
 } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 const ReferralDetails = () => {
     const { referralId: id } = useLocalSearchParams<{ referralId: string }>()
+    const [visible, setVisible] = useState(false)
     const [sendingWirelessEmail, setSendingWirelessEmail] = useState(false)
     const dispatch = useAppDispatch()
     const { loading, referral } = useReferral(id!)
     const [sendingEmail, setSendingEmail] = useState(false)
-
-    const [editComment, setEditComment] = useState(false)
-    const [newComment, setNewComment] = useState('')
     const bgColor = useThemeColor('background')
     const bgDanger = useThemeColor('error')
     const textColor = useThemeColor('text')
     const deleteColor = useThemeColor('warning')
-    const placeholderColor = useThemeColor('placeholder')
 
     const sendIntroEmail = useCallback(async () => {
         try {
@@ -68,8 +69,9 @@ const ReferralDetails = () => {
         }
     }, [id])
 
-    const updateComment = async () => {
+    const updateComment = async (newComment: string) => {
         try {
+            console.log(newComment)
             if (referral?.comment === newComment) return
 
             const newReferral: Referral = {
@@ -224,338 +226,310 @@ const ReferralDetails = () => {
                     </Row>
                 }
             />
-            <KeyboardAwareScrollView
-                extraHeight={60}
-                keyboardDismissMode="on-drag"
-                contentContainerStyle={{
-                    padding: SIZES.padding,
-                    gap: SIZES.padding
-                }}
+            <KeyboardAvoidingView
+                keyboardVerticalOffset={60}
+                style={{ flex: 1 }}
+                behavior="padding"
             >
-                <Scheduler referral={referral} />
-                <View
-                    style={[
-                        Styles.boxShadow,
-                        styles.container,
-                        { backgroundColor: bgColor }
-                    ]}
+                <ScrollView
+                    style={{ flex: 1 }}
+                    contentContainerStyle={{
+                        padding: SIZES.padding,
+                        gap: SIZES.padding,
+                        marginBottom: 20
+                    }}
                 >
-                    <Text center fontSize={22} fontFamily="SFBold">
-                        {referral?.name}
-                    </Text>
+                    <Scheduler referral={referral} />
+                    <View
+                        style={[
+                            Styles.boxShadow,
+                            styles.container,
+                            { backgroundColor: bgColor }
+                        ]}
+                    >
+                        <Text center fontSize={22} fontFamily="SFBold">
+                            {referral?.name}
+                        </Text>
 
-                    {!referral.propertyName.includes(referral.address) && (
-                        <Text color="grey" fontSize={16} fontFamily="QSBold">
-                            {referral.propertyName}
-                        </Text>
-                    )}
-
-                    <View style={{ gap: SIZES.base, marginTop: SIZES.base }}>
-                        <Text fontFamily="QSLight">
-                            {referral?.address &&
-                                referral?.address.slice(
-                                    0,
-                                    referral.address.length - 5
-                                )}
-                        </Text>
-                        <Text fontFamily="QSLight">
-                            Apt, Unit / FLR: {referral?.apt}
-                        </Text>
-                        <Row style={{ justifyContent: 'space-between' }}>
-                            <Text fontFamily="QSLight">
-                                Phone: {referral?.phone}
+                        {!referral.propertyName.includes(referral.address) && (
+                            <Text
+                                color="grey"
+                                fontSize={16}
+                                fontFamily="QSBold"
+                            >
+                                {referral.propertyName}
                             </Text>
-                        </Row>
-                        {referral?.email && (
+                        )}
+
+                        <View
+                            style={{ gap: SIZES.base, marginTop: SIZES.base }}
+                        >
+                            <Text fontFamily="QSLight">
+                                {referral?.address &&
+                                    referral?.address.slice(
+                                        0,
+                                        referral.address.length - 5
+                                    )}
+                            </Text>
+                            <Text fontFamily="QSLight">
+                                Apt, Unit / FLR: {referral?.apt}
+                            </Text>
                             <Row style={{ justifyContent: 'space-between' }}>
                                 <Text fontFamily="QSLight">
-                                    Email: {referral?.email}
+                                    Phone: {referral?.phone}
                                 </Text>
-                                {sendingEmail && (
-                                    <ActivityIndicator
-                                        size="small"
-                                        color={textColor}
-                                    />
-                                )}
                             </Row>
-                        )}
-                        {referral?.followUpOn && (
-                            <Text fontFamily="QSLight">
-                                Follow Up:{' '}
-                                {moment(referral?.followUpOn).format('lll')}
-                            </Text>
-                        )}
-                        {referral?.email_sent && (
-                            <Text fontFamily="QSLight">
-                                Email Sent On:{' '}
-                                {moment(referral?.email_sent_on).format('lll')}
-                            </Text>
-                        )}
-                    </View>
+                            {referral?.email && (
+                                <Row
+                                    style={{ justifyContent: 'space-between' }}
+                                >
+                                    <Text fontFamily="QSLight">
+                                        Email: {referral?.email}
+                                    </Text>
+                                    {sendingEmail && (
+                                        <ActivityIndicator
+                                            size="small"
+                                            color={textColor}
+                                        />
+                                    )}
+                                </Row>
+                            )}
+                            {referral?.followUpOn && (
+                                <Text fontFamily="QSLight">
+                                    Follow Up:{' '}
+                                    {moment(referral?.followUpOn).format('lll')}
+                                </Text>
+                            )}
+                            {referral?.email_sent && (
+                                <Text fontFamily="QSLight">
+                                    Email Sent On:{' '}
+                                    {moment(referral?.email_sent_on).format(
+                                        'lll'
+                                    )}
+                                </Text>
+                            )}
+                        </View>
 
-                    <Row
-                        style={{
-                            justifyContent: 'center',
-                            gap: SIZES.padding * 3,
-                            marginTop: SIZES.base
-                        }}
-                    >
-                        {!referral.followUpOn && (
-                            <TouchableOpacity
-                                onPress={() => {
-                                    dispatch(setShowScheduler(true))
-                                }}
-                            >
+                        <Row
+                            style={{
+                                justifyContent: 'center',
+                                gap: SIZES.padding * 3,
+                                marginTop: SIZES.base
+                            }}
+                        >
+                            {!referral.followUpOn && (
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        dispatch(setShowScheduler(true))
+                                    }}
+                                >
+                                    <FontAwesome
+                                        name="calendar-o"
+                                        color={textColor}
+                                        size={24}
+                                    />
+                                </TouchableOpacity>
+                            )}
+                            {!referral.emailInstroductionSent &&
+                                referral.status.id !== 'not_sold' &&
+                                referral.status.id !== 'closed' && (
+                                    <TouchableOpacity
+                                        disabled={sendingEmail}
+                                        onPress={() => {
+                                            Alert.alert(
+                                                'Send Email',
+                                                'This will send an email introduction to the customer \n Would you like to send it?',
+                                                [
+                                                    {
+                                                        text: 'Cancel',
+                                                        style: 'cancel'
+                                                    },
+                                                    {
+                                                        text: 'Send',
+                                                        onPress: sendIntroEmail,
+                                                        style: 'destructive'
+                                                    }
+                                                ]
+                                            )
+                                        }}
+                                    >
+                                        <FontAwesome
+                                            name="envelope"
+                                            size={24}
+                                            color={textColor}
+                                        />
+                                    </TouchableOpacity>
+                                )}
+                            <TouchableOpacity onPress={makeCall}>
                                 <FontAwesome
-                                    name="calendar-o"
-                                    color={textColor}
+                                    name="phone"
                                     size={24}
+                                    color={textColor}
                                 />
                             </TouchableOpacity>
-                        )}
-                        {!referral.emailInstroductionSent &&
-                            referral.status.id !== 'not_sold' &&
-                            referral.status.id !== 'closed' && (
+                            {sendingWirelessEmail ? (
+                                <ActivityIndicator size={'small'} />
+                            ) : (
                                 <TouchableOpacity
-                                    disabled={sendingEmail}
                                     onPress={() => {
                                         Alert.alert(
-                                            'Send Email',
-                                            'This will send an email introduction to the customer \n Would you like to send it?',
+                                            'Send Wireless Template',
+                                            `Would you like to send helpful wireless information to ${referral.name}?`,
                                             [
                                                 {
                                                     text: 'Cancel',
                                                     style: 'cancel'
                                                 },
                                                 {
-                                                    text: 'Send',
-                                                    onPress: sendIntroEmail,
-                                                    style: 'destructive'
+                                                    text: 'Yes, Send it',
+                                                    onPress: sendWirelessT
                                                 }
                                             ]
                                         )
                                     }}
                                 >
-                                    <FontAwesome
-                                        name="envelope"
-                                        size={24}
-                                        color={textColor}
-                                    />
+                                    <Row style={{ gap: 4 }}>
+                                        <Entypo
+                                            name="email"
+                                            size={24}
+                                            color={textColor}
+                                        />
+                                        <FontAwesome
+                                            name="mobile"
+                                            size={26}
+                                            color={textColor}
+                                        />
+                                    </Row>
                                 </TouchableOpacity>
                             )}
-                        <TouchableOpacity onPress={makeCall}>
-                            <FontAwesome
-                                name="phone"
-                                size={24}
-                                color={textColor}
-                            />
-                        </TouchableOpacity>
-                        {sendingWirelessEmail ? (
-                            <ActivityIndicator size={'small'} />
-                        ) : (
-                            <TouchableOpacity
-                                onPress={() => {
-                                    Alert.alert(
-                                        'Send Wireless Template',
-                                        `Would you like to send helpful wireless information to ${referral.name}?`,
-                                        [
-                                            { text: 'Cancel', style: 'cancel' },
-                                            {
-                                                text: 'Yes, Send it',
-                                                onPress: sendWirelessT
-                                            }
-                                        ]
-                                    )
-                                }}
-                            >
-                                <Row style={{ gap: 4 }}>
-                                    <Entypo
-                                        name="email"
-                                        size={24}
-                                        color={textColor}
-                                    />
-                                    <FontAwesome
-                                        name="mobile"
-                                        size={26}
-                                        color={textColor}
-                                    />
-                                </Row>
-                            </TouchableOpacity>
-                        )}
-                    </Row>
-                </View>
-                <View
-                    style={[
-                        Styles.boxShadow,
-                        styles.container,
-                        {
-                            backgroundColor:
-                                referral.status.name === 'Not Sold'
-                                    ? bgDanger
-                                    : bgColor
-                        }
-                    ]}
-                >
-                    <Row style={{ justifyContent: 'space-between' }}>
-                        <Text>
-                            Status:{' '}
-                            <Text fontFamily="QSLight">
-                                {referral.status.name}
+                        </Row>
+                    </View>
+                    <View
+                        style={[
+                            Styles.boxShadow,
+                            styles.container,
+                            {
+                                backgroundColor:
+                                    referral.status.name === 'Not Sold'
+                                        ? bgDanger
+                                        : bgColor
+                            }
+                        ]}
+                    >
+                        <Row style={{ justifyContent: 'space-between' }}>
+                            <Text>
+                                Status:{' '}
+                                <Text fontFamily="QSLight">
+                                    {referral.status.name}
+                                </Text>
                             </Text>
-                        </Text>
-                    </Row>
-                    <Row style={{ justifyContent: 'space-between' }}>
-                        <Text>
-                            Move In:{' '}
-                            <Text fontFamily="QSLight">
-                                {moment(referral?.moveIn).format(
-                                    'ddd, MMM Do, YYYY'
-                                )}
+                        </Row>
+                        <Row style={{ justifyContent: 'space-between' }}>
+                            <Text>
+                                Move In:{' '}
+                                <Text fontFamily="QSLight">
+                                    {moment(referral?.moveIn).format(
+                                        'ddd, MMM Do, YYYY'
+                                    )}
+                                </Text>
                             </Text>
-                        </Text>
-                        <Text fontSize={13} fontFamily="QSLight">
-                            {moment(referral?.moveIn).fromNow()}
-                        </Text>
-                    </Row>
-                    {/* <Text>
+                            <Text fontSize={13} fontFamily="QSLight">
+                                {moment(referral?.moveIn).fromNow()}
+                            </Text>
+                        </Row>
+                        {/* <Text>
                         Status:{' '}
                         <Text fontFamily="QSLight">
                             {referral?.status.name}
                         </Text>
                     </Text> */}
-                    <Text>
-                        Is Verizon Wireless :{' '}
-                        <Text fontFamily="QSLight">
-                            {referral?.isVerizonWirelessCustomer ? 'YES' : 'NO'}
-                        </Text>
-                    </Text>
-                    {referral?.type === 'acp' && (
                         <Text>
-                            ACP Customer :{' '}
+                            Is Verizon Wireless :{' '}
                             <Text fontFamily="QSLight">
-                                {referral?.type === 'acp' ? 'YES' : 'NO'}
+                                {referral?.isVerizonWirelessCustomer
+                                    ? 'YES'
+                                    : 'NO'}
                             </Text>
                         </Text>
-                    )}
-
-                    {referral?.referee && (
-                        <Text>
-                            Referred By:{' '}
-                            <Text capitalize fontFamily="QSLight">
-                                {referral?.referee?.name}
-                            </Text>
-                        </Text>
-                    )}
-                    {referral?.applicationId && (
-                        <Text>
-                            ACP:{' '}
-                            <Text fontFamily="QSLight">
-                                {referral?.applicationId}
-                            </Text>
-                        </Text>
-                    )}
-                </View>
-                {referral?.status.id === 'closed' && (
-                    <View
-                        style={[
-                            Styles.boxShadow,
-                            styles.container,
-                            { backgroundColor: bgColor, gap: SIZES.base }
-                        ]}
-                    >
-                        <Text fontFamily="SFBold">
-                            MON: <Text>{referral.mon}</Text>
-                        </Text>
-                        <Text fontFamily="SFBold">
-                            Order Date:{' '}
+                        {referral?.type === 'acp' && (
                             <Text>
-                                {moment(referral.order_date).format('LL')}
-                            </Text>
-                        </Text>
-                        <Text fontFamily="SFBold">
-                            Due Date:{' '}
-                            <Text>
-                                {moment(referral.due_date).format('LL')}
-                            </Text>
-                        </Text>
-                        <Text fontFamily="SFBold">
-                            Services:{' '}
-                            <Text>
-                                {referral.package?.internet &&
-                                    `${referral.package.internet.name}`}{' '}
-                                {referral.package?.tv &&
-                                    `, ${referral.package.tv.name}`}{' '}
-                                {referral.package?.home &&
-                                    `, ${referral.package.home.name}`}
-                                {referral.package?.wireless &&
-                                    `, ${referral.package.wireless.name}`}
-                            </Text>
-                        </Text>
-                    </View>
-                )}
-
-                <View
-                    style={[
-                        Styles.boxShadow,
-                        styles.container,
-                        { backgroundColor: bgColor }
-                    ]}
-                >
-                    <Row style={{ justifyContent: 'space-between' }}>
-                        <Text fontFamily="SFBold">Notes or Comments</Text>
-                        <TouchableOpacity
-                            onPress={() => {
-                                if (referral?.comment) {
-                                    setNewComment(referral?.comment)
-                                }
-                                setEditComment((prev) => {
-                                    if (prev) {
-                                        updateComment()
-                                    }
-                                    return !prev
-                                })
-                            }}
-                        >
-                            <Row>
-                                <Text fontFamily="QSBold">
-                                    {editComment ? 'Save' : 'Edit'}
+                                ACP Customer :{' '}
+                                <Text fontFamily="QSLight">
+                                    {referral?.type === 'acp' ? 'YES' : 'NO'}
                                 </Text>
-
-                                <FontAwesome
-                                    style={{ marginLeft: SIZES.base }}
-                                    name={editComment ? 'save' : 'edit'}
-                                    size={20}
-                                    color={textColor}
-                                />
-                            </Row>
-                        </TouchableOpacity>
-                    </Row>
-                    {!editComment ? (
-                        <TouchableOpacity
-                            onLongPress={() => setEditComment(true)}
-                            style={{
-                                borderWidth: 0.5,
-                                borderRadius: SIZES.radius,
-                                borderColor: placeholderColor,
-                                padding: SIZES.base
-                            }}
-                        >
-                            <Text fontFamily="QSLight" fontSize={18}>
-                                {referral?.comment}
                             </Text>
-                        </TouchableOpacity>
-                    ) : (
-                        <TextInput
-                            isMultiline
-                            placeholder="Type any note or comment here.."
-                            autoCapitalize="none"
-                            value={newComment}
-                            onChangeText={setNewComment}
-                            style={{ fontFamily: 'QSLight' }}
-                        />
+                        )}
+
+                        {referral?.referee && (
+                            <Text>
+                                Referred By:{' '}
+                                <Text capitalize fontFamily="QSLight">
+                                    {referral?.referee?.name}
+                                </Text>
+                            </Text>
+                        )}
+                        {referral?.applicationId && (
+                            <Text>
+                                ACP:{' '}
+                                <Text fontFamily="QSLight">
+                                    {referral?.applicationId}
+                                </Text>
+                            </Text>
+                        )}
+                    </View>
+                    {referral?.status.id === 'closed' && (
+                        <View
+                            style={[
+                                Styles.boxShadow,
+                                styles.container,
+                                { backgroundColor: bgColor, gap: SIZES.base }
+                            ]}
+                        >
+                            <Text fontFamily="SFBold">
+                                MON: <Text>{referral.mon}</Text>
+                            </Text>
+                            <Text fontFamily="SFBold">
+                                Order Date:{' '}
+                                <Text>
+                                    {moment(referral.order_date).format('LL')}
+                                </Text>
+                            </Text>
+                            <Text fontFamily="SFBold">
+                                Due Date:{' '}
+                                <Text>
+                                    {moment(referral.due_date).format('LL')}
+                                </Text>
+                            </Text>
+                            <Text fontFamily="SFBold">
+                                Services:{' '}
+                                <Text>
+                                    {referral.package?.internet &&
+                                        `${referral.package.internet.name}`}{' '}
+                                    {referral.package?.tv &&
+                                        `, ${referral.package.tv.name}`}{' '}
+                                    {referral.package?.home &&
+                                        `, ${referral.package.home.name}`}
+                                    {referral.package?.wireless &&
+                                        `, ${referral.package.wireless.name}`}
+                                </Text>
+                            </Text>
+                        </View>
                     )}
-                </View>
-            </KeyboardAwareScrollView>
+
+                    <CommentsOrNotes
+                        comment={referral.comment || ''}
+                        setVisible={setVisible}
+                    />
+                </ScrollView>
+                <NotesBottomSheet
+                    isVisible={visible}
+                    comment={referral.comment || ''}
+                    onClose={() => {
+                        setVisible(false)
+                    }}
+                    onUpdate={updateComment}
+                />
+            </KeyboardAvoidingView>
         </Screen>
     )
 }

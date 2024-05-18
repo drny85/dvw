@@ -33,8 +33,10 @@ import useAppSelector from '@/common/hooks/useAppSelector'
 import { isFullName } from '@/utils/isFullName'
 import moment from 'moment'
 
+import CommentsOrNotes from '@/common/components/CommentsOrNotes'
 import DataPickerModal from '@/common/components/DataPickerModal'
 import Loading from '@/common/components/Loading'
+import NotesBottomSheet from '@/common/components/NotesBottomSheet'
 import { useHelpers } from '@/common/hooks/referrals/useHelpers'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
 import {
@@ -50,8 +52,8 @@ import {
 import { setSaleQuoteReferral } from '@/features/sales/salesSlide'
 import { formatPhone } from '@/utils/formatPhone'
 import { isEmailValid } from '@/utils/isEmailValid'
-import { FlatList } from 'react-native-gesture-handler'
 import { Dispatch } from '@reduxjs/toolkit'
+import { FlatList } from 'react-native-gesture-handler'
 import Animated, {
     SlideInLeft,
     SlideInRight,
@@ -63,7 +65,7 @@ const GOOGLE_KEY = process.env.EXPO_PUBLIC_GOOGLE_KEY as string
 
 const ReferralsScreen = () => {
     const dispatch = useAppDispatch()
-
+    const [showComment, setShowComment] = React.useState(false)
     const user = useAppSelector((s) => s.auth.user)
     const { referral: editingReferral, editing } = useAppSelector(
         (s) => s.referrals
@@ -74,6 +76,7 @@ const ReferralsScreen = () => {
     const scrollViewRef = useRef<KeyboardAwareScrollView>(null)
     const [index, setIndex] = React.useState(0)
     const monRef = useRef<Input>(null)
+
     const googleRef = useRef<GooglePlacesAutocompleteRef>(null)
     const [isReferral, setIsReferral] = React.useState(true)
     const [showMoveIn, setShowMoveIn] = React.useState(false)
@@ -153,6 +156,18 @@ const ReferralsScreen = () => {
                 }
                 return prev - 1
             })
+        }
+    }
+    const updateComment = async (newComment: string) => {
+        try {
+            const newReferral: Referral = {
+                ...referral!,
+                comment: newComment
+            }
+
+            dispatch(updateReferral(newReferral))
+        } catch (error) {
+            console.log(error)
         }
     }
 
@@ -414,7 +429,8 @@ const ReferralsScreen = () => {
                         isVZW,
                         setIsVZW,
                         dispatch,
-                        referralLines
+                        referralLines,
+                        setShowComment
                     )}
             </KeyboardAwareScrollView>
             <View style={{ padding: SIZES.padding }}>
@@ -633,13 +649,17 @@ const ReferralsScreen = () => {
                         dispatch(setHasWireless(false))
                 }}
             />
-            {/* <Modal
-                presentationStyle="overFullScreen"
-                visible={showCongratulations}
-                animationType="slide"
-            >
-                <Congratulations setShow={setShowCongratulations} />
-            </Modal> */}
+
+            <NotesBottomSheet
+                isVisible={showComment}
+                comment={referral.comment || ''}
+                onClose={() => {
+                    setShowComment(false)
+                }}
+                onUpdate={(newComment) => {
+                    setReferral({ ...referral!, comment: newComment })
+                }}
+            />
         </Screen>
     )
 }
@@ -690,7 +710,8 @@ function SectionThree(
     isVZW: boolean,
     setIsVZW: React.Dispatch<React.SetStateAction<boolean>>,
     dispatch: Dispatch,
-    referralLines: number
+    referralLines: number,
+    setShowComment: React.Dispatch<React.SetStateAction<boolean>>
 ): React.ReactNode {
     return (
         <Animated.View
@@ -1243,25 +1264,11 @@ function SectionThree(
                     />
                 </View>
             )}
-            <View style={{ marginVertical: SIZES.base * 1.5 }}>
-                <Text
-                    fontFamily="SFBold"
-                    style={{
-                        margin: SIZES.base
-                    }}
-                >
-                    Comment or Note
-                </Text>
-                <TextInput
-                    placeholder="Comment or Note"
-                    isMultiline
-                    value={referral.comment!}
-                    onChangeText={(text) =>
-                        setReferral({
-                            ...referral,
-                            comment: text
-                        })
-                    }
+
+            <View style={{ marginTop: SIZES.padding * 1.5 }}>
+                <CommentsOrNotes
+                    comment={referral.comment || ''}
+                    setVisible={() => setShowComment(true)}
                 />
             </View>
         </Animated.View>

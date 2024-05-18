@@ -352,7 +352,16 @@ const MyPlan = () => {
             <View style={{ marginVertical: SIZES.base, zIndex: 190 }}>
                 <LineSetter
                     onRemoveLine={() => {
-                        dispatch(toogleShake(true))
+                        Alert.alert(
+                            'Invalid Action',
+                            'Please select the line you want to remove individually',
+                            [
+                                {
+                                    text: 'OK',
+                                    onPress: () => dispatch(toogleShake(true))
+                                }
+                            ]
+                        )
                     }}
                     onAddLine={onAddLine}
                 />

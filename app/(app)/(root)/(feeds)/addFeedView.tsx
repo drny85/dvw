@@ -352,7 +352,9 @@ const AddFeedModal = () => {
                                             />
                                         </View>
                                         <View
-                                            style={{ marginTop: SIZES.padding }}
+                                            style={{
+                                                marginTop: SIZES.padding * 2
+                                            }}
                                         >
                                             <Button
                                                 disabled={
@@ -455,15 +457,17 @@ const AddFeedModal = () => {
                                 name="title"
                             />
                         </View>
-                        <Button
-                            disabled={isLoading || isSubmitting || !isValid}
-                            title={'Review Post'}
-                            onPress={() => {
-                                if (isValid) {
-                                    setReviewFeed(true)
-                                }
-                            }}
-                        />
+                        <View style={{ marginTop: SIZES.padding }}>
+                            <Button
+                                disabled={isLoading || isSubmitting || !isValid}
+                                title={'Review Post'}
+                                onPress={() => {
+                                    if (isValid) {
+                                        setReviewFeed(true)
+                                    }
+                                }}
+                            />
+                        </View>
                     </MotiView>
                 </>
             )}
