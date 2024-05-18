@@ -54,7 +54,8 @@ const SaveQuote = () => {
         expressAutoPay,
         expressFirstResponder,
         expressHasFios,
-        expressInternet
+        expressInternet,
+        isWelcome
     } = useAppSelector((s) => s.wireless)
 
     const validate = () => {
@@ -108,7 +109,8 @@ const SaveQuote = () => {
             isFirstResponder: expressFirstResponder,
             hasFios: expressHasFios,
             internetPlan: expressInternet ? expressInternet : null,
-            message
+            message,
+            isWelcome
         }
         try {
             setLoading(true)

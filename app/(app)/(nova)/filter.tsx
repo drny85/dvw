@@ -44,6 +44,13 @@ const filter = () => {
                     }}
                 />
                 <Switcher
+                    value={isWelcome}
+                    title="Welcome Unlimited Offer"
+                    onValueChange={() => {
+                        dispatch(toggleIsWelcomeQualified())
+                    }}
+                />
+                <Switcher
                     value={expressFirstResponder}
                     title="First Responder"
                     onValueChange={() => {
@@ -63,13 +70,7 @@ const filter = () => {
                         dispatch(setExpressHasFios(!expressHasFios))
                     }}
                 />
-                <Switcher
-                    value={isWelcome}
-                    title="Welcome Unlimited Offer"
-                    onValueChange={() => {
-                        dispatch(toggleIsWelcomeQualified())
-                    }}
-                />
+
                 <AnimatePresence>
                     {expressHasFios && (
                         <MotiView

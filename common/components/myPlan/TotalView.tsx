@@ -1,5 +1,6 @@
 import useAppDispatch from '@/common/hooks/useAppDispatch'
 import useAppSelector from '@/common/hooks/useAppSelector'
+import { LOYALTY_EXPIRATION_DATE } from '@/constants'
 import { SIZES } from '@/constants/Sizes'
 import {
     setExpressAutoPay,
@@ -12,17 +13,15 @@ import {
 import { byodSavings } from '@/utils/byodSavings'
 import { firstResponderDiscount } from '@/utils/firstResponderDiscount'
 import { totalPerksCount } from '@/utils/perksCount'
+import { useRouter } from 'expo-router'
+import moment from 'moment'
 import { AnimatePresence, MotiView } from 'moti'
 import React from 'react'
-import { Switch, TouchableOpacity } from 'react-native'
+import { TouchableOpacity } from 'react-native'
 import Divider from '../Divider'
 import Row from '../Row'
 import Text from '../Text'
 import View from '../View'
-import { useRouter } from 'expo-router'
-import { LOYALTY_EXPIRATION_DATE } from '@/constants'
-import moment from 'moment'
-import useThemeColor from '@/common/hooks/useThemeColor'
 
 type Props = {
     showResetAll?: boolean
@@ -33,8 +32,6 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
     const lines = useAppSelector((s) => s.wireless.lines)
     const isWelcome = useAppSelector((s) => s.wireless.isWelcome)
     const dispatch = useAppDispatch()
-    const thumbColor = useThemeColor('accent')
-    const bgColor = useThemeColor('background')
 
     const {
         expressFirstResponder,
@@ -118,6 +115,7 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
         dispatch(setExpressFirstResponder(false))
         dispatch(setExpressHasFios(false))
         dispatch(setExpressInternet())
+        if (isWelcome) dispatch(toggleIsWelcomeQualified())
     }
 
     const loyaltyBonusDiscount = (): number => {

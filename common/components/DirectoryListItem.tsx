@@ -18,6 +18,7 @@ type Props = {
 const DirectoryListItem = ({ user }: Props) => {
     const background = useThemeColor('background')
     const ascent = useThemeColor('accent')
+    const color = useThemeColor('text')
 
     const makeCall = (phone: string) => {
         const number = phone.replace(/[^0-9]/g, '').trim()
@@ -123,14 +124,14 @@ const DirectoryListItem = ({ user }: Props) => {
                 >
                     {user.phone && (
                         <TouchableOpacity onPress={() => makeCall(user.phone!)}>
-                            <FontAwesome name="phone" size={22} />
+                            <FontAwesome name="phone" size={22} color={color} />
                         </TouchableOpacity>
                     )}
                     <TouchableOpacity
                         onLongPress={() => onPaste(user.email!, user.name)}
                         onPress={() => sendEmail(user.email!)}
                     >
-                        <FontAwesome name="envelope" size={22} />
+                        <FontAwesome name="envelope" size={22} color={color} />
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={() => sendMessage(user.phone!, user.name)}

@@ -29,11 +29,13 @@ const WirelessQuoteEmail: React.FC<Readonly<WirelessQuote>> = ({
     isAutoPay,
     isFirstResponder,
     lines,
-    emPhone
+    emPhone,
+    isWelcome
 }) => {
     const total = (): number =>
         lines.reduce((acc, line) => acc + line.price, 0) -
-        firstResponderDiscount(lines.length, isFirstResponder)
+        firstResponderDiscount(lines.length, isFirstResponder) -
+        welcomeOfferBonus()
     const byod = byodSavings(lines)
     const autoPayDiscount = (): number => {
         return isAutoPay ? lines.length * 10 : 0
@@ -58,6 +60,24 @@ const WirelessQuoteEmail: React.FC<Readonly<WirelessQuote>> = ({
             )
             .flat()
             .reduce((acc, perks) => acc + perks, 0)
+    }
+
+    const welcomeTotal = lines.filter(
+        (l) => l.name === 'Unlimited Welcome'
+    ).length
+
+    const welcomeOfferBonus = (): number => {
+        if (welcomeTotal === 0) return 0
+        if (!isWelcome) return 0
+        return welcomeTotal === 1
+            ? 10
+            : welcomeTotal === 2
+            ? 15
+            : welcomeTotal === 3
+            ? 20
+            : welcomeTotal === 0
+            ? 0
+            : 0
     }
 
     const loyalty = loyaltyBonusDiscount(lines, internetPlan, hasFios)
@@ -243,6 +263,19 @@ const WirelessQuoteEmail: React.FC<Readonly<WirelessQuote>> = ({
                                     <Column className="flex justify-end">
                                         <Text className="text-md">
                                             -${loyalty}
+                                        </Text>
+                                    </Column>
+                                </Row>
+                            )}
+                            {welcomeOfferBonus() > 0 && isWelcome && (
+                                <Row className="justify-between items-center px-4 py-0 w-full">
+                                    <Column className="w-['70%]">
+                                        <Text className="text-md">LGPO</Text>
+                                    </Column>
+
+                                    <Column className="flex justify-end">
+                                        <Text className="text-md">
+                                            -${welcomeOfferBonus()}
                                         </Text>
                                     </Column>
                                 </Row>

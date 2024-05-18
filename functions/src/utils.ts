@@ -65,6 +65,7 @@ export const loyaltyBonusDiscount = (
     expressInternet: InternetPlan,
     expressHasFios: boolean
 ): number => {
+    return 0
     return lines
         .map((line) =>
             (line.name === 'Unlimited Welcome' ||

@@ -15,6 +15,7 @@ export interface WirelessQuote {
     sent?: boolean
     isFirstResponder: boolean
     emPhone?: string
+    isWelcome: boolean
 }
 
 export type InternetPlan = '300' | '500' | 'one_gig' | 'two_gig' | undefined

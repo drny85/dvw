@@ -126,6 +126,7 @@ export interface WirelessQuote {
     isFirstResponder: boolean
     scheduledOn: string | null
     emPhone?: string
+    isWelcome: boolean
 }
 
 export type FeedType = 'quote' | 'feed'

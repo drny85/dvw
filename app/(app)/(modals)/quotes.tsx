@@ -79,6 +79,23 @@ const MyQuotes = () => {
         router.push('/(app)/(root)/(plan)')
     }
 
+    const confirmSendingQuote = (quoteId: string) => {
+        Alert.alert(
+            'Confirm sending quote',
+            'Are you sure you want to send this quote?',
+            [
+                { text: 'Cancel', style: 'cancel' },
+                {
+                    text: 'Send',
+
+                    onPress: () => {
+                        handleSendQuote(quoteId)
+                    }
+                }
+            ]
+        )
+    }
+
     const toggleQuoteStatus = async (q: WirelessQuote) => {
         try {
             dispatch(
@@ -113,7 +130,7 @@ const MyQuotes = () => {
                 style={[
                     Styles.boxShadow,
                     {
-                        backgroundColor: !item.sent ? bgColor : 'gray',
+                        backgroundColor: !item.sent ? bgColor : '#edede9',
                         padding: SIZES.padding,
                         borderRadius: SIZES.radius
                     }
@@ -225,7 +242,7 @@ const MyQuotes = () => {
                         disabled={loadingQuote || item.sent}
                         title={item.sent ? 'Sent' : 'Send Quote'}
                         color={loadingQuote ? greyColor : btnColor}
-                        onPress={() => handleSendQuote(item.quoteId!)}
+                        onPress={() => confirmSendingQuote(item.quoteId!)}
                     />
                 </View>
             </Animated.View>
