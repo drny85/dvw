@@ -69,7 +69,7 @@ const ReferralDetails = () => {
 
     const updateComment = async (newComment: string) => {
         try {
-            console.log(newComment)
+            if (!newComment) return
             if (referral?.comment === newComment) return
 
             const newReferral: Referral = {
@@ -78,6 +78,7 @@ const ReferralDetails = () => {
             }
 
             dispatch(updateReferral(newReferral))
+            setVisible(false)
         } catch (error) {
             console.log(error)
         }

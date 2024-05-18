@@ -1,4 +1,4 @@
-import { Button } from 'react-native'
+import { Button, Keyboard } from 'react-native'
 
 import BottomSheet, {
     BottomSheetBackdrop,
@@ -24,7 +24,6 @@ const NotesBottomSheet = ({ isVisible, comment, onClose, onUpdate }: Props) => {
     const ascent = useThemeColor('accent')
     const snapPoints = useMemo(() => ['50%'], [])
     const [newComment, setNewComment] = useState(comment)
-    console.log('NEW C', newComment)
 
     const renderBackdrop = useCallback(
         (props: any) => (
@@ -40,6 +39,7 @@ const NotesBottomSheet = ({ isVisible, comment, onClose, onUpdate }: Props) => {
     const handleUpdate = () => {
         onUpdate(newComment)
         onClose()
+        Keyboard.dismiss()
     }
 
     useEffect(() => {
@@ -61,7 +61,10 @@ const NotesBottomSheet = ({ isVisible, comment, onClose, onUpdate }: Props) => {
             overDragResistanceFactor={5}
             handleIndicatorStyle={{ backgroundColor: ascent }}
             handleStyle={{ backgroundColor }}
-            onClose={onClose}
+            onClose={() => {
+                Keyboard.dismiss()
+                onClose()
+            }}
         >
             <View
                 style={{
@@ -100,9 +103,18 @@ const NotesBottomSheet = ({ isVisible, comment, onClose, onUpdate }: Props) => {
                     <Button
                         color={warningColor}
                         title={'Cancel'}
-                        onPress={onClose}
+                        onPress={() => {
+                            Keyboard.dismiss()
+                            onClose()
+                        }}
                     />
-                    <Button title={'Done'} onPress={handleUpdate} />
+                    <Button
+                        title={'Done'}
+                        onPress={() => {
+                            Keyboard.dismiss()
+                            handleUpdate()
+                        }}
+                    />
                 </View>
             </View>
         </BottomSheet>
