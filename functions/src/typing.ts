@@ -166,6 +166,7 @@ export type AppUser = {
     blockedUsers: string[]
     coachId: string | null
     isOnline?: boolean
+    lastSeen?: string
 }
 export type NotificationData = {
     id: string

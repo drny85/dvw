@@ -45,6 +45,7 @@ export type AppUser = {
     blockedUsers: string[]
     coachId: string | null
     isOnline?: boolean
+    lastSeen?: string
 }
 export type UserData = Pick<AppUser, 'id' | 'name'>[]
 export type UserRole = 'admin' | 'em' | 'coach' | 'ce' | 'referee' | 'ceo'

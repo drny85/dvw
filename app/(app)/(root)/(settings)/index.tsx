@@ -6,6 +6,7 @@ import Styles from '@/constants/Styles'
 import { FontAwesome } from '@expo/vector-icons'
 import React, { useCallback } from 'react'
 
+import Divider from '@/common/components/Divider'
 import Row from '@/common/components/Row'
 import Text from '@/common/components/Text'
 import TextInput from '@/common/components/TextInput'
@@ -15,6 +16,8 @@ import useAppSelector from '@/common/hooks/useAppSelector'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { logoutUser, updateUser } from '@/features/auth/authActions'
 import { deleteUserAccount } from '@/firebase'
+import { AppUser } from '@/types'
+import { formatPhone } from '@/utils/formatPhone'
 import { isFullName } from '@/utils/isFullName'
 import * as Clipboard from 'expo-clipboard'
 import { router } from 'expo-router'
@@ -27,16 +30,12 @@ import {
     StyleSheet,
     TouchableOpacity
 } from 'react-native'
-import { formatPhone } from '@/utils/formatPhone'
-import Divider from '@/common/components/Divider'
-import { AppUser } from '@/types'
 
 const Settings = () => {
     useAuth()
 
     const iconColor = useThemeColor('text')
     const deleteColor = useThemeColor('warning')
-    const donateColor = useThemeColor('accent')
     const user = useAppSelector((state) => state.auth.user)
     const [updatePhone, setUpdatePhone] = React.useState('')
     const [showPhone, setShowPhone] = React.useState(false)
@@ -160,11 +159,13 @@ const Settings = () => {
                 showsVerticalScrollIndicator={false}
             >
                 <Image
-                    source={{
-                        uri:
-                            user?.image ||
-                            'https://www.edigitalagency.com.au/wp-content/uploads/verizon-red-icon-black-1200x1200.png'
-                    }}
+                    source={
+                        user?.image
+                            ? {
+                                  uri: user?.image
+                              }
+                            : require('@/assets/images/verizon.png')
+                    }
                     style={styles.image}
                 />
                 <View style={styles.info}>

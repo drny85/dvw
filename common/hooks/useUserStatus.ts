@@ -21,7 +21,8 @@ export const useUserStatus = () => {
                 ) {
                     const updatedUser = {
                         ...user,
-                        isOnline: true
+                        isOnline: true,
+                        lastSeen: new Date().toISOString()
                     }
                     dispatch(updateUser({ ...updatedUser }))
                 }

@@ -1,3 +1,4 @@
+import DirectoryListItem from '@/common/components/DirectoryListItem'
 import Loading from '@/common/components/Loading'
 import Row from '@/common/components/Row'
 import Text from '@/common/components/Text'
@@ -8,26 +9,29 @@ import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import { AppUser } from '@/types'
 import { usersCollection } from '@/utils/collections'
-import { AntDesign, FontAwesome } from '@expo/vector-icons'
-import * as Clipboard from 'expo-clipboard'
-import * as Linking from 'expo-linking'
+
 import { useNavigation } from 'expo-router'
 import { onSnapshot, query, where } from 'firebase/firestore'
-import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import React, {
+    useCallback,
+    useEffect,
+    useLayoutEffect,
+    useMemo,
+    useState
+} from 'react'
 import {
     Alert,
     FlatList,
     Image,
+    ListRenderItem,
     ScrollView,
     TouchableOpacity
 } from 'react-native'
-import Communications from 'react-native-communications'
 
 const Directory = () => {
     const navigation = useNavigation()
     const ascent = useThemeColor('accent')
     const background = useThemeColor('background')
-    const secondary = useThemeColor('white')
     const textColor = useThemeColor('text')
     const user = useAppSelector((s) => s.auth.user)
     const [users, setUsers] = useState<AppUser[]>([])
@@ -49,64 +53,9 @@ const Directory = () => {
         )
     }, [users, search])
 
-    const makeCall = (phone: string) => {
-        const number = phone.replace(/[^0-9]/g, '').trim()
-        if (!number) return
-
-        Linking.canOpenURL(`tel:+1${number}`)
-            .then((supported) => {
-                if (supported) {
-                    Linking.openURL(`tel:+1${number}`)
-                } else {
-                    console.log("Don't know how to open URI: " + number)
-                }
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-    }
-    const sendMessage = (phone: string, name: string) => {
-        const number = phone.replace(/[^0-9]/g, '').trim()
-        if (!number) return
-
-        console.log(number)
-        try {
-            Communications.text(number, `Hi ${name.split(' ')[0]}, \n \n`)
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    const onPaste = async (email: string, name: string) => {
-        try {
-            if (!email || !name) return
-            await Clipboard.setStringAsync(email)
-            Alert.alert(
-                'Email Copied',
-                `${
-                    name.split(' ')[0]
-                }'s email was copied, go ahead and paste it as your email recipient`
-            )
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    const sendEmail = (email: string) => {
-        if (!email) return
-
-        Linking.canOpenURL(`mailto:${email}`)
-            .then((supported) => {
-                if (supported) {
-                    Linking.openURL(`mailto:${email}`)
-                } else {
-                    console.log("Don't know how to open URI: " + email)
-                }
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-    }
+    const renderUsers: ListRenderItem<AppUser> = useCallback(({ item }) => {
+        return <DirectoryListItem user={item} />
+    }, [])
 
     useEffect(() => {
         const docQuery = query(
@@ -155,97 +104,7 @@ const Directory = () => {
                         gap: SIZES.padding,
                         marginBottom: 20
                     }}
-                    renderItem={({ item }) => (
-                        <Row
-                            style={{
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                flex: 1,
-                                shadowOffset: {
-                                    width: 2,
-                                    height: 4
-                                },
-                                shadowColor: '#000',
-                                shadowOpacity: 0.2,
-                                backgroundColor: background,
-                                borderRadius: SIZES.base,
-                                padding: SIZES.base,
-                                elevation: 6
-                            }}
-                        >
-                            <Row>
-                                <View
-                                    style={{
-                                        width: 12,
-                                        height: 12,
-                                        borderRadius: 6,
-                                        backgroundColor: item.isOnline
-                                            ? 'green'
-                                            : '#e63946'
-                                    }}
-                                />
-                                <Image
-                                    source={{
-                                        uri:
-                                            item.image ||
-                                            'https://www.edigitalagency.com.au/wp-content/uploads/verizon-red-icon-black-1200x1200.png'
-                                    }}
-                                    resizeMode="cover"
-                                    width={50}
-                                    height={50}
-                                    style={{
-                                        borderRadius: 25,
-                                        marginHorizontal: SIZES.base
-                                    }}
-                                />
-                                <Text capitalize>{item.name}</Text>
-                            </Row>
-
-                            <View>
-                                <Row
-                                    style={{
-                                        gap: SIZES.padding,
-                                        flex: 0.4
-                                    }}
-                                >
-                                    {item.phone && (
-                                        <TouchableOpacity
-                                            onPress={() =>
-                                                makeCall(item.phone!)
-                                            }
-                                        >
-                                            <FontAwesome
-                                                name="phone"
-                                                size={22}
-                                            />
-                                        </TouchableOpacity>
-                                    )}
-                                    <TouchableOpacity
-                                        onLongPress={() =>
-                                            onPaste(item.email!, item.name)
-                                        }
-                                        onPress={() => sendEmail(item.email!)}
-                                    >
-                                        <FontAwesome
-                                            name="envelope"
-                                            size={22}
-                                        />
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        onPress={() =>
-                                            sendMessage(item.phone!, item.name)
-                                        }
-                                    >
-                                        <AntDesign
-                                            name="message1"
-                                            size={22}
-                                            color={ascent}
-                                        />
-                                    </TouchableOpacity>
-                                </Row>
-                            </View>
-                        </Row>
-                    )}
+                    renderItem={renderUsers}
                 />
             </ScrollView>
         </View>
