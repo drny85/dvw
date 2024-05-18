@@ -196,7 +196,7 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
                 }}
                 onPress={onClickSave}
             >
-                <Text center={true} fontFamily="SFHeavy" color="success">
+                <Text center={true} fontFamily="SFHeavy" color="accent">
                     {showResetAll ? 'Summary' : 'Save Wireless Quote'}
                 </Text>
             </TouchableOpacity>

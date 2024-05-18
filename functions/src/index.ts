@@ -194,14 +194,18 @@ exports.sendNewMessageNotification = onDocumentCreated(
             const message = messageData?.data() as Msg
             const sender = message.user.name
             const usersRef = await admin.firestore().collection('users').get()
-            const users = usersRef.docs.map((doc) => doc.data())
+            const users = usersRef.docs.map((doc) => doc.data()) as AppUser[]
             const data: NotificationData = {
                 id: message.chatId,
                 type: 'new-message'
             }
             const pushTokens: string[] = []
             users.map((user) => {
-                if (user.pushToken && user.id !== message.user._id)
+                if (
+                    user.pushToken &&
+                    user.id !== message.user._id &&
+                    user.emailVerified
+                )
                     pushTokens.push(user.pushToken)
             })
 
@@ -219,16 +223,16 @@ exports.sendNewMessageNotification = onDocumentCreated(
 )
 
 exports.sendNewPostNotification = onDocumentCreated(
-    'quotes/{quoteId}',
+    'feeds/{feedId}',
     async (event) => {
         try {
             const quoteData = event.data
             const quote = quoteData?.data() as Feed
             const sender = quote.user
             const usersRef = await admin.firestore().collection('users').get()
-            const users = usersRef.docs.map((doc) => doc.data())
+            const users = usersRef.docs.map((doc) => doc.data()) as AppUser[]
             const data: NotificationData = {
-                id: event.params.quoteId,
+                id: event.params.feedId,
                 type: 'feed'
             }
             const pushTokens: string[] = []

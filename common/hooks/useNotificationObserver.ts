@@ -10,7 +10,10 @@ export function useNotificationObserver() {
         function redirect(notification: Notifications.Notification) {
             const data = notification.request.content.data as NotificationData
             if (data.type === 'new-message') {
-                router.push(`/(app)/(root)/(chats)/${data.id}`)
+                router.push({
+                    pathname: '/(app)/(nova)/chat',
+                    params: { chatId: data.id }
+                })
             }
             if (data.type === 'reminder') {
                 router.push(`/(app)/(modals)/${data.id}`)

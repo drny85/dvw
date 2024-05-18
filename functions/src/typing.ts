@@ -162,6 +162,10 @@ export type AppUser = {
     phone?: string | null
     pushToken?: string
     createdAt?: string
+    acceptedEULA: boolean
+    blockedUsers: string[]
+    coachId: string | null
+    isOnline?: boolean
 }
 export type NotificationData = {
     id: string
