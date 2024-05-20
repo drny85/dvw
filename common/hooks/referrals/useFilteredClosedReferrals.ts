@@ -16,7 +16,7 @@ export const useFilteredClosedReferrals = (
     const [mtd, setMtd] = useState<Referral[]>([])
     const [twb, setTwb] = useState<Referral[]>([])
 
-    const { referrals, loading: load } = useReferrals(userId!)
+    const { loading: load, referrals } = useReferrals(userId!)
 
     const result: Referral[] = data
         ? data
@@ -75,7 +75,7 @@ export const useFilteredClosedReferrals = (
         setMtd(thisMonth)
         setTwb(twbData)
         setLoading(false)
-    }, [load, referrals.length])
+    }, [referrals, load, userId])
 
     return { loading, today, wtd, mtd, lw, lm, twb, referrals }
 }

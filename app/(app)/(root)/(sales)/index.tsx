@@ -1,8 +1,8 @@
 import React from 'react'
 import Referrals from '@/common/components/referrals/Referrals'
 
-const index = () => {
+const ReferralsScreen = () => {
     return <Referrals />
 }
 
-export default index
+export default ReferralsScreen

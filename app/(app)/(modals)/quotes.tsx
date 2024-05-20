@@ -17,7 +17,8 @@ import {
     setExpressHasFios,
     setExpressInternet,
     setLinesData,
-    setReviewModal
+    setReviewModal,
+    toggleIsWelcomeQualified
 } from '@/features/wireless/wirelessSlide'
 import {
     deleteWirelessQuote,
@@ -44,6 +45,7 @@ import Animated, { FadeOutLeft } from 'react-native-reanimated'
 const MyQuotes = () => {
     const { loading, quotes } = useWirelessQuotes()
     const { route } = useAppSelector((s) => s.settings)
+    const isWelcome = useAppSelector((s) => s.wireless.isWelcome)
     const bgColor = useThemeColor('background')
     const iconColor = useThemeColor('warning')
     const greyColor = useThemeColor('placeholder')
@@ -76,6 +78,7 @@ const MyQuotes = () => {
         dispatch(setExpressHasFios(quote.hasFios))
         dispatch(setLinesData(quote.lines))
         dispatch(setReviewModal('review'))
+        if (!isWelcome && quote.isWelcome) dispatch(toggleIsWelcomeQualified())
         router.push('/(app)/(root)/(plan)')
     }
 

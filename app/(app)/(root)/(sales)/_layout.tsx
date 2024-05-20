@@ -1,11 +1,5 @@
-import useAppSelector from '@/common/hooks/useAppSelector'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
-import {
-    isFirstTime,
-    resetFirstTime,
-    setNotFirstTime
-} from '@/utils/checkFirstTimeUser'
 import {
     MaterialTopTabNavigationEventMap,
     MaterialTopTabNavigationOptions,
@@ -30,7 +24,6 @@ const HomeLayout = () => {
     const bgColor = useThemeColor('background')
     const acent = useThemeColor('accent')
     const text = useThemeColor('text')
-    const user = useAppSelector((state) => state.auth.user)
 
     return (
         <MaterialTopTabs

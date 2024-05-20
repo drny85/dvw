@@ -319,23 +319,7 @@ const MyPlan = () => {
         <Screen>
             <View style={styles.header}>
                 <Text />
-                {/* <Ionicon
-                    name="chevron-back"
-                    size={32}
-                    onPress={() => {
-                        if (reviewModal && reviewModal === 'review') {
-                            dispatch(setReviewModal())
-                            router.push('/(app)/(modals)/quotes')
-                        } else {
-                            if (saleQuote) {
-                                dispatch(setSaleQuoteReferral(null))
-                                router.push('/(app)/(root)/(plan)')
-                            } else {
-                                router.back()
-                            }
-                        }
-                    }}
-                /> */}
+
                 <Text fontFamily="SFBold" fontSize={24}>
                     My Plan
                 </Text>

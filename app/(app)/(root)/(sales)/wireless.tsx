@@ -45,9 +45,33 @@ const Sales = () => {
     const backgroundColor = useThemeColor('accent')
     const iconColor = useThemeColor('text')
 
+    const xData: SaleData[] = useMemo(() => {
+        const s = generateFeedsBasedOnRange(
+            'ytd',
+            feeds.filter((s) => s.feedType === 'feed')
+        )
+        const listData = formatedData(s)
+        return listData
+    }, [feeds])
+
+    const totalEarned: number = useMemo(() => {
+        const s = generateFeedsBasedOnRange(
+            'mtd',
+            feeds.filter((s) => s.feedType === 'feed')
+        )
+        const listData = formatedData(s)
+        return listData.reduce((acc, curr) => {
+            const c =
+                curr.saleType === 'direct'
+                    ? 125 * curr.numberOfLines
+                    : 65 * curr.numberOfLines
+            return acc + c
+        }, 0)
+    }, [feeds])
+
     const goals = useMemo(() => {
         if (!user) return 0
-        return calculateSalesGoals(user?.id, WIRELESS_MONTHLY_GOAL, data)
+        return calculateSalesGoals(user?.id, WIRELESS_MONTHLY_GOAL, xData)
     }, [data, user])
 
     const renderSales: ListRenderItem<SaleData> = ({ item }) => {
@@ -87,7 +111,13 @@ const Sales = () => {
                         marginBottom: SIZES.base
                     }}
                 >
-                    <Text fontFamily="SFBold">
+                    <Text fontFamily="OWRegelar" fontSize={20}>
+                        Earning this month{' '}
+                        <Text fontFamily="SFBold" fontSize={24}>
+                            ${totalEarned}{' '}
+                        </Text>
+                    </Text>
+                    <Text fontFamily="SFBold" fontSize={18}>
                         Monthly Goal {WIRELESS_MONTHLY_GOAL}
                     </Text>
                     <Row style={{ gap: SIZES.padding }}>
