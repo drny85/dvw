@@ -13,6 +13,7 @@ import TextInput from '@/common/components/TextInput'
 import { useAuth } from '@/common/hooks/auth/useAuth'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
 import useAppSelector from '@/common/hooks/useAppSelector'
+import { useStatusBarColor } from '@/common/hooks/useStatusBarColor'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { logoutUser, updateUser } from '@/features/auth/authActions'
 import { deleteUserAccount } from '@/firebase'
@@ -124,6 +125,8 @@ const Settings = () => {
             console.log('Error updating name', error)
         }
     }, [])
+
+    useStatusBarColor('dark')
 
     return (
         <Screen

@@ -3,6 +3,7 @@ import Screen from '@/common/components/Screen'
 import Text from '@/common/components/Text'
 import GiftedChatScreen from '@/common/components/chats/GiftedChatScreen'
 import { useChat } from '@/common/hooks/chats/useChat'
+import { useStatusBarColor } from '@/common/hooks/useStatusBarColor'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import { FontAwesome } from '@expo/vector-icons'
@@ -52,12 +53,13 @@ const Chat = () => {
         })
     }, [navigation, chat?.name, bgColor])
 
+    useStatusBarColor('light')
+
     if (loading) return <Loading />
 
     // const { topic, createdAt, messages }
     return (
         <Screen>
-            <StatusBar style="light" />
             <KeyboardAvoidingView
                 behavior="padding"
                 style={{ flex: 1 }}

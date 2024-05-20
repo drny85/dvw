@@ -6,6 +6,7 @@ import LinesContainer from '@/common/components/myPlan/LinesContainer'
 import TotalContainer from '@/common/components/myPlan/TotalContainer'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
 import useAppSelector from '@/common/hooks/useAppSelector'
+import { useStatusBarColor } from '@/common/hooks/useStatusBarColor'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import {
     PLUS_BYOD_VALUE,
@@ -314,6 +315,8 @@ const MyPlan = () => {
             if (timer) clearTimeout(timer)
         }
     }, [lines.length, bottomShetRef.current])
+
+    useStatusBarColor('dark')
 
     return (
         <Screen>

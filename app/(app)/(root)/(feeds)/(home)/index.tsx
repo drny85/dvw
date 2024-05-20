@@ -9,6 +9,7 @@ import { useAuth } from '@/common/hooks/auth/useAuth'
 import { useFeeds } from '@/common/hooks/feeds/useFeeds'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
 import useAppSelector from '@/common/hooks/useAppSelector'
+import { useStatusBarColor } from '@/common/hooks/useStatusBarColor'
 import { SIZES } from '@/constants/Sizes'
 
 import { deleteFeed, updateFeed } from '@/features/feeds/feedsActions'
@@ -16,6 +17,7 @@ import { deleteFeed, updateFeed } from '@/features/feeds/feedsActions'
 import { Feed } from '@/types'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { router } from 'expo-router'
+import { StatusBar } from 'expo-status-bar'
 import React, { useCallback, useRef } from 'react'
 
 import { Button, FlatList, ListRenderItem, StyleSheet } from 'react-native'
@@ -70,6 +72,8 @@ const Feeds = () => {
             />
         )
     }, [])
+
+    useStatusBarColor('light')
 
     if (loading) return <Loading />
 

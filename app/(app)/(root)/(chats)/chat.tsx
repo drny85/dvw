@@ -5,13 +5,14 @@ import ChatList from '@/common/components/chats/ChatList'
 import { useChats } from '@/common/hooks/chats/useChats'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
 import useAppSelector from '@/common/hooks/useAppSelector'
+import { useStatusBarColor } from '@/common/hooks/useStatusBarColor'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import { deleteChat } from '@/features/chats/chatsActions'
 import { Chat } from '@/types'
 import { FontAwesome } from '@expo/vector-icons'
 import { router, useNavigation } from 'expo-router'
-import { StatusBar } from 'expo-status-bar'
+import { setStatusBarStyle, StatusBar } from 'expo-status-bar'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import {
     Alert,
@@ -144,6 +145,8 @@ const ChatScreen = () => {
         }
     }, [navigation, search, chats.length])
 
+    useStatusBarColor('dark')
+
     if (loading) return <Loading />
 
     return (
@@ -151,7 +154,6 @@ const ChatScreen = () => {
             style={{ backgroundColor: bgColor, flex: 1 }}
             contentInsetAdjustmentBehavior="automatic"
         >
-            <StatusBar style="dark" />
             <FlatList
                 data={data}
                 scrollEnabled={false}

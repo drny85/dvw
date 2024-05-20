@@ -1,14 +1,10 @@
-import React from 'react'
 import Referrals from '@/common/components/referrals/Referrals'
-import { StatusBar } from 'expo-status-bar'
+import { useStatusBarColor } from '@/common/hooks/useStatusBarColor'
+import React from 'react'
 
 const ReferralsScreen = () => {
-    return (
-        <>
-            <StatusBar style="light" />
-            <Referrals />
-        </>
-    )
+    useStatusBarColor('light')
+    return <Referrals />
 }
 
 export default ReferralsScreen

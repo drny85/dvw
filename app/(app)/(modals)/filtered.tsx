@@ -4,6 +4,7 @@ import ReferralCard from '@/common/components/referrals/ReferralCard'
 import { useReferrals } from '@/common/hooks/referrals/useReferrals'
 import useAppSelector from '@/common/hooks/useAppSelector'
 import { useNavigationSearch } from '@/common/hooks/useNavigationSearch'
+import { useStatusBarColor } from '@/common/hooks/useStatusBarColor'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import { Referral } from '@/types'
@@ -59,6 +60,8 @@ const FilteredReferrals = () => {
             title: filterTitle(filterType!)
         })
     }, [filterTitle, navigation, bgColor, color])
+
+    useStatusBarColor('dark')
 
     if (loading || !filterType) return <Loading />
 
