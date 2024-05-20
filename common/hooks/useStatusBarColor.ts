@@ -8,7 +8,6 @@ export const useStatusBarColor = (color: 'light' | 'dark') => {
         const sub = navigation.addListener('focus', () => {
             setStatusBarStyle(color)
         })
-        console.log('CHANGING COLOR', color)
 
         return () => navigation.removeListener('focus', sub)
     }, [navigation, color])

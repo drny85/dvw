@@ -21,7 +21,11 @@ import moment from 'moment'
 import { AnimatePresence, MotiView } from 'moti'
 
 import ProgressCircle from '@/common/components/referrals/ProgressCircle'
-import { WIRELESS_MONTHLY_GOAL } from '@/constants'
+import {
+    WIRELESS_CLICK_TO_CALL,
+    WIRELESS_DIRECT,
+    WIRELESS_MONTHLY_GOAL
+} from '@/constants'
 import React, { useEffect, useMemo, useState } from 'react'
 import {
     FlatList,
@@ -64,8 +68,8 @@ const Sales = () => {
         return listData.reduce((acc, curr) => {
             const c =
                 curr.saleType === 'direct'
-                    ? 125 * curr.numberOfLines
-                    : 65 * curr.numberOfLines
+                    ? WIRELESS_DIRECT * curr.numberOfLines
+                    : WIRELESS_CLICK_TO_CALL * curr.numberOfLines
             return acc + c
         }, 0)
     }, [feeds])
