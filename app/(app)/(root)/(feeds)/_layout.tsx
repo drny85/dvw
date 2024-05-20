@@ -17,6 +17,7 @@ export const unstable_settings = {
 
 const _layout = () => {
     const accent = useThemeColor('accent')
+    const secondary = useThemeColor('secondary')
     const user = useAppSelector((s) => s.auth.user)
     useReferrals(user?.id!)
 
@@ -28,6 +29,7 @@ const _layout = () => {
                 headerStyle: { backgroundColor: accent },
                 headerShadowVisible: false,
                 headerTitle: () => <Greeting />,
+
                 headerLeft: () => {
                     if (!user?.image) {
                         return (
@@ -37,14 +39,17 @@ const _layout = () => {
                                     router.push('/(app)/(nova)/directory')
                                 }
                                 underlayColor={'transparent'}
+                                style={{
+                                    marginBottom: 6
+                                }}
                                 onPress={() => router.push('/spark')}
                             >
                                 <View
                                     style={{
-                                        height: 46,
-                                        width: 46,
-                                        borderRadius: 23,
-                                        backgroundColor: accent,
+                                        height: 40,
+                                        width: 40,
+                                        borderRadius: 20,
+                                        backgroundColor: secondary,
                                         justifyContent: 'center',
                                         alignItems: 'center'
                                     }}

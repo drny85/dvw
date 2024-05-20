@@ -8,17 +8,19 @@ const config: ExpoConfig = {
     icon: './assets/images/icon.png',
     scheme: 'drasco',
     userInterfaceStyle: 'automatic',
-    platforms: ['ios', 'android'],
+    platforms: ['ios'],
     splash: {
         image: './assets/images/splash.png',
         resizeMode: 'contain',
         backgroundColor: '#ffffff'
     },
+
     assetBundlePatterns: ['**/*'],
     ios: {
         supportsTablet: true,
         bundleIdentifier: 'net.robertdev.drasco-dvw',
         buildNumber: '5',
+
         infoPlist: {
             LSApplicationQueriesSchemes: [
                 'dvw',

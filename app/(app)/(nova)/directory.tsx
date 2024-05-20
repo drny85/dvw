@@ -4,6 +4,7 @@ import Text from '@/common/components/Text'
 import View from '@/common/components/View'
 import useAppSelector from '@/common/hooks/useAppSelector'
 import { useNavigationSearch } from '@/common/hooks/useNavigationSearch'
+import { useStatusBarColor } from '@/common/hooks/useStatusBarColor'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import { AppUser } from '@/types'
@@ -69,6 +70,7 @@ const Directory = () => {
             headerStyle: {
                 backgroundColor: background
             },
+            headerTitle: `Directory (${users.length})`,
             headerLargeStyle: {
                 backgroundColor: background
             },
@@ -76,7 +78,9 @@ const Directory = () => {
                 color: textColor
             }
         })
-    }, [navigation, background, textColor])
+    }, [navigation, background, textColor, users.length])
+
+    useStatusBarColor('dark')
 
     if (loading) return <Loading />
     return (

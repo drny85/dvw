@@ -6,6 +6,7 @@ import Text from '@/common/components/Text'
 import View from '@/common/components/View'
 import { useReferrals } from '@/common/hooks/referrals/useReferrals'
 import useAppSelector from '@/common/hooks/useAppSelector'
+import { useStatusBarColor } from '@/common/hooks/useStatusBarColor'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import { Referral } from '@/types'
@@ -81,6 +82,8 @@ const Spark = () => {
             )
         )
     }, [referrals.length])
+
+    useStatusBarColor('dark')
 
     if (loading) return <Loading />
 

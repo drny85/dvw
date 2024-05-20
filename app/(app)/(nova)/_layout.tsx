@@ -32,7 +32,10 @@ const NovaLayout = () => {
                 options={{
                     ...StackScreenWithSearchBar,
                     headerLeft: () => (
-                        <TouchableOpacity onPress={router.back}>
+                        <TouchableOpacity
+                            style={{ padding: 6 }}
+                            onPress={router.back}
+                        >
                             <FontAwesome
                                 name="chevron-left"
                                 size={22}

@@ -1,5 +1,5 @@
 import { Referral, TIERS } from '@/types'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 
 type Payout = Record<string, number>
 export const usePayout = (referrals: Referral[]) => {

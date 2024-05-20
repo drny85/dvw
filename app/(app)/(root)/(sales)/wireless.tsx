@@ -63,7 +63,7 @@ const Sales = () => {
     const totalEarned: number = useMemo(() => {
         const s = generateFeedsBasedOnRange(
             'mtd',
-            feeds.filter((s) => s.feedType === 'feed')
+            feeds.filter((s) => s.feedType === 'feed' && s.user.id === user?.id)
         )
         const listData = formatedData(s)
         return listData.reduce((acc, curr) => {
@@ -120,12 +120,14 @@ const Sales = () => {
                         marginBottom: SIZES.base
                     }}
                 >
-                    <Text fontFamily="OWRegelar" fontSize={18}>
-                        Earning this month{' '}
-                        <Text fontFamily="SFBold" fontSize={20}>
-                            ${totalEarned}{' '}
+                    {totalEarned > 0 && (
+                        <Text fontFamily="OWRegelar" fontSize={18}>
+                            Earning this month{' '}
+                            <Text fontFamily="SFBold" fontSize={20}>
+                                ${totalEarned}{' '}
+                            </Text>
                         </Text>
-                    </Text>
+                    )}
                     <Text fontFamily="SFBold" fontSize={24}>
                         Monthly Goal {WIRELESS_MONTHLY_GOAL}
                     </Text>
@@ -161,7 +163,7 @@ const Sales = () => {
                     ListHeaderComponent={
                         sales.length > 0 ? (
                             <Text center fontFamily="SFBold">
-                                By EM
+                                By EM ({sales.length})
                             </Text>
                         ) : null
                     }

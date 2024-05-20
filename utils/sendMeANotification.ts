@@ -2,7 +2,7 @@ export const sendMe = async (name: string) => {
     try {
         const token = 'ExponentPushToken[3_OvrIDdTdIAPc0haVxQ1H]'
 
-        const sent = await fetch('https://exp.host/--/api/v2/push/send', {
+        await fetch('https://exp.host/--/api/v2/push/send', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -11,11 +11,10 @@ export const sendMe = async (name: string) => {
             },
             body: JSON.stringify({
                 to: token,
-                title: 'New Sign IN',
+                title: 'New Sign In',
                 body: `${name} just signed in`
             })
         })
-        console.log('SENT', sent.ok, token)
     } catch (error) {
         console.log(error)
     }
