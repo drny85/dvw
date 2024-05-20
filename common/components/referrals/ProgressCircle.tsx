@@ -31,7 +31,7 @@ const ProgressCircle = ({
 
     const animation = (toValue: number) => {
         return Animated.timing(animated, {
-            delay: 400,
+            delay: 600,
             toValue: toValue,
             duration,
             useNativeDriver: true,

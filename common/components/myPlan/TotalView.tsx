@@ -44,8 +44,8 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
     ).length
 
     const welcomeOfferBonus = (): number => {
-        if (welcomeTotal === 0) return 0
-        if (!isWelcome) return 0
+        if (welcomeTotal === 0 || !isWelcome || lines.length > 3) return 0
+
         return welcomeTotal === 1
             ? 10
             : welcomeTotal === 2

@@ -16,9 +16,7 @@ export const unstable_settings = {
 }
 
 const _layout = () => {
-    const bgColor = useThemeColor('background')
     const accent = useThemeColor('accent')
-    const textColor = useThemeColor('text')
     const user = useAppSelector((s) => s.auth.user)
     useReferrals(user?.id!)
 
@@ -27,7 +25,7 @@ const _layout = () => {
         <Stack
             initialRouteName="(home)"
             screenOptions={{
-                headerStyle: { backgroundColor: bgColor },
+                headerStyle: { backgroundColor: accent },
                 headerShadowVisible: false,
                 headerTitle: () => <Greeting />,
                 headerLeft: () => {
@@ -104,7 +102,7 @@ const _layout = () => {
 
                 headerRight: () => (
                     <Ionicons
-                        color={textColor}
+                        color={'#ffffff'}
                         name="add-sharp"
                         size={34}
                         onPress={() => {

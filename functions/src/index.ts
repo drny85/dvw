@@ -447,7 +447,7 @@ exports.sendWirelessClosedTemplate = onCall<{ referralId: string }>(
                 .collection('referrals')
                 .doc(referralId)
                 .update({
-                    emailInstroductionSent: true
+                    emailWirelessTemplateSent: true
                 })
             await increaseEmailSentForUser(request.auth.uid)
             return true

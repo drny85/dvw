@@ -30,6 +30,7 @@ import {
     TouchableOpacity
 } from 'react-native'
 import { calculateSalesGoals } from '@/utils/calculateGoals'
+import { StatusBar } from 'expo-status-bar'
 
 const OPTIONS = ['Week', 'Month', 'Year']
 
@@ -102,6 +103,7 @@ const Sales = () => {
 
     return (
         <Screen>
+            <StatusBar style="light" />
             <View style={{ flex: 1, marginTop: SIZES.padding }}>
                 <View
                     style={{
@@ -111,13 +113,13 @@ const Sales = () => {
                         marginBottom: SIZES.base
                     }}
                 >
-                    <Text fontFamily="OWRegelar" fontSize={20}>
+                    <Text fontFamily="OWRegelar" fontSize={18}>
                         Earning this month{' '}
-                        <Text fontFamily="SFBold" fontSize={24}>
+                        <Text fontFamily="SFBold" fontSize={20}>
                             ${totalEarned}{' '}
                         </Text>
                     </Text>
-                    <Text fontFamily="SFBold" fontSize={18}>
+                    <Text fontFamily="SFBold" fontSize={24}>
                         Monthly Goal {WIRELESS_MONTHLY_GOAL}
                     </Text>
                     <Row style={{ gap: SIZES.padding }}>

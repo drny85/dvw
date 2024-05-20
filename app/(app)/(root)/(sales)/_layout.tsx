@@ -21,8 +21,8 @@ export const unstable_settings = {
 }
 
 const HomeLayout = () => {
-    const bgColor = useThemeColor('background')
-    const acent = useThemeColor('accent')
+    const bgColor = useThemeColor('accent')
+    const white = useThemeColor('white')
     const text = useThemeColor('text')
 
     return (
@@ -34,11 +34,12 @@ const HomeLayout = () => {
                 },
 
                 tabBarActiveTintColor: text,
-                tabBarIndicatorStyle: { backgroundColor: acent, height: 4 },
+                tabBarIndicatorStyle: { backgroundColor: white, height: 4 },
                 tabBarLabelStyle: {
                     textTransform: 'capitalize',
                     fontWeight: 'bold',
-                    fontSize: 18
+                    fontSize: 18,
+                    color: white
                 }
             }}
         >

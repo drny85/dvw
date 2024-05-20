@@ -371,7 +371,7 @@ const ReferralDetails = () => {
                             </TouchableOpacity>
                             {sendingWirelessEmail ? (
                                 <ActivityIndicator size={'small'} />
-                            ) : (
+                            ) : !referral.emailWirelessTemplateSent ? (
                                 <TouchableOpacity
                                     onPress={() => {
                                         Alert.alert(
@@ -403,7 +403,7 @@ const ReferralDetails = () => {
                                         />
                                     </Row>
                                 </TouchableOpacity>
-                            )}
+                            ) : null}
                         </Row>
                     </View>
                     <View

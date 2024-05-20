@@ -209,6 +209,7 @@ export type Referral = {
     addedBy: string
     updated: string | null
     isVerizonWirelessCustomer: boolean
+    emailWirelessTemplateSent?: boolean
     isReferral: boolean
     type: 'move' | 'new' | 'acp' | 'other'
     applicationId: string | null
