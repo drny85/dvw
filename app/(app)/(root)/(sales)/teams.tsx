@@ -1,4 +1,3 @@
-import Divider from '@/common/components/Divider'
 import Loading from '@/common/components/Loading'
 import Row from '@/common/components/Row'
 import Screen from '@/common/components/Screen'
@@ -6,10 +5,11 @@ import Text from '@/common/components/Text'
 import UserDRRs from '@/common/components/sales/UserDRRs'
 import { useAllVerifiedUsers } from '@/common/hooks/auth/useAllVerifiedUsers'
 import { useCoachess } from '@/common/hooks/auth/useCoaches'
+import { useStatusBarColor } from '@/common/hooks/useStatusBarColor'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import { UserData } from '@/types'
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import { FlatList, ListRenderItem } from 'react-native'
 import Animated, { FadeInLeft } from 'react-native-reanimated'
 
@@ -73,6 +73,7 @@ const Teams = () => {
             </Animated.View>
         )
     }
+    useStatusBarColor('light')
 
     if (loading || ld) return <Loading />
     return (

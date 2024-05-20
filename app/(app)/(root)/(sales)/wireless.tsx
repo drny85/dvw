@@ -35,6 +35,7 @@ import {
 } from 'react-native'
 import { calculateSalesGoals } from '@/utils/calculateGoals'
 import { StatusBar } from 'expo-status-bar'
+import { useStatusBarColor } from '@/common/hooks/useStatusBarColor'
 
 const OPTIONS = ['Week', 'Month', 'Year']
 
@@ -102,6 +103,8 @@ const Sales = () => {
         const listData = formatedData(sales)
         setData(listData)
     }, [feeds.length, range])
+
+    useStatusBarColor('light')
 
     if (loading) return <Loading />
 
