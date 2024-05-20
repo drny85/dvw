@@ -1,15 +1,12 @@
 import Screen from '@/common/components/Screen'
 import Text from '@/common/components/Text'
-import React, { useCallback, useEffect, useRef } from 'react'
-import { Alert, TextInput as Input, StyleSheet } from 'react-native'
+import React, { useEffect, useRef } from 'react'
+import { Alert, TextInput as Input } from 'react-native'
 
-import ButtonRadio from '@/common/components/RadioButton'
 import Row from '@/common/components/Row'
-import TextInput from '@/common/components/TextInput'
 import View from '@/common/components/View'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
-import Styles from '@/constants/Styles'
 import {
     ORDER_TYPE,
     Referral,
@@ -20,12 +17,8 @@ import {
 } from '@/types'
 import { FontAwesome } from '@expo/vector-icons'
 import { router } from 'expo-router'
-import { AnimatePresence, MotiView } from 'moti'
 import { TouchableOpacity } from 'react-native'
-import {
-    GooglePlacesAutocomplete,
-    GooglePlacesAutocompleteRef
-} from 'react-native-google-places-autocomplete'
+import { GooglePlacesAutocompleteRef } from 'react-native-google-places-autocomplete'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import DateModal from '@/common/components/DateModal'
@@ -33,7 +26,6 @@ import useAppSelector from '@/common/hooks/useAppSelector'
 import { isFullName } from '@/utils/isFullName'
 import moment from 'moment'
 
-import CommentsOrNotes from '@/common/components/CommentsOrNotes'
 import DataPickerModal from '@/common/components/DataPickerModal'
 import Loading from '@/common/components/Loading'
 
@@ -51,21 +43,15 @@ import {
     setReferrralLines
 } from '@/features/referrals/referralsSlide'
 import { setSaleQuoteReferral } from '@/features/sales/salesSlide'
-import { formatPhone } from '@/utils/formatPhone'
 import { isEmailValid } from '@/utils/isEmailValid'
-import { Dispatch } from '@reduxjs/toolkit'
-import { FlatList } from 'react-native-gesture-handler'
 
-import Animated, {
-    SlideInLeft,
-    SlideInRight,
-    SlideOutLeft,
-    SlideOutRight
-} from 'react-native-reanimated'
+import CustomerInfoThirdScreen from '@/common/components/referrals/CustomerInfoThirdScreen'
+import MainInfoFirstScreen from '@/common/components/referrals/MainInfoFirstScreen'
 import NotesModal from '@/common/components/referrals/NotesModal'
-import { set } from 'react-hook-form'
-
-const GOOGLE_KEY = process.env.EXPO_PUBLIC_GOOGLE_KEY as string
+import ReferralHeader from '@/common/components/referrals/ReferralHeader'
+import ReferralInfoLastScreen from '@/common/components/referrals/ReferralInfoLastScreen'
+import ReferralInfoSecondScreen from '@/common/components/referrals/ReferralInfoSecondScreen'
+import { useStatusBarColor } from '@/common/hooks/useStatusBarColor'
 
 const ReferralsScreen = () => {
     const dispatch = useAppDispatch()
@@ -101,10 +87,7 @@ const ReferralsScreen = () => {
     const [orderType, setOrderType] = React.useState<ORDER_TYPE>('new')
     const [isVZW, setIsVZW] = React.useState<boolean>(false)
     const bgColor = useThemeColor('background')
-
-    const secondaryColor = useThemeColor('secondary')
     const textColor = useThemeColor('text')
-    const placeholderColor = useThemeColor('placeholder')
 
     const [referral, setReferral] = React.useState<Referral>({
         name: '',
@@ -191,6 +174,11 @@ const ReferralsScreen = () => {
                 setShowMoveIn(true)
                 return
             }
+            if (isReferral && !referral.referee) {
+                Alert.alert('Please select a referee')
+                setShowReferees(true)
+                return
+            }
             setIndex((prev) => prev + 1)
         }
         if (index === 2) {
@@ -204,6 +192,11 @@ const ReferralsScreen = () => {
             }
             if (referral.email && !isEmailValid(referral.email)) {
                 Alert.alert('Please enter a valid email')
+                return
+            }
+            if (isReferral && !referral.manager) {
+                Alert.alert('Please select a CE')
+                setShowManagers(true)
                 return
             }
             setIndex((prev) => prev + 1)
@@ -316,53 +309,14 @@ const ReferralsScreen = () => {
         }
     }, [helpers.length])
 
+    useStatusBarColor('dark')
+
     if (loading) return <Loading />
 
     return (
         <>
             <Screen style={{ flex: 1 }}>
-                <Row
-                    style={{
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        paddingHorizontal: SIZES.padding,
-                        marginVertical: SIZES.base
-                    }}
-                >
-                    {index === 0 ? (
-                        <TouchableOpacity
-                            onPress={() => {
-                                router.back()
-                            }}
-                        >
-                            <FontAwesome
-                                name="chevron-left"
-                                size={26}
-                                color={textColor}
-                            />
-                        </TouchableOpacity>
-                    ) : (
-                        <Text />
-                    )}
-                    <Text center fontFamily="SFBold" fontSize={18}>
-                        {index === 0
-                            ? 'Main Info'
-                            : index === 2
-                            ? "Customer's Info"
-                            : 'Referral Info'}
-                    </Text>
-                    {index !== 0 ? (
-                        <TouchableOpacity onPress={router.back}>
-                            <FontAwesome
-                                name="close"
-                                size={26}
-                                color={textColor}
-                            />
-                        </TouchableOpacity>
-                    ) : (
-                        <Text />
-                    )}
-                </Row>
+                <ReferralHeader index={index} />
 
                 <KeyboardAwareScrollView
                     ref={scrollViewRef}
@@ -376,61 +330,58 @@ const ReferralsScreen = () => {
                     keyboardShouldPersistTaps="handled"
                     extraHeight={60}
                 >
-                    {index === 0 &&
-                        mainInfo(
-                            bgColor,
-                            isReferral,
-                            setIsReferral,
-                            orderType,
-                            setOrderType
-                        )}
-                    {index === 1 &&
-                        SectionOne(
-                            googleRef,
-                            bgColor,
-                            placeholderColor,
-                            textColor,
-                            setAddress,
-                            address,
-                            referral,
-                            setReferral,
-                            setShowMoveIn,
-                            editing,
-                            setShowReferees,
-                            isReferral,
-                            moveIn
-                        )}
-                    {index === 2 &&
-                        SectionTwo(
-                            referral,
-                            isReferral,
-                            setReferral,
-                            setShowManagers,
-                            placeholderColor
-                        )}
+                    {index === 0 && (
+                        <MainInfoFirstScreen
+                            bgColor={bgColor}
+                            isReferral={isReferral}
+                            orderType={orderType}
+                            setOrderType={setOrderType}
+                            setIsReferral={setIsReferral}
+                        />
+                    )}
+                    {index === 1 && (
+                        <ReferralInfoSecondScreen
+                            address={address}
+                            editing={editing}
+                            googleRef={googleRef}
+                            isReferral={isReferral}
+                            moveIn={moveIn}
+                            referral={referral}
+                            setAddress={setAddress}
+                            setReferral={setReferral}
+                            setShowMoveIn={setShowMoveIn}
+                            setShowReferees={setShowReferees}
+                        />
+                    )}
+                    {index === 2 && (
+                        <CustomerInfoThirdScreen
+                            isReferral={isReferral}
+                            referral={referral}
+                            setReferral={setReferral}
+                            setShowManagers={setShowManagers}
+                        />
+                    )}
 
-                    {index === 3 &&
-                        SectionThree(
-                            setShowStatus,
-                            placeholderColor,
-                            referral,
-                            monRef,
-                            setReferral,
-                            setShowInternetPicker,
-                            secondaryColor,
-                            setShowTvPicker,
-                            setShowHomePicker,
-                            setShowWirelessPicker,
-                            validateServicesOrdered,
-                            setShowOrderDate,
-                            setShowOrderDueDate,
-                            orderType,
-                            isVZW,
-                            setIsVZW,
-                            dispatch,
-                            referralLines,
-                            setShowComment
-                        )}
+                    {index === 3 && (
+                        <ReferralInfoLastScreen
+                            isVZW={isVZW}
+                            monRef={monRef}
+                            orderType={orderType}
+                            referral={referral}
+                            referralLines={referralLines}
+                            setIsVZW={setIsVZW}
+                            setReferral={setReferral}
+                            setShowComment={setShowComment}
+                            setShowHomePicker={setShowHomePicker}
+                            setShowInternetPicker={setShowInternetPicker}
+                            setShowOrderDate={setShowOrderDate}
+                            setShowOrderDueDate={setShowOrderDueDate}
+                            setShowWirelessPicker={setShowWirelessPicker}
+                            setShowStatus={setShowStatus}
+                            setShowTvPicker={setShowTvPicker}
+                            validateServicesOrdered={validateServicesOrdered}
+                        />
+                    )}
                 </KeyboardAwareScrollView>
                 <View style={{ padding: SIZES.padding }}>
                     <Row style={{ justifyContent: 'space-between' }}>
@@ -666,1088 +617,3 @@ const ReferralsScreen = () => {
 }
 
 export default ReferralsScreen
-
-const styles = StyleSheet.create({
-    row: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: SIZES.padding,
-        borderRadius: SIZES.radius
-    },
-    remove: {
-        position: 'absolute',
-        right: -8,
-        top: -8,
-        width: 24,
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: 24,
-        borderRadius: 12
-    },
-    choice: {
-        padding: SIZES.base,
-        minWidth: '45%',
-        borderRadius: SIZES.radius,
-        alignItems: 'center',
-        justifyContent: 'center'
-    }
-})
-
-function SectionThree(
-    setShowStatus: React.Dispatch<React.SetStateAction<boolean>>,
-    placeholderColor: string,
-    referral: Referral,
-    monRef: React.RefObject<Input>,
-    setReferral: React.Dispatch<React.SetStateAction<Referral>>,
-    setShowInternetPicker: React.Dispatch<React.SetStateAction<boolean>>,
-    secondaryColor: string,
-    setShowTvPicker: React.Dispatch<React.SetStateAction<boolean>>,
-    setShowHomePicker: React.Dispatch<React.SetStateAction<boolean>>,
-    setShowWirelessPicker: React.Dispatch<React.SetStateAction<boolean>>,
-    validateServicesOrdered: () => boolean,
-    setShowOrderDate: React.Dispatch<React.SetStateAction<boolean>>,
-    setShowOrderDueDate: React.Dispatch<React.SetStateAction<boolean>>,
-    orderType: ORDER_TYPE,
-    isVZW: boolean,
-    setIsVZW: React.Dispatch<React.SetStateAction<boolean>>,
-    dispatch: Dispatch,
-    referralLines: number,
-    setShowComment: React.Dispatch<React.SetStateAction<boolean>>
-): React.ReactNode {
-    return (
-        <Animated.View
-            exiting={SlideOutLeft.duration(600)}
-            entering={SlideInRight.duration(600)}
-        >
-            <View>
-                <Text
-                    fontFamily="SFBold"
-                    style={{
-                        margin: SIZES.base
-                    }}
-                >
-                    Referral's Status
-                </Text>
-                <TouchableOpacity
-                    activeOpacity={0.5}
-                    onPress={() => setShowStatus(true)}
-                >
-                    <Row
-                        style={{
-                            width: '100%',
-                            ...Styles.boxShadow,
-                            backgroundColor: placeholderColor,
-                            padding: SIZES.base * 1.5,
-                            borderRadius: SIZES.radius * 2
-                        }}
-                    >
-                        <FontAwesome
-                            name="clock-o"
-                            color={'white'}
-                            size={24}
-                            style={{
-                                marginHorizontal: SIZES.base
-                            }}
-                        />
-                        <View
-                            style={{
-                                borderRadius: SIZES.radius,
-                                overflow: 'hidden',
-                                marginLeft: SIZES.padding
-                            }}
-                        >
-                            <Text fontFamily="SFBold" color="white">
-                                {referral.status.name}
-                            </Text>
-                        </View>
-                    </Row>
-                </TouchableOpacity>
-            </View>
-            <AnimatePresence>
-                {referral.status.id === 'closed' && (
-                    <MotiView
-                        from={{ opacity: 0, translateY: -20 }}
-                        animate={{ opacity: 1, translateY: 0 }}
-                        exit={{ opacity: 0, translateY: -20 }}
-                        transition={{ duration: 300 }}
-                    >
-                        <Text
-                            fontFamily="SFBold"
-                            style={{
-                                margin: SIZES.base
-                            }}
-                        >
-                            Order Number / MON
-                        </Text>
-                        <TextInput
-                            keyboardType={
-                                referral.mon && referral.mon.length >= 2
-                                    ? 'number-pad'
-                                    : 'default'
-                            }
-                            placeholder="MON or Order Number"
-                            maxLength={13}
-                            ref={monRef}
-                            autoComplete="off"
-                            autoCorrect={false}
-                            value={referral.mon!}
-                            onChangeText={(text) =>
-                                setReferral({
-                                    ...referral,
-                                    mon: text.toUpperCase()
-                                })
-                            }
-                        />
-                    </MotiView>
-                )}
-            </AnimatePresence>
-            <AnimatePresence>
-                {referral.mon !== null &&
-                    referral.mon.length === 13 &&
-                    referral.status.id === 'closed' && (
-                        <MotiView
-                            style={{
-                                marginBottom: 8,
-                                gap: SIZES.padding
-                            }}
-                            from={{
-                                opacity: 0,
-                                translateY: -SIZES.padding
-                            }}
-                            animate={{
-                                opacity: 1,
-                                translateY: SIZES.padding,
-                                scale: 1
-                            }}
-                            transition={{
-                                type: 'timing',
-                                repeat: 0,
-                                duration: 300
-                            }}
-                            exit={{ opacity: 0 }}
-                        >
-                            <Text center fontFamily="SFBold">
-                                Select a Package
-                            </Text>
-                            <Row
-                                style={{
-                                    justifyContent: 'space-evenly',
-                                    alignItems: 'center',
-                                    marginHorizontal: 10,
-                                    paddingHorizontal: 10,
-                                    gap: SIZES.padding
-                                }}
-                            >
-                                <View>
-                                    <TouchableOpacity
-                                        onPress={() =>
-                                            setShowInternetPicker(true)
-                                        }
-                                        style={[
-                                            styles.choice,
-                                            {
-                                                backgroundColor:
-                                                    referral.package
-                                                        ?.internet !== null
-                                                        ? placeholderColor
-                                                        : secondaryColor
-                                            }
-                                        ]}
-                                    >
-                                        <Text
-                                            color="white"
-                                            fontFamily={
-                                                referral.package?.internet !==
-                                                null
-                                                    ? 'SFBold'
-                                                    : 'SFRegular'
-                                            }
-                                        >
-                                            {referral.package?.internet
-                                                ? referral.package.internet.name
-                                                : 'Internet'}
-                                        </Text>
-                                    </TouchableOpacity>
-                                    {referral.package?.internet !== null && (
-                                        <TouchableOpacity
-                                            onPress={() =>
-                                                setReferral({
-                                                    ...referral,
-                                                    package: {
-                                                        ...referral.package!,
-                                                        internet: null
-                                                    }
-                                                })
-                                            }
-                                            style={[
-                                                styles.remove,
-                                                {
-                                                    backgroundColor:
-                                                        placeholderColor
-                                                }
-                                            ]}
-                                        >
-                                            <FontAwesome
-                                                name="close"
-                                                size={18}
-                                                color={'white'}
-                                            />
-                                        </TouchableOpacity>
-                                    )}
-                                </View>
-                                <View>
-                                    <TouchableOpacity
-                                        onPress={() => setShowTvPicker(true)}
-                                        style={[
-                                            styles.choice,
-                                            {
-                                                backgroundColor:
-                                                    referral.package?.tv !==
-                                                    null
-                                                        ? placeholderColor
-                                                        : secondaryColor
-                                            }
-                                        ]}
-                                    >
-                                        <Text
-                                            color="white"
-                                            fontFamily={
-                                                referral.package?.tv !== null
-                                                    ? 'SFBold'
-                                                    : 'SFRegular'
-                                            }
-                                        >
-                                            {referral.package?.tv
-                                                ? referral.package.tv.name
-                                                : 'TV'}
-                                        </Text>
-                                    </TouchableOpacity>
-                                    {referral.package?.tv !== null && (
-                                        <TouchableOpacity
-                                            onPress={() =>
-                                                setReferral({
-                                                    ...referral,
-                                                    package: {
-                                                        ...referral.package!,
-                                                        tv: null
-                                                    }
-                                                })
-                                            }
-                                            style={[
-                                                styles.remove,
-                                                {
-                                                    backgroundColor:
-                                                        placeholderColor
-                                                }
-                                            ]}
-                                        >
-                                            <FontAwesome
-                                                name="close"
-                                                size={18}
-                                                color={'white'}
-                                            />
-                                        </TouchableOpacity>
-                                    )}
-                                </View>
-                            </Row>
-                            <Row
-                                style={{
-                                    justifyContent: 'space-evenly',
-                                    alignItems: 'center',
-                                    marginHorizontal: 10,
-                                    paddingHorizontal: 10,
-                                    gap: SIZES.padding
-                                }}
-                            >
-                                <View>
-                                    <TouchableOpacity
-                                        onPress={() => setShowHomePicker(true)}
-                                        style={[
-                                            styles.choice,
-                                            {
-                                                backgroundColor:
-                                                    referral.package?.home !==
-                                                    null
-                                                        ? placeholderColor
-                                                        : secondaryColor
-                                            }
-                                        ]}
-                                    >
-                                        <Text
-                                            color="white"
-                                            fontFamily={
-                                                referral.package?.home !== null
-                                                    ? 'SFBold'
-                                                    : 'SFRegular'
-                                            }
-                                        >
-                                            {referral.package?.home
-                                                ? referral.package.home.name
-                                                : 'Home Phone'}
-                                        </Text>
-                                    </TouchableOpacity>
-                                    {referral.package?.home !== null && (
-                                        <TouchableOpacity
-                                            onPress={() =>
-                                                setReferral({
-                                                    ...referral,
-                                                    package: {
-                                                        ...referral.package!,
-                                                        home: null
-                                                    }
-                                                })
-                                            }
-                                            style={[
-                                                styles.remove,
-                                                {
-                                                    backgroundColor:
-                                                        placeholderColor
-                                                }
-                                            ]}
-                                        >
-                                            <FontAwesome
-                                                name="close"
-                                                size={18}
-                                                color={'white'}
-                                            />
-                                        </TouchableOpacity>
-                                    )}
-                                </View>
-
-                                <View>
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            dispatch(setHasWireless(true))
-                                            setShowWirelessPicker(true)
-                                        }}
-                                        style={[
-                                            styles.choice,
-                                            {
-                                                backgroundColor:
-                                                    referral.package
-                                                        ?.wireless !== null
-                                                        ? placeholderColor
-                                                        : secondaryColor
-                                            }
-                                        ]}
-                                    >
-                                        <Text
-                                            color="white"
-                                            fontFamily={
-                                                referral.package?.wireless !==
-                                                null
-                                                    ? 'SFBold'
-                                                    : 'SFRegular'
-                                            }
-                                        >
-                                            {referral.package?.wireless
-                                                ? referralLines +
-                                                  ' ' +
-                                                  referral.package.wireless.name
-                                                : 'Wireless'}
-                                        </Text>
-                                    </TouchableOpacity>
-                                    {referral.package?.wireless !== null && (
-                                        <TouchableOpacity
-                                            onPress={() =>
-                                                setReferral({
-                                                    ...referral,
-                                                    package: {
-                                                        ...referral.package!,
-                                                        wireless: null
-                                                    }
-                                                })
-                                            }
-                                            style={[
-                                                styles.remove,
-                                                {
-                                                    backgroundColor:
-                                                        placeholderColor
-                                                }
-                                            ]}
-                                        >
-                                            <FontAwesome
-                                                name="close"
-                                                size={18}
-                                                color={'white'}
-                                            />
-                                        </TouchableOpacity>
-                                    )}
-                                </View>
-                            </Row>
-                        </MotiView>
-                    )}
-            </AnimatePresence>
-            <AnimatePresence>
-                {validateServicesOrdered() && (
-                    <MotiView
-                        style={{ marginTop: SIZES.base }}
-                        from={{ opacity: 0, translateY: -20 }}
-                        animate={{ opacity: 1, translateY: 0 }}
-                        exit={{ opacity: 0, translateY: -20 }}
-                        transition={{ type: 'timing', duration: 300 }}
-                    >
-                        <View>
-                            <Text
-                                fontFamily="SFBold"
-                                style={{
-                                    margin: SIZES.base * 1.5
-                                }}
-                            >
-                                Order Date
-                            </Text>
-                            <Row
-                                style={{
-                                    width: '100%',
-                                    ...Styles.boxShadow,
-                                    backgroundColor: placeholderColor,
-                                    padding: SIZES.base * 1.5,
-                                    borderRadius: SIZES.radius * 2
-                                }}
-                            >
-                                <FontAwesome
-                                    name="calendar"
-                                    color={'white'}
-                                    size={24}
-                                    style={{
-                                        marginHorizontal: SIZES.base
-                                    }}
-                                />
-                                <TouchableOpacity
-                                    onPress={() => setShowOrderDate(true)}
-                                >
-                                    <Text color="white" fontFamily="SFBold">
-                                        {referral.order_date
-                                            ? moment(
-                                                  referral.order_date
-                                              ).format('dddd Do, MMM YYYY')
-                                            : 'Pick a Order Date'}
-                                    </Text>
-                                </TouchableOpacity>
-                            </Row>
-                        </View>
-                    </MotiView>
-                )}
-            </AnimatePresence>
-            <AnimatePresence>
-                {referral.order_date &&
-                    referral.status.id === 'closed' &&
-                    referral.mon &&
-                    validateServicesOrdered() && (
-                        <MotiView
-                            style={{ marginTop: SIZES.base }}
-                            from={{ opacity: 0, translateY: -20 }}
-                            animate={{ opacity: 1, translateY: 0 }}
-                            exit={{ opacity: 0, translateY: -20 }}
-                            transition={{ type: 'timing', duration: 300 }}
-                        >
-                            <View>
-                                <Text
-                                    fontFamily="SFBold"
-                                    style={{
-                                        margin: SIZES.base * 1.5
-                                    }}
-                                >
-                                    Due Date
-                                </Text>
-                                <Row
-                                    style={{
-                                        width: '100%',
-                                        ...Styles.boxShadow,
-                                        backgroundColor: placeholderColor,
-                                        padding: SIZES.base * 1.5,
-                                        borderRadius: SIZES.radius * 2
-                                    }}
-                                >
-                                    <FontAwesome
-                                        name="calendar"
-                                        color={'white'}
-                                        size={24}
-                                        style={{
-                                            marginHorizontal: SIZES.base
-                                        }}
-                                    />
-                                    <TouchableOpacity
-                                        onPress={() =>
-                                            setShowOrderDueDate(true)
-                                        }
-                                    >
-                                        <Text color="white" fontFamily="SFBold">
-                                            {referral.due_date
-                                                ? moment(
-                                                      referral.due_date
-                                                  ).format('dddd Do, MMM YYYY')
-                                                : 'Pick a Due Date'}
-                                        </Text>
-                                    </TouchableOpacity>
-                                </Row>
-                            </View>
-                        </MotiView>
-                    )}
-            </AnimatePresence>
-            <AnimatePresence>
-                {referral.status.id === 'closed' && referral.due_date && (
-                    <MotiView
-                        from={{ opacity: 0, translateY: -20 }}
-                        animate={{ opacity: 1, translateY: 0 }}
-                        transition={{ type: 'timing', duration: 600 }}
-                    >
-                        <View
-                            style={[
-                                Styles.boxShadow,
-                                {
-                                    ...styles.row,
-                                    backgroundColor: placeholderColor,
-                                    marginTop: SIZES.base * 1.5
-                                }
-                            ]}
-                        >
-                            <Text fontFamily="SFBold" color="white">
-                                Is a Verizon Wireless Customer?
-                            </Text>
-                            <Row
-                                style={{
-                                    justifyContent: 'space-around',
-                                    width: '80%',
-                                    marginTop: SIZES.base
-                                }}
-                            >
-                                <ButtonRadio
-                                    selected={isVZW}
-                                    title="Yes"
-                                    onPress={() => {
-                                        //setIsVZW(true)
-                                        setIsVZW(true)
-                                        setReferral({
-                                            ...referral!,
-                                            isVerizonWirelessCustomer: true
-                                        })
-                                    }}
-                                />
-                                <ButtonRadio
-                                    selected={!isVZW}
-                                    title="No"
-                                    onPress={() => {
-                                        // setIsVZW(false)
-                                        setIsVZW(false)
-                                        setReferral({
-                                            ...referral!,
-                                            isVerizonWirelessCustomer: true
-                                        })
-                                    }}
-                                />
-                            </Row>
-                        </View>
-                    </MotiView>
-                )}
-            </AnimatePresence>
-
-            {orderType === 'acp' && (
-                <View style={{ marginVertical: SIZES.base * 1.5 }}>
-                    <Text
-                        fontFamily="SFBold"
-                        style={{
-                            margin: SIZES.base
-                        }}
-                    >
-                        ACP Application ID
-                    </Text>
-                    <TextInput
-                        placeholder="B98765-43210"
-                        value={referral.applicationId!}
-                        maxLength={12}
-                        onChangeText={(text) =>
-                            setReferral({
-                                ...referral,
-                                applicationId: text.toUpperCase()
-                            })
-                        }
-                    />
-                </View>
-            )}
-
-            <View style={{ marginTop: SIZES.padding * 1.5 }}>
-                <CommentsOrNotes
-                    comment={referral.comment || ''}
-                    onOpen={() => {
-                        dispatch(setComment(referral.comment))
-                        setShowComment(true)
-                    }}
-                />
-            </View>
-        </Animated.View>
-    )
-}
-
-const SectionOne = (
-    googleRef: React.RefObject<GooglePlacesAutocompleteRef>,
-    bgColor: string,
-    placeholderColor: string,
-    textColor: string,
-    setAddress: React.Dispatch<React.SetStateAction<string>>,
-    address: string,
-    referral: Referral,
-    setReferral: React.Dispatch<React.SetStateAction<Referral>>,
-    setShowMoveIn: React.Dispatch<React.SetStateAction<boolean>>,
-    editing: boolean,
-    setShowReferees: React.Dispatch<React.SetStateAction<boolean>>,
-    isReferral: boolean,
-    moveIn: string | null
-): React.ReactNode => {
-    return (
-        <Animated.View
-            entering={SlideInLeft.duration(600)}
-            exiting={SlideOutRight.duration(500)}
-            style={{
-                flex: 1,
-
-                padding: SIZES.base,
-                gap: SIZES.padding
-            }}
-        >
-            <View>
-                <Text
-                    fontFamily="SFBold"
-                    style={{
-                        margin: SIZES.base
-                    }}
-                >
-                    Customer's Address
-                </Text>
-                <FlatList
-                    data={[]}
-                    horizontal
-                    renderItem={() => <></>}
-                    contentContainerStyle={{ width: '100%' }}
-                    ListHeaderComponentStyle={{ width: '100%' }}
-                    keyboardShouldPersistTaps="handled"
-                    ListHeaderComponent={
-                        <GooglePlacesAutocomplete
-                            ref={googleRef}
-                            nearbyPlacesAPI="GooglePlacesSearch"
-                            keyboardShouldPersistTaps="handled"
-                            placeholder="Type Customer's Address"
-                            fetchDetails={true}
-                            minLength={2}
-                            styles={{
-                                container: {
-                                    flex: 0,
-                                    paddingHorizontal: 4,
-                                    width: '100%'
-                                },
-                                textInput: {
-                                    borderRadius: SIZES.radius * 2,
-                                    backgroundColor: bgColor,
-                                    borderWidth: 0.5,
-                                    paddingVertical: SIZES.base * 1.5,
-                                    borderColor: placeholderColor,
-                                    color: textColor
-                                },
-                                textInputContainer: {
-                                    backgroundColor: bgColor
-                                },
-                                row: {
-                                    backgroundColor: bgColor
-                                },
-                                description: {
-                                    color: textColor
-                                }
-                            }}
-                            textInputProps={{
-                                placeholderTextColor: placeholderColor
-                            }}
-                            query={{
-                                key: GOOGLE_KEY,
-                                language: 'en', // language of the results
-                                components: 'country:us'
-                            }}
-                            enablePoweredByContainer={false}
-                            debounce={500}
-                            onPress={(data, details) => {
-                                if (details?.formatted_address) {
-                                    setAddress(details?.formatted_address)
-                                    setReferral({
-                                        ...referral,
-                                        address: details?.formatted_address!
-                                    })
-                                }
-                            }}
-                        />
-                    }
-                />
-                {editing && (
-                    <Text color="grey" style={{ marginLeft: SIZES.padding }}>
-                        {address}
-                    </Text>
-                )}
-            </View>
-            <AnimatePresence>
-                {address.length > 0 && (
-                    <MotiView
-                        style={{ gap: SIZES.padding }}
-                        from={{ opacity: 0, translateY: -20 }}
-                        animate={{ opacity: 1, translateY: 0 }}
-                        exit={{ opacity: 0, translateY: -20 }}
-                    >
-                        <View>
-                            <Text
-                                fontFamily="SFBold"
-                                style={{
-                                    margin: SIZES.base
-                                }}
-                            >
-                                Apt, Suite, Flr
-                            </Text>
-                            <TextInput
-                                placeholder="Apt, Suite, FLR"
-                                value={referral.apt!}
-                                onChangeText={(text) =>
-                                    setReferral({
-                                        ...referral,
-                                        apt: text.toUpperCase()
-                                    })
-                                }
-                            />
-                        </View>
-                        <View>
-                            <Text
-                                fontFamily="SFBold"
-                                style={{
-                                    margin: SIZES.base
-                                }}
-                            >
-                                Property's Name
-                            </Text>
-                            <TextInput
-                                placeholder="Ex, The Avalon"
-                                value={referral.propertyName}
-                                autoCapitalize="words"
-                                onChangeText={(text) =>
-                                    setReferral({
-                                        ...referral!,
-                                        propertyName: text
-                                    })
-                                }
-                            />
-                        </View>
-                        <View>
-                            <Text
-                                fontFamily="SFBold"
-                                style={{
-                                    margin: SIZES.base
-                                }}
-                            >
-                                Moving Date
-                            </Text>
-                            <Row
-                                style={{
-                                    width: '100%',
-                                    ...Styles.boxShadow,
-                                    backgroundColor: placeholderColor,
-                                    padding: SIZES.base * 1.5,
-                                    borderRadius: SIZES.radius * 2
-                                }}
-                            >
-                                <FontAwesome
-                                    name="calendar"
-                                    color={'white'}
-                                    size={24}
-                                    style={{
-                                        marginHorizontal: SIZES.base
-                                    }}
-                                />
-                                <TouchableOpacity
-                                    onPress={() => setShowMoveIn(true)}
-                                >
-                                    <Text color="white" fontFamily="SFBold">
-                                        {moveIn
-                                            ? moment(moveIn).format(
-                                                  'dddd Do, MMM YYYY'
-                                              )
-                                            : 'Pick a Moving Date'}
-                                    </Text>
-                                </TouchableOpacity>
-                            </Row>
-                        </View>
-                        {isReferral && (
-                            <View>
-                                <View>
-                                    <Text
-                                        fontFamily="SFBold"
-                                        style={{
-                                            margin: SIZES.base
-                                        }}
-                                    >
-                                        Referred By
-                                    </Text>
-                                    <TouchableOpacity
-                                        onPress={() => setShowReferees(true)}
-                                    >
-                                        <Row
-                                            style={{
-                                                width: '100%',
-                                                ...Styles.boxShadow,
-                                                backgroundColor:
-                                                    placeholderColor,
-                                                padding: SIZES.base * 1.5,
-                                                borderRadius: SIZES.radius * 2
-                                            }}
-                                        >
-                                            <FontAwesome
-                                                name="user-o"
-                                                color={'white'}
-                                                size={24}
-                                                style={{
-                                                    marginHorizontal: SIZES.base
-                                                }}
-                                            />
-                                            <View
-                                                style={{
-                                                    borderRadius: SIZES.radius,
-                                                    overflow: 'hidden',
-                                                    marginLeft: SIZES.padding
-                                                }}
-                                            >
-                                                <Text
-                                                    fontFamily="SFBold"
-                                                    color="white"
-                                                >
-                                                    {referral.referee
-                                                        ? referral.referee.name
-                                                        : 'Pick a Referred By'}
-                                                </Text>
-                                            </View>
-                                        </Row>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        )}
-                    </MotiView>
-                )}
-            </AnimatePresence>
-        </Animated.View>
-    )
-}
-
-function SectionTwo(
-    referral: Referral,
-    isReferral: boolean,
-    setReferral: React.Dispatch<React.SetStateAction<Referral>>,
-    setShowManagers: React.Dispatch<React.SetStateAction<boolean>>,
-    placeholderColor: string
-): React.ReactNode {
-    return (
-        <Animated.View
-            exiting={SlideOutLeft.duration(600)}
-            entering={SlideInRight.duration(600)}
-            style={Styles.flex}
-        >
-            <View>
-                <Text
-                    fontFamily="SFBold"
-                    style={{
-                        margin: SIZES.base
-                    }}
-                >
-                    Full Name
-                </Text>
-                <TextInput
-                    placeholder="Full Name"
-                    value={referral.name}
-                    onChangeText={(text) =>
-                        setReferral({ ...referral, name: text })
-                    }
-                    autoCapitalize="words"
-                />
-            </View>
-            <View>
-                <Text
-                    fontFamily="SFBold"
-                    style={{
-                        margin: SIZES.base
-                    }}
-                >
-                    Cell Phone
-                </Text>
-                <TextInput
-                    placeholder="Cell Phone"
-                    value={referral.phone}
-                    keyboardType="number-pad"
-                    onChangeText={(text) =>
-                        setReferral({
-                            ...referral,
-                            phone: formatPhone(text)
-                        })
-                    }
-                />
-            </View>
-            <View>
-                <Text
-                    fontFamily="SFBold"
-                    style={{
-                        margin: SIZES.base
-                    }}
-                >
-                    Email Address
-                </Text>
-                <TextInput
-                    placeholder="Email address"
-                    value={referral.email}
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                    onChangeText={(text) =>
-                        setReferral({
-                            ...referral,
-                            email: text.toLowerCase()
-                        })
-                    }
-                />
-            </View>
-            {isReferral && (
-                <View>
-                    <View>
-                        <Text
-                            fontFamily="SFBold"
-                            style={{
-                                margin: SIZES.base
-                            }}
-                        >
-                            Account Manager / CE
-                        </Text>
-                        <Row
-                            style={{
-                                width: '100%',
-                                ...Styles.boxShadow,
-                                backgroundColor: placeholderColor,
-                                padding: SIZES.base * 1.5,
-                                borderRadius: SIZES.radius * 2
-                            }}
-                        >
-                            <FontAwesome
-                                name="user-o"
-                                color={'white'}
-                                size={24}
-                                style={{
-                                    marginHorizontal: SIZES.base
-                                }}
-                            />
-                            <View
-                                style={{
-                                    borderRadius: SIZES.radius,
-                                    overflow: 'hidden',
-                                    marginLeft: SIZES.padding
-                                }}
-                            >
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        setShowManagers(true)
-                                    }}
-                                >
-                                    <Text fontFamily="SFBold" color="white">
-                                        {referral.manager
-                                            ? referral.manager.name
-                                            : ' Pick a Manager or CE'}
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
-                        </Row>
-                    </View>
-                </View>
-            )}
-        </Animated.View>
-    )
-}
-
-function mainInfo(
-    bgColor: string,
-    isReferral: boolean,
-    setIsReferral: React.Dispatch<React.SetStateAction<boolean>>,
-    orderType: string,
-    setOrderType: React.Dispatch<React.SetStateAction<ORDER_TYPE>>
-) {
-    return (
-        <Animated.View
-            entering={SlideInLeft.duration(600)}
-            exiting={SlideOutRight.duration(600)}
-            style={{ flex: 1, gap: SIZES.padding * 1.5 }}
-        >
-            <View
-                style={[
-                    Styles.boxShadow,
-                    { ...styles.row, backgroundColor: bgColor }
-                ]}
-            >
-                <Text fontFamily="SFBold">Is This a Referral?</Text>
-                <Row
-                    style={{
-                        justifyContent: 'space-around',
-                        width: '80%',
-                        marginTop: SIZES.base
-                    }}
-                >
-                    <ButtonRadio
-                        selected={isReferral}
-                        title="Yes"
-                        onPress={() => {
-                            setIsReferral(true)
-                        }}
-                    />
-                    <ButtonRadio
-                        selected={!isReferral}
-                        title="No"
-                        onPress={() => {
-                            setIsReferral(false)
-                        }}
-                    />
-                </Row>
-            </View>
-            <View
-                style={[
-                    Styles.boxShadow,
-                    { ...styles.row, backgroundColor: bgColor }
-                ]}
-            >
-                <Text fontFamily="SFBold">Order Type</Text>
-                <Row
-                    style={{
-                        justifyContent: 'space-around',
-                        width: '80%',
-                        marginTop: SIZES.base
-                    }}
-                >
-                    <ButtonRadio
-                        selected={orderType === 'new'}
-                        title="New"
-                        onPress={() => {
-                            setOrderType('new')
-                        }}
-                    />
-                    <ButtonRadio
-                        selected={orderType === 'move'}
-                        title="Move"
-                        onPress={() => {
-                            setOrderType('move')
-                        }}
-                    />
-                    <ButtonRadio
-                        selected={orderType === 'acp'}
-                        title="ACP"
-                        onPress={() => {
-                            setOrderType('acp')
-                        }}
-                    />
-                </Row>
-            </View>
-
-            <Text fontSize={20} fontFamily="QSLight">{`This customer is ${
-                isReferral ? 'a Referral' : 'not a Referral'
-            } and is ${
-                orderType === 'new'
-                    ? 'new customer'
-                    : orderType === 'move'
-                    ? 'a moving customer'
-                    : 'ACP customer'
-            } `}</Text>
-        </Animated.View>
-    )
-}
