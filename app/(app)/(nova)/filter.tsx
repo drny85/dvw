@@ -33,7 +33,7 @@ const filter = () => {
     return (
         <Screen>
             <View style={Styles.flex}>
-                <Header title="Selection" onPressBack={router.back} />
+                <Header title="Discounts" onPressBack={router.back} />
                 <Switcher
                     value={expressAutoPay === 10}
                     title="Auto Pay"
@@ -123,25 +123,25 @@ const filter = () => {
                         </MotiView>
                     )}
                 </AnimatePresence>
-                <View
-                    style={{
-                        padding: SIZES.padding,
-                        marginTop: SIZES.padding,
-                        justifyContent: 'center',
-                        alignItems: 'center'
+            </View>
+            <View
+                style={{
+                    padding: SIZES.padding,
+                    marginTop: SIZES.padding,
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}
+            >
+                <TouchableOpacity
+                    onPress={() => {
+                        //router.back()
+                        router.push('/(app)/(nova)/nova')
                     }}
                 >
-                    <TouchableOpacity
-                        onPress={() => {
-                            //router.back()
-                            router.push('/(app)/(nova)/nova')
-                        }}
-                    >
-                        <Text fontFamily="QSBold">
-                            Nova Credit Countries List
-                        </Text>
-                    </TouchableOpacity>
-                </View>
+                    <Text fontSize={18} fontFamily="SFHeavy">
+                        Nova Credit Countries List
+                    </Text>
+                </TouchableOpacity>
             </View>
         </Screen>
     )

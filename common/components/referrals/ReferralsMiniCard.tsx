@@ -4,7 +4,7 @@ import { SIZES } from '@/constants/Sizes'
 import Styles from '@/constants/Styles'
 import { ReferralsFilterType } from '@/types'
 import { getResults } from '@/utils/getReferralsFilterData'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { StyleSheet, TouchableOpacity } from 'react-native'
 import Text from '../Text'
 import { router } from 'expo-router'
@@ -22,6 +22,8 @@ const ReferralsMiniCard = ({ subtitle, type }: Props) => {
     const shadow = useThemeColor('secondary')
     const dispatch = useAppDispatch()
     const { loading, referrals } = useReferrals(user?.id!)
+
+    const data = useMemo(() => referrals, [referrals])
     if (loading || !user) null
 
     return (
@@ -40,7 +42,7 @@ const ReferralsMiniCard = ({ subtitle, type }: Props) => {
         >
             <Text fontFamily="QSBold">{subtitle}</Text>
             <Text fontFamily="SFBold" fontSize={22}>
-                {getResults(referrals, type).length}
+                {getResults(data, type).length}
             </Text>
         </TouchableOpacity>
     )

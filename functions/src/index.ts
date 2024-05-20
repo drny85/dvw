@@ -441,6 +441,14 @@ exports.sendWirelessClosedTemplate = onCall<{ referralId: string }>(
             })
 
             console.log('Wireless Closed Template Sent', result.data?.id)
+            await db
+                .collection('referrals')
+                .doc(request.auth.uid)
+                .collection('referrals')
+                .doc(referralId)
+                .update({
+                    emailInstroductionSent: true
+                })
             await increaseEmailSentForUser(request.auth.uid)
             return true
         } catch (error) {

@@ -6,6 +6,7 @@ import { novaCountries } from '@/novaCountries'
 import { router } from 'expo-router'
 import React from 'react'
 import { FlatList } from 'react-native'
+import Animated, { SlideInDown, SlideInRight } from 'react-native-reanimated'
 
 const Nova = () => {
     return (
@@ -17,7 +18,22 @@ const Nova = () => {
                     padding: SIZES.padding
                 }}
                 data={novaCountries}
-                renderItem={({ item }) => <Text>{item.name}</Text>}
+                ListFooterComponent={
+                    <Animated.View
+                        entering={SlideInDown.delay(1300).duration(800)}
+                    >
+                        <Text fontSize={18} fontFamily="OWElight">
+                            Note: Customer might enter 123-45-6789 as SSN
+                        </Text>
+                    </Animated.View>
+                }
+                renderItem={({ item, index }) => (
+                    <Animated.View entering={SlideInRight.delay(index * 100)}>
+                        <Text fontSize={18} fontFamily="QSBold">
+                            {index + 1}) {item.name}
+                        </Text>
+                    </Animated.View>
+                )}
             />
         </Screen>
     )

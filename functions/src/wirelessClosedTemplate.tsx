@@ -71,7 +71,7 @@ export const WirelessClosedTemplate = ({
                                 </Link>
                             </Text>
                             <Text>
-                                3. If any Employee or Special Discounts apply
+                                3. If any Employee or Special Discounts apply,
                                 you can validate them online or through the app {' '}
                                 <Link href="https://www.verizon.com/onesearch/search?q=Employee%20Discount&lid=sayt&sayt=employee*&src=wireless&ES=support">
                                     Additional Discounts

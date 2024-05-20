@@ -171,7 +171,7 @@ const Settings = () => {
                 <View style={styles.info}>
                     <Row style={{ gap: SIZES.padding }}>
                         <Text fontFamily="SFBold" capitalize>
-                            Full Name
+                            Name
                         </Text>
                         {user?.name && !updateName ? (
                             <Text capitalize>{user?.name}</Text>
@@ -186,7 +186,7 @@ const Settings = () => {
                     </Row>
                     <Row style={{ gap: SIZES.padding }}>
                         <Text fontFamily="SFBold" capitalize>
-                            Cell Phone
+                            Phone
                         </Text>
                         {user?.phone && !updatePhone ? (
                             <Text capitalize>{user?.phone}</Text>

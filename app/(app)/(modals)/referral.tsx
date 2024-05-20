@@ -36,7 +36,7 @@ import moment from 'moment'
 import CommentsOrNotes from '@/common/components/CommentsOrNotes'
 import DataPickerModal from '@/common/components/DataPickerModal'
 import Loading from '@/common/components/Loading'
-import NotesBottomSheet from '@/common/components/NotesBottomSheet'
+
 import { useHelpers } from '@/common/hooks/referrals/useHelpers'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
 import {
@@ -55,7 +55,7 @@ import { formatPhone } from '@/utils/formatPhone'
 import { isEmailValid } from '@/utils/isEmailValid'
 import { Dispatch } from '@reduxjs/toolkit'
 import { FlatList } from 'react-native-gesture-handler'
-import BottomSheet, { BottomSheetModal } from '@gorhom/bottom-sheet'
+
 import Animated, {
     SlideInLeft,
     SlideInRight,
@@ -63,12 +63,12 @@ import Animated, {
     SlideOutRight
 } from 'react-native-reanimated'
 import NotesModal from '@/common/components/referrals/NotesModal'
+import { set } from 'react-hook-form'
 
 const GOOGLE_KEY = process.env.EXPO_PUBLIC_GOOGLE_KEY as string
 
 const ReferralsScreen = () => {
     const dispatch = useAppDispatch()
-    const bottomSheetRef = useRef<BottomSheetModal>(null)
     const user = useAppSelector((s) => s.auth.user)
     const {
         referral: editingReferral,
@@ -171,7 +171,6 @@ const ReferralsScreen = () => {
             setIndex((prev) => prev + 1)
         }
         if (index === 1) {
-            console.log(address)
             if (address === '') {
                 Alert.alert('Please enter a valid address')
                 googleRef.current?.focus()
@@ -1270,7 +1269,10 @@ function SectionThree(
             <View style={{ marginTop: SIZES.padding * 1.5 }}>
                 <CommentsOrNotes
                     comment={referral.comment || ''}
-                    onOpen={() => setShowComment(true)}
+                    onOpen={() => {
+                        dispatch(setComment(referral.comment))
+                        setShowComment(true)
+                    }}
                 />
             </View>
         </Animated.View>
@@ -1534,7 +1536,6 @@ function SectionTwo(
     setShowManagers: React.Dispatch<React.SetStateAction<boolean>>,
     placeholderColor: string
 ): React.ReactNode {
-    console.log(isReferral)
     return (
         <Animated.View
             exiting={SlideOutLeft.duration(600)}

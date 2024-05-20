@@ -127,16 +127,23 @@ const DirectoryListItem = ({ user }: Props) => {
                             <FontAwesome name="phone" size={22} color={color} />
                         </TouchableOpacity>
                     )}
+
+                    {user.phone && (
+                        <TouchableOpacity
+                            onPress={() => sendMessage(user.phone!, user.name)}
+                        >
+                            <AntDesign
+                                name="message1"
+                                size={22}
+                                color={color}
+                            />
+                        </TouchableOpacity>
+                    )}
                     <TouchableOpacity
                         onLongPress={() => onPaste(user.email!, user.name)}
                         onPress={() => sendEmail(user.email!)}
                     >
                         <FontAwesome name="envelope" size={22} color={color} />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => sendMessage(user.phone!, user.name)}
-                    >
-                        <AntDesign name="message1" size={22} color={ascent} />
                     </TouchableOpacity>
                 </Row>
             </View>

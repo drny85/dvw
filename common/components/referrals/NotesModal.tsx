@@ -28,12 +28,18 @@ export default function NotesModal({ show, setShow, onDone }: Props) {
     const dispatch = useAppDispatch()
     const backgroundColor = useThemeColor('background')
     const comment = useAppSelector((s) => s.referrals.comment)
+
+    const resetComment = () => {
+        dispatch(setComment(null))
+        Keyboard.dismiss()
+        setShow(false)
+    }
     return (
         <Modal transparent animationType="slide" visible={show}>
             <TouchableHighlight
                 underlayColor={'#0e0d0d5c'}
                 activeOpacity={1}
-                onPress={() => setShow(false)}
+                onPress={resetComment}
                 style={{ flex: 1, backgroundColor: '#212121b5', zIndex: -10 }}
             >
                 <View
@@ -58,7 +64,7 @@ export default function NotesModal({ show, setShow, onDone }: Props) {
                             underlayColor={backgroundColor}
                             activeOpacity={1}
                             style={{ flex: 1, borderRadius: SIZES.radius * 3 }}
-                            onPress={Keyboard.dismiss}
+                            onPress={resetComment}
                         >
                             <View
                                 style={{
@@ -83,9 +89,7 @@ export default function NotesModal({ show, setShow, onDone }: Props) {
                                         height: 32
                                     }}
                                 >
-                                    <TouchableOpacity
-                                        onPress={() => setShow(false)}
-                                    >
+                                    <TouchableOpacity onPress={resetComment}>
                                         <FontAwesome
                                             name="close"
                                             size={20}

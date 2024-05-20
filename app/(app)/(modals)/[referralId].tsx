@@ -154,21 +154,22 @@ const ReferralDetails = () => {
     }
 
     useEffect(() => {
+        if (!referral) return
         if (referral?.followUpOn) {
             const diff = moment(referral?.followUpOn).isBefore(
-                moment().subtract(15, 'minutes')
+                moment().subtract(5, 'minutes')
             )
             if (diff) {
                 dispatch(
                     updateReferral({
-                        ...referral!,
+                        ...referral,
                         followUpOn: null,
                         followUpType: null
                     })
                 )
             }
         }
-    }, [])
+    }, [referral?.followUpOn])
 
     if (loading || !id) return <Loading />
     if (!referral)
@@ -355,7 +356,7 @@ const ReferralDetails = () => {
                                         }}
                                     >
                                         <FontAwesome
-                                            name="envelope"
+                                            name="handshake-o"
                                             size={24}
                                             color={textColor}
                                         />

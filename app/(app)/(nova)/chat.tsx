@@ -7,6 +7,7 @@ import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import { FontAwesome } from '@expo/vector-icons'
 import { router, useLocalSearchParams, useNavigation } from 'expo-router'
+import { StatusBar } from 'expo-status-bar'
 import React, { useLayoutEffect } from 'react'
 import { KeyboardAvoidingView, TouchableOpacity } from 'react-native'
 
@@ -56,6 +57,7 @@ const Chat = () => {
     // const { topic, createdAt, messages }
     return (
         <Screen>
+            <StatusBar style="light" />
             <KeyboardAvoidingView
                 behavior="padding"
                 style={{ flex: 1 }}

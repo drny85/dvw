@@ -215,10 +215,10 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
             </Row> */}
             <Divider />
             <RowView show={lines.length > 0}>
-                <Text fontFamily="SFBold" fontSize={18}>
+                <Text fontFamily="SFBold" fontSize={16}>
                     Sub-Total
                 </Text>
-                <Text fontFamily="SFBold" fontSize={18}>
+                <Text fontFamily="SFBold" fontSize={16}>
                     $
                     {lines.reduce((acc, line) => acc + line.price, 0) +
                         mobilePlusHomeDiscount() +
@@ -236,11 +236,11 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
             </RowView>
             <RowView show={autoPayDiscount() > 0}>
                 <Text>Auto Pay Discount</Text>
-                <Text>-${autoPayDiscount()}</Text>
+                <Text color="red">-${autoPayDiscount()}</Text>
             </RowView>
             <RowView show={mobilePlusHomeDiscount() > 0}>
                 <Text>M + H Discount</Text>
-                <Text>-${mobilePlusHomeDiscount()}</Text>
+                <Text color="red">-${mobilePlusHomeDiscount()}</Text>
             </RowView>
             <RowView
                 show={
@@ -252,28 +252,28 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
                 <Text fontSize={14} color="error">
                     ends ({LOYALTY_EXPIRATION_DATE})
                 </Text>
-                <Text>-${loyaltyBonusDiscount()}</Text>
+                <Text color="red">-${loyaltyBonusDiscount()}</Text>
             </RowView>
             <RowView show={firstResponder() > 0}>
                 <Text>First Responder</Text>
-                <Text>-${firstResponder()}</Text>
+                <Text color="red">-${firstResponder()}</Text>
             </RowView>
             <RowView show={byod > 0}>
                 <Text>BYOD Savings</Text>
-                <Text>-${byod}</Text>
+                <Text color="red">-${byod}</Text>
             </RowView>
             <RowView show={welcomeTotal > 0 && isWelcome && lines.length <= 3}>
                 <Text>LGPO</Text>
-                <Text>-${welcomeOfferBonus()}</Text>
+                <Text color="red">-${welcomeOfferBonus()}</Text>
             </RowView>
             <RowView show={lines.length > 0}>
-                <Text fontFamily="SFHeavy" fontSize={22}>
+                <Text fontFamily="SFHeavy" fontSize={20}>
                     Total
                 </Text>
                 <Text color="grey">
                     {autoPayDiscount() === 0 ? 'w/o' : 'w/'} auto pay
                 </Text>
-                <Text fontFamily="SFHeavy" fontSize={22}>
+                <Text fontFamily="SFHeavy" fontSize={20}>
                     ${total().toFixed(0)}
                 </Text>
             </RowView>

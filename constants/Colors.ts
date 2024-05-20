@@ -27,7 +27,8 @@ const Colors = {
         tabIconSelected: brandColor,
         grey: '#808080',
         placeholder: '#748cab',
-        black: '#212121'
+        black: '#212121',
+        red: '#9e2a2b'
     },
     dark: {
         background: '#14213d',
@@ -47,7 +48,8 @@ const Colors = {
         tabIconSelected: brandColor,
         grey: '#808080',
         placeholder: '#748cab',
-        black: '#212121'
+        black: '#212121',
+        red: '#e5383b'
     },
     pink: {
         background: '#14213d',
@@ -67,7 +69,8 @@ const Colors = {
         tabIconSelected: brandColor,
         grey: '#808080',
         placeholder: '#748cab',
-        black: '#212121'
+        black: '#212121',
+        red: '#e5383b'
     }
 }
 

@@ -1,6 +1,5 @@
 import DirectoryListItem from '@/common/components/DirectoryListItem'
 import Loading from '@/common/components/Loading'
-import Row from '@/common/components/Row'
 import Text from '@/common/components/Text'
 import View from '@/common/components/View'
 import useAppSelector from '@/common/hooks/useAppSelector'
@@ -19,18 +18,11 @@ import React, {
     useMemo,
     useState
 } from 'react'
-import {
-    Alert,
-    FlatList,
-    Image,
-    ListRenderItem,
-    ScrollView,
-    TouchableOpacity
-} from 'react-native'
+import { FlatList, ListRenderItem, ScrollView } from 'react-native'
 
 const Directory = () => {
     const navigation = useNavigation()
-    const ascent = useThemeColor('accent')
+
     const background = useThemeColor('background')
     const textColor = useThemeColor('text')
     const user = useAppSelector((s) => s.auth.user)

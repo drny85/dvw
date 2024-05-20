@@ -5,7 +5,7 @@ const { width, height } = Dimensions.get('window')
 export const SIZES = {
     radius: 12,
     padding: 16,
-    font: 16,
+    font: 15,
     base: 8,
     width,
     height,

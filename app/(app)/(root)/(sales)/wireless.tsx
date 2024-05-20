@@ -10,7 +10,7 @@ import useAppSelector from '@/common/hooks/useAppSelector'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import Styles from '@/constants/Styles'
-import { SaleData, SalesRange } from '@/types'
+import { SaleData } from '@/types'
 import {
     formatedData,
     generateFeedsBasedOnRange,
@@ -21,28 +21,21 @@ import moment from 'moment'
 import { AnimatePresence, MotiView } from 'moti'
 
 import ProgressCircle from '@/common/components/referrals/ProgressCircle'
-import Referrals from '@/common/components/referrals/Referrals'
 import { WIRELESS_MONTHLY_GOAL } from '@/constants'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import {
     FlatList,
     ListRenderItem,
     StyleSheet,
     TouchableOpacity
 } from 'react-native'
+import { calculateSalesGoals } from '@/utils/calculateGoals'
 
-const getMonthlyGoal = (range: SalesRange): number => {
-    if (range === 'mtd') return WIRELESS_MONTHLY_GOAL
-    if (range === 'ytd') return WIRELESS_MONTHLY_GOAL * 12
-    if (range === 'wtd') return WIRELESS_MONTHLY_GOAL / 4
-    if (range === 'all') return WIRELESS_MONTHLY_GOAL * 7
-    if (range === 'today') return WIRELESS_MONTHLY_GOAL / 30
-    return 0
-}
+const OPTIONS = ['Week', 'Month', 'Year']
 
 const Sales = () => {
     const { loading, feeds } = useFeeds()
-    const [view, setView] = useState<'sales' | 'referrals'>('referrals')
+    const user = useAppSelector((s) => s.auth.user)
     const [data, setData] = useState<SaleData[]>([])
     const range = useAppSelector((s) => s.sales.range)
     const [expand, setExpand] = useState<boolean>(false)
@@ -50,22 +43,12 @@ const Sales = () => {
 
     const sales = salesData(data)
     const backgroundColor = useThemeColor('accent')
-    const borderColor = useThemeColor('secondary')
     const iconColor = useThemeColor('text')
-    const totalSales = data.reduce((a, b) => a + b.numberOfLines, 0)
 
-    const goalPercentage = (r: SalesRange) =>
-        Math.round((totalSales / getMonthlyGoal(r)) * 100)
-
-    const today = data.filter((d) =>
-        moment(d.createdAt).startOf('day').isSame(moment().startOf('day'))
-    )
-
-    const todayGoal = Math.round(
-        (today.reduce((a, b) => a + b.numberOfLines, 0) /
-            (WIRELESS_MONTHLY_GOAL / 30)) *
-            100
-    )
+    const goals = useMemo(() => {
+        if (!user) return 0
+        return calculateSalesGoals(user?.id, WIRELESS_MONTHLY_GOAL, data)
+    }, [data, user])
 
     const renderSales: ListRenderItem<SaleData> = ({ item }) => {
         return SaleDataLine(
@@ -108,43 +91,25 @@ const Sales = () => {
                         Monthly Goal {WIRELESS_MONTHLY_GOAL}
                     </Text>
                     <Row style={{ gap: SIZES.padding }}>
-                        {['today', 'wtd', 'mtd'].map((r) => (
+                        {Object.values(goals).map((r, index) => (
                             <View
                                 style={{
                                     justifyContent: 'center',
                                     alignItems: 'center'
                                 }}
-                                key={r}
+                                key={index}
                             >
                                 <ProgressCircle
-                                    percentage={
-                                        r === 'today'
-                                            ? todayGoal
-                                            : goalPercentage(r as SalesRange)
-                                    }
+                                    percentage={r.percentage}
                                     textColor={iconColor}
                                     color={backgroundColor}
                                     duration={600}
                                     max={100}
-                                    strokeWidth={8}
+                                    strokeWidth={10}
                                 />
                                 <Text fontFamily="SFBold" fontSize={12}>
-                                    {r === 'wtd'
-                                        ? 'Weekly'
-                                        : r === 'mtd'
-                                        ? 'Monthly'
-                                        : r === 'today'
-                                        ? 'Daily'
-                                        : ''}
-                                    (
-                                    {r === 'today'
-                                        ? (WIRELESS_MONTHLY_GOAL / 30).toFixed(
-                                              1
-                                          )
-                                        : Math.ceil(
-                                              getMonthlyGoal(r as SalesRange)
-                                          ).toFixed(1)}
-                                    )
+                                    {OPTIONS[index]} (
+                                    {r.units.toFixed(index === 0 ? 1 : 0)})
                                 </Text>
                             </View>
                         ))}
@@ -283,3 +248,5 @@ function SaleDataLine(
         </MotiView>
     )
 }
+
+// Example usage

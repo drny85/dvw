@@ -16,7 +16,7 @@ type Props = {
 }
 const ProgressCircle = ({
     percentage,
-    radius = (SIZES.width * 0.2) / 2,
+    radius = (SIZES.width * 0.25) / 2,
     strokeWidth = 10,
     duration = 500,
     color,

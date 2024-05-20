@@ -121,7 +121,7 @@ const LineItem = ({
 
                                 <Text
                                     onPress={() => setLinePressed(true)}
-                                    fontSize={16}
+                                    fontSize={14}
                                     fontFamily="SFBold"
                                 >
                                     {SIZES.width > 500
@@ -157,7 +157,10 @@ const LineItem = ({
                 </View>
 
                 <View style={styles.lineName}>
-                    <Text fontFamily={line.byod ? 'SFBold' : 'SFRegular'}>
+                    <Text
+                        fontSize={14}
+                        fontFamily={line.byod ? 'SFBold' : 'SFRegular'}
+                    >
                         BYOD
                     </Text>
                     <Switch
@@ -169,12 +172,12 @@ const LineItem = ({
                     />
                 </View>
                 <View style={styles.lineName}>
-                    <Text fontSize={18} fontFamily="SFBold">
+                    <Text fontSize={16} fontFamily="SFBold">
                         ${line.price}
                     </Text>
                 </View>
                 <TouchableOpacity onPress={() => onPerksPress(line.id)}>
-                    <Text>
+                    <Text fontSize={14}>
                         {' '}
                         {totalPerksCount([], line) > 0
                             ? `Perks ${totalPerksCount([], line)}`
