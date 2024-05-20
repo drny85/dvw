@@ -24,6 +24,7 @@ const HomeLayout = () => {
     const bgColor = useThemeColor('background')
     const acent = useThemeColor('accent')
     const text = useThemeColor('text')
+    const border = useThemeColor('tertiary')
 
     useEffect(() => {
         async function checkFirstTime() {
@@ -41,7 +42,11 @@ const HomeLayout = () => {
     return (
         <MaterialTopTabs
             screenOptions={{
-                tabBarStyle: { backgroundColor: bgColor },
+                tabBarStyle: {
+                    backgroundColor: bgColor,
+                    borderColor: border,
+                    borderBottomWidth: 0.5
+                },
                 tabBarActiveTintColor: text,
                 tabBarIndicatorStyle: { backgroundColor: acent, height: 3 },
                 tabBarLabelStyle: {
