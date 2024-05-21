@@ -1,6 +1,12 @@
 import Screen from '@/common/components/Screen'
 import React, { useState } from 'react'
-import { Alert, Button, KeyboardAvoidingView } from 'react-native'
+import {
+    Alert,
+    Button,
+    Keyboard,
+    KeyboardAvoidingView,
+    TouchableWithoutFeedback
+} from 'react-native'
 import Header from '@/common/components/Header'
 import TextInput from '@/common/components/TextInput'
 import { SIZES } from '@/constants/Sizes'
@@ -29,27 +35,32 @@ const passwordReset = () => {
     return (
         <Screen>
             <Header title="Reset Password" onPressBack={router.back} />
-            <KeyboardAvoidingView
-                behavior="padding"
-                style={{
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    padding: 20,
-                    gap: SIZES.padding * 2
-                }}
+            <TouchableWithoutFeedback
+                style={{ flex: 1 }}
+                onPress={Keyboard.dismiss}
             >
-                <TextInput
-                    placeholder="Email Address"
-                    value={email}
-                    onChangeText={setEmail}
-                    capitalize={false}
-                    autoCapitalize="none"
-                    keyboardType="email-address"
-                />
+                <KeyboardAvoidingView
+                    behavior="padding"
+                    style={{
+                        flex: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        padding: 20,
+                        gap: SIZES.padding * 2
+                    }}
+                >
+                    <TextInput
+                        placeholder="Email Address"
+                        value={email}
+                        onChangeText={(text) => setEmail(text.toLowerCase())}
+                        capitalize={false}
+                        autoCapitalize="none"
+                        keyboardType="email-address"
+                    />
 
-                <Button title="Submit" onPress={handleSubmit} />
-            </KeyboardAvoidingView>
+                    <Button title="Submit" onPress={handleSubmit} />
+                </KeyboardAvoidingView>
+            </TouchableWithoutFeedback>
         </Screen>
     )
 }
