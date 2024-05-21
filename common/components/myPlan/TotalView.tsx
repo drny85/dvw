@@ -180,7 +180,7 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
                 }}
             >
                 {showResetAll && (
-                    <Text fontFamily="SFLight" fontSize={12}>
+                    <Text center fontFamily="SFLight" fontSize={12}>
                         Note: ${lines.length * 35} activation fee will be
                         included in the first bill
                     </Text>
@@ -195,7 +195,7 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
                 onPress={onClickSave}
             >
                 <Text center={true} fontFamily="SFHeavy" color="accent">
-                    {showResetAll ? 'Summary' : 'Save Wireless Quote'}
+                    {showResetAll ? 'View Summary' : 'Save Wireless Quote'}
                 </Text>
             </TouchableOpacity>
             {/* <Row style={{ alignSelf: 'center', gap: 8 }}>
@@ -260,6 +260,9 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
             </RowView>
             <RowView show={byod > 0}>
                 <Text>BYOD Savings</Text>
+                <Text fontFamily="SFLight" color="grey" fontSize={13}>
+                    (36 months)
+                </Text>
                 <Text color="red">-${byod}</Text>
             </RowView>
             <RowView show={welcomeTotal > 0 && isWelcome && lines.length <= 3}>
@@ -278,6 +281,7 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
                 </Text>
             </RowView>
             <Divider small />
+
             {showResetAll && (
                 <Row
                     style={{

@@ -9,10 +9,11 @@ export const useFeeds = () => {
     const [feeds, setFeeds] = useState<Feed[]>([])
 
     const user = useAppSelector((s) => s.auth.user)
+
     useEffect(() => {
         if (!user) {
             setLoading(false)
-            //setFeeds([])
+            setFeeds([])
             return
         }
         const blocked = [...user.blockedUsers]
@@ -29,3 +30,4 @@ export const useFeeds = () => {
 
     return { loading, feeds }
 }
+1

@@ -139,7 +139,7 @@ const LineItem = ({
                             <View key={p}>
                                 <MenuItem
                                     textStyle={{
-                                        color: text,
+                                        color: '#ffffff',
                                         fontFamily: 'SFBold'
                                     }}
                                     pressColor={bgColor}
