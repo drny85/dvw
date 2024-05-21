@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
     inputContainer: {
         position: 'relative',
         flexDirection: 'column-reverse',
-        borderRadius: SIZES.radius * 2,
+        borderRadius: SIZES.radius,
         marginHorizontal: SIZES.base
     },
     composer: {

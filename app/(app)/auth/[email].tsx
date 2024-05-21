@@ -5,6 +5,7 @@ import { TouchableOpacity } from 'react-native'
 import { SIZES } from '@/constants/Sizes'
 import { router, useLocalSearchParams } from 'expo-router'
 import useThemeColor from '@/common/hooks/useThemeColor'
+import View from '@/common/components/View'
 
 const EmailVerification = () => {
     const btnColor = useThemeColor('accent')
@@ -19,7 +20,25 @@ const EmailVerification = () => {
                 padding: SIZES.padding
             }}
         >
-            <Text style={{ fontSize: 16, fontWeight: 'bold', lineHeight: 30 }}>
+            <View
+                style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: 4
+                }}
+            >
+                <Text fontFamily="SFMedium" fontSize={20}>
+                    Hey, it was not going to be that easy.
+                </Text>
+                <Text fontFamily="SFMedium" fontSize={20}>
+                    We need to verify your email
+                </Text>
+            </View>
+            <Text
+                fontFamily="QSRegular"
+                fontSize={16}
+                style={{ lineHeight: 24 }}
+            >
                 Email was sent to {email}, Please check your inbox or junk
                 folder and verify your email address.
             </Text>

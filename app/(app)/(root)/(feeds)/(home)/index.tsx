@@ -11,13 +11,10 @@ import useAppDispatch from '@/common/hooks/useAppDispatch'
 import useAppSelector from '@/common/hooks/useAppSelector'
 import { useStatusBarColor } from '@/common/hooks/useStatusBarColor'
 import { SIZES } from '@/constants/Sizes'
-
 import { deleteFeed, updateFeed } from '@/features/feeds/feedsActions'
-
 import { Feed } from '@/types'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { router } from 'expo-router'
-import { StatusBar } from 'expo-status-bar'
 import React, { useCallback, useRef } from 'react'
 
 import { Button, FlatList, ListRenderItem, StyleSheet } from 'react-native'
@@ -108,27 +105,16 @@ const Feeds = () => {
                 </View>
             )}
             {feeds.length > 0 && (
-                <>
-                    {/* <Header
-                        title="Posts"
-                        contentContainerStyle={{ paddingRight: 10 }}
-                        hasRightIcon
-                        rightIcon={
-                           
-                        }
-                    /> */}
-
-                    <FlatList
-                        data={feeds}
-                        showsVerticalScrollIndicator={false}
-                        contentContainerStyle={{
-                            paddingHorizontal: 6,
-                            gap: SIZES.padding
-                        }}
-                        keyExtractor={(item) => item.id!}
-                        renderItem={renderFeeds}
-                    />
-                </>
+                <FlatList
+                    data={feeds}
+                    showsVerticalScrollIndicator={false}
+                    contentContainerStyle={{
+                        paddingHorizontal: 6,
+                        gap: SIZES.padding
+                    }}
+                    keyExtractor={(item) => item.id!}
+                    renderItem={renderFeeds}
+                />
             )}
 
             <FeedBottomSheet

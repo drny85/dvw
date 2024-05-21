@@ -293,6 +293,7 @@ const Signup = () => {
                                             onBlur={() => {
                                                 onBlur()
                                             }}
+                                            textContentType="oneTimeCode"
                                             onChangeText={onChange}
                                             secureTextEntry={!showPassword}
                                             error={
@@ -332,6 +333,7 @@ const Signup = () => {
                                             placeholder="Confirm Password"
                                             value={value}
                                             onChangeText={onChange}
+                                            textContentType="oneTimeCode"
                                             onBlur={() => {
                                                 onBlur()
                                             }}
