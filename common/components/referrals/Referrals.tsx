@@ -24,9 +24,10 @@ import {
 } from '@/features/referrals/referralsSlide'
 
 const Referrals = () => {
-    const bgColor = useThemeColor('secondary')
+    const bgColor = useThemeColor('background')
     const { loading, helpers } = useHelpers()
     const accent = useThemeColor('accent')
+    const text = useThemeColor('text')
     const dispatch = useAppDispatch()
     const user = useAppSelector((s) => s.auth.user)
 
@@ -98,6 +99,7 @@ const Referrals = () => {
 
             {show && (
                 <ScrollView
+                    showsVerticalScrollIndicator={false}
                     contentContainerStyle={{
                         padding: SIZES.base,
                         gap: SIZES.padding
@@ -227,7 +229,7 @@ const Referrals = () => {
                         router.push('/(app)/(modals)/referral')
                     }}
                 >
-                    <FontAwesome name="plus" size={30} color={'white'} />
+                    <FontAwesome name="plus" size={30} color={text} />
                 </TouchableOpacity>
             )}
         </Screen>

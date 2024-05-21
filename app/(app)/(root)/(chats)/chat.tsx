@@ -12,8 +12,7 @@ import { deleteChat } from '@/features/chats/chatsActions'
 import { Chat } from '@/types'
 import { FontAwesome } from '@expo/vector-icons'
 import { router, useNavigation } from 'expo-router'
-import { setStatusBarStyle, StatusBar } from 'expo-status-bar'
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import {
     Alert,
     FlatList,
@@ -31,6 +30,9 @@ const ChatScreen = () => {
     const user = useAppSelector((s) => s.auth.user)
 
     const { chats, loading } = useChats()
+    const disabled = useMemo(() => {
+        return chats.findIndex((c) => c.user.id === user?.id) === -1
+    }, [chats])
 
     const [data, setData] = useState<Chat[]>([])
     const [search, setSearch] = useState<string>('')
@@ -87,8 +89,7 @@ const ChatScreen = () => {
                 color
             },
             headerLeft: () => {
-                const disabled =
-                    chats.findIndex((c) => c.user.id === user?.id) === -1
+                console.log(disabled)
 
                 return (
                     <TouchableOpacity
@@ -131,7 +132,7 @@ const ChatScreen = () => {
                 }
             }
         })
-    }, [navigation, showDelete, bgColor])
+    }, [navigation, showDelete, bgColor, disabled])
 
     useEffect(() => {
         if (search) {

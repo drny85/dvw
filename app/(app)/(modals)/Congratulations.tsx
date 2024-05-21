@@ -20,11 +20,11 @@ const Congratulations = () => {
     const navigateBack = () => {
         dispatch(setSaleQuoteReferral(null))
 
-        router.push('/(app)/(root)/(sales)')
+        router.replace('/(app)/(root)/(sales)')
     }
 
     const goToPlan = () => {
-        router.push('/(app)/(modals)/scheduleWireles')
+        router.replace('/(app)/(modals)/scheduleWireles')
     }
     return (
         <Screen style={Styles.flex}>

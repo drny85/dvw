@@ -1,7 +1,14 @@
 import { Chat, Msg } from '@/types'
 import { chatsCollection, messagesCollection } from '@/utils/collections'
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { addDoc, deleteDoc, doc } from 'firebase/firestore'
+import {
+    addDoc,
+    deleteDoc,
+    doc,
+    getDocs,
+    query,
+    where
+} from 'firebase/firestore'
 
 export const createChat = createAsyncThunk(
     'chats/create',
@@ -50,8 +57,22 @@ export const deleteChat = createAsyncThunk(
             const chatRef = doc(chatsCollection, id)
 
             await deleteDoc(chatRef)
+            await deleteChatMessages(id)
         } catch (error) {
             console.log(error)
         }
     }
 )
+
+const deleteChatMessages = async (chatId: string) => {
+    try {
+        const ref = query(messagesCollection, where('chatId', '==', chatId))
+        const messages = await getDocs(ref)
+        if (messages.empty) return
+        messages.forEach(async (doc) => {
+            await deleteDoc(doc.ref)
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}

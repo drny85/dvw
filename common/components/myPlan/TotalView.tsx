@@ -1,6 +1,9 @@
 import useAppDispatch from '@/common/hooks/useAppDispatch'
 import useAppSelector from '@/common/hooks/useAppSelector'
-import { LOYALTY_EXPIRATION_DATE } from '@/constants'
+import {
+    LOYALTY_EXPIRATION_DATE,
+    WELCOME_OFFER_EXPIRATION_DATE
+} from '@/constants'
 import { SIZES } from '@/constants/Sizes'
 import {
     setExpressAutoPay,
@@ -22,6 +25,7 @@ import Divider from '../Divider'
 import Row from '../Row'
 import Text from '../Text'
 import View from '../View'
+import { WELCOME_BYOD_VALUE } from '@/functions/src/typing'
 
 type Props = {
     showResetAll?: boolean
@@ -45,6 +49,10 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
 
     const welcomeOfferBonus = (): number => {
         if (welcomeTotal === 0 || !isWelcome || lines.length > 3) return 0
+        if (
+            moment(WELCOME_OFFER_EXPIRATION_DATE).endOf('day').isAfter(moment())
+        )
+            return 0
 
         return welcomeTotal === 1
             ? 10
@@ -265,8 +273,18 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
                 </Text>
                 <Text color="red">-${byod}</Text>
             </RowView>
-            <RowView show={welcomeTotal > 0 && isWelcome && lines.length <= 3}>
+            <RowView
+                show={
+                    welcomeTotal > 0 &&
+                    isWelcome &&
+                    lines.length <= 3 &&
+                    welcomeOfferBonus() > 0
+                }
+            >
                 <Text>LGPO</Text>
+                <Text fontFamily="SFLight" color="warning" fontSize={13}>
+                    exprires ({WELCOME_OFFER_EXPIRATION_DATE})
+                </Text>
                 <Text color="red">-${welcomeOfferBonus()}</Text>
             </RowView>
             <RowView show={lines.length > 0}>

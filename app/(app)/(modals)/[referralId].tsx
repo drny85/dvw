@@ -1,6 +1,7 @@
 import CommentsOrNotes from '@/common/components/CommentsOrNotes'
 import Header from '@/common/components/Header'
 import Loading from '@/common/components/Loading'
+import NeoView from '@/common/components/NeoView'
 import NotesModal from '@/common/components/referrals/NotesModal'
 import Row from '@/common/components/Row'
 import Scheduler from '@/common/components/Scheduler'
@@ -320,89 +321,94 @@ const ReferralDetails = () => {
                             }}
                         >
                             {!referral.followUpOn && (
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        dispatch(setShowScheduler(true))
-                                    }}
-                                >
+                                <NeoView rounded size={40}>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            dispatch(setShowScheduler(true))
+                                        }}
+                                    >
+                                        <FontAwesome
+                                            name="calendar-o"
+                                            color={textColor}
+                                            size={24}
+                                        />
+                                    </TouchableOpacity>
+                                </NeoView>
+                            )}
+                            <NeoView rounded size={40}>
+                                <TouchableOpacity onPress={makeCall}>
                                     <FontAwesome
-                                        name="calendar-o"
-                                        color={textColor}
+                                        name="phone"
                                         size={24}
+                                        color={textColor}
                                     />
                                 </TouchableOpacity>
-                            )}
+                            </NeoView>
                             {!referral.emailInstroductionSent &&
                                 referral.status.id !== 'not_sold' &&
                                 referral.status.id !== 'closed' && (
+                                    <NeoView rounded size={40}>
+                                        <TouchableOpacity
+                                            disabled={sendingEmail}
+                                            onPress={() => {
+                                                Alert.alert(
+                                                    'Send Email',
+                                                    'This will send an email introduction to the customer \n Would you like to send it?',
+                                                    [
+                                                        {
+                                                            text: 'Cancel',
+                                                            style: 'cancel'
+                                                        },
+                                                        {
+                                                            text: 'Send',
+                                                            onPress:
+                                                                sendIntroEmail,
+                                                            style: 'destructive'
+                                                        }
+                                                    ]
+                                                )
+                                            }}
+                                        >
+                                            <FontAwesome
+                                                name="handshake-o"
+                                                size={24}
+                                                color={textColor}
+                                            />
+                                        </TouchableOpacity>
+                                    </NeoView>
+                                )}
+
+                            {sendingWirelessEmail ? (
+                                <ActivityIndicator size={'small'} />
+                            ) : !referral.emailWirelessTemplateSent ? (
+                                <NeoView rounded size={40}>
                                     <TouchableOpacity
-                                        disabled={sendingEmail}
                                         onPress={() => {
                                             Alert.alert(
-                                                'Send Email',
-                                                'This will send an email introduction to the customer \n Would you like to send it?',
+                                                'Send Wireless Template',
+                                                `Would you like to send helpful wireless information to ${referral.name}?`,
                                                 [
                                                     {
                                                         text: 'Cancel',
                                                         style: 'cancel'
                                                     },
                                                     {
-                                                        text: 'Send',
-                                                        onPress: sendIntroEmail,
-                                                        style: 'destructive'
+                                                        text: 'Yes, Send it',
+                                                        onPress: sendWirelessT
                                                     }
                                                 ]
                                             )
                                         }}
                                     >
-                                        <FontAwesome
-                                            name="handshake-o"
-                                            size={24}
-                                            color={textColor}
-                                        />
+                                        <Row style={{ gap: 4 }}>
+                                            <Entypo
+                                                name="email"
+                                                size={24}
+                                                color={textColor}
+                                            />
+                                        </Row>
                                     </TouchableOpacity>
-                                )}
-                            <TouchableOpacity onPress={makeCall}>
-                                <FontAwesome
-                                    name="phone"
-                                    size={24}
-                                    color={textColor}
-                                />
-                            </TouchableOpacity>
-                            {sendingWirelessEmail ? (
-                                <ActivityIndicator size={'small'} />
-                            ) : !referral.emailWirelessTemplateSent ? (
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        Alert.alert(
-                                            'Send Wireless Template',
-                                            `Would you like to send helpful wireless information to ${referral.name}?`,
-                                            [
-                                                {
-                                                    text: 'Cancel',
-                                                    style: 'cancel'
-                                                },
-                                                {
-                                                    text: 'Yes, Send it',
-                                                    onPress: sendWirelessT
-                                                }
-                                            ]
-                                        )
-                                    }}
-                                >
-                                    <Row style={{ gap: 4 }}>
-                                        <Entypo
-                                            name="email"
-                                            size={24}
-                                            color={textColor}
-                                        />
-                                        <FontAwesome
-                                            name="mobile"
-                                            size={26}
-                                            color={textColor}
-                                        />
-                                    </Row>
-                                </TouchableOpacity>
+                                </NeoView>
                             ) : null}
                         </Row>
                     </View>

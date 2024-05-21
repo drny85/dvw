@@ -111,7 +111,7 @@ exports.sendIntroductionEmail = onCall<{
         }
         const Template: typeof IntroductionEmail = IntroductionEmail
         await resend.emails.send({
-            from: `${user.name} <melendez@robertdev.net>`,
+            from: `${user.name} <no-reply@robertdev.net>`,
             to: [referral.email!],
             reply_to: user.email,
             subject: `Your Dedicated Verizon Specialist at ${referral.propertyName}`,
@@ -159,7 +159,7 @@ exports.sendEmail = onCall<{ quoteId: string }>(
             }
             const Template: typeof WirelessQuoteEmail = WirelessQuoteEmail
             await resend.emails.send({
-                from: `${user.name} <melendez@robertdev.net>`,
+                from: `${user.name} <no-reply@robertdev.net>`,
                 to: [quote.email],
                 subject: 'Wireless Quote',
                 reply_to: user.email,
@@ -314,7 +314,7 @@ exports.sendClosedEmail = onDocumentWritten(
             const Template: typeof SendCloseEmail = SendCloseEmail
             //SEND EMAIL TO LA
             await resend.emails.send({
-                from: `${user.name} <melendez@robertdev.net>`,
+                from: `${user.name} <no-reply@robertdev.net>`,
                 to: [coachEmail],
                 subject: 'Sale / Referral Closed',
                 reply_to: user.email,
@@ -338,7 +338,7 @@ exports.sendClosedEmail = onDocumentWritten(
                 const TemplateTwo: typeof SendCloseEmailToReferee =
                     SendCloseEmailToReferee
                 await resend.emails.send({
-                    from: `${user.name} <melendez@robertdev.net>`,
+                    from: `${user.name} <no-reply@robertdev.net>`,
                     to: [refereeEmail],
                     subject: 'Congratulations! This Referral Has Been Closed',
                     reply_to: user.email,
@@ -431,7 +431,7 @@ exports.sendWirelessClosedTemplate = onCall<{ referralId: string }>(
                 repPhone: phone || ''
             }
             const result = await resend.emails.send({
-                from: `${name} <melendez@robertdev.net>`,
+                from: `${name} <no-reply@robertdev.net>`,
                 to: [referral.email!],
                 subject: 'Helpful Information For Your Wireless Service',
                 reply_to: user.email,

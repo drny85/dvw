@@ -2,6 +2,7 @@ export const ULTIMATE_BYOD_VALUE = 540 / 36
 export const PLUS_BYOD_VALUE = 360 / 36
 export const WELCOME_BYOD_VALUE = 180 / 36
 export const LOYALTY_EXPIRATION_DATE = '05/08/2024'
+export const WELCOME_OFFER_EXPIRATION_DATE = '06/30/2024'
 export const WIRELESS_MONTHLY_GOAL = 10
 export const WIRELESS_DIRECT = 125
 export const WIRELESS_CLICK_TO_CALL = 60
