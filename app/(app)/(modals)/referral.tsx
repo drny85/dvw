@@ -83,6 +83,7 @@ const ReferralsScreen = () => {
     const [showOrderDueDate, setShowOrderDueDate] = React.useState(false)
     const [showWirelessPicker, setShowWirelessPicker] = React.useState(false)
     const [showHomePicker, setShowHomePicker] = React.useState(false)
+    const [processing, setProcessing] = React.useState(false)
 
     const [orderType, setOrderType] = React.useState<ORDER_TYPE>('new')
     const [isVZW, setIsVZW] = React.useState<boolean>(false)
@@ -226,6 +227,7 @@ const ReferralsScreen = () => {
             try {
                 if (editing && editingReferral) {
                     const r = { ...referral, referralLines }
+                    setProcessing(true)
                     dispatch(updateReferral(r))
                     dispatch(setEditingReferral(false))
                     setReferralState(null)
@@ -278,6 +280,7 @@ const ReferralsScreen = () => {
             } catch (error) {
                 console.log(error)
             } finally {
+                setProcessing(false)
                 dispatch(setReferrralLines(0))
             }
         }
@@ -311,7 +314,7 @@ const ReferralsScreen = () => {
 
     useStatusBarColor('dark')
 
-    if (loading) return <Loading />
+    if (loading || processing) return <Loading />
 
     return (
         <>

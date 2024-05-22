@@ -12,7 +12,8 @@ export const isValidDrascoEmail = (email: string): boolean => {
     if (valid) {
         if (
             (email && email.split('@')[1] === 'drascosales.com') ||
-            email === 'robertomelendez0513@gmail.com'
+            email === 'robertomelendez0513@gmail.com' ||
+            'drascotest@gmail.com'
         ) {
             //VALID
 

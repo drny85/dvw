@@ -28,10 +28,10 @@ const EmailVerification = () => {
                 }}
             >
                 <Text fontFamily="SFMedium" fontSize={20}>
-                    Hey, it was not going to be that easy.
+                    Hey, it was not going to be that easy,
                 </Text>
                 <Text fontFamily="SFMedium" fontSize={20}>
-                    We need to verify your email
+                    We need to verify your email.
                 </Text>
             </View>
             <Text
@@ -39,8 +39,9 @@ const EmailVerification = () => {
                 fontSize={16}
                 style={{ lineHeight: 24 }}
             >
-                Email was sent to {email}, Please check your inbox or junk
-                folder and verify your email address.
+                Email was sent to <Text fontFamily="SFBold">{email}</Text>,
+                Please check your inbox or junk folder and verify your email
+                address.
             </Text>
 
             <TouchableOpacity

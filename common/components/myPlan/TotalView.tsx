@@ -25,7 +25,6 @@ import Divider from '../Divider'
 import Row from '../Row'
 import Text from '../Text'
 import View from '../View'
-import { WELCOME_BYOD_VALUE } from '@/functions/src/typing'
 
 type Props = {
     showResetAll?: boolean

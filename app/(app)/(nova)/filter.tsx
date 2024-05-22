@@ -47,6 +47,9 @@ const filter = () => {
                     value={isWelcome}
                     title="Welcome Unlimited Offer"
                     onValueChange={() => {
+                        if (expressFirstResponder) {
+                            dispatch(setExpressFirstResponder(false))
+                        }
                         dispatch(toggleIsWelcomeQualified())
                     }}
                 />
@@ -54,9 +57,13 @@ const filter = () => {
                     value={expressFirstResponder}
                     title="First Responder"
                     onValueChange={() => {
-                        dispatch(
-                            setExpressFirstResponder(!expressFirstResponder)
-                        )
+                        if (isWelcome) {
+                            setExpressFirstResponder(false)
+                        } else {
+                            dispatch(
+                                setExpressFirstResponder(!expressFirstResponder)
+                            )
+                        }
                     }}
                 />
                 <Switcher

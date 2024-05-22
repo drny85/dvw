@@ -43,7 +43,7 @@ const FilteredReferrals = () => {
                 r.phone.match(regex)
             )
         })
-    }, [search, data])
+    }, [search, referrals, data])
 
     const renderReferrals: ListRenderItem<Referral> = ({ item }) => {
         return <ReferralCard item={item} bgColor={bgColor} />

@@ -24,7 +24,7 @@ import {
 } from '@/features/referrals/referralsSlide'
 
 const Referrals = () => {
-    const bgColor = useThemeColor('background')
+    const bgColor = useThemeColor('accent')
     const { loading, helpers } = useHelpers()
     const accent = useThemeColor('accent')
     const text = useThemeColor('text')
@@ -143,7 +143,7 @@ const Referrals = () => {
                             />
                             <ReferralsMiniCard
                                 type="closed-mtd"
-                                subtitle="Closed"
+                                subtitle="MTD"
                             />
                         </Row>
                     </View>

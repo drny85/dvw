@@ -3,8 +3,10 @@ import Screen from '@/common/components/Screen'
 import Header from '@/common/components/Header'
 import { router } from 'expo-router'
 import Metrics from '@/common/components/referrals/Metrics'
+import { useStatusBarColor } from '@/common/hooks/useStatusBarColor'
 
-const reports = () => {
+const Reports = () => {
+    useStatusBarColor('dark')
     return (
         <Screen>
             <Header
@@ -20,4 +22,4 @@ const reports = () => {
     )
 }
 
-export default reports
+export default Reports

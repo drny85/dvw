@@ -46,6 +46,7 @@ const ReferralDetails = () => {
     const comment = useAppSelector((s) => s.referrals.comment)
     const [sendingWirelessEmail, setSendingWirelessEmail] = useState(false)
     const [show, setShow] = useState(false)
+    const [deleting, setDeleting] = useState(false)
     const dispatch = useAppDispatch()
     const { loading, referral } = useReferral(id!)
     const [sendingEmail, setSendingEmail] = useState(false)
@@ -102,6 +103,7 @@ const ReferralDetails = () => {
                         text: 'Yes, Delete it',
                         onPress: async () => {
                             if (!referral?.id) return
+                            setDeleting(true)
                             dispatch(deleteReferral(referral.id))
                             //await deleteContact(referral.email)
                             router.back()
@@ -112,6 +114,8 @@ const ReferralDetails = () => {
             )
         } catch (error) {
             console.log('Error deleting referral', error)
+        } finally {
+            setDeleting(false)
         }
     }
 
@@ -172,7 +176,7 @@ const ReferralDetails = () => {
         }
     }, [referral?.followUpOn])
 
-    if (loading || !id) return <Loading />
+    if (loading || !id || deleting) return <Loading />
     if (!referral)
         return (
             <Screen>

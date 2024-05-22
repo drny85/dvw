@@ -16,7 +16,11 @@ export const useReferrals = (userId: string) => {
         }
         const q = query(
             referralssCollection(userId),
-            where('moveIn', '>=', moment().startOf('year').toISOString())
+            where(
+                'moveIn',
+                '>=',
+                moment().subtract(1, 'month').startOf('day').toISOString()
+            )
         )
         const sub = onSnapshot(q, (snap) => {
             setReferrals(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
