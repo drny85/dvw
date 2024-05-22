@@ -6,6 +6,7 @@ import FeedsView from '@/common/components/feed/FeedsView'
 import { useReferrals } from '@/common/hooks/referrals/useReferrals'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
 import useAppSelector from '@/common/hooks/useAppSelector'
+import { useStatusBarColor } from '@/common/hooks/useStatusBarColor'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import Styles from '@/constants/Styles'
@@ -84,7 +85,7 @@ const FollowUps = () => {
             </TouchableOpacity>
         )
     }
-
+    useStatusBarColor('light')
     if (loading) return <Loading />
     return (
         <Screen>

@@ -598,6 +598,7 @@ const AddFeedModal = () => {
                     )}
                     <DateModal
                         date={createdAt}
+                        minDate={moment().startOf('year').toISOString()}
                         maxDate={new Date().toISOString()}
                         onChange={(event, date) => {
                             if (date) {

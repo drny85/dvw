@@ -4,6 +4,7 @@ import Screen from '@/common/components/Screen'
 import Text from '@/common/components/Text'
 import View from '@/common/components/View'
 import { useAllReferrals } from '@/common/hooks/referrals/useAllReferrals'
+import { useStatusBarColor } from '@/common/hooks/useStatusBarColor'
 
 import { SIZES } from '@/constants/Sizes'
 import { ReferralSold } from '@/types'
@@ -74,6 +75,7 @@ const AllFeeds = () => {
         },
         []
     )
+    useStatusBarColor('light')
     if (loading) return <Loading />
     return (
         <Screen>

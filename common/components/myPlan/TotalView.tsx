@@ -50,7 +50,8 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
     const welcomeOfferBonus = (): number => {
         if (welcomeTotal === 0 || !isWelcome || lines.length > 3) return 0
         if (
-            moment(WELCOME_OFFER_EXPIRATION_DATE).endOf('day').isAfter(moment())
+            new Date(WELCOME_OFFER_EXPIRATION_DATE).getTime() <
+            new Date().getTime()
         )
             return 0
 

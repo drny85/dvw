@@ -74,6 +74,20 @@ const Sales = () => {
             return acc + c
         }, 0)
     }, [feeds])
+    const totalEarnedYtd: number = useMemo(() => {
+        const s = generateFeedsBasedOnRange(
+            'ytd',
+            feeds.filter((s) => s.feedType === 'feed' && s.user.id === user?.id)
+        )
+        const listData = formatedData(s)
+        return listData.reduce((acc, curr) => {
+            const c =
+                curr.saleType === 'direct'
+                    ? WIRELESS_DIRECT * curr.numberOfLines
+                    : WIRELESS_CLICK_TO_CALL * curr.numberOfLines
+            return acc + c
+        }, 0)
+    }, [feeds])
 
     const goals = useMemo(() => {
         if (!user) return 0
@@ -157,6 +171,16 @@ const Sales = () => {
                     </Row>
                 </View>
                 <Divider small />
+                {range === 'ytd' && (
+                    <Text
+                        style={{ marginTop: 6 }}
+                        fontFamily="SFBold"
+                        fontSize={18}
+                        center
+                    >
+                        Earned YTD ${totalEarnedYtd}
+                    </Text>
+                )}
                 <SalesHeader />
                 <FlatList
                     showsVerticalScrollIndicator={false}
