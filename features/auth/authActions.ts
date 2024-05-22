@@ -1,11 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { AppUser } from './authSlice'
 
 import { auth } from '@/firebase'
 import { RootState } from '@/store/configureStore'
 import { usersCollection } from '@/utils/collections'
 import { signOut } from 'firebase/auth'
 import { doc, getDoc, updateDoc } from 'firebase/firestore'
+import { AppUser } from '@/types'
 
 export const getUser = createAsyncThunk(
     'auth/get',
@@ -28,7 +28,10 @@ export const getUser = createAsyncThunk(
                 image: userData?.image || '',
                 pushToken: userData?.pushToken || '',
                 createdAt: userData?.createdAt || '',
-                blockedUsers: userData?.blockedUsers || []
+                blockedUsers: userData?.blockedUsers || [],
+                isOnline: false,
+                coachId: null,
+                phone: null
             }
 
             return appUser
