@@ -1,5 +1,6 @@
 import useColorScheme from '@/common/hooks/useColorScheme'
 import useThemeColor from '@/common/hooks/useThemeColor'
+import { useUserStatus } from '@/common/hooks/useUserStatus'
 import Fonts from '@/constants/Fonts'
 import Styles from '@/constants/Styles'
 import { persistor, store } from '@/store/configureStore'
@@ -59,6 +60,8 @@ function RootLayout() {
     const colorScheme = useColorScheme()
     const navigationBarColor = useThemeColor('background')
     const bg = useThemeColor('background')
+
+    useUserStatus()
 
     return (
         <ThemeProvider

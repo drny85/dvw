@@ -1,3 +1,4 @@
+import { useStatusBarColor } from '@/common/hooks/useStatusBarColor'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { isFirstTime } from '@/utils/checkFirstTimeUser'
 import {

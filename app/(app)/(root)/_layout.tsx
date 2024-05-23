@@ -33,7 +33,6 @@ export default function () {
     // Check if the user is logged in using Redux state
     const { loading } = useAuth()
     onFetchUpdateAsync()
-    useUserStatus()
 
     const { user, loading: ld } = useAppSelector((state) => state.auth)
     const tabBarActiveTintColor = useThemeColor('accent')

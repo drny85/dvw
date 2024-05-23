@@ -58,12 +58,11 @@ const filter = () => {
                     title="First Responder"
                     onValueChange={() => {
                         if (isWelcome) {
-                            setExpressFirstResponder(false)
-                        } else {
-                            dispatch(
-                                setExpressFirstResponder(!expressFirstResponder)
-                            )
+                            dispatch(toggleIsWelcomeQualified())
                         }
+                        dispatch(
+                            setExpressFirstResponder(!expressFirstResponder)
+                        )
                     }}
                 />
                 <Switcher

@@ -78,7 +78,7 @@ const Login = () => {
                 )
                 return
             }
-            await sendMe(user.email!)
+
             const noti = sendMeATotificationWhenSomeoneLogin()
             await noti()
             dispatch(
