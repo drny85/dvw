@@ -93,7 +93,8 @@ const Signup = () => {
                 createdAt: new Date().toISOString(),
                 acceptedEULA: false,
                 blockedUsers: [],
-                coachId: null
+                coachId: null,
+                pushToken: null
             })
             94
             reset()

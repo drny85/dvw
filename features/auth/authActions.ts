@@ -22,16 +22,16 @@ export const getUser = createAsyncThunk(
                 id: userData?.id!,
                 email: userData?.email!,
                 acceptedEULA: userData?.acceptedEULA || false,
-                role: userData?.role,
+                role: userData?.role || 'em',
                 emailVerified: values.isVerified,
                 name: userData?.name || '',
                 image: userData?.image || '',
-                pushToken: userData?.pushToken || '',
+                pushToken: userData?.pushToken || null,
                 createdAt: userData?.createdAt || '',
                 blockedUsers: userData?.blockedUsers || [],
                 isOnline: false,
-                coachId: null,
-                phone: null
+                coachId: userData?.coachId || null,
+                phone: userData?.phone || null
             }
 
             return appUser

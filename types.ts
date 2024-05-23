@@ -39,7 +39,7 @@ export type AppUser = {
     role?: UserRole
     image?: string
     phone?: string | null
-    pushToken?: string
+    pushToken: string | null
     createdAt?: string
     acceptedEULA: boolean
     blockedUsers: string[]
