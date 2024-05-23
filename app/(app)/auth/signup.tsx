@@ -92,11 +92,13 @@ const Signup = () => {
                 emailVerified: user.emailVerified,
                 createdAt: new Date().toISOString(),
                 acceptedEULA: false,
+                isOnline: false,
+                image: null,
                 blockedUsers: [],
                 coachId: null,
                 pushToken: null
             })
-            94
+
             reset()
             setLoading(false)
             router.replace(`/(app)/auth/${user.email}`)

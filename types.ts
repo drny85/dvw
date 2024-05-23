@@ -37,7 +37,7 @@ export type AppUser = {
     email?: string
     emailVerified: boolean
     role?: UserRole
-    image?: string
+    image: string | null
     phone?: string | null
     pushToken: string | null
     createdAt?: string
