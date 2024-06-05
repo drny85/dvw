@@ -1,22 +1,28 @@
-import React from 'react'
-import { Switch, StyleSheet } from 'react-native'
+import React, { ReactNode } from 'react'
+import { Switch, StyleSheet, ViewStyle } from 'react-native'
 import useThemeColor from '../hooks/useThemeColor'
 import View from './View'
 import Text from './Text'
 
 interface SwitcherProps {
-    title: string
+    title: string | ReactNode
     value: boolean
     onValueChange: () => void
+    containerStyle?: ViewStyle
 }
 
-const Switcher: React.FC<SwitcherProps> = ({ title, value, onValueChange }) => {
+const Switcher: React.FC<SwitcherProps> = ({
+    title,
+    value,
+    onValueChange,
+    containerStyle
+}) => {
     const trackColor = useThemeColor('secondary')
     const thumbColor = useThemeColor('success')
     const bgColor = useThemeColor('background')
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, containerStyle]}>
             <View style={{ width: '75%' }}>
                 <Text capitalize style={styles.title}>
                     {title}

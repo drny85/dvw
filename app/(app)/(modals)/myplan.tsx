@@ -25,7 +25,7 @@ import {
 } from '@/features/wireless/wirelessSlide'
 import { perks } from '@/perks'
 import { Line, LineName } from '@/types'
-import { AntDesign } from '@expo/vector-icons'
+import { AntDesign, FontAwesome } from '@expo/vector-icons'
 import BottomSheet from '@gorhom/bottom-sheet'
 import { router } from 'expo-router'
 import { AnimatePresence, MotiView } from 'moti'
@@ -321,7 +321,13 @@ const MyPlan = () => {
     return (
         <Screen>
             <View style={styles.header}>
-                <Text />
+                <TouchableOpacity style={{ padding: 2 }} onPress={router.back}>
+                    <FontAwesome
+                        name="chevron-left"
+                        size={22}
+                        color={iconColor}
+                    />
+                </TouchableOpacity>
 
                 <Text fontFamily="SFBold" fontSize={24}>
                     My Plan
@@ -361,7 +367,10 @@ const MyPlan = () => {
                     onDelete={(id) => deleteLine(id)}
                     onSwitchLine={onSwitchLine}
                     onPerksPress={(id) => {
-                        router.push(`/(app)/(root)/(plan)/${id}`)
+                        router.push({
+                            pathname: '/(app)/(modals)/perks',
+                            params: { lineId: id }
+                        })
                     }}
                 />
             </ScrollView>

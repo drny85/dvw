@@ -17,13 +17,6 @@ const PlanLaypout = () => {
                     headerShown: false
                 }}
             />
-            <Stack.Screen
-                name="[lineId]"
-                options={{
-                    presentation: 'fullScreenModal',
-                    headerShown: false
-                }}
-            />
         </Stack>
     )
 }
