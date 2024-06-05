@@ -84,7 +84,10 @@ const Plan5G = () => {
                 <Text center fontFamily="QSBold" fontSize={24}>
                     5G Plans
                 </Text>
-                <TouchableOpacity onPress={() => setVisible(true)}>
+                <TouchableOpacity
+                    onPress={() => setVisible(true)}
+                    style={{ padding: SIZES.base }}
+                >
                     <FontAwesome name="list" size={24} />
                 </TouchableOpacity>
             </Row>
@@ -107,11 +110,11 @@ const Plan5G = () => {
                         }}
                     >
                         <Row style={{ justifyContent: 'space-between' }}>
-                            <Text fontFamily="SFBold" fontSize={20}>
+                            <Text fontFamily="SFBold" fontSize={22}>
                                 5G Home Plus
                             </Text>
-                            <Text fontFamily="SFBold" fontSize={20}>
-                                $ $
+                            <Text fontFamily="SFBold" fontSize={22}>
+                                $
                                 {PRICE.plus -
                                     (isAutoPay ? 10 : 0) -
                                     (isMobile && isPremium
@@ -192,10 +195,10 @@ const Plan5G = () => {
                         }}
                     >
                         <Row style={{ justifyContent: 'space-between' }}>
-                            <Text fontFamily="SFBold" fontSize={20}>
+                            <Text fontFamily="SFBold" fontSize={22}>
                                 5G Home
                             </Text>
-                            <Text fontFamily="SFBold" fontSize={20}>
+                            <Text fontFamily="SFBold" fontSize={22}>
                                 $
                                 {PRICE.home -
                                     (isAutoPay ? 10 : 0) -
@@ -335,10 +338,20 @@ const Plan5G = () => {
                         </Text>
                         <Text />
                     </Row>
-                    <View style={{ flex: 1, padding: SIZES.padding }}>
+                    <View
+                        style={{
+                            flex: 1,
+                            padding: SIZES.padding,
+                            gap: SIZES.padding
+                        }}
+                    >
                         <Switcher
                             value={isAutoPay}
-                            title={<Text fontFamily="QSBold">Auto Pay</Text>}
+                            title={
+                                <Text fontFamily="QSBold" fontSize={20}>
+                                    Auto Pay
+                                </Text>
+                            }
                             onValueChange={() => {
                                 setIsAutoPay((prev) => !prev)
                             }}
@@ -346,7 +359,7 @@ const Plan5G = () => {
                         <Switcher
                             value={isMobile}
                             title={
-                                <Text fontFamily="QSBold">
+                                <Text fontFamily="QSBold" fontSize={20}>
                                     Is Verizon Wireless Customer?
                                 </Text>
                             }
@@ -357,15 +370,9 @@ const Plan5G = () => {
                         {isMobile && (
                             <View style={{ gap: 10 }}>
                                 <Switcher
-                                    containerStyle={{
-                                        borderTopWidth:
-                                            StyleSheet.hairlineWidth,
-                                        borderTopColor: 'grey',
-                                        width: '100%'
-                                    }}
                                     value={isPremium}
                                     title={
-                                        <Text fontFamily="QSBold">
+                                        <Text fontFamily="QSBold" fontSize={20}>
                                             Premium Plan
                                         </Text>
                                     }
@@ -373,9 +380,9 @@ const Plan5G = () => {
                                         setIsPremium((prev) => !prev)
                                     }}
                                 />
-                                <Text fontFamily="SFLight" fontSize={14}>
+                                <Text fontFamily="SFLight" fontSize={16}>
                                     Note: If the plan includes 5G Ultra
-                                    Wideband, is Premium
+                                    Wideband, is a Premium Plan
                                 </Text>
                             </View>
                         )}
