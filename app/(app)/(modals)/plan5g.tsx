@@ -10,8 +10,10 @@ import {
     FontAwesome,
     MaterialIcons
 } from '@expo/vector-icons'
-import { Image, ScrollView, StyleSheet } from 'react-native'
+import { Image, ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
 import Switcher from '@/common/components/Switcher'
+import useThemeColor from '@/common/hooks/useThemeColor'
+import { router } from 'expo-router'
 
 const PRICE = {
     plus: 80,
@@ -22,12 +24,29 @@ const Plan5G = () => {
     const [isAutoPay, setIsAutoPay] = useState(true)
     const [isMobile, setIsMobile] = useState(false)
     const [isPremium, setIsPremium] = useState(false)
+    const iconColor = useThemeColor('text')
 
     return (
         <Screen>
-            <Text center fontFamily="QSBold" fontSize={24}>
-                5G Plans
-            </Text>
+            <Row
+                style={{
+                    justifyContent: 'space-between',
+                    paddingHorizontal: SIZES.padding
+                }}
+            >
+                <TouchableOpacity style={{ padding: 4 }} onPress={router.back}>
+                    <FontAwesome
+                        name="chevron-left"
+                        size={22}
+                        color={iconColor}
+                    />
+                </TouchableOpacity>
+                <Text center fontFamily="QSBold" fontSize={24}>
+                    5G Plans
+                </Text>
+                <Text />
+            </Row>
+
             <View style={{ flex: 1, justifyContent: 'space-between' }}>
                 <ScrollView
                     style={{ flex: 0.8 }}

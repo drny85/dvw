@@ -97,7 +97,7 @@ export default function () {
             <Tabs.Screen
                 name="(plan)"
                 options={{
-                    title: 'My Plan',
+                    title: 'Plans',
                     tabBarIcon: ({ color, size }) => (
                         <TabBarIcon name="wifi" size={size} color={color} />
                     )
