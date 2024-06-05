@@ -14,6 +14,7 @@ interface DataState {
     quotes: WirelessQuote[]
     shake: boolean
     isWelcome: boolean
+    fromQuote: boolean
 }
 
 const initialState: DataState = {
@@ -28,7 +29,8 @@ const initialState: DataState = {
     getStarted: false,
     quotes: [],
     shake: false,
-    isWelcome: false
+    isWelcome: false,
+    fromQuote: false
 }
 
 const wirelessSlide = createSlice({
@@ -94,6 +96,9 @@ const wirelessSlide = createSlice({
         },
         toggleIsWelcomeQualified: (state) => {
             state.isWelcome = !state.isWelcome
+        },
+        setFromQuote: (state, { payload }: PayloadAction<boolean>) => {
+            state.fromQuote = payload
         }
     }
 })
@@ -111,7 +116,8 @@ export const {
     setGetStarted,
     setQuotes,
     toogleShake,
-    toggleIsWelcomeQualified
+    toggleIsWelcomeQualified,
+    setFromQuote
 } = wirelessSlide.actions
 
 export default wirelessSlide.reducer

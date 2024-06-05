@@ -10,10 +10,19 @@ import {
     FontAwesome,
     MaterialIcons
 } from '@expo/vector-icons'
-import { Image, ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
+import {
+    Image,
+    Modal,
+    ScrollView,
+    StyleSheet,
+    TouchableOpacity
+} from 'react-native'
 import Switcher from '@/common/components/Switcher'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { router } from 'expo-router'
+import useAppSelector from '@/common/hooks/useAppSelector'
+import useAppDispatch from '@/common/hooks/useAppDispatch'
+import { setFromQuote } from '@/features/wireless/wirelessSlide'
 
 const PRICE = {
     plus: 80,
@@ -22,9 +31,40 @@ const PRICE = {
 
 const Plan5G = () => {
     const [isAutoPay, setIsAutoPay] = useState(true)
+    const [visible, setVisible] = useState(false)
     const [isMobile, setIsMobile] = useState(false)
     const [isPremium, setIsPremium] = useState(false)
+    const dispatch = useAppDispatch()
     const iconColor = useThemeColor('text')
+    const { expressAutoPay, lines, fromQuote } = useAppSelector(
+        (s) => s.wireless
+    )
+    const isPremiumPlan =
+        lines.length > 0 && lines.some((l) => !l.name.includes('Welcome'))
+
+    useEffect(() => {
+        if (fromQuote) {
+            if (expressAutoPay > 0) {
+                setIsAutoPay(true)
+            } else {
+                setIsAutoPay(false)
+            }
+            if (lines.length > 0) {
+                setIsMobile(true)
+            } else {
+                setIsMobile(false)
+            }
+            if (isPremiumPlan) {
+                setIsPremium(true)
+            } else {
+                setIsPremium(false)
+            }
+        } else {
+            setIsAutoPay(true)
+            setIsMobile(false)
+            setIsPremium(false)
+        }
+    }, [expressAutoPay, fromQuote, isPremiumPlan])
 
     return (
         <Screen>
@@ -44,12 +84,14 @@ const Plan5G = () => {
                 <Text center fontFamily="QSBold" fontSize={24}>
                     5G Plans
                 </Text>
-                <Text />
+                <TouchableOpacity onPress={() => setVisible(true)}>
+                    <FontAwesome name="list" size={24} />
+                </TouchableOpacity>
             </Row>
 
             <View style={{ flex: 1, justifyContent: 'space-between' }}>
                 <ScrollView
-                    style={{ flex: 0.8 }}
+                    style={{ flex: 0.9 }}
                     showsVerticalScrollIndicator={false}
                     contentContainerStyle={{
                         padding: SIZES.padding,
@@ -235,7 +277,7 @@ const Plan5G = () => {
                 </ScrollView>
                 <View
                     style={{
-                        flex: 0.2,
+                        flex: 0.1,
                         padding: SIZES.padding,
                         alignItems: 'center',
                         borderTopRightRadius: SIZES.radius * 2,
@@ -245,66 +287,101 @@ const Plan5G = () => {
                         backgroundColor: '#ffffff'
                     }}
                 >
-                    <Row>
-                        <View style={{ width: '40%' }}>
-                            <Switcher
-                                containerStyle={{
-                                    borderBottomWidth: 0
-                                }}
-                                value={isAutoPay}
-                                title={
-                                    <Text fontFamily="QSBold">Auto Pay</Text>
-                                }
-                                onValueChange={() => {
-                                    setIsAutoPay((prev) => !prev)
-                                }}
-                            />
-                        </View>
-                        <View style={{ flex: 1 }}>
-                            <Switcher
-                                containerStyle={{
-                                    borderBottomWidth: 0,
-                                    flex: 1
-                                }}
-                                value={isMobile}
-                                title={
-                                    <Text fontFamily="QSBold">
-                                        Is VZW Customer?
-                                    </Text>
-                                }
-                                onValueChange={() => {
-                                    setIsMobile((prev) => !prev)
-                                }}
-                            />
-                        </View>
-                    </Row>
-
-                    {isMobile && (
-                        <>
-                            <Switcher
-                                containerStyle={{
-                                    borderTopWidth: StyleSheet.hairlineWidth,
-                                    borderTopColor: 'grey',
-                                    width: '100%'
-                                }}
-                                value={isPremium}
-                                title={
-                                    <Text fontFamily="QSBold">
-                                        Premium Plan
-                                    </Text>
-                                }
-                                onValueChange={() => {
-                                    setIsPremium((prev) => !prev)
-                                }}
-                            />
-                            <Text fontFamily="SFLight" fontSize={12}>
-                                Note: If the plan includes 5G Ultra Wideband, is
-                                Premium
+                    <Switcher
+                        containerStyle={{
+                            borderBottomWidth: 0
+                        }}
+                        value={fromQuote}
+                        title={
+                            <Text fontFamily="QSBold">
+                                Get Pricing from My Plan
                             </Text>
-                        </>
-                    )}
+                        }
+                        onValueChange={() => {
+                            dispatch(setFromQuote(!fromQuote))
+                        }}
+                    />
+                    <Text fontFamily="SFLight" fontSize={12}>
+                        Toggle this on if you want to get the discount based on
+                        the plan you are working on for wireless
+                    </Text>
                 </View>
             </View>
+            <Modal
+                animationType="slide"
+                style={{ flex: 1 }}
+                visible={visible}
+                presentationStyle="overFullScreen"
+            >
+                <Screen>
+                    <Row
+                        style={{
+                            justifyContent: 'space-between',
+                            paddingHorizontal: SIZES.padding
+                        }}
+                    >
+                        <TouchableOpacity
+                            style={{ padding: 4 }}
+                            onPress={() => setVisible(false)}
+                        >
+                            <FontAwesome
+                                name="chevron-left"
+                                size={22}
+                                color={iconColor}
+                            />
+                        </TouchableOpacity>
+                        <Text center fontFamily="QSBold" fontSize={24}>
+                            Discounts
+                        </Text>
+                        <Text />
+                    </Row>
+                    <View style={{ flex: 1, padding: SIZES.padding }}>
+                        <Switcher
+                            value={isAutoPay}
+                            title={<Text fontFamily="QSBold">Auto Pay</Text>}
+                            onValueChange={() => {
+                                setIsAutoPay((prev) => !prev)
+                            }}
+                        />
+                        <Switcher
+                            value={isMobile}
+                            title={
+                                <Text fontFamily="QSBold">
+                                    Is Verizon Wireless Customer?
+                                </Text>
+                            }
+                            onValueChange={() => {
+                                setIsMobile((prev) => !prev)
+                            }}
+                        />
+                        {isMobile && (
+                            <View style={{ gap: 10 }}>
+                                <Switcher
+                                    containerStyle={{
+                                        borderTopWidth:
+                                            StyleSheet.hairlineWidth,
+                                        borderTopColor: 'grey',
+                                        width: '100%'
+                                    }}
+                                    value={isPremium}
+                                    title={
+                                        <Text fontFamily="QSBold">
+                                            Premium Plan
+                                        </Text>
+                                    }
+                                    onValueChange={() => {
+                                        setIsPremium((prev) => !prev)
+                                    }}
+                                />
+                                <Text fontFamily="SFLight" fontSize={14}>
+                                    Note: If the plan includes 5G Ultra
+                                    Wideband, is Premium
+                                </Text>
+                            </View>
+                        )}
+                    </View>
+                </Screen>
+            </Modal>
         </Screen>
     )
 }
