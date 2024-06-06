@@ -11,6 +11,9 @@
             "ios": {
                 "resourceClass": "medium",
                 "simulator": true
+            },
+            "android": {
+                "resourceClass": "medium"
             }
         },
         "preview": {

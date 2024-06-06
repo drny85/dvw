@@ -278,37 +278,39 @@ const Plan5G = () => {
                         />
                     </View>
                 </ScrollView>
-                <View
-                    style={{
-                        flex: 0.1,
-                        padding: SIZES.padding,
-                        alignItems: 'center',
-                        borderTopRightRadius: SIZES.radius * 2,
+                {lines.length > 0 && (
+                    <View
+                        style={{
+                            flex: 0.1,
+                            padding: SIZES.padding,
+                            alignItems: 'center',
+                            borderTopRightRadius: SIZES.radius * 2,
 
-                        borderTopLeftRadius: SIZES.radius * 2,
-                        width: '100%',
-                        backgroundColor: '#ffffff'
-                    }}
-                >
-                    <Switcher
-                        containerStyle={{
-                            borderBottomWidth: 0
+                            borderTopLeftRadius: SIZES.radius * 2,
+                            width: '100%',
+                            backgroundColor: '#ffffff'
                         }}
-                        value={fromQuote}
-                        title={
-                            <Text fontFamily="QSBold">
-                                Get Pricing from My Plan
-                            </Text>
-                        }
-                        onValueChange={() => {
-                            dispatch(setFromQuote(!fromQuote))
-                        }}
-                    />
-                    <Text fontFamily="SFLight" fontSize={12}>
-                        Toggle this on if you want to get the discount based on
-                        the plan you are working on for wireless
-                    </Text>
-                </View>
+                    >
+                        <Switcher
+                            containerStyle={{
+                                borderBottomWidth: 0
+                            }}
+                            value={fromQuote}
+                            title={
+                                <Text fontFamily="QSBold">
+                                    Get Pricing from My Plan
+                                </Text>
+                            }
+                            onValueChange={() => {
+                                dispatch(setFromQuote(!fromQuote))
+                            }}
+                        />
+                        <Text fontFamily="SFLight" fontSize={12}>
+                            Toggle this on if you want to get the discount based
+                            on the plan you are working on for wireless
+                        </Text>
+                    </View>
+                )}
             </View>
             <Modal
                 animationType="slide"

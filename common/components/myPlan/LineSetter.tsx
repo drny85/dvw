@@ -70,12 +70,12 @@ export default LineSetter
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
+
         justifyContent: 'space-evenly',
         alignItems: 'center',
         paddingHorizontal:
             SIZES.width > 500 ? SIZES.padding * 2 : SIZES.padding,
         borderRadius: SIZES.radius * 3,
-
         gap: SIZES.padding,
 
         alignSelf: 'center'

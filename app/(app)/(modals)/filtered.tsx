@@ -1,4 +1,5 @@
 import Loading from '@/common/components/Loading'
+import Screen from '@/common/components/Screen'
 import View from '@/common/components/View'
 import ReferralCard from '@/common/components/referrals/ReferralCard'
 import { useReferrals } from '@/common/hooks/referrals/useReferrals'
@@ -66,7 +67,7 @@ const FilteredReferrals = () => {
     if (loading || !filterType) return <Loading />
 
     return (
-        <View style={{ flex: 1, backgroundColor: bgColor }}>
+        <Screen>
             <ScrollView
                 style={{ flex: 1 }}
                 contentInsetAdjustmentBehavior="automatic"
@@ -82,7 +83,7 @@ const FilteredReferrals = () => {
                     renderItem={renderReferrals}
                 />
             </ScrollView>
-        </View>
+        </Screen>
 
         // <Screen>
         //     <Header

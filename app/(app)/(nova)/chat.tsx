@@ -10,13 +10,14 @@ import { FontAwesome } from '@expo/vector-icons'
 import { router, useLocalSearchParams, useNavigation } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import React, { useLayoutEffect } from 'react'
-import { KeyboardAvoidingView, TouchableOpacity } from 'react-native'
+import { KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native'
 
 const Chat = () => {
     const { chatId } = useLocalSearchParams<{ chatId: string }>()
     const navigation = useNavigation()
     const { chat, loading } = useChat(chatId)
     const bgColor = useThemeColor('accent')
+    const textColor = useThemeColor('text')
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -35,21 +36,27 @@ const Chat = () => {
             headerStyle: {
                 backgroundColor: bgColor
             },
+            headerBackTitleStyle: {
+                color: textColor
+            },
 
-            headerLeft: () => {
-                return (
-                    <TouchableOpacity
-                        onPress={() => router.back()}
-                        style={{ padding: SIZES.base }}
-                    >
-                        <FontAwesome
-                            name="chevron-left"
-                            size={24}
-                            color={'#ffffff'}
-                        />
-                    </TouchableOpacity>
-                )
-            }
+            headerLeft:
+                Platform.OS === 'ios'
+                    ? () => {
+                          return (
+                              <TouchableOpacity
+                                  onPress={() => router.back()}
+                                  style={{ padding: SIZES.base }}
+                              >
+                                  <FontAwesome
+                                      name="chevron-left"
+                                      size={24}
+                                      color={'#ffffff'}
+                                  />
+                              </TouchableOpacity>
+                          )
+                      }
+                    : undefined
         })
     }, [navigation, chat?.name, bgColor])
 

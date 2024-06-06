@@ -161,16 +161,20 @@ const Settings = () => {
                 }}
                 showsVerticalScrollIndicator={false}
             >
-                <Image
-                    source={
-                        user?.image
-                            ? {
-                                  uri: user?.image
-                              }
-                            : require('@/assets/images/verizon.png')
-                    }
-                    style={styles.image}
-                />
+                <TouchableOpacity
+                    onPress={() => router.push('/(app)/(nova)/myinfo')}
+                >
+                    <Image
+                        source={
+                            user?.image
+                                ? {
+                                      uri: user?.image
+                                  }
+                                : require('@/assets/images/verizon.png')
+                        }
+                        style={styles.image}
+                    />
+                </TouchableOpacity>
                 <View style={styles.info}>
                     <Row style={{ gap: SIZES.padding }}>
                         <Text fontFamily="SFBold" capitalize>

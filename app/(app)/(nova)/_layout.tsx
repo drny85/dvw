@@ -6,6 +6,7 @@ import { TouchableOpacity } from 'react-native'
 
 const NovaLayout = () => {
     const text = useThemeColor('text')
+    const bg = useThemeColor('background')
     return (
         <Stack>
             <Stack.Screen
@@ -18,6 +19,30 @@ const NovaLayout = () => {
                 name="nova"
                 options={{
                     headerShown: false
+                }}
+            />
+
+            <Stack.Screen
+                name="myinfo"
+                options={{
+                    title: 'My Contact Info',
+                    headerStyle: {
+                        backgroundColor: bg
+                    },
+                    headerLeft: () => {
+                        return (
+                            <TouchableOpacity
+                                style={{ padding: 6 }}
+                                onPress={router.back}
+                            >
+                                <FontAwesome
+                                    name="chevron-left"
+                                    size={22}
+                                    color={text}
+                                />
+                            </TouchableOpacity>
+                        )
+                    }
                 }}
             />
             <Stack.Screen name="chat" />
