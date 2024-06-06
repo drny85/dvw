@@ -9,8 +9,6 @@ import { useAuth } from '@/common/hooks/auth/useAuth'
 import { onFetchUpdateAsync } from '@/utils/checkUpdates'
 import React from 'react'
 import { LogBox } from 'react-native'
-import { useUserStatus } from '@/common/hooks/useUserStatus'
-import { useShake } from '@/common/hooks/useShake'
 
 export function TabBarIcon(props: {
     name: React.ComponentProps<typeof FontAwesome>['name']
@@ -33,7 +31,7 @@ export const unstable_settings = {
 export default function () {
     // Check if the user is logged in using Redux state
     const { loading } = useAuth()
-    useShake()
+
     onFetchUpdateAsync()
 
     const { user, loading: ld } = useAppSelector((state) => state.auth)

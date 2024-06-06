@@ -77,9 +77,7 @@ const config: ExpoConfig = {
         }
     },
     owner: 'drny85',
-    runtimeVersion: {
-        policy: 'appVersion'
-    },
+    runtimeVersion: '1.0.4',
     updates: {
         url: 'https://u.expo.dev/e87419d5-8fcd-4daa-945c-ce36e902a7c6'
     }

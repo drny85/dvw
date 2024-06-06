@@ -31,12 +31,10 @@ import {
     StyleSheet,
     TouchableOpacity
 } from 'react-native'
-import Switcher from '@/common/components/Switcher'
-import { setShake } from '@/features/settings/settingsSlice'
 
 const Settings = () => {
     useAuth()
-    const { shake } = useAppSelector((s) => s.settings)
+
     const iconColor = useThemeColor('text')
     const deleteColor = useThemeColor('warning')
     const user = useAppSelector((state) => state.auth.user)
@@ -392,12 +390,6 @@ const Settings = () => {
                             />
                         </Row>
                     </TouchableOpacity>
-
-                    <Switcher
-                        title="Enable Shake"
-                        value={shake}
-                        onValueChange={() => dispatch(setShake(!shake))}
-                    />
                 </View>
                 {/* <TouchableOpacity
                     style={[
