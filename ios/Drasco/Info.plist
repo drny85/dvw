@@ -65,6 +65,8 @@
     <string>Allow Drasco App to access your contacts.</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>Allow $(PRODUCT_NAME) to access your microphone</string>
+    <key>NSMotionUsageDescription</key>
+    <string>Allow $(PRODUCT_NAME) to access your device motion</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>The app accesses your photos to let you share them with your friends.</string>
     <key>NSUserActivityTypes</key>

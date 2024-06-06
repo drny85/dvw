@@ -5,8 +5,9 @@ import { router } from 'expo-router'
 
 export const useShake = () => {
     const user = useAppSelector((s) => s.auth.user)
+    const shake = useAppSelector((s) => s.settings.shake)
     useEffect(() => {
-        if (!user) return
+        if (!user || !shake) return
 
         let previousAcceleration = { x: 0, y: 0, z: 0 }
         let shakeDetected = false
@@ -40,5 +41,5 @@ export const useShake = () => {
         return () => {
             subscription.remove()
         }
-    }, [user])
+    }, [user, shake])
 }

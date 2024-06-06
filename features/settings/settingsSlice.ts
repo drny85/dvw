@@ -7,13 +7,15 @@ export type Theme = 'dark' | 'light' | 'auto' | 'pink'
 export type SettingsState = {
     theme: Theme
     route: 'myPlan' | null
+    shake: boolean
 }
 
 export const themes: Theme[] = ['auto', 'dark', 'light']
 
 const initialState: SettingsState = {
     theme: themes[0],
-    route: null // Default theme is 'auto'
+    route: null,
+    shake: true // Default theme is 'auto'
 }
 
 const slice = createSlice({
@@ -28,12 +30,15 @@ const slice = createSlice({
             { payload }: PayloadAction<SettingsState['route']>
         ) => {
             state.route = payload
+        },
+        setShake: (state, { payload }: PayloadAction<boolean>) => {
+            state.shake = payload
         }
     }
 })
 
 const settingsReducer = slice.reducer
 
-export const { updateTheme, setReturnRoute } = slice.actions
+export const { updateTheme, setReturnRoute, setShake } = slice.actions
 
 export default settingsReducer
