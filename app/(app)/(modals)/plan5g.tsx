@@ -10,19 +10,14 @@ import {
     FontAwesome,
     MaterialIcons
 } from '@expo/vector-icons'
-import {
-    Image,
-    Modal,
-    ScrollView,
-    StyleSheet,
-    TouchableOpacity
-} from 'react-native'
+import { Image, Modal, ScrollView, TouchableOpacity } from 'react-native'
 import Switcher from '@/common/components/Switcher'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { router } from 'expo-router'
 import useAppSelector from '@/common/hooks/useAppSelector'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
 import { setFromQuote } from '@/features/wireless/wirelessSlide'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const PRICE = {
     plus: 80,
@@ -34,8 +29,11 @@ const Plan5G = () => {
     const [visible, setVisible] = useState(false)
     const [isMobile, setIsMobile] = useState(false)
     const [isPremium, setIsPremium] = useState(false)
+    const { top, bottom } = useSafeAreaInsets()
     const dispatch = useAppDispatch()
     const iconColor = useThemeColor('text')
+    const backgroundColor = useThemeColor('secondary')
+    const innerColor = useThemeColor('background')
     const { expressAutoPay, lines, fromQuote } = useAppSelector(
         (s) => s.wireless
     )
@@ -67,7 +65,13 @@ const Plan5G = () => {
     }, [expressAutoPay, fromQuote, isPremiumPlan])
 
     return (
-        <Screen>
+        <View
+            style={{
+                flex: 1,
+                paddingTop: top,
+                backgroundColor: innerColor
+            }}
+        >
             <Row
                 style={{
                     justifyContent: 'space-between',
@@ -88,7 +92,7 @@ const Plan5G = () => {
                     onPress={() => setVisible(true)}
                     style={{ padding: SIZES.base }}
                 >
-                    <FontAwesome name="list" size={24} />
+                    <FontAwesome name="list" size={24} color={iconColor} />
                 </TouchableOpacity>
             </Row>
 
@@ -104,7 +108,7 @@ const Plan5G = () => {
                     <View
                         style={{
                             padding: SIZES.padding,
-                            backgroundColor: '#ffffff',
+                            backgroundColor,
                             borderRadius: SIZES.radius,
                             gap: SIZES.padding
                         }}
@@ -125,14 +129,14 @@ const Plan5G = () => {
                                 /mo
                             </Text>
                         </Row>
-                        <Text color="button" style={{ textAlign: 'right' }}>
+                        <Text style={{ textAlign: 'right' }}>
                             {isAutoPay ? 'with auto pay' : 'without auto pay'}
                         </Text>
                         <View
                             style={{
                                 padding: SIZES.padding,
                                 borderRadius: SIZES.radius,
-                                backgroundColor: '#e5e5e5',
+                                backgroundColor: innerColor,
                                 gap: SIZES.base,
                                 width: '100%'
                             }}
@@ -141,7 +145,7 @@ const Plan5G = () => {
                                 <AntDesign
                                     name="download"
                                     size={24}
-                                    color="black"
+                                    color={iconColor}
                                 />
                                 <Text fontSize={14}>
                                     Up to 300 Mbps download
@@ -151,7 +155,7 @@ const Plan5G = () => {
                                 <MaterialIcons
                                     name="4k"
                                     size={24}
-                                    color="black"
+                                    color={iconColor}
                                 />
                                 <Text fontSize={14}>
                                     Ultra HD 4K video streaming
@@ -161,7 +165,7 @@ const Plan5G = () => {
                                 <FontAwesome
                                     name="wifi"
                                     size={24}
-                                    color="black"
+                                    color={iconColor}
                                 />
                                 <Text fontSize={14}>
                                     Router and Whole-Home Wi-fi included
@@ -172,14 +176,18 @@ const Plan5G = () => {
                                 <AntDesign
                                     name="lock1"
                                     size={24}
-                                    color="black"
+                                    color={iconColor}
                                 />
                                 <Text fontSize={14}>
                                     3 Year Price Guarantee
                                 </Text>
                             </Row>
                             <Row style={{ gap: SIZES.base }}>
-                                <Entypo name="icloud" size={24} color="black" />
+                                <Entypo
+                                    name="icloud"
+                                    size={24}
+                                    color={iconColor}
+                                />
                                 <Text fontSize={14}>
                                     Verizon Cloud Unlimited
                                 </Text>
@@ -189,7 +197,7 @@ const Plan5G = () => {
                     <View
                         style={{
                             padding: SIZES.padding,
-                            backgroundColor: '#ffffff',
+                            backgroundColor,
                             borderRadius: SIZES.radius,
                             gap: SIZES.padding
                         }}
@@ -210,14 +218,14 @@ const Plan5G = () => {
                                 /mo
                             </Text>
                         </Row>
-                        <Text color="button" style={{ textAlign: 'right' }}>
+                        <Text style={{ textAlign: 'right' }}>
                             {isAutoPay ? 'with auto pay' : 'without auto pay'}
                         </Text>
                         <View
                             style={{
                                 padding: SIZES.padding,
                                 borderRadius: SIZES.radius,
-                                backgroundColor: '#e5e5e5',
+                                backgroundColor: innerColor,
                                 gap: SIZES.base,
                                 width: '100%'
                             }}
@@ -226,7 +234,7 @@ const Plan5G = () => {
                                 <AntDesign
                                     name="download"
                                     size={24}
-                                    color="black"
+                                    color={iconColor}
                                 />
                                 <Text fontSize={14}>
                                     Up to 100 Mbps download
@@ -236,7 +244,7 @@ const Plan5G = () => {
                                 <MaterialIcons
                                     name="hd"
                                     size={24}
-                                    color="black"
+                                    color={iconColor}
                                 />
                                 <Text fontSize={14}>
                                     1080p HD video streaming
@@ -246,7 +254,7 @@ const Plan5G = () => {
                                 <FontAwesome
                                     name="wifi"
                                     size={24}
-                                    color="black"
+                                    color={iconColor}
                                 />
                                 <Text fontSize={14}>
                                     Wireless router included
@@ -257,7 +265,7 @@ const Plan5G = () => {
                                 <AntDesign
                                     name="lock1"
                                     size={24}
-                                    color="black"
+                                    color={iconColor}
                                 />
                                 <Text fontSize={14}>
                                     2 Year Price Guarantee
@@ -269,10 +277,12 @@ const Plan5G = () => {
                         style={{
                             padding: SIZES.padding,
                             gap: SIZES.base,
-                            alignItems: 'center'
+                            alignItems: 'center',
+                            borderRadius: SIZES.radius
                         }}
                     >
                         <Image
+                            style={{ borderRadius: SIZES.radius }}
                             source={require('@/assets/images/5g.png')}
                             resizeMode="contain"
                         />
@@ -285,10 +295,10 @@ const Plan5G = () => {
                             padding: SIZES.padding,
                             alignItems: 'center',
                             borderTopRightRadius: SIZES.radius * 2,
-
+                            paddingBottom: bottom + 6,
                             borderTopLeftRadius: SIZES.radius * 2,
                             width: '100%',
-                            backgroundColor: '#ffffff'
+                            backgroundColor
                         }}
                     >
                         <Switcher
@@ -297,7 +307,7 @@ const Plan5G = () => {
                             }}
                             value={fromQuote}
                             title={
-                                <Text fontFamily="QSBold">
+                                <Text fontFamily="QSBold" color={'text'}>
                                     Get Pricing from My Plan
                                 </Text>
                             }
@@ -391,7 +401,7 @@ const Plan5G = () => {
                     </View>
                 </Screen>
             </Modal>
-        </Screen>
+        </View>
     )
 }
 

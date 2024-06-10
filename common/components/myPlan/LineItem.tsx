@@ -21,6 +21,7 @@ type Props = {
     onDelete: (id: string) => void
     onSwitchLine: (id: string, name: LineName) => void
     onPerksPress: (id: string) => void
+    onTradeInPress: (id: string) => void
 }
 const LineItem = ({
     line,
@@ -28,6 +29,7 @@ const LineItem = ({
     onDelete,
     onSwitchLine,
     onPerksPress,
+    onTradeInPress,
     index
 }: Props) => {
     const ascent = useThemeColor('placeholder')
@@ -172,18 +174,35 @@ const LineItem = ({
                     />
                 </View>
                 <View style={styles.lineName}>
+                    <TouchableOpacity>
+                        <Text
+                            fontSize={12}
+                            fontFamily={line.tradeIn ? 'SFBold' : 'SFRegular'}
+                        >
+                            TRADE-IN
+                        </Text>
+                    </TouchableOpacity>
+                    {/* <Switch
+                        value={line.byod}
+                        trackColor={{ false: thumbColor, true: '#8d99ae' }}
+                        thumbColor={line.byod ? thumbColor : 'grey'}
+                        ios_backgroundColor={bgColor}
+                        onChange={() => onBYOD(line.id)}
+                    /> */}
+                </View>
+                <View style={styles.lineName}>
                     <Text fontSize={16} fontFamily="SFBold">
                         ${line.price}
                     </Text>
                 </View>
-                <TouchableOpacity onPress={() => onPerksPress(line.id)}>
+                {/* <TouchableOpacity onPress={() => onPerksPress(line.id)}>
                     <Text fontSize={14}>
                         {' '}
                         {totalPerksCount([], line) > 0
                             ? `Perks ${totalPerksCount([], line)}`
                             : 'Perks'}
                     </Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <Animated.View
                     style={{ transform: [{ translateX: animation }] }}
                 >

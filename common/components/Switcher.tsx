@@ -17,7 +17,7 @@ const Switcher: React.FC<SwitcherProps> = ({
     onValueChange,
     containerStyle
 }) => {
-    const trackColor = useThemeColor('secondary')
+    const trackColor = useThemeColor('button')
     const thumbColor = useThemeColor('success')
     const bgColor = useThemeColor('background')
 

@@ -68,7 +68,8 @@ const MyPlan = () => {
                 price: 75 - expressAutoPay,
                 byod: false,
                 perks: [...perks],
-                originalPrice: 75
+                originalPrice: 75,
+                tradeIn: false
             }
 
             dispatch(setLinesData([...lines, newLine]))
