@@ -19,12 +19,14 @@ import { totalPerksCount } from '@/utils/perksCount'
 import { useRouter } from 'expo-router'
 import moment from 'moment'
 import { AnimatePresence, MotiView } from 'moti'
-import React from 'react'
+import React, { useMemo, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
 import Divider from '../Divider'
 import Row from '../Row'
 import Text from '../Text'
 import View from '../View'
+import { FontAwesome } from '@expo/vector-icons'
+import useThemeColor from '@/common/hooks/useThemeColor'
 
 type Props = {
     showResetAll?: boolean
@@ -32,9 +34,11 @@ type Props = {
 }
 const TotalView = ({ onClickSave, showResetAll }: Props) => {
     const router = useRouter()
+    const iconColor = useThemeColor('text')
     const lines = useAppSelector((s) => s.wireless.lines)
     const isWelcome = useAppSelector((s) => s.wireless.isWelcome)
     const dispatch = useAppDispatch()
+    const [showTradeInDetails, setShowTradeInDetails] = useState(false)
 
     const {
         expressFirstResponder,
@@ -66,13 +70,23 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
     }
 
     const byod = byodSavings(lines)
+    const tradeInTotal = (): number => {
+        return (
+            lines
+                .filter((i) => i.tradeIn && i.tradeInValues !== null)
+                .map((line) => line.tradeInValues)
+                .reduce((acc, tradeIn) => acc + tradeIn?.monthlyPrice!, 0) || 0
+        )
+    }
+
     const firstResponder = (): number =>
         firstResponderDiscount(lines.length, expressFirstResponder)
 
     const total = (): number =>
         lines.reduce((acc, line) => acc + line.price, 0) -
         firstResponderDiscount(lines.length, expressFirstResponder) -
-        welcomeOfferBonus()
+        welcomeOfferBonus() +
+        tradeInTotal()
 
     const mobilePlusHomeDiscount = (): number => {
         return lines
@@ -287,6 +301,47 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
                 </Text>
                 <Text color="red">-${welcomeOfferBonus()}</Text>
             </RowView>
+            <TouchableOpacity
+                onPress={() => setShowTradeInDetails((prev) => !prev)}
+            >
+                <RowView show={tradeInTotal() > 0}>
+                    <Row style={{ alignItems: 'center', gap: SIZES.base }}>
+                        <Text>Trade-In Balance</Text>
+                        <FontAwesome
+                            size={16}
+                            color={iconColor + '80'}
+                            name={
+                                showTradeInDetails
+                                    ? 'chevron-right'
+                                    : 'chevron-down'
+                            }
+                        />
+                    </Row>
+
+                    <Text color="text">${tradeInTotal().toFixed(2)}</Text>
+                </RowView>
+            </TouchableOpacity>
+            <RowView show={showTradeInDetails}>
+                <View style={{ padding: SIZES.padding, gap: 3, width: '100%' }}>
+                    {lines
+                        .filter((l) => l.tradeIn)
+                        .map((t, index) => (
+                            <Row
+                                key={index}
+                                style={{ justifyContent: 'space-between' }}
+                            >
+                                <Text fontFamily="QSLight">
+                                    {index + 1} - {t.name}
+                                </Text>
+
+                                <Text fontFamily="QSLight">
+                                    ${t.tradeInValues?.monthlyPrice.toFixed(2)}
+                                </Text>
+                            </Row>
+                        ))}
+                </View>
+            </RowView>
+
             <RowView show={lines.length > 0}>
                 <Text fontFamily="SFHeavy" fontSize={20}>
                     Total
@@ -295,7 +350,7 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
                     {autoPayDiscount() === 0 ? 'w/o' : 'w/'} auto pay
                 </Text>
                 <Text fontFamily="SFHeavy" fontSize={20}>
-                    ${total().toFixed(0)}
+                    ${total().toFixed(2)}
                 </Text>
             </RowView>
             <Divider small />

@@ -25,6 +25,7 @@ import {
 } from '@/features/wireless/wirelessSlide'
 import { perks } from '@/perks'
 import { Line, LineName } from '@/types'
+import { calculateTradeInValues } from '@/utils/calculateTradeIn'
 import { AntDesign, FontAwesome } from '@expo/vector-icons'
 import BottomSheet from '@gorhom/bottom-sheet'
 import { router } from 'expo-router'
@@ -69,7 +70,8 @@ const MyPlan = () => {
                 byod: false,
                 perks: [...perks],
                 originalPrice: 75,
-                tradeIn: false
+                tradeIn: false,
+                tradeInValues: null
             }
 
             dispatch(setLinesData([...lines, newLine]))
@@ -82,7 +84,9 @@ const MyPlan = () => {
                 return {
                     ...line,
                     price: calculatePrice({ ...line, byod: !line.byod }),
-                    byod: !line.byod
+                    byod: !line.byod,
+                    tradeIn: false,
+                    tradeInValues: null
                 }
             }
             return line
@@ -90,6 +94,13 @@ const MyPlan = () => {
         // @ts-ignore
 
         dispatch(setLinesData(newLines))
+    }
+
+    const onTradeInPress = (id: string, index: string) => {
+        router.push({
+            pathname: '/(app)/(modals)/trade-in',
+            params: { lineId: id, lineIndex: index }
+        })
     }
 
     const calculatePrice = useCallback(
@@ -195,7 +206,15 @@ const MyPlan = () => {
                     ...perkChecked,
                     price: calculatePrice(n),
                     name: name,
-                    perks: line.perks
+                    perks: line.perks,
+                    tradeIn: line.tradeIn,
+                    tradeInValues: line.tradeInValues
+                        ? calculateTradeInValues(
+                              name,
+                              line.tradeInValues?.device!,
+                              line.tradeInValues?.phoneRetailValue
+                          )
+                        : null
                 }
             }
             return line
@@ -364,6 +383,7 @@ const MyPlan = () => {
             <ScrollView showsVerticalScrollIndicator={false}>
                 <LinesContainer
                     lines={lines}
+                    onTradeInPress={(id, index) => onTradeInPress(id, index)}
                     onBYOD={(line) => onSwitchBYOD(line)}
                     onDelete={(id) => deleteLine(id)}
                     onSwitchLine={onSwitchLine}

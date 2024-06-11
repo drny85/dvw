@@ -61,6 +61,15 @@ export type SalesRange =
     | 'twb'
     | 'lm'
 
+export type TradeInDeviceType = 'Iphone' | 'Android'
+type TradeInData = {
+    name: LineName
+    discount: number
+    balance: number
+    monthlyPrice: number
+    device?: TradeInDeviceType
+    phoneRetailValue: number
+}
 export interface Line {
     id: string
     name: LineName
@@ -69,6 +78,7 @@ export interface Line {
     originalPrice: number
     perks: Perk[]
     tradeIn: boolean
+    tradeInValues: TradeInData | null
 }
 export type SaleData = Pick<
     Feed,

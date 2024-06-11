@@ -15,6 +15,10 @@ const ModalLaout = () => {
             <Stack.Screen name="plan5g" />
             <Stack.Screen name="quotes" />
             <Stack.Screen
+                name="trade-in"
+                options={{ animation: 'slide_from_bottom' }}
+            />
+            <Stack.Screen
                 name="filtered"
                 options={{
                     headerShown: true,

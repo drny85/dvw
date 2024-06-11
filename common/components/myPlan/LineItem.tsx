@@ -174,10 +174,10 @@ const LineItem = ({
                     />
                 </View>
                 <View style={styles.lineName}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => onTradeInPress(line.id)}>
                         <Text
                             fontSize={12}
-                            fontFamily={line.tradeIn ? 'SFBold' : 'SFRegular'}
+                            fontFamily={line.tradeIn ? 'SFHeavy' : 'SFRegular'}
                         >
                             TRADE-IN
                         </Text>
