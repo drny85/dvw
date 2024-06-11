@@ -32,7 +32,7 @@ const ChatList = ({
     const user = useAppSelector((s) => s.auth.user)
     const show = showDelete && user?.id === item.user.id
     const { loading, messages } = useMessages(item.id!)
-    const lastMessage = messages.at(-1)
+    const lastMessage = messages[0]
     if (loading) return null
 
     return (
