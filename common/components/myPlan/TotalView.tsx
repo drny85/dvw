@@ -39,6 +39,7 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
     const isWelcome = useAppSelector((s) => s.wireless.isWelcome)
     const dispatch = useAppDispatch()
     const [showTradeInDetails, setShowTradeInDetails] = useState(false)
+    const [showBreakdown, setShowBreakdown] = useState(false)
 
     const {
         expressFirstResponder,
@@ -85,8 +86,7 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
     const total = (): number =>
         lines.reduce((acc, line) => acc + line.price, 0) -
         firstResponderDiscount(lines.length, expressFirstResponder) -
-        welcomeOfferBonus() +
-        tradeInTotal()
+        welcomeOfferBonus()
 
     const mobilePlusHomeDiscount = (): number => {
         return lines
@@ -191,6 +191,7 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
             )
             .reduce((acc, line) => acc + line.discount, 0)
     }
+
     return (
         <View>
             <Row
@@ -237,9 +238,22 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
             </Row> */}
             <Divider />
             <RowView show={lines.length > 0}>
-                <Text fontFamily="SFBold" fontSize={16}>
-                    Sub-Total
-                </Text>
+                <Row style={{ alignItems: 'center', gap: SIZES.base }}>
+                    <Text fontFamily="SFBold" fontSize={16}>
+                        Sub-Total
+                    </Text>
+                    <TouchableOpacity
+                        onPress={() => setShowBreakdown((prev) => !prev)}
+                    >
+                        <FontAwesome
+                            size={16}
+                            color={iconColor + '80'}
+                            name={
+                                showBreakdown ? 'chevron-right' : 'chevron-down'
+                            }
+                        />
+                    </TouchableOpacity>
+                </Row>
                 <Text fontFamily="SFBold" fontSize={16}>
                     $
                     {(
@@ -247,10 +261,47 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
                         mobilePlusHomeDiscount() +
                         autoPayDiscount() +
                         loyaltyBonusDiscount() +
-                        byod +
-                        tradeInTotal()
+                        byod
                     ).toFixed(2)}
                 </Text>
+            </RowView>
+            <RowView show={showBreakdown}>
+                <View
+                    style={{
+                        padding: SIZES.padding,
+                        gap: 3,
+                        width: '100%'
+                    }}
+                >
+                    {lines
+                        .map((t) => ({ name: t.name, price: t.price }))
+                        .map((l, index) => (
+                            <Row
+                                key={index}
+                                style={{ justifyContent: 'space-between' }}
+                            >
+                                <Text fontFamily="QSLight">
+                                    {index + 1} - {l.name}
+                                </Text>
+
+                                <Text fontFamily="QSLight">
+                                    ${l.price.toFixed(2)}
+                                </Text>
+                            </Row>
+                        ))}
+                    <Row
+                        style={{
+                            justifyContent: 'space-between'
+                        }}
+                    >
+                        <Text fontFamily="QSLight">
+                            {lines.length + 1} - Auto Pay
+                        </Text>
+                        <Text fontFamily="QSLight">
+                            ${(lines.length * expressAutoPay).toFixed(2)}
+                        </Text>
+                    </Row>
+                </View>
             </RowView>
             <RowView show={perksTotal() > 0}>
                 <Text>Perks ({totalPerksCount(lines)})</Text>
@@ -309,7 +360,7 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
             >
                 <RowView show={tradeInTotal() > 0}>
                     <Row style={{ alignItems: 'center', gap: SIZES.base }}>
-                        <Text>Trade-In Balance</Text>
+                        <Text color="tabIconDefault">Trade-In Balance</Text>
                         <FontAwesome
                             size={16}
                             color={iconColor + '80'}
@@ -321,7 +372,9 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
                         />
                     </Row>
 
-                    <Text color="text">${tradeInTotal().toFixed(2)}</Text>
+                    <Text color="tabIconDefault">
+                        ${tradeInTotal().toFixed(2)}
+                    </Text>
                 </RowView>
             </TouchableOpacity>
             <RowView show={showTradeInDetails}>
@@ -353,7 +406,7 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
                     {autoPayDiscount() === 0 ? 'w/o' : 'w/'} auto pay
                 </Text>
                 <Text fontFamily="SFHeavy" fontSize={20}>
-                    ${total().toFixed(2)}
+                    ${(total() + tradeInTotal()).toFixed(2)}
                 </Text>
             </RowView>
             <Divider small />

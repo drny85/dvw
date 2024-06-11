@@ -18,6 +18,7 @@ import useAppSelector from '@/common/hooks/useAppSelector'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
 import { setFromQuote } from '@/features/wireless/wirelessSlide'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { setShow5G } from '@/features/settings/settingsSlice'
 
 const PRICE = {
     plus: 80,
@@ -78,7 +79,11 @@ const My5GPlan = () => {
                     paddingHorizontal: SIZES.padding
                 }}
             >
-                <Text />
+                <TouchableOpacity onPress={() => dispatch(setShow5G(false))}>
+                    <Text fontFamily="SFBold" fontSize={18}>
+                        My Plan
+                    </Text>
+                </TouchableOpacity>
 
                 <Text center fontFamily="QSBold" fontSize={24}>
                     5G Plans

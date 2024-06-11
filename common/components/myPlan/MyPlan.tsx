@@ -14,7 +14,7 @@ import {
     WELCOME_BYOD_VALUE
 } from '@/constants'
 import { SIZES } from '@/constants/Sizes'
-import { setReturnRoute } from '@/features/settings/settingsSlice'
+import { setReturnRoute, setShow5G } from '@/features/settings/settingsSlice'
 import {
     setExpressAutoPay,
     setExpressFirstResponder,
@@ -68,7 +68,7 @@ const MyPlan = () => {
                 name: 'Unlimited Welcome',
                 price: 75 - expressAutoPay,
                 byod: false,
-                perks: [...perks],
+                perks: [],
                 originalPrice: 75,
                 tradeIn: false,
                 tradeInValues: null
@@ -341,7 +341,15 @@ const MyPlan = () => {
     return (
         <Screen>
             <View style={styles.header}>
-                <Text />
+                <TouchableOpacity
+                    onPress={() => {
+                        dispatch(setShow5G(true))
+                    }}
+                >
+                    <Text fontFamily="SFHeavy" fontSize={18}>
+                        5G
+                    </Text>
+                </TouchableOpacity>
                 <Text fontFamily="SFBold" fontSize={24}>
                     My Plan
                 </Text>
