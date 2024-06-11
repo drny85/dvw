@@ -24,7 +24,7 @@ const PRICE = {
     home: 60
 }
 
-const Plan5G = () => {
+const My5GPlan = () => {
     const [isAutoPay, setIsAutoPay] = useState(true)
     const [visible, setVisible] = useState(false)
     const [isMobile, setIsMobile] = useState(false)
@@ -78,13 +78,8 @@ const Plan5G = () => {
                     paddingHorizontal: SIZES.padding
                 }}
             >
-                <TouchableOpacity style={{ padding: 4 }} onPress={router.back}>
-                    <FontAwesome
-                        name="chevron-left"
-                        size={22}
-                        color={iconColor}
-                    />
-                </TouchableOpacity>
+                <Text />
+
                 <Text center fontFamily="QSBold" fontSize={24}>
                     5G Plans
                 </Text>
@@ -405,4 +400,4 @@ const Plan5G = () => {
     )
 }
 
-export default Plan5G
+export default My5GPlan

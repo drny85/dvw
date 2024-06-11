@@ -341,14 +341,7 @@ const MyPlan = () => {
     return (
         <Screen>
             <View style={styles.header}>
-                <TouchableOpacity style={{ padding: 2 }} onPress={router.back}>
-                    <FontAwesome
-                        name="chevron-left"
-                        size={22}
-                        color={iconColor}
-                    />
-                </TouchableOpacity>
-
+                <Text />
                 <Text fontFamily="SFBold" fontSize={24}>
                     My Plan
                 </Text>

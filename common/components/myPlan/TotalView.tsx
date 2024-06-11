@@ -242,11 +242,14 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
                 </Text>
                 <Text fontFamily="SFBold" fontSize={16}>
                     $
-                    {lines.reduce((acc, line) => acc + line.price, 0) +
+                    {(
+                        lines.reduce((acc, line) => acc + line.price, 0) +
                         mobilePlusHomeDiscount() +
                         autoPayDiscount() +
                         loyaltyBonusDiscount() +
-                        byod}
+                        byod +
+                        tradeInTotal()
+                    ).toFixed(2)}
                 </Text>
             </RowView>
             <RowView show={perksTotal() > 0}>

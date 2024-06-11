@@ -186,6 +186,7 @@ const TradeIn = () => {
                     >
                         {VALUES.map((value) => (
                             <View
+                                key={value}
                                 style={{
                                     padding: SIZES.base,
                                     backgroundColor:

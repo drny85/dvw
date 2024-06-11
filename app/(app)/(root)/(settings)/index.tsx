@@ -31,12 +31,15 @@ import {
     StyleSheet,
     TouchableOpacity
 } from 'react-native'
+import Switcher from '@/common/components/Switcher'
+import { setShow5G } from '@/features/settings/settingsSlice'
 
 const Settings = () => {
     useAuth()
 
     const iconColor = useThemeColor('text')
     const deleteColor = useThemeColor('warning')
+    const show5G = useAppSelector((s) => s.settings.show5G)
     const user = useAppSelector((state) => state.auth.user)
     const [updatePhone, setUpdatePhone] = React.useState('')
     const [showPhone, setShowPhone] = React.useState(false)
@@ -390,6 +393,13 @@ const Settings = () => {
                             />
                         </Row>
                     </TouchableOpacity>
+                    <Switcher
+                        value={show5G}
+                        onValueChange={() => {
+                            dispatch(setShow5G(!show5G))
+                        }}
+                        title="Show 5G"
+                    />
                 </View>
                 {/* <TouchableOpacity
                     style={[

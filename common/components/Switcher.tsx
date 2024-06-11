@@ -24,9 +24,11 @@ const Switcher: React.FC<SwitcherProps> = ({
     return (
         <View style={[styles.container, containerStyle]}>
             <View style={{ width: '75%' }}>
-                <Text capitalize style={styles.title}>
-                    {title}
-                </Text>
+                {typeof title === 'string' ? (
+                    <Text style={styles.title}>{title}</Text>
+                ) : (
+                    title
+                )}
             </View>
             <View>
                 <Switch

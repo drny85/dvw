@@ -10,9 +10,7 @@ const ModalLaout = () => {
     return (
         <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="referral" />
-            <Stack.Screen name="myplan" />
             <Stack.Screen name="perks" />
-            <Stack.Screen name="plan5g" />
             <Stack.Screen name="quotes" />
             <Stack.Screen
                 name="trade-in"
