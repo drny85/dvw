@@ -222,7 +222,7 @@ const TradeIn = () => {
                     </View>
                 )}
 
-                {discounts !== null && (
+                {discounts !== null && phone && (
                     <>
                         <Divider small />
                         <View
@@ -247,7 +247,7 @@ const TradeIn = () => {
                                 </Text>
                                 <Text>
                                     $
-                                    {phone && phone.isFree
+                                    {phone && phone?.isFree
                                         ? phone.value
                                         : phoneDiscount.toFixed(2)}
                                 </Text>
@@ -375,7 +375,7 @@ const TradeIn = () => {
                                             <Text fontFamily="QSBold">
                                                 {p.name}
                                             </Text>
-                                            {p.isFree && (
+                                            {p && p.isFree && (
                                                 <Text
                                                     fontFamily="QSBold"
                                                     fontSize={16}

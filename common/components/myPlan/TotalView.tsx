@@ -89,15 +89,13 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
         firstResponderDiscount(lines.length, expressFirstResponder) -
         welcomeOfferBonus()
 
-    const isThereFreeTradeIn = useMemo(
-        () =>
-            lines.some(
-                (s) =>
-                    (s.tradeInValues?.phone.isFree && s.tradeIn) ||
-                    s.tradeInValues?.balance === 0
-            ),
-        [lines]
-    )
+    const isThereFreeTradeIn = useMemo(() => {
+        return lines.some(
+            (s) =>
+                (s.tradeInValues?.phone.isFree && s.tradeIn) ||
+                s.tradeInValues?.balance === 0
+        )
+    }, [lines])
 
     const mobilePlusHomeDiscount = (): number => {
         return lines

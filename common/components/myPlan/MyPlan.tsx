@@ -26,7 +26,7 @@ import {
 import { perks } from '@/perks'
 import { Line, LineName } from '@/types'
 import { calculateTradeInValues } from '@/utils/calculateTradeIn'
-import { AntDesign, FontAwesome } from '@expo/vector-icons'
+import { AntDesign } from '@expo/vector-icons'
 import BottomSheet from '@gorhom/bottom-sheet'
 import { router } from 'expo-router'
 import { AnimatePresence, MotiView } from 'moti'
