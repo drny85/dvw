@@ -21,3 +21,130 @@ export const VALUES = [
     'Other'
 ]
 export const INDEXES = ['Iphone', 'Android']
+
+export const PHONES = {
+    Iphone: [
+        {
+            name: 'Iphone 15 Pro Max',
+            value: 1199.99,
+            promoPrice: 10,
+            isFree: false
+        },
+        {
+            name: 'Iphone 15 Pro',
+            value: 999.99,
+            promoPrice: 5,
+            isFree: false
+        },
+        {
+            name: 'Iphone 15 Plus',
+            value: 929.99,
+            promoPrice: 5,
+            isFree: false
+        },
+        {
+            name: 'Iphone 15',
+            value: 829.99,
+            promoPrice: 5,
+            isFree: false
+        },
+        {
+            name: 'Iphone 14 Pro Max',
+            value: 1099.99,
+            promoPrice: 0,
+            isFree: false
+        },
+        {
+            name: 'Iphone 14 Pro',
+            value: 899.99,
+            promoPrice: 5,
+            isFree: false
+        },
+        {
+            name: 'Iphone 14 Plus',
+            value: 829.99,
+            promoPrice: 0,
+            isFree: true
+        },
+        {
+            name: 'Iphone 14',
+            value: 729.99,
+            promoPrice: 0,
+            isFree: true
+        },
+        {
+            name: 'Iphone 13 Pro Max',
+            value: 1099.99,
+            promoPrice: 0,
+            isFree: true
+        },
+        {
+            name: 'Iphone 13 Pro',
+            value: 899.99,
+            promoPrice: 0,
+            isFree: true
+        },
+        {
+            name: 'Iphone 13 Plus',
+            value: 799.99,
+            promoPrice: 0,
+            isFree: true
+        },
+        {
+            name: 'Iphone 13',
+            value: 629.99,
+            promoPrice: 0,
+            isFree: true
+        },
+        {
+            name: 'Iphone 13 Mini',
+            value: 599.99,
+            promoPrice: 0,
+            isFree: true
+        }
+    ],
+    Android: [
+        {
+            name: 'Samsung Galaxy Z Fold5',
+            value: 1799.99,
+            promoPrice: 0,
+            isFree: false
+        },
+        {
+            name: 'Samsung Galaxy S24 Ultra',
+            value: 1299.99,
+            promoPrice: 0,
+            isFree: false
+        },
+        {
+            name: 'Samsung Galaxy S24+',
+            value: 999.99,
+            promoPrice: 0,
+            isFree: false
+        },
+        {
+            name: 'Samsung Galaxy S24',
+            value: 799.99,
+            promoPrice: 0,
+            isFree: false
+        },
+        {
+            name: 'Samsung Galaxy S23 Ultra',
+            value: 1199.99,
+            promoPrice: 0,
+            isFree: false
+        },
+        {
+            name: 'Samsung Galaxy S23+',
+            value: 999.99,
+            promoPrice: 0,
+            isFree: false
+        },
+        {
+            name: 'Samsung Galaxy S23 FE',
+            value: 599.99,
+            promoPrice: 0,
+            isFree: true
+        }
+    ]
+}

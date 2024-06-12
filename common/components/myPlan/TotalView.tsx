@@ -238,13 +238,14 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
             </Row> */}
             <Divider />
             <RowView show={lines.length > 0}>
-                <Row style={{ alignItems: 'center', gap: SIZES.base }}>
-                    <Text fontFamily="SFBold" fontSize={16}>
-                        Sub-Total
-                    </Text>
-                    <TouchableOpacity
-                        onPress={() => setShowBreakdown((prev) => !prev)}
-                    >
+                <TouchableOpacity
+                    onPress={() => setShowBreakdown((prev) => !prev)}
+                >
+                    <Row style={{ alignItems: 'center', gap: SIZES.base }}>
+                        <Text fontFamily="SFBold" fontSize={16}>
+                            Sub-Total
+                        </Text>
+
                         <FontAwesome
                             size={16}
                             color={iconColor + '80'}
@@ -252,8 +253,9 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
                                 showBreakdown ? 'chevron-right' : 'chevron-down'
                             }
                         />
-                    </TouchableOpacity>
-                </Row>
+                    </Row>
+                </TouchableOpacity>
+
                 <Text fontFamily="SFBold" fontSize={16}>
                     $
                     {(

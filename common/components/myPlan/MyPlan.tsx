@@ -97,6 +97,10 @@ const MyPlan = () => {
     }
 
     const onTradeInPress = (id: string, index: string) => {
+        const line = lines.find((l) => l.id === id)
+        if (line && line.byod) {
+            onSwitchBYOD(id)
+        }
         router.push({
             pathname: '/(app)/(modals)/trade-in',
             params: { lineId: id, lineIndex: index }
