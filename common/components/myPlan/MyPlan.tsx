@@ -216,7 +216,7 @@ const MyPlan = () => {
                         ? calculateTradeInValues(
                               name,
                               line.tradeInValues?.device!,
-                              line.tradeInValues?.phoneRetailValue
+                              line.tradeInValues.phone
                           )
                         : null
                 }

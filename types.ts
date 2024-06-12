@@ -1,4 +1,5 @@
 import { IMessage } from 'react-native-gifted-chat'
+import { Phone } from './constants'
 
 export type Feed = {
     id?: string
@@ -69,6 +70,7 @@ type TradeInData = {
     monthlyPrice: number
     device?: TradeInDeviceType
     phoneRetailValue: number
+    phone: Phone
 }
 export interface Line {
     id: string

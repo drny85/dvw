@@ -40,6 +40,7 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
     const dispatch = useAppDispatch()
     const [showTradeInDetails, setShowTradeInDetails] = useState(false)
     const [showBreakdown, setShowBreakdown] = useState(false)
+    const [showFreeTradeIn, setShowFreeTradeIn] = useState(false)
 
     const {
         expressFirstResponder,
@@ -87,6 +88,16 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
         lines.reduce((acc, line) => acc + line.price, 0) -
         firstResponderDiscount(lines.length, expressFirstResponder) -
         welcomeOfferBonus()
+
+    const isThereFreeTradeIn = useMemo(
+        () =>
+            lines.some(
+                (s) =>
+                    (s.tradeInValues?.phone.isFree && s.tradeIn) ||
+                    s.tradeInValues?.balance === 0
+            ),
+        [lines]
+    )
 
     const mobilePlusHomeDiscount = (): number => {
         return lines
@@ -357,28 +368,41 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
                 </Text>
                 <Text color="red">-${welcomeOfferBonus()}</Text>
             </RowView>
-            <TouchableOpacity
-                onPress={() => setShowTradeInDetails((prev) => !prev)}
-            >
-                <RowView show={tradeInTotal() > 0}>
-                    <Row style={{ alignItems: 'center', gap: SIZES.base }}>
-                        <Text color="tabIconDefault">Trade-In Balance</Text>
-                        <FontAwesome
-                            size={16}
-                            color={iconColor + '80'}
-                            name={
-                                showTradeInDetails
-                                    ? 'chevron-right'
-                                    : 'chevron-down'
-                            }
-                        />
-                    </Row>
 
-                    <Text color="tabIconDefault">
-                        ${tradeInTotal().toFixed(2)}
-                    </Text>
-                </RowView>
-            </TouchableOpacity>
+            <RowView show={tradeInTotal() > 0}>
+                <TouchableOpacity
+                    onPress={() => setShowTradeInDetails((prev) => !prev)}
+                >
+                    <Row
+                        style={{
+                            justifyContent: 'space-between',
+                            width: '100%'
+                        }}
+                    >
+                        <Row
+                            style={{
+                                alignItems: 'center',
+                                gap: SIZES.base
+                            }}
+                        >
+                            <Text color="tabIconDefault">Trade-In Balance</Text>
+                            <FontAwesome
+                                size={16}
+                                color={iconColor + '80'}
+                                name={
+                                    showTradeInDetails
+                                        ? 'chevron-right'
+                                        : 'chevron-down'
+                                }
+                            />
+                        </Row>
+
+                        <Text color="tabIconDefault">
+                            ${tradeInTotal().toFixed(2)}
+                        </Text>
+                    </Row>
+                </TouchableOpacity>
+            </RowView>
             <RowView show={showTradeInDetails}>
                 <View style={{ padding: SIZES.padding, gap: 3, width: '100%' }}>
                     {lines
@@ -394,6 +418,85 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
 
                                 <Text fontFamily="QSLight">
                                     ${t.tradeInValues?.monthlyPrice.toFixed(2)}
+                                </Text>
+                            </Row>
+                        ))}
+                </View>
+            </RowView>
+            <RowView show={isThereFreeTradeIn}>
+                <TouchableOpacity
+                    onPress={() => setShowFreeTradeIn((prev) => !prev)}
+                >
+                    <Row
+                        style={{
+                            alignItems: 'center',
+                            gap: SIZES.base,
+                            width: '100%',
+                            justifyContent: 'space-between'
+                        }}
+                    >
+                        <Row style={{ gap: SIZES.base }}>
+                            <Text color="tabIconDefault">Free Phones</Text>
+                            <FontAwesome
+                                size={16}
+                                color={iconColor + '80'}
+                                name={
+                                    showTradeInDetails
+                                        ? 'chevron-right'
+                                        : 'chevron-down'
+                                }
+                            />
+                        </Row>
+                        <Text
+                            style={{
+                                textDecorationLine: 'line-through',
+                                textDecorationStyle: 'solid',
+                                textDecorationColor: 'red'
+                            }}
+                            color="tabIconDefault"
+                        >
+                            $
+                            {lines
+                                .map((l) =>
+                                    l.tradeInValues?.balance === 0 && l.tradeIn
+                                        ? { price: l.tradeInValues.phone.value }
+                                        : { price: 0 }
+                                )
+                                .reduce((acc, curr) => acc + curr.price, 0)}
+                        </Text>
+                    </Row>
+                </TouchableOpacity>
+            </RowView>
+            <RowView show={showFreeTradeIn && isThereFreeTradeIn}>
+                <View
+                    style={{
+                        padding: SIZES.padding,
+                        gap: 3,
+                        width: '100%'
+                    }}
+                >
+                    {lines
+                        .filter(
+                            (l) => l.tradeIn && l.tradeInValues?.balance === 0
+                        )
+                        .map((t, index) => (
+                            <Row
+                                key={index}
+                                style={{ justifyContent: 'space-between' }}
+                            >
+                                <Text fontFamily="QSLight">
+                                    {index + 1} - {t.tradeInValues?.phone.name}
+                                </Text>
+
+                                <Text
+                                    style={{
+                                        textDecorationLine: 'line-through',
+                                        textDecorationStyle: 'solid',
+                                        textDecorationColor: 'red'
+                                    }}
+                                    fontFamily="QSLight"
+                                >
+                                    ${t.tradeInValues?.phone.value}
                                 </Text>
                             </Row>
                         ))}
