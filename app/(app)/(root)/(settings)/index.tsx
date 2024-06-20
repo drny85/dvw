@@ -33,6 +33,7 @@ import {
 } from 'react-native'
 import Switcher from '@/common/components/Switcher'
 import { setShow5G } from '@/features/settings/settingsSlice'
+import { setLinesData } from '@/features/wireless/wirelessSlide'
 
 const Settings = () => {
     useAuth()
@@ -427,6 +428,21 @@ const Settings = () => {
                         </Text>
                     </Row>
                 </TouchableOpacity> */}
+                <Row
+                    style={{
+                        justifyContent: 'space-between',
+                        paddingHorizontal: SIZES.padding * 0.7
+                    }}
+                >
+                    <Text> Clear My Plan Lines</Text>
+                    <TouchableOpacity
+                        onPress={() => {
+                            dispatch(setLinesData([]))
+                        }}
+                    >
+                        <Text>Clear</Text>
+                    </TouchableOpacity>
+                </Row>
                 <Row
                     style={{
                         marginVertical: 20,
