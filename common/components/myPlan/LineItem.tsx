@@ -1,41 +1,38 @@
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import Styles from '@/constants/Styles'
-import { Line, LineName } from '@/types'
-import { totalPerksCount } from '@/utils/perksCount'
+import { Line } from '@/types'
+
+import useAppDispatch from '@/common/hooks/useAppDispatch'
+import useAppSelector from '@/common/hooks/useAppSelector'
+import { setLinesData, toogleShake } from '@/features/wireless/wirelessSlide'
 import { FontAwesome } from '@expo/vector-icons'
 import { MotiView } from 'moti'
 import React, { useEffect } from 'react'
-import { StyleSheet, Switch, TouchableOpacity, Animated } from 'react-native'
-import { Menu, MenuDivider, MenuItem } from 'react-native-material-menu'
+import { Animated, StyleSheet, Switch, TouchableOpacity } from 'react-native'
 import Text from '../Text'
 import View from '../View'
-import useAppSelector from '@/common/hooks/useAppSelector'
-import useAppDispatch from '@/common/hooks/useAppDispatch'
-import { toogleShake } from '@/features/wireless/wirelessSlide'
+import LinesMenu from './Menu'
+import { calculatePrice } from '@/helpers'
 
 type Props = {
     index: number
     line: Line
     onBYOD: (id: string) => void
     onDelete: (id: string) => void
-    onSwitchLine: (id: string, name: LineName) => void
     onPerksPress: (id: string) => void
     onTradeInPress: (id: string) => void
 }
-const LineItem = ({
-    line,
-    onBYOD,
-    onDelete,
-    onSwitchLine,
-    onPerksPress,
-    onTradeInPress,
-    index
-}: Props) => {
-    const ascent = useThemeColor('placeholder')
+const LineItem = ({ line, onBYOD, onDelete, onTradeInPress, index }: Props) => {
+    const {
+        lines,
+        expressAutoPay,
+        expressInternet,
+        expressHasFios,
+        expressFirstResponder
+    } = useAppSelector((s) => s.wireless)
     const shake = useAppSelector((s) => s.wireless.shake)
     const dispatch = useAppDispatch()
-    const text = useThemeColor('text')
     const warning = useThemeColor('warning')
     const thumbColor = useThemeColor('success')
     const bgColor = useThemeColor('background')
@@ -67,15 +64,33 @@ const LineItem = ({
         })
     }
 
-    const [linePressed, setLinePressed] = React.useState(false)
-    const onPressLineName = (name: LineName) => {
-        setLinePressed(false)
-        onSwitchLine(line.id, name)
-    }
-
     useEffect(() => {
         if (shake) shakeDelete()
     }, [shake])
+
+    useEffect(() => {
+        const newLines = lines.map((line) => {
+            return {
+                ...line,
+                price: calculatePrice(
+                    line,
+                    lines,
+                    expressAutoPay,
+                    expressInternet,
+                    expressHasFios
+                )
+            }
+        })
+
+        dispatch(setLinesData(newLines))
+    }, [
+        lines.length,
+        line.name,
+        expressAutoPay,
+        expressFirstResponder,
+        expressInternet,
+        expressHasFios
+    ])
 
     return (
         <>
@@ -104,58 +119,7 @@ const LineItem = ({
                         width: '26%'
                     }}
                 >
-                    <Menu
-                        animationDuration={300}
-                        visible={linePressed}
-                        style={{
-                            backgroundColor: ascent,
-                            marginTop: SIZES.padding * 2
-                        }}
-                        anchor={
-                            <View
-                                style={{
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    flexGrow: 1
-                                }}
-                            >
-                                <Text fontSize={12}>{index + 1} - </Text>
-
-                                <Text
-                                    onPress={() => setLinePressed(true)}
-                                    fontSize={14}
-                                    fontFamily="SFBold"
-                                >
-                                    {SIZES.width > 500
-                                        ? line.name
-                                        : line.name.split(' ')[1]}
-                                </Text>
-                            </View>
-                        }
-                    >
-                        {[
-                            'Unlimited Welcome',
-                            'Unlimited Plus',
-                            'Unlimited Ultimate'
-                        ].map((p) => (
-                            <View key={p}>
-                                <MenuItem
-                                    textStyle={{
-                                        color: '#ffffff',
-                                        fontFamily: 'SFBold'
-                                    }}
-                                    pressColor={bgColor}
-                                    onPress={() =>
-                                        onPressLineName(p as LineName)
-                                    }
-                                    key={p}
-                                >
-                                    {p}
-                                </MenuItem>
-                                <MenuDivider color={bgColor} />
-                            </View>
-                        ))}
-                    </Menu>
+                    <LinesMenu line={line} index={index} />
                 </View>
 
                 <View style={styles.lineName}>

@@ -8,11 +8,6 @@ import useAppDispatch from '@/common/hooks/useAppDispatch'
 import useAppSelector from '@/common/hooks/useAppSelector'
 import { useStatusBarColor } from '@/common/hooks/useStatusBarColor'
 import useThemeColor from '@/common/hooks/useThemeColor'
-import {
-    PLUS_BYOD_VALUE,
-    ULTIMATE_BYOD_VALUE,
-    WELCOME_BYOD_VALUE
-} from '@/constants'
 import { SIZES } from '@/constants/Sizes'
 import { setReturnRoute, setShow5G } from '@/features/settings/settingsSlice'
 import {
@@ -23,15 +18,14 @@ import {
     setLinesData,
     toogleShake
 } from '@/features/wireless/wirelessSlide'
-import { perks } from '@/perks'
-import { Line, LineName } from '@/types'
-import { calculateTradeInValues } from '@/utils/calculateTradeIn'
+import { calculatePrice } from '@/helpers'
+import { Line } from '@/types'
 import { AntDesign } from '@expo/vector-icons'
 import BottomSheet from '@gorhom/bottom-sheet'
 import { router } from 'expo-router'
 import { AnimatePresence, MotiView } from 'moti'
 
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 
 import { Alert, ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
 
@@ -83,7 +77,13 @@ const MyPlan = () => {
             if (line.id === id) {
                 return {
                     ...line,
-                    price: calculatePrice({ ...line, byod: !line.byod }),
+                    price: calculatePrice(
+                        { ...line, byod: !line.byod },
+                        lines,
+                        expressAutoPay,
+                        expressInternet,
+                        expressHasFios
+                    ),
                     byod: !line.byod,
                     tradeIn: false,
                     tradeInValues: null
@@ -107,195 +107,17 @@ const MyPlan = () => {
         })
     }
 
-    const calculatePrice = useCallback(
-        (line: Line): number => {
-            switch (line.name) {
-                case 'Unlimited Welcome':
-                    return (
-                        (lines.length === 1
-                            ? 75
-                            : lines.length === 2
-                            ? 65
-                            : lines.length === 3
-                            ? 50
-                            : lines.length === 4
-                            ? 40
-                            : lines.length >= 5
-                            ? 37
-                            : 0) -
-                        expressAutoPay -
-                        mobilePlusHome(line) -
-                        (line.byod ? WELCOME_BYOD_VALUE : 0) -
-                        calculateLoyaltyBonus(line, expressInternet) +
-                        perksTotal(line)
-                    )
-                case 'Unlimited Plus':
-                    return (
-                        (lines.length === 1
-                            ? 90
-                            : lines.length === 2
-                            ? 80
-                            : lines.length === 3
-                            ? 65
-                            : lines.length === 4
-                            ? 55
-                            : lines.length >= 5
-                            ? 52
-                            : 0) -
-                        expressAutoPay -
-                        mobilePlusHome(line) -
-                        (line.byod ? PLUS_BYOD_VALUE : 0) -
-                        calculateLoyaltyBonus(line, expressInternet) +
-                        perksTotal(line)
-                    )
-                case 'Unlimited Ultimate':
-                    return (
-                        (lines.length === 1
-                            ? 100
-                            : lines.length === 2
-                            ? 90
-                            : lines.length === 3
-                            ? 75
-                            : lines.length === 4
-                            ? 65
-                            : lines.length >= 5
-                            ? 62
-                            : 0) -
-                        expressAutoPay -
-                        mobilePlusHome(line) -
-                        (line.byod ? ULTIMATE_BYOD_VALUE : 0) -
-                        calculateLoyaltyBonus(line, expressInternet) +
-                        perksTotal(line)
-                    )
-                default:
-                    return 0
-            }
-        },
-        [
-            lines.length,
-            expressAutoPay,
-            expressFirstResponder,
-            expressInternet,
-            expressHasFios
-        ]
-    )
-
-    const onSwitchLine = (id: string, name: LineName) => {
-        const line = lines.find((line) => line.id === id)!
-        const n: Line = {
-            ...line,
-            originalPrice:
-                name === 'Unlimited Ultimate'
-                    ? 100
-                    : name === 'Unlimited Plus'
-                    ? 90
-                    : name === 'Unlimited Welcome'
-                    ? 75
-                    : 0,
-            name: name
-        }
-        const perkChecked =
-            name === 'Unlimited Ultimate'
-                ? {
-                      ...n,
-
-                      perks: [
-                          ...perks.filter((p) => p.name !== '3 TravelPass Days')
-                      ]
-                  }
-                : { ...n, perks: [...perks] }
-        const newLines = lines.map((line) => {
-            if (line.id === id) {
-                return {
-                    ...perkChecked,
-                    price: calculatePrice(n),
-                    name: name,
-                    perks: line.perks,
-                    tradeIn: line.tradeIn,
-                    tradeInValues: line.tradeInValues
-                        ? calculateTradeInValues(
-                              name,
-                              line.tradeInValues?.device!,
-                              line.tradeInValues.phone
-                          )
-                        : null
-                }
-            }
-            return line
-        })
-
-        dispatch(setLinesData(newLines))
-    }
-
-    const perksTotal = (line: Line): number => {
-        return line.perks
-            .map((i) => (i.selected ? i.price : 0))
-            .reduce(
-                (acc, p) => acc + p,
-
-                0
-            )
-    }
-
-    const mobilePlusHome = (line: Line): number => {
-        if (
-            (expressInternet === 'one_gig' || expressInternet === 'two_gig') &&
-            (line.name === 'Unlimited Plus' ||
-                line.name === 'Unlimited Ultimate')
-        ) {
-            return 10
-        } else if (
-            expressHasFios &&
-            expressInternet === 'one_gig' &&
-            line.name === 'Unlimited Welcome'
-        ) {
-            return 5
-        } else if (expressHasFios && expressInternet !== 'one_gig') {
-            return 5
-        } else {
-            return 0
-        }
-    }
-
-    const calculateLoyaltyBonus = (
-        line: Line,
-        internet: typeof expressInternet
-    ): number => {
-        return 0
-        // if (!expressHasFios || lines.length === 0) return 0
-        // const gig = internet === 'one_gig' || internet === 'two_gig'
-        // if (
-        //     line.name === 'Unlimited Plus' ||
-        //     line.name === 'Unlimited Ultimate'
-        // ) {
-        //     if (gig) {
-        //         return lines.length === 1 ? 25 : lines.length === 2 ? 15 : 0
-        //     }
-        //     return lines.length === 1
-        //         ? 30
-        //         : lines.length === 2
-        //         ? 20
-        //         : lines.length === 3
-        //         ? 5
-        //         : 0
-        // } else if (line.name === 'Unlimited Welcome') {
-        //     return lines.length === 1
-        //         ? 30
-        //         : lines.length === 2
-        //         ? 20
-        //         : lines.length === 3
-        //         ? 5
-        //         : 0
-        // } else {
-        //     return 0
-        // }
-    }
-
     useEffect(() => {
         const newLines = lines.map((line) => {
             return {
                 ...line,
-                price: calculatePrice(line)
+                price: calculatePrice(
+                    line,
+                    lines,
+                    expressAutoPay,
+                    expressInternet,
+                    expressHasFios
+                )
             }
         })
 
@@ -391,7 +213,6 @@ const MyPlan = () => {
                     onTradeInPress={(id, index) => onTradeInPress(id, index)}
                     onBYOD={(line) => onSwitchBYOD(line)}
                     onDelete={(id) => deleteLine(id)}
-                    onSwitchLine={onSwitchLine}
                     onPerksPress={(id) => {
                         router.push({
                             pathname: '/(app)/(modals)/perks',

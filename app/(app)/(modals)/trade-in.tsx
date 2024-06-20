@@ -1,5 +1,6 @@
 import Divider from '@/common/components/Divider'
 import Header from '@/common/components/Header'
+import LinesMenu from '@/common/components/myPlan/Menu'
 import NeoView from '@/common/components/NeoView'
 import Row from '@/common/components/Row'
 import Screen from '@/common/components/Screen'
@@ -162,9 +163,28 @@ const TradeIn = () => {
                     gap: SIZES.padding
                 }}
             >
-                <Text fontFamily="QSBold" fontSize={20} center>
-                    Trading for line #{+lineIndex + 1}, {line?.name}
-                </Text>
+                <Row style={{ gap: SIZES.base, alignSelf: 'center' }}>
+                    <Text fontFamily="QSBold" fontSize={20} center>
+                        Trading for line #
+                    </Text>
+                    <NeoView
+                        innerStyleContainer={{
+                            borderRadius: SIZES.radius * 2,
+                            padding: 6
+                        }}
+                        containerStyle={{
+                            borderRadius: SIZES.radius * 2
+                        }}
+                    >
+                        <LinesMenu
+                            line={line!}
+                            index={+lineIndex}
+                            showFullName={true}
+                            fontSize={15}
+                        />
+                    </NeoView>
+                </Row>
+
                 <Divider small />
                 <Text fontSize={18} fontFamily="QSBold" center>
                     Select the OS for the new phone
@@ -345,6 +365,7 @@ const TradeIn = () => {
                     >
                         {PHONES[selectedSegment].map((p) => (
                             <NeoView
+                                key={p.name}
                                 containerStyle={{
                                     borderRadius: SIZES.base
                                 }}

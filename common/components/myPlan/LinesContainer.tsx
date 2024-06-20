@@ -1,5 +1,5 @@
 import { SIZES } from '@/constants/Sizes'
-import { Line, LineName } from '@/types'
+import { Line } from '@/types'
 import React from 'react'
 import { StyleSheet } from 'react-native'
 import View from '../View'
@@ -9,7 +9,6 @@ type Props = {
     lines: Line[]
     onBYOD: (id: string) => void
     onDelete: (id: string) => void
-    onSwitchLine: (id: string, name: LineName) => void
     onPerksPress: (id: string) => void
     onTradeInPress: (id: string, index: string) => void
 }
@@ -17,7 +16,6 @@ const LinesContainer = ({
     lines,
     onBYOD,
     onDelete,
-    onSwitchLine,
     onPerksPress,
     onTradeInPress
 }: Props) => {
@@ -34,7 +32,6 @@ const LinesContainer = ({
                     onBYOD={() => onBYOD(line.id)}
                     onDelete={() => onDelete(line.id)}
                     onPerksPress={(id) => onPerksPress(id)}
-                    onSwitchLine={(id, name) => onSwitchLine(id, name)}
                 />
             ))}
         </View>
