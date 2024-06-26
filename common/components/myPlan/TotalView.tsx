@@ -100,19 +100,24 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
     const mobilePlusHomeDiscount = (): number => {
         return lines
             .map((line) =>
-                (line.name === 'Unlimited Plus' ||
-                    line.name === 'Unlimited Ultimate') &&
-                expressHasFios &&
-                (expressInternet === 'two_gig' || expressInternet === 'one_gig')
+                // (line.name === 'Unlimited Plus' ||
+                //     line.name === 'Unlimited Ultimate') &&
+                // expressHasFios &&
+                // (expressInternet === 'two_gig' || expressInternet === 'one_gig')
+                //     ? { discount: 10 }
+                //     : (line.name === 'Unlimited Plus' ||
+                //           line.name === 'Unlimited Ultimate') &&
+                //       expressHasFios &&
+                //       expressInternet !== 'two_gig' &&
+                //       expressInternet !== 'one_gig'
+                //     ? { discount: 5 }
+                //     : line.name === 'Unlimited Welcome' && expressHasFios
+                //     ? { discount: 5 }
+                //     : { discount: 0 }
+                expressHasFios && line.name === 'Unlimited Welcome'
+                    ? { discount: 5 }
+                    : expressHasFios && line.name !== 'Unlimited Welcome'
                     ? { discount: 10 }
-                    : (line.name === 'Unlimited Plus' ||
-                          line.name === 'Unlimited Ultimate') &&
-                      expressHasFios &&
-                      expressInternet !== 'two_gig' &&
-                      expressInternet !== 'one_gig'
-                    ? { discount: 5 }
-                    : line.name === 'Unlimited Welcome' && expressHasFios
-                    ? { discount: 5 }
                     : { discount: 0 }
             )
             .reduce((acc, line) => acc + line.discount, 0)

@@ -13,19 +13,28 @@ export const mobilePlusHome = (
     expressInternet: InternetPlan,
     expressHasFios: boolean
 ): number => {
-    if (
-        (expressInternet === 'one_gig' || expressInternet === 'two_gig') &&
-        (line.name === 'Unlimited Plus' || line.name === 'Unlimited Ultimate')
-    ) {
-        return 10
-    } else if (
-        expressHasFios &&
-        expressInternet === 'one_gig' &&
-        line.name === 'Unlimited Welcome'
-    ) {
-        return 5
-    } else if (expressHasFios && expressInternet !== 'one_gig') {
-        return 5
+    // if (
+    //     (expressInternet === 'one_gig' || expressInternet === 'two_gig') &&
+    //     (line.name === 'Unlimited Plus' || line.name === 'Unlimited Ultimate')
+    // ) {
+    //     return 10
+    // } else if (
+    //     expressHasFios &&
+    //     expressInternet === 'one_gig' &&
+    //     line.name === 'Unlimited Welcome'
+    // ) {
+    //     return 5
+    // } else if (expressHasFios && expressInternet !== 'one_gig') {
+    //     return 5
+    // } else {
+    //     return 0
+    // }
+    if (expressHasFios) {
+        if (line.name === 'Unlimited Welcome') {
+            return 5
+        } else {
+            return 10
+        }
     } else {
         return 0
     }

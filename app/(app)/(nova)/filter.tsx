@@ -16,18 +16,12 @@ import {
     toggleIsWelcomeQualified
 } from '@/features/wireless/wirelessSlide'
 import { router } from 'expo-router'
-import { AnimatePresence, MotiView } from 'moti'
 import React from 'react'
 import { TouchableOpacity } from 'react-native'
 
 const filter = () => {
-    const {
-        expressAutoPay,
-        expressFirstResponder,
-        expressHasFios,
-        expressInternet,
-        isWelcome
-    } = useAppSelector((s) => s.wireless)
+    const { expressAutoPay, expressFirstResponder, expressHasFios, isWelcome } =
+        useAppSelector((s) => s.wireless)
 
     const dispatch = useAppDispatch()
     return (
@@ -67,7 +61,7 @@ const filter = () => {
                 />
                 <Switcher
                     value={expressHasFios}
-                    title="Mobile + Home Discount"
+                    title="Mobile + Home 3.0"
                     onValueChange={() => {
                         if (expressHasFios) {
                             dispatch(setExpressInternet())
@@ -77,7 +71,7 @@ const filter = () => {
                     }}
                 />
 
-                <AnimatePresence>
+                {/* <AnimatePresence>
                     {expressHasFios && (
                         <MotiView
                             key="internet"
@@ -128,7 +122,7 @@ const filter = () => {
                             />
                         </MotiView>
                     )}
-                </AnimatePresence>
+                </AnimatePresence> */}
             </View>
             <View
                 style={{

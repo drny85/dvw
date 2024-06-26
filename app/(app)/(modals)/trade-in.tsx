@@ -1,6 +1,7 @@
 import Divider from '@/common/components/Divider'
 import Header from '@/common/components/Header'
 import LinesMenu from '@/common/components/myPlan/Menu'
+import TotalView from '@/common/components/myPlan/TotalView'
 import NeoView from '@/common/components/NeoView'
 import Row from '@/common/components/Row'
 import Screen from '@/common/components/Screen'
