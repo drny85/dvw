@@ -1,8 +1,13 @@
 import { LineName } from '@/types'
 
-export const ULTIMATE_BYOD_VALUE = 540 / 36
-export const PLUS_BYOD_VALUE = 360 / 36
-export const WELCOME_BYOD_VALUE = 360 / 36
+const WELCOME_BYOD = 360
+const PLUS_BYOD = 360
+const ULTIMATE_BYOD = 540
+
+export const ULTIMATE_BYOD_VALUE = ULTIMATE_BYOD / 36
+export const PLUS_BYOD_VALUE = PLUS_BYOD / 36
+export const WELCOME_BYOD_VALUE = WELCOME_BYOD / 36
+export const WELCOME_BYOD_BONUS_EXPIRATION = '07/07/2024'
 export const LOYALTY_EXPIRATION_DATE = '05/08/2024'
 export const WELCOME_OFFER_EXPIRATION_DATE = '07/30/2024'
 export const WIRELESS_MONTHLY_GOAL = 10

@@ -2,6 +2,7 @@ import useAppDispatch from '@/common/hooks/useAppDispatch'
 import useAppSelector from '@/common/hooks/useAppSelector'
 import {
     LOYALTY_EXPIRATION_DATE,
+    WELCOME_BYOD_BONUS_EXPIRATION,
     WELCOME_OFFER_EXPIRATION_DATE
 } from '@/constants'
 import { SIZES } from '@/constants/Sizes'
@@ -40,6 +41,8 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
     const dispatch = useAppDispatch()
     const [showTradeInDetails, setShowTradeInDetails] = useState(false)
     const [showBreakdown, setShowBreakdown] = useState(false)
+    const [showBYODDetails, setShowBYODDetails] = useState(false)
+    const [showMHDetails, setShowMHDetails] = useState(false)
     const [showFreeTradeIn, setShowFreeTradeIn] = useState(false)
 
     const {
@@ -331,8 +334,46 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
                 <Text color="red">-${autoPayDiscount()}</Text>
             </RowView>
             <RowView show={mobilePlusHomeDiscount() > 0}>
-                <Text>M + H Discount</Text>
+                <TouchableOpacity
+                    onPress={() => setShowMHDetails((prev) => !prev)}
+                >
+                    <Row style={{ alignItems: 'center', gap: SIZES.base }}>
+                        <Text>M + H Discount</Text>
+
+                        <FontAwesome
+                            size={16}
+                            color={iconColor + '80'}
+                            name={
+                                showMHDetails ? 'chevron-right' : 'chevron-down'
+                            }
+                        />
+                    </Row>
+                </TouchableOpacity>
+
                 <Text color="red">-${mobilePlusHomeDiscount()}</Text>
+            </RowView>
+            <RowView show={showMHDetails && mobilePlusHomeDiscount() > 0}>
+                <View
+                    style={{
+                        padding: SIZES.base,
+                        gap: 3,
+                        width: '100%'
+                    }}
+                >
+                    {lines.map((l, index) => (
+                        <Row
+                            key={index}
+                            style={{ justifyContent: 'space-between' }}
+                        >
+                            <Text fontFamily="QSLight">
+                                {index + 1} - {l.name}
+                            </Text>
+                            <Text fontFamily="QSLight" color="grey">
+                                ${l.name === 'Unlimited Welcome' ? 5 : 10}
+                            </Text>
+                        </Row>
+                    ))}
+                </View>
             </RowView>
             <RowView
                 show={
@@ -351,11 +392,58 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
                 <Text color="red">-${firstResponder()}</Text>
             </RowView>
             <RowView show={byod > 0}>
-                <Text>BYOD Savings</Text>
+                <TouchableOpacity
+                    onPress={() => setShowBYODDetails((prev) => !prev)}
+                >
+                    <Row style={{ alignItems: 'center', gap: SIZES.base }}>
+                        <Text>BYOD Savings</Text>
+
+                        <FontAwesome
+                            size={16}
+                            color={iconColor + '80'}
+                            name={
+                                showBYODDetails
+                                    ? 'chevron-right'
+                                    : 'chevron-down'
+                            }
+                        />
+                    </Row>
+                </TouchableOpacity>
+
                 <Text fontFamily="SFLight" color="grey" fontSize={13}>
                     (36 months)
                 </Text>
                 <Text color="red">-${byod}</Text>
+            </RowView>
+            <RowView show={showBYODDetails}>
+                <View
+                    style={{
+                        padding: SIZES.base,
+                        gap: 3,
+                        width: '100%'
+                    }}
+                >
+                    {lines
+                        .filter((l) => l.byod)
+                        .map((l, index) => (
+                            <Row
+                                key={index}
+                                style={{ justifyContent: 'space-between' }}
+                            >
+                                <Text fontFamily="QSLight">
+                                    {index + 1} - {l.name}
+                                </Text>
+                                {l.name === 'Unlimited Welcome' && (
+                                    <Text fontFamily="QSLight" color="grey">
+                                        ( ends 7/7 )
+                                    </Text>
+                                )}
+                                <Text fontFamily="QSLight" color="grey">
+                                    ${l.name === 'Unlimited Ultimate' ? 15 : 10}
+                                </Text>
+                            </Row>
+                        ))}
+                </View>
             </RowView>
             <RowView
                 show={
@@ -367,7 +455,7 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
             >
                 <Text>LGPO</Text>
                 <Text fontFamily="SFLight" color="warning" fontSize={13}>
-                    exprires ({WELCOME_OFFER_EXPIRATION_DATE})
+                    ends ({WELCOME_OFFER_EXPIRATION_DATE})
                 </Text>
                 <Text color="red">-${welcomeOfferBonus()}</Text>
             </RowView>
