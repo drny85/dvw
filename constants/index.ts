@@ -1,6 +1,6 @@
 import { LineName } from '@/types'
 
-const WELCOME_BYOD = 360
+const WELCOME_BYOD = 180
 const PLUS_BYOD = 360
 const ULTIMATE_BYOD = 540
 

@@ -129,13 +129,13 @@ export type NotificationBody = {
 }
 export async function schedulePushNotification(
     values: NotificationBody
-): Promise<boolean> {
+): Promise<string | null> {
     if (moment(values.date).diff(new Date(), 'seconds') < 1) {
         Alert.alert('select a time in the future')
-        return false
+        return null
     }
     try {
-        const noti = await Notifications.scheduleNotificationAsync({
+        const indetifier = await Notifications.scheduleNotificationAsync({
             content: {
                 title: values.title,
                 body: values.body,
@@ -144,14 +144,23 @@ export async function schedulePushNotification(
                 vibrate: [0, 250, 250, 250],
                 autoDismiss: true
             },
-            trigger: { date: new Date(values.date) },
-            identifier: 'reminder'
+            trigger: { date: new Date(values.date) }
         })
-        console.log(noti)
 
-        return true
+        return indetifier
     } catch (error) {
         console.log('@Error at scheduleNotification', error)
+        return null
+    }
+}
+
+export async function cancelNotification(identifier: string): Promise<boolean> {
+    try {
+        if (!identifier) return false
+        await Notifications.cancelScheduledNotificationAsync(identifier)
+        return true
+    } catch (error) {
+        console.log('@Error at cancelNotification', error)
         return false
     }
 }

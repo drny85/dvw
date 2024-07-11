@@ -233,6 +233,7 @@ export type Referral = {
     comment: string | null
     followUpOn: string | null
     referralLines: number
+    notificationIdentifier: string | null
 }
 
 export interface STATUS {

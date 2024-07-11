@@ -9,7 +9,6 @@ import React from 'react'
 import {
     Image,
     ImageBackground,
-    Pressable,
     StyleSheet,
     TouchableOpacity,
     TouchableWithoutFeedback
@@ -233,18 +232,22 @@ const FeedCard = ({
                                 gap: SIZES.base
                             }}
                         >
-                            <Image
-                                style={{
-                                    height: 50,
-                                    width: 50,
-                                    borderRadius: 25
-                                }}
-                                source={
-                                    feed.user.image
-                                        ? { uri: feed.user.image }
-                                        : require('@/assets/images/profile.jpg')
-                                }
-                            />
+                            {feed.user?.image ? (
+                                <Image
+                                    style={{
+                                        height: 50,
+                                        width: 50,
+                                        borderRadius: 25
+                                    }}
+                                    source={{ uri: feed.user.image }}
+                                />
+                            ) : (
+                                <FontAwesome
+                                    size={38}
+                                    name="user-circle"
+                                    color={'#ffffff'}
+                                />
+                            )}
                             <Text color="white" fontFamily="SFBold" capitalize>
                                 {feed.user.name}
                             </Text>

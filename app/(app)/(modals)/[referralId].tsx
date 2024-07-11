@@ -169,7 +169,8 @@ const ReferralDetails = () => {
                     updateReferral({
                         ...referral,
                         followUpOn: null,
-                        followUpType: null
+                        followUpType: null,
+                        notificationIdentifier: null
                     })
                 )
             }

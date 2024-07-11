@@ -57,8 +57,11 @@ export const CloseReferralEmailToReferee = (data: EmailRef) => {
                             those referrals coming!
                         </Text>
                         <Section className="text-center my-3">
-                            <Text className="font-semibold">
-                                Please if you have a moment and have some
+                            <Text className="text-md">
+                                Please if you have a moment and have some{' '}
+                                <Text className="font-bold text-lg">
+                                    Fios and/or Wireless
+                                </Text>{' '}
                                 referrals, submit those now, why wait!
                             </Text>
                             <Link

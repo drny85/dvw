@@ -1,6 +1,7 @@
 import { Msg } from '@/types'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import {
+    Avatar,
     BubbleProps,
     GiftedChat,
     InputToolbar,

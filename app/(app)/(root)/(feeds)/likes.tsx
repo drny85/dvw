@@ -11,6 +11,8 @@ import { Image, ScrollView } from 'react-native'
 import Text from '@/common/components/Text'
 import View from '@/common/components/View'
 import { AppUser } from '@/types'
+import { FontAwesome } from '@expo/vector-icons'
+import useThemeColor from '@/common/hooks/useThemeColor'
 
 const likes = () => {
     const feed = useAppSelector((s) => s.feeds.feed)
@@ -50,6 +52,7 @@ type Props = {
     user: AppUser
 }
 const UserLiked = ({ user }: Props) => {
+    const iconColor = useThemeColor('text')
     return (
         <View
             style={{
@@ -58,20 +61,26 @@ const UserLiked = ({ user }: Props) => {
                 padding: SIZES.padding
             }}
         >
-            <Image
-                resizeMode="cover"
-                source={
-                    user.image
-                        ? { uri: user.image }
-                        : require('@/assets/images/profile.jpg')
-                }
-                style={{
-                    borderRadius: 30,
-                    marginRight: SIZES.padding,
-                    height: 60,
-                    width: 60
-                }}
-            />
+            {user.image ? (
+                <Image
+                    resizeMode="cover"
+                    source={{ uri: user.image }}
+                    style={{
+                        borderRadius: 30,
+                        marginRight: SIZES.padding,
+                        height: 60,
+                        width: 60
+                    }}
+                />
+            ) : (
+                <FontAwesome
+                    style={{ marginRight: SIZES.padding }}
+                    size={60}
+                    name="user-circle"
+                    color={iconColor}
+                />
+            )}
+
             <Text capitalize fontSize={16} fontFamily="OWRegelar">
                 {user.name}
             </Text>

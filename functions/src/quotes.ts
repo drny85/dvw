@@ -22,6 +22,18 @@ export const quotes = [
         author: 'Colin Powell'
     },
     {
+        quote: 'Our lives begin to end the day we become silent about things that matter.',
+        author: 'Martin Luther King, Jr.'
+    },
+    {
+        quote: 'Yesterday is ashes. Tomorrow is green wood. Only today does the fire burn brightly',
+        author: 'Eskimo Saying'
+    },
+    {
+        quote: 'Success consists of going from failure to failure without loss of enthusiasm.',
+        author: 'Winston Churchill'
+    },
+    {
         quote: "Success seems to be connected with action. Successful people keep moving. They make mistakes, but they don't quit.",
         author: 'Conrad Hilton'
     },

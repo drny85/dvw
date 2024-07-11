@@ -2,7 +2,6 @@ import useAppDispatch from '@/common/hooks/useAppDispatch'
 import useAppSelector from '@/common/hooks/useAppSelector'
 import {
     LOYALTY_EXPIRATION_DATE,
-    WELCOME_BYOD_BONUS_EXPIRATION,
     WELCOME_OFFER_EXPIRATION_DATE
 } from '@/constants'
 import { SIZES } from '@/constants/Sizes'
@@ -433,13 +432,16 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
                                 <Text fontFamily="QSLight">
                                     {index + 1} - {l.name}
                                 </Text>
-                                {l.name === 'Unlimited Welcome' && (
-                                    <Text fontFamily="QSLight" color="grey">
-                                        ( ends 7/7 )
-                                    </Text>
-                                )}
+
                                 <Text fontFamily="QSLight" color="grey">
-                                    ${l.name === 'Unlimited Ultimate' ? 15 : 10}
+                                    $
+                                    {l.name === 'Unlimited Ultimate'
+                                        ? 15
+                                        : l.name === 'Unlimited Plus'
+                                        ? 10
+                                        : l.name === 'Unlimited Welcome'
+                                        ? 5
+                                        : 0}
                                 </Text>
                             </Row>
                         ))}

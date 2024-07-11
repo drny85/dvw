@@ -125,7 +125,8 @@ const ReferralsScreen = () => {
         userId: user?.id!,
         email: '',
         followUpOn: null,
-        referralLines: referralLines || 0
+        referralLines: referralLines || 0,
+        notificationIdentifier: null
     })
 
     const validateServicesOrdered = (): boolean => {

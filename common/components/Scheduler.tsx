@@ -41,21 +41,22 @@ const Scheduler = ({
                 return
             }
 
-            const scheduled = await schedulePushNotification({
+            const identifier = await schedulePushNotification({
                 title: 'Follow Up',
                 data: { id: referral.id!, type: 'reminder' },
                 body: `Get in contact with ${referral.name}`,
                 date: followUp?.toISOString()
             })
-            if (!scheduled) return
+            if (!identifier) return
             dispatch(
                 updateReferral({
                     ...referral,
                     followUpOn: followUp?.toISOString(),
-                    followUpType: followUpType || null
+                    followUpType: followUpType || null,
+                    notificationIdentifier: identifier
                 })
             )
-            console.log('follow up scheduled', followUp.toISOString())
+
             dispatch(setShowScheduler(false))
             if (hide) {
                 router.replace('/(app)/(root)/(feeds)/(home)/followups')
