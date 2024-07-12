@@ -232,22 +232,19 @@ const FeedCard = ({
                                 gap: SIZES.base
                             }}
                         >
-                            {feed.user?.image ? (
-                                <Image
-                                    style={{
-                                        height: 50,
-                                        width: 50,
-                                        borderRadius: 25
-                                    }}
-                                    source={{ uri: feed.user.image }}
-                                />
-                            ) : (
-                                <FontAwesome
-                                    size={38}
-                                    name="user-circle"
-                                    color={'#ffffff'}
-                                />
-                            )}
+                            <Image
+                                style={{
+                                    height: 50,
+                                    width: 50,
+                                    borderRadius: 25
+                                }}
+                                source={{
+                                    uri:
+                                        feed.user.image ||
+                                        'https://firebasestorage.googleapis.com/v0/b/ayuda-b2079.appspot.com/o/verizon.png?alt=media&token=4d4c0560-4c17-4bc4-a73f-d4740312cb3c'
+                                }}
+                            />
+
                             <Text color="white" fontFamily="SFBold" capitalize>
                                 {feed.user.name}
                             </Text>

@@ -59,9 +59,7 @@ export const CloseReferralEmailToReferee = (data: EmailRef) => {
                         <Section className="text-center my-3">
                             <Text className="text-md">
                                 Please if you have a moment and have some{' '}
-                                <Text className="font-bold text-lg">
-                                    Fios and/or Wireless
-                                </Text>{' '}
+                                <strong>Fios and / or Wireless</strong>{' '}
                                 referrals, submit those now, why wait!
                             </Text>
                             <Link
@@ -70,7 +68,7 @@ export const CloseReferralEmailToReferee = (data: EmailRef) => {
                                     sendMe(data)
                                 }}
                                 target={'_blank'}
-                                className="bg-slate-800 hover:bg-slate-700 text-white font-semibold px-6 py-3 my-10  rounded-md"
+                                className="bg-slate-800 hover:bg-slate-700 text-white font-semibold px-6 py-3 my-12  rounded-md"
                             >
                                 Submit Referral
                             </Link>

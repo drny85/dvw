@@ -97,13 +97,11 @@ const DirectoryListItem = ({ user }: Props) => {
                     }}
                 />
                 <Image
-                    source={
-                        user?.image
-                            ? {
-                                  uri: user?.image
-                              }
-                            : require('@/assets/images/verizon.png')
-                    }
+                    source={{
+                        uri:
+                            user?.image ||
+                            'https://firebasestorage.googleapis.com/v0/b/ayuda-b2079.appspot.com/o/verizon.png?alt=media&token=4d4c0560-4c17-4bc4-a73f-d4740312cb3c'
+                    }}
                     resizeMode="cover"
                     style={{
                         borderRadius: 25,

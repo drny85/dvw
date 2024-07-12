@@ -33,18 +33,14 @@ const CommentView = ({
     return (
         <View style={styles.container}>
             <View style={styles.inner}>
-                {comment.user.image ? (
-                    <Image
-                        source={{ uri: comment.user.image }}
-                        style={styles.image}
-                    />
-                ) : (
-                    <FontAwesome
-                        size={38}
-                        name="user-circle"
-                        color={'#ffffff'}
-                    />
-                )}
+                <Image
+                    source={{
+                        uri:
+                            comment.user.image ||
+                            'https://firebasestorage.googleapis.com/v0/b/ayuda-b2079.appspot.com/o/verizon.png?alt=media&token=4d4c0560-4c17-4bc4-a73f-d4740312cb3c'
+                    }}
+                    style={styles.image}
+                />
 
                 <View>
                     <Text capitalize fontFamily="SFBold">

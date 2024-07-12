@@ -5,14 +5,11 @@ import { useUsers } from '@/common/hooks/auth/useUsers'
 import useAppSelector from '@/common/hooks/useAppSelector'
 import { SIZES } from '@/constants/Sizes'
 import { router } from 'expo-router'
-import React from 'react'
 import { Image, ScrollView } from 'react-native'
 
 import Text from '@/common/components/Text'
 import View from '@/common/components/View'
 import { AppUser } from '@/types'
-import { FontAwesome } from '@expo/vector-icons'
-import useThemeColor from '@/common/hooks/useThemeColor'
 
 const likes = () => {
     const feed = useAppSelector((s) => s.feeds.feed)
@@ -52,7 +49,6 @@ type Props = {
     user: AppUser
 }
 const UserLiked = ({ user }: Props) => {
-    const iconColor = useThemeColor('text')
     return (
         <View
             style={{
@@ -61,25 +57,20 @@ const UserLiked = ({ user }: Props) => {
                 padding: SIZES.padding
             }}
         >
-            {user.image ? (
-                <Image
-                    resizeMode="cover"
-                    source={{ uri: user.image }}
-                    style={{
-                        borderRadius: 30,
-                        marginRight: SIZES.padding,
-                        height: 60,
-                        width: 60
-                    }}
-                />
-            ) : (
-                <FontAwesome
-                    style={{ marginRight: SIZES.padding }}
-                    size={60}
-                    name="user-circle"
-                    color={iconColor}
-                />
-            )}
+            <Image
+                resizeMode="cover"
+                source={{
+                    uri:
+                        user.image ||
+                        'https://firebasestorage.googleapis.com/v0/b/ayuda-b2079.appspot.com/o/verizon.png?alt=media&token=4d4c0560-4c17-4bc4-a73f-d4740312cb3c'
+                }}
+                style={{
+                    borderRadius: 30,
+                    marginRight: SIZES.padding,
+                    height: 60,
+                    width: 60
+                }}
+            />
 
             <Text capitalize fontSize={16} fontFamily="OWRegelar">
                 {user.name}
