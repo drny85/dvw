@@ -34,6 +34,7 @@ import {
 import Switcher from '@/common/components/Switcher'
 import { setSaveContact, setShow5G } from '@/features/settings/settingsSlice'
 import { setLinesData } from '@/features/wireless/wirelessSlide'
+import ModernSettingsPage from '@/common/components/ModernSettingsPage'
 
 const Settings = () => {
     useAuth()
@@ -131,6 +132,14 @@ const Settings = () => {
     }, [])
 
     useStatusBarColor('dark')
+
+    return (
+        <ModernSettingsPage
+            onPress={() => {
+                setShowPhone(true)
+            }}
+        />
+    )
 
     return (
         <Screen

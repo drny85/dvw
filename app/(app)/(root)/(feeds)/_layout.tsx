@@ -3,7 +3,8 @@ import View from '@/common/components/View'
 import Greeting from '@/common/components/feed/Greeting'
 import { useReferrals } from '@/common/hooks/referrals/useReferrals'
 import useAppSelector from '@/common/hooks/useAppSelector'
-import useNotifications from '@/common/hooks/useNotification'
+import { useNotifications } from '@/common/hooks/useNotification'
+
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import { Ionicons } from '@expo/vector-icons'
@@ -20,8 +21,8 @@ const _layout = () => {
     const secondary = useThemeColor('secondary')
     const user = useAppSelector((s) => s.auth.user)
     useReferrals(user?.id!)
-
     useNotifications()
+
     return (
         <Stack
             initialRouteName="(home)"

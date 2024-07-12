@@ -21,11 +21,14 @@ Notifications.setNotificationHandler({
     }
 })
 
-const useNotifications = () => {
+export const useNotifications = () => {
     const nColor = useThemeColor('accent')
     const notificationListener = useRef<any>()
     const responseListener = useRef<any>()
     const user = useAppSelector((state) => state.auth.user)
+    const pushNotification = useAppSelector(
+        (state) => state.settings.pushNotifications
+    )
 
     useEffect(() => {
         if (!user) return
@@ -77,6 +80,7 @@ const useNotifications = () => {
 
     const registerForPushNotificationsAsync = async () => {
         try {
+            if (!pushNotification) return
             if (Device.isDevice) {
                 const { status: existingStatus } =
                     await Notifications.requestPermissionsAsync()
@@ -97,7 +101,6 @@ const useNotifications = () => {
 
                     return
                 }
-                console.log(Device.modelId)
                 if (user?.pushToken) return
                 const token = (await Notifications.getExpoPushTokenAsync()).data
 
@@ -118,9 +121,10 @@ const useNotifications = () => {
             console.log('Error from useNotifications hooks', err.message)
         }
     }
+
+    return { registerForPushNotificationsAsync }
 }
 
-export default useNotifications
 export type NotificationBody = {
     date: string
     title: string
