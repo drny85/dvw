@@ -35,10 +35,7 @@ import { formatPhone } from '@/utils/formatPhone'
 import { isFullName } from '@/utils/isFullName'
 import Row from './Row'
 
-type Props = {
-    onPress: () => void
-}
-export default function ModernSettingsPage({ onPress }: Props) {
+export default function ModernSettingsPage() {
     useAuth()
     const { registerForPushNotificationsAsync } = useNotifications()
     const dispatch = useAppDispatch()
