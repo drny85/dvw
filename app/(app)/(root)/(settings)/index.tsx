@@ -32,7 +32,7 @@ import {
     TouchableOpacity
 } from 'react-native'
 import Switcher from '@/common/components/Switcher'
-import { setShow5G } from '@/features/settings/settingsSlice'
+import { setSaveContact, setShow5G } from '@/features/settings/settingsSlice'
 import { setLinesData } from '@/features/wireless/wirelessSlide'
 
 const Settings = () => {
@@ -40,7 +40,7 @@ const Settings = () => {
 
     const iconColor = useThemeColor('text')
     const deleteColor = useThemeColor('warning')
-    const show5G = useAppSelector((s) => s.settings.show5G)
+    const { show5G, saveContact } = useAppSelector((s) => s.settings)
     const user = useAppSelector((state) => state.auth.user)
     const [updatePhone, setUpdatePhone] = React.useState('')
     const [showPhone, setShowPhone] = React.useState(false)
@@ -398,6 +398,13 @@ const Settings = () => {
                             dispatch(setShow5G(!show5G))
                         }}
                         title="Show 5G"
+                    />
+                    <Switcher
+                        value={saveContact}
+                        onValueChange={() => {
+                            dispatch(setSaveContact(!saveContact))
+                        }}
+                        title="Save Contact"
                     />
                 </View>
                 {/* <TouchableOpacity

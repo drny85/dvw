@@ -1,5 +1,5 @@
 import * as Contacts from 'expo-contacts'
-import { deviceName } from 'expo-device'
+import { modelName } from 'expo-device'
 
 export interface ContactPerson {
     firstName: string
@@ -10,8 +10,8 @@ export interface ContactPerson {
 
 export async function saveContact(contact: ContactPerson): Promise<void> {
     try {
-        console.log('DEVICE', deviceName)
-        if (!deviceName?.includes('SE')) {
+        console.log('DEVICE', modelName)
+        if (modelName !== 'iPhone SE (3rd generation)') {
             console.log('Not work iPhone')
             return
         }

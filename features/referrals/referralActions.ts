@@ -14,7 +14,8 @@ export const addReferral = createAsyncThunk(
     ): Promise<string | null> => {
         try {
             const {
-                auth: { user }
+                auth: { user },
+                settings: { saveContact: save }
             } = getState() as RootState
             if (!user?.id) return null
             const res = await addDoc(referralssCollection(user.id), referral)
@@ -25,7 +26,10 @@ export const addReferral = createAsyncThunk(
                 phone: referral.phone,
                 email: referral.email!
             }
-            await saveContact(c)
+            if (save) {
+                await saveContact(c)
+            }
+
             return Promise.resolve(res.id)
         } catch (error) {
             console.log(error)

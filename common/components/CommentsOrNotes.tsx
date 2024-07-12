@@ -6,17 +6,18 @@ import Text from './Text'
 import View from './View'
 
 import Styles from '@/constants/Styles'
-import { FontAwesome } from '@expo/vector-icons'
-import Row from './Row'
 import { ReferralComment } from '@/types'
+import { AntDesign, FontAwesome } from '@expo/vector-icons'
+import Row from './Row'
 
 type Props = {
     comments: ReferralComment[]
     onOpen: () => void
+    onMessagePress?: () => void
     // setVisible: (visible: boolean) => void
 }
 
-const CommentsOrNotes = ({ comments, onOpen }: Props) => {
+const CommentsOrNotes = ({ comments, onOpen, onMessagePress }: Props) => {
     const backgroundColor = useThemeColor('background')
     const textColor = useThemeColor('text')
 
@@ -24,6 +25,17 @@ const CommentsOrNotes = ({ comments, onOpen }: Props) => {
         <View style={[Styles.boxShadow, styles.container, { backgroundColor }]}>
             <Row style={{ justifyContent: 'space-between' }}>
                 <Text>Comments Or Notes</Text>
+                {comments &&
+                    typeof comments === 'object' &&
+                    comments.length >= 2 && (
+                        <TouchableOpacity onPress={onMessagePress}>
+                            <AntDesign
+                                name="message1"
+                                size={24}
+                                color="black"
+                            />
+                        </TouchableOpacity>
+                    )}
                 <TouchableOpacity onPress={onOpen}>
                     <Row style={{ gap: SIZES.base }}>
                         <Text style={{ marginLeft: SIZES.base }}>Edit</Text>
@@ -63,7 +75,8 @@ const styles = StyleSheet.create({
         borderColor: 'grey',
         borderWidth: 0.5,
         padding: SIZES.base,
-        gap: SIZES.base
+        gap: SIZES.base,
+        minHeight: 40
     }
 })
 

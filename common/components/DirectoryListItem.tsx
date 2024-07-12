@@ -17,7 +17,7 @@ type Props = {
 
 const DirectoryListItem = ({ user }: Props) => {
     const background = useThemeColor('background')
-    const ascent = useThemeColor('accent')
+
     const color = useThemeColor('text')
 
     const makeCall = (phone: string) => {

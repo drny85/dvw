@@ -23,9 +23,12 @@ import {
     setShowScheduler
 } from '@/features/referrals/referralsSlide'
 import { sendIntroductionEmail, sendWirelessClosedTemplate } from '@/firebase'
+import Communications from 'react-native-communications'
 
+import useAppSelector from '@/common/hooks/useAppSelector'
 import { Referral } from '@/types'
 import { Entypo, FontAwesome } from '@expo/vector-icons'
+import { deviceName, modelName } from 'expo-device'
 import * as Linking from 'expo-linking'
 import { router, useLocalSearchParams } from 'expo-router'
 import moment from 'moment'
@@ -41,6 +44,7 @@ import {
 
 const ReferralDetails = () => {
     const { referralId: id } = useLocalSearchParams<{ referralId: string }>()
+    const user = useAppSelector((s) => s.auth.user)
     const [sendingWirelessEmail, setSendingWirelessEmail] = useState(false)
     const [show, setShow] = useState(false)
     const [deleting, setDeleting] = useState(false)
@@ -51,6 +55,36 @@ const ReferralDetails = () => {
     const bgDanger = useThemeColor('error')
     const textColor = useThemeColor('text')
     const deleteColor = useThemeColor('warning')
+
+    const sendMessage = async () => {
+        if (modelName !== 'iPhone SE (3rd generation)') {
+            Alert.alert(
+                'Error',
+                'Sorry, this feature is not available on your device. \n You must be using your work phone'
+            )
+            return
+        }
+        if (!user?.name) {
+            Alert.alert(
+                'Error',
+                'You must have a name to send a message to this referral.'
+            )
+            return
+        }
+        const number = referral?.phone.replace(/[^0-9]/g, '').trim()
+        if (!number) return
+        const msg = `Hi ${referral?.name.split(' ')[0]},\n \nThis is ${
+            user?.name.split(' ')[0]
+        }, your dedicated Verizon Specialist at ${
+            referral?.propertyName
+        }. I’ve tried to reach you to discuss the exclusive Verizon services available for your move. Please let me know a convenient time to connect. I would appreciate hearing back from you.\n\nThank you!`
+
+        try {
+            Communications.text(number, msg)
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     const sendIntroEmail = useCallback(async () => {
         try {
@@ -539,6 +573,7 @@ const ReferralDetails = () => {
                     )}
 
                     <CommentsOrNotes
+                        onMessagePress={sendMessage}
                         comments={
                             referral.comment &&
                             typeof referral.comment === 'string'
