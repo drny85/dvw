@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Image } from 'react-native'
+import { StyleSheet } from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 
 import useAppSelector from '../hooks/useAppSelector'

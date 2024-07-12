@@ -2,7 +2,7 @@ import useAppDispatch from '@/common/hooks/useAppDispatch'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import Styles from '@/constants/Styles'
-import { setComment, setHasWireless } from '@/features/referrals/referralsSlide'
+import { setHasWireless } from '@/features/referrals/referralsSlide'
 import { ORDER_TYPE, Referral } from '@/types'
 import { FontAwesome } from '@expo/vector-icons'
 import moment from 'moment'
@@ -611,9 +611,18 @@ const ReferralInfoLastScreen = ({
 
             <View style={{ marginTop: SIZES.padding * 1.5 }}>
                 <CommentsOrNotes
-                    comment={referral.comment || ''}
+                    comments={
+                        referral.comment && typeof referral.comment === 'string'
+                            ? [
+                                  {
+                                      message: referral.comment,
+                                      timestamp: new Date().toISOString()
+                                  }
+                              ]
+                            : referral.comment
+                    }
                     onOpen={() => {
-                        dispatch(setComment(referral.comment))
+                        // dispatch(setComment(referral.comment))
                         setShowComment(true)
                     }}
                 />

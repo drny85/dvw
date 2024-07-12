@@ -124,6 +124,12 @@ exports.sendIntroductionEmail = onCall<{
         })
 
         await increaseEmailSentForUser(auth.uid)
+        referralRef.ref.update({
+            comment: admin.firestore.FieldValue.arrayUnion({
+                message: 'Introduction email sent',
+                timestamp: new Date().toISOString()
+            })
+        })
 
         return { message: 'Email sent!' }
     } catch (error) {

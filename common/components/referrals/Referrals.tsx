@@ -220,7 +220,7 @@ const Referrals = () => {
                 <TouchableOpacity
                     style={[
                         styles.floatingButton,
-                        { backgroundColor: bgColor }
+                        { backgroundColor: 'lightgrey' }
                     ]}
                     onPress={() => {
                         dispatch(setEditingReferral(false))
@@ -229,7 +229,7 @@ const Referrals = () => {
                         router.push('/(app)/(modals)/referral')
                     }}
                 >
-                    <FontAwesome name="plus" size={30} color={text} />
+                    <FontAwesome name="plus" size={30} color={'#212121'} />
                 </TouchableOpacity>
             )}
         </Screen>

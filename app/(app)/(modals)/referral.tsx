@@ -36,7 +36,6 @@ import {
     updateReferral
 } from '@/features/referrals/referralActions'
 import {
-    setComment,
     setEditingReferral,
     setHasWireless,
     setReferralState,
@@ -56,11 +55,9 @@ import { useStatusBarColor } from '@/common/hooks/useStatusBarColor'
 const ReferralsScreen = () => {
     const dispatch = useAppDispatch()
     const user = useAppSelector((s) => s.auth.user)
-    const {
-        referral: editingReferral,
-        editing,
-        comment: newComment
-    } = useAppSelector((s) => s.referrals)
+    const { referral: editingReferral, editing } = useAppSelector(
+        (s) => s.referrals
+    )
     const referralLines = useAppSelector((s) => s.referrals.referralLines)
 
     const { loading, helpers } = useHelpers()
@@ -98,7 +95,7 @@ const ReferralsScreen = () => {
         addedBy: user?.id!,
         applicationId: null,
         isReferral,
-        comment: null,
+        comment: [],
         due_date: null,
         email_sent: false,
         email_sent_on: null,
@@ -290,7 +287,19 @@ const ReferralsScreen = () => {
     useEffect(() => {
         if (editingReferral && editing) {
             setAddress(editingReferral.address)
-            setReferral(editingReferral)
+            setReferral({
+                ...editingReferral,
+                comment:
+                    editingReferral &&
+                    typeof editingReferral.comment === 'string'
+                        ? [
+                              {
+                                  message: editingReferral.comment,
+                                  timestamp: new Date().toISOString()
+                              }
+                          ]
+                        : editingReferral.comment
+            })
             setMoveIn(editingReferral.moveIn)
             setIsVZW(editingReferral.isVerizonWirelessCustomer)
             setIndex(3)
@@ -607,12 +616,18 @@ const ReferralsScreen = () => {
             <NotesModal
                 show={showComment}
                 setShow={setShowComment}
-                onDone={() => {
+                onDone={(newComment) => {
+                    if (!newComment) return
                     setReferral({
                         ...referral!,
-                        comment: newComment
+                        comment: [
+                            {
+                                message: newComment,
+                                timestamp: new Date().toISOString()
+                            },
+                            ...referral.comment
+                        ]
                     })
-                    dispatch(setComment(null))
                     setShowComment(false)
                 }}
             />

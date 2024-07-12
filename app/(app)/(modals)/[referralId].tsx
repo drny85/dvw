@@ -10,7 +10,6 @@ import Text from '@/common/components/Text'
 import View from '@/common/components/View'
 import { useReferral } from '@/common/hooks/referrals/useReferral'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
-import useAppSelector from '@/common/hooks/useAppSelector'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import Styles from '@/constants/Styles'
@@ -19,7 +18,6 @@ import {
     updateReferral
 } from '@/features/referrals/referralActions'
 import {
-    setComment,
     setEditingReferral,
     setReferralState,
     setShowScheduler
@@ -43,7 +41,6 @@ import {
 
 const ReferralDetails = () => {
     const { referralId: id } = useLocalSearchParams<{ referralId: string }>()
-    const comment = useAppSelector((s) => s.referrals.comment)
     const [sendingWirelessEmail, setSendingWirelessEmail] = useState(false)
     const [show, setShow] = useState(false)
     const [deleting, setDeleting] = useState(false)
@@ -71,18 +68,30 @@ const ReferralDetails = () => {
             setSendingEmail(false)
         }
     }, [id])
-
-    const updateComment = async (newComment: string | null) => {
+    const updateComment = async (newComment: string) => {
         try {
-            if (referral?.comment === newComment) return
+            if (!newComment || !referral) return
 
             const newReferral: Referral = {
                 ...referral!,
-                comment: newComment
+                comment:
+                    referral?.comment && typeof referral.comment === 'string'
+                        ? [
+                              {
+                                  message: newComment,
+                                  timestamp: new Date().toISOString()
+                              }
+                          ]
+                        : [
+                              {
+                                  message: newComment,
+                                  timestamp: new Date().toISOString()
+                              },
+                              ...referral.comment
+                          ]
             }
 
             dispatch(updateReferral(newReferral))
-            dispatch(setComment(null))
         } catch (error) {
             console.log(error)
         }
@@ -530,9 +539,19 @@ const ReferralDetails = () => {
                     )}
 
                     <CommentsOrNotes
-                        comment={referral.comment || ''}
+                        comments={
+                            referral.comment &&
+                            typeof referral.comment === 'string'
+                                ? [
+                                      {
+                                          message: referral.comment,
+                                          timestamp: new Date().toISOString()
+                                      }
+                                  ]
+                                : referral.comment
+                        }
                         onOpen={() => {
-                            dispatch(setComment(referral.comment))
+                            //dispatch(setComment(referral.comment))
                             setShow(true)
                         }}
                     />
@@ -546,9 +565,8 @@ const ReferralDetails = () => {
             <NotesModal
                 show={show}
                 setShow={setShow}
-                onDone={() => {
-                    updateComment(comment)
-                    setShow(false)
+                onDone={(newComment) => {
+                    updateComment(newComment)
                 }}
             />
         </Screen>

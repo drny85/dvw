@@ -8,14 +8,15 @@ import View from './View'
 import Styles from '@/constants/Styles'
 import { FontAwesome } from '@expo/vector-icons'
 import Row from './Row'
+import { ReferralComment } from '@/types'
 
 type Props = {
-    comment: string
+    comments: ReferralComment[]
     onOpen: () => void
     // setVisible: (visible: boolean) => void
 }
 
-const CommentsOrNotes = ({ comment, onOpen }: Props) => {
+const CommentsOrNotes = ({ comments, onOpen }: Props) => {
     const backgroundColor = useThemeColor('background')
     const textColor = useThemeColor('text')
 
@@ -31,7 +32,19 @@ const CommentsOrNotes = ({ comment, onOpen }: Props) => {
                 </TouchableOpacity>
             </Row>
             <TouchableOpacity style={styles.comment} onPress={onOpen}>
-                <Text>{comment || ''}</Text>
+                {comments?.map((comment, index) => (
+                    <View key={index}>
+                        <Text color="grey">{comment.message}</Text>
+                        <Text color="grey" fontSize={11}>{`${
+                            getMonthDayTime(comment.timestamp).month
+                        }/${getMonthDayTime(comment.timestamp).day} at ${
+                            getMonthDayTime(comment.timestamp).time
+                        }`}</Text>
+                        <Text color="grey" fontSize={11}>
+                            ---
+                        </Text>
+                    </View>
+                ))}
             </TouchableOpacity>
         </View>
     )
@@ -49,6 +62,25 @@ const styles = StyleSheet.create({
         borderRadius: SIZES.base,
         borderColor: 'grey',
         borderWidth: 0.5,
-        padding: SIZES.base
+        padding: SIZES.base,
+        gap: SIZES.base
     }
 })
+
+function getMonthDayTime(dateString: string) {
+    const date = new Date(dateString)
+
+    const month = date.toLocaleString('en-US', { month: '2-digit' })
+    const day = date.getDate()
+    const time = date.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true
+    })
+
+    return {
+        month,
+        day,
+        time
+    }
+}

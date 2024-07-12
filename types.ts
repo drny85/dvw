@@ -230,10 +230,15 @@ export type Referral = {
     email_sent: boolean
     email_sent_on: string | null
     emailInstroductionSent: boolean
-    comment: string | null
+    comment: ReferralComment[]
     followUpOn: string | null
     referralLines: number
     notificationIdentifier: string | null
+}
+
+export type ReferralComment = {
+    message: string
+    timestamp: string
 }
 
 export interface STATUS {

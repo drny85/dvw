@@ -1,5 +1,8 @@
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
+import Styles from '@/constants/Styles'
+import { FontAwesome } from '@expo/vector-icons'
+import { useState } from 'react'
 import {
     Button,
     Keyboard,
@@ -9,28 +12,22 @@ import {
     TouchableHighlight,
     TouchableOpacity
 } from 'react-native'
-import View from '../View'
-import useAppSelector from '@/common/hooks/useAppSelector'
 import Text from '../Text'
-import useAppDispatch from '@/common/hooks/useAppDispatch'
-import { setComment } from '@/features/referrals/referralsSlide'
-import { FontAwesome } from '@expo/vector-icons'
-import Styles from '@/constants/Styles'
+import View from '../View'
 
 type Props = {
     show: boolean
     setShow: (value: boolean) => void
-    onDone: () => void
+    onDone: (newComment: string) => void
 }
 export default function NotesModal({ show, setShow, onDone }: Props) {
     const ascent = useThemeColor('accent')
     const textColor = useThemeColor('text')
-    const dispatch = useAppDispatch()
     const backgroundColor = useThemeColor('background')
-    const comment = useAppSelector((s) => s.referrals.comment)
+    const [comment, setComment] = useState('')
 
     const resetComment = () => {
-        dispatch(setComment(null))
+        setComment('')
         Keyboard.dismiss()
         setShow(false)
     }
@@ -115,12 +112,19 @@ export default function NotesModal({ show, setShow, onDone }: Props) {
                                     placeholderTextColor={ascent}
                                     value={comment || ''}
                                     onChangeText={(text) => {
-                                        dispatch(setComment(text))
+                                        setComment(text)
+                                        // dispatch(setComment(text))
                                     }}
                                     multiline
                                     placeholder="Comments or Notes for this referral"
                                 />
-                                <Button title="Done" onPress={onDone} />
+                                <Button
+                                    title="Done"
+                                    onPress={() => {
+                                        onDone(comment)
+                                        resetComment()
+                                    }}
+                                />
                             </View>
                         </TouchableHighlight>
                     </KeyboardAvoidingView>

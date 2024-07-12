@@ -224,9 +224,14 @@ export type Referral = {
     mon: string | null
     email_sent: boolean
     email_sent_on: string | null
-    comment: string | null
+    comment: ReferralComment[]
     followUpOn: string | null
     referralLines: number
+}
+
+export type ReferralComment = {
+    message: string
+    timestamp: string
 }
 
 export interface Helper {

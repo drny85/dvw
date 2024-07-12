@@ -14,7 +14,6 @@ import { Referral } from './typing'
 
 export const SendCloseEmail = ({
     name,
-
     mon,
     due_date,
     order_date,
@@ -85,11 +84,19 @@ export const SendCloseEmail = ({
                             </Text>
                         </Section>
                         <Text className="font-bold">Comments / Notes</Text>
-                        <Section className="shadow-md rounded-md bg-slate-300 px-4">
-                            <Text className="text-black font-italic">
-                                {comment}
-                            </Text>
-                        </Section>
+                        {comment && (
+                            <Section className="shadow-md rounded-md bg-slate-300 px-4">
+                                {typeof comment === 'string' ? (
+                                    <Text>{comment}</Text>
+                                ) : (
+                                    comment.map((item, index) => (
+                                        <i className="text-muted" key={index}>
+                                            {item.message}
+                                        </i>
+                                    ))
+                                )}
+                            </Section>
+                        )}
                     </Container>
                 </Body>
             </Tailwind>
