@@ -1,5 +1,5 @@
 import useThemeColor from '@/common/hooks/useThemeColor'
-import { Ionicons } from '@expo/vector-icons'
+import { Feather, FontAwesome, Ionicons } from '@expo/vector-icons'
 import { Stack, router } from 'expo-router'
 import React from 'react'
 import { TouchableOpacity } from 'react-native'
@@ -45,6 +45,25 @@ const SettingsLayout = () => {
                 options={{
                     presentation: 'fullScreenModal',
                     headerShown: false
+                }}
+            />
+            <Stack.Screen
+                name="eula"
+                options={{
+                    presentation: 'fullScreenModal',
+                    title: 'Terms of Use',
+                    headerStyle: {
+                        backgroundColor: bgColor
+                    },
+                    headerLeft: () => (
+                        <Feather
+                            name="chevron-left"
+                            size={30}
+                            color={iconColor}
+                            onPress={router.back}
+                        />
+                    )
+                    // headerShown: false
                 }}
             />
             <Stack.Screen

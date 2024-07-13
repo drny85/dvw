@@ -2,6 +2,7 @@ import {
     Entypo,
     Feather,
     FontAwesome,
+    FontAwesome6,
     MaterialIcons,
     SimpleLineIcons
 } from '@expo/vector-icons'
@@ -667,6 +668,39 @@ export default function ModernSettingsPage() {
                         <TouchableOpacity
                             onPress={() => {
                                 // handle onPress
+                                router.push('/(app)/(root)/(settings)/eula')
+                            }}
+                            style={[
+                                styles.row,
+                                { backgroundColor: secondaryColor }
+                            ]}
+                        >
+                            <View
+                                style={[
+                                    styles.rowIcon,
+                                    { backgroundColor: 'royalblue' }
+                                ]}
+                            >
+                                <FontAwesome6
+                                    name="file-contract"
+                                    size={24}
+                                    color="#ffffff"
+                                />
+                            </View>
+
+                            <Text style={styles.rowLabel}>Terms of Use</Text>
+
+                            <View style={styles.rowSpacer} />
+
+                            <Feather
+                                color="#C6C6C6"
+                                name="chevron-right"
+                                size={20}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => {
+                                // handle onPress
                                 router.push('/(app)/(root)/(settings)/blocked')
                             }}
                             style={[
@@ -696,7 +730,10 @@ export default function ModernSettingsPage() {
                         <View
                             style={[
                                 styles.row,
-                                { backgroundColor: secondaryColor }
+                                {
+                                    backgroundColor: secondaryColor,
+                                    marginBottom: 80
+                                }
                             ]}
                         >
                             <View
@@ -901,7 +938,8 @@ const styles = StyleSheet.create({
     },
     scrollViewContent: {
         paddingTop: IMAGE_HEIGHT / 2,
-        marginTop: IMAGE_HEIGHT / 2
+        marginTop: IMAGE_HEIGHT / 2,
+        marginBottom: 20
     },
     profileAddress: {
         fontSize: 16,
