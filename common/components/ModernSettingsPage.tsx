@@ -1,39 +1,57 @@
-import { Entypo, Feather, FontAwesome } from '@expo/vector-icons'
+import {
+    Entypo,
+    Feather,
+    FontAwesome,
+    MaterialIcons,
+    SimpleLineIcons
+} from '@expo/vector-icons'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
-    StyleSheet,
-    SafeAreaView,
-    View,
-    ScrollView,
-    TouchableOpacity,
-    Switch,
-    Image,
     Alert,
-    Button
+    Button,
+    Dimensions,
+    Keyboard,
+    SafeAreaView,
+    StyleSheet,
+    Switch,
+    TouchableOpacity,
+    View
 } from 'react-native'
-import { useAuth } from '../hooks/auth/useAuth'
-import useAppSelector from '../hooks/useAppSelector'
-import { router } from 'expo-router'
-import ThemeSwitcher from './ThemeSwitcher'
-import useAppDispatch from '../hooks/useAppDispatch'
+
+import { SIZES } from '@/constants/Sizes'
+import { logoutUser, updateUser } from '@/features/auth/authActions'
 import {
     setPushNotifications,
     setSaveContact,
     setShow5G
 } from '@/features/settings/settingsSlice'
 import { deleteUserAccount } from '@/firebase'
-import { logoutUser, updateUser } from '@/features/auth/authActions'
-import { SIZES } from '@/constants/Sizes'
-import useThemeColor from '../hooks/useThemeColor'
-import { useNotifications } from '../hooks/useNotification'
-import Text from './Text'
+import { formatPhone } from '@/utils/formatPhone'
+import { isFullName } from '@/utils/isFullName'
 import BottomSheet, {
     BottomSheetBackdrop,
     BottomSheetTextInput
 } from '@gorhom/bottom-sheet'
-import { formatPhone } from '@/utils/formatPhone'
-import { isFullName } from '@/utils/isFullName'
+import { router } from 'expo-router'
+import { useAuth } from '../hooks/auth/useAuth'
+import useAppDispatch from '../hooks/useAppDispatch'
+import useAppSelector from '../hooks/useAppSelector'
+import { useNotifications } from '../hooks/useNotification'
+import useThemeColor from '../hooks/useThemeColor'
 import Row from './Row'
+import Text from './Text'
+import ThemeSwitcher from './ThemeSwitcher'
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window')
+const IMAGE_HEIGHT = 100
+const IMAGE_SIZE = IMAGE_HEIGHT
+
+import Animated, {
+    interpolate,
+    useAnimatedScrollHandler,
+    useAnimatedStyle,
+    useSharedValue
+} from 'react-native-reanimated'
 
 export default function ModernSettingsPage() {
     useAuth()
@@ -46,9 +64,69 @@ export default function ModernSettingsPage() {
     const { show5G, saveContact } = useAppSelector((s) => s.settings)
     const user = useAppSelector((state) => state.auth.user)
     const bottomSheetRef = useRef<BottomSheet>(null)
-    const snapoints = useMemo(() => ['50%', '70%'], [])
+    const snapoints = useMemo(() => ['1%', '50%', '70%'], [])
     const [name, setName] = useState('')
     const [phone, setPhone] = useState('')
+    const [showEditModal, setShowEditModal] = useState(false)
+
+    const scrollY = useSharedValue(0)
+
+    const scrollHandler = useAnimatedScrollHandler((event) => {
+        scrollY.value = event.contentOffset.y
+    })
+
+    const animatedImageStyle = useAnimatedStyle(() => {
+        const translateY = interpolate(
+            scrollY.value,
+            [0, IMAGE_SIZE],
+            [0, -IMAGE_SIZE / 2],
+            'clamp'
+        )
+
+        const translateX = interpolate(
+            scrollY.value,
+            [0, IMAGE_SIZE],
+            [0, -SCREEN_WIDTH / 2 + IMAGE_SIZE / 2],
+            'clamp'
+        )
+
+        const scale = interpolate(
+            scrollY.value,
+            [0, IMAGE_SIZE],
+            [1, 0.5],
+            'clamp'
+        )
+
+        return {
+            transform: [{ translateY }, { translateX }, { scale }]
+        }
+    })
+
+    const animatedHeigth = useAnimatedStyle(() => {
+        const height = interpolate(
+            scrollY.value,
+            [0, IMAGE_HEIGHT],
+            [IMAGE_HEIGHT, 0],
+            'clamp'
+        )
+
+        return {
+            height
+        }
+    })
+
+    const animatedInfoStyle = useAnimatedStyle(() => {
+        const opacity = interpolate(
+            scrollY.value,
+            [0, IMAGE_HEIGHT / 2, IMAGE_HEIGHT],
+            [1, 0, 0],
+            'clamp'
+        )
+
+        return {
+            opacity
+        }
+    })
 
     const renderBackdrop = useCallback(
         (props: any) => (
@@ -102,9 +180,11 @@ export default function ModernSettingsPage() {
     }
 
     const resetForm = () => {
+        Keyboard.dismiss()
         setName('')
         setPhone('')
         bottomSheetRef.current?.close()
+        setShowEditModal(false)
     }
 
     const handlePushNotificationChange = (value: boolean) => {
@@ -153,44 +233,62 @@ export default function ModernSettingsPage() {
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: bgColor }}>
             <TouchableOpacity style={styles.logout} onPress={handleSignOut}>
-                <FontAwesome name="sign-out" size={30} color={iconColor} />
+                <Text fontFamily="QSBold" color="grey">
+                    Log Out
+                </Text>
             </TouchableOpacity>
             <View style={[styles.container, { backgroundColor: bgColor }]}>
-                <View style={[styles.profile, { backgroundColor: bgColor }]}>
+                <Animated.View
+                    style={[styles.profile, { backgroundColor: bgColor }]}
+                >
                     <TouchableOpacity
+                        style={{ position: 'relative' }}
                         onPress={() => {
                             // handle onPress
                             router.push('/(app)/(nova)/myinfo')
                         }}
                     >
-                        <View style={styles.profileAvatarWrapper}>
-                            <Image
+                        <Animated.View
+                            style={[
+                                styles.profileAvatarWrapper,
+                                animatedHeigth
+                            ]}
+                        >
+                            <Animated.Image
                                 alt=""
                                 source={{
                                     uri:
                                         user?.image ||
                                         'https://firebasestorage.googleapis.com/v0/b/ayuda-b2079.appspot.com/o/verizon.png?alt=media&token=4d4c0560-4c17-4bc4-a73f-d4740312cb3c'
                                 }}
-                                style={styles.profileAvatar}
+                                style={[styles.image, animatedImageStyle]}
+                                resizeMode="cover"
                             />
-
-                            <TouchableOpacity
-                                onPress={() => {
-                                    bottomSheetRef.current?.snapToIndex(1)
-                                }}
+                            <Animated.View
+                                style={[
+                                    styles.profileAction,
+                                    animatedInfoStyle
+                                ]}
                             >
-                                <View style={styles.profileAction}>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        setShowEditModal(true)
+                                        bottomSheetRef.current?.snapToIndex(1)
+                                    }}
+                                >
                                     <Feather
                                         color="#fff"
                                         name="edit-3"
                                         size={15}
                                     />
-                                </View>
-                            </TouchableOpacity>
-                        </View>
+                                </TouchableOpacity>
+                            </Animated.View>
+                        </Animated.View>
                     </TouchableOpacity>
 
-                    <View>
+                    <Animated.View
+                        style={[styles.infoContainer, animatedInfoStyle]}
+                    >
                         <Text style={styles.profileName}>{user?.name}</Text>
 
                         <Text style={styles.profileAddress}>{user?.phone}</Text>
@@ -202,10 +300,15 @@ export default function ModernSettingsPage() {
                                 ? 'Coach'
                                 : 'EM'}
                         </Text>
-                    </View>
-                </View>
+                    </Animated.View>
+                </Animated.View>
 
-                <ScrollView>
+                <Animated.ScrollView
+                    contentContainerStyle={styles.scrollViewContent}
+                    onScroll={scrollHandler}
+                    scrollEventThrottle={16}
+                    showsVerticalScrollIndicator={false}
+                >
                     <View style={styles.section}>
                         <Text style={styles.sectionTitle}>Manage</Text>
                         <TouchableOpacity
@@ -289,10 +392,14 @@ export default function ModernSettingsPage() {
                             <View
                                 style={[
                                     styles.rowIcon,
-                                    { backgroundColor: 'lightblue' }
+                                    { backgroundColor: '#edfefe' }
                                 ]}
                             >
-                                <Feather color="#fff" name="user" size={20} />
+                                <Feather
+                                    color="#212121"
+                                    name="user"
+                                    size={20}
+                                />
                             </View>
 
                             <Text style={styles.rowLabel}>My Coach</Text>
@@ -337,7 +444,6 @@ export default function ModernSettingsPage() {
                                 small
                             />
                         </View>
-
                         <View
                             style={[
                                 styles.row,
@@ -350,43 +456,10 @@ export default function ModernSettingsPage() {
                                     { backgroundColor: '#38C959' }
                                 ]}
                             >
-                                <Feather color="#fff" name="bell" size={20} />
-                            </View>
-
-                            <Text style={styles.rowLabel}>
-                                Push Notifications
-                            </Text>
-
-                            <View style={styles.rowSpacer} />
-
-                            <Switch
-                                onValueChange={(pushNotifications) =>
-                                    handlePushNotificationChange(
-                                        pushNotifications
-                                    )
-                                }
-                                value={user?.pushToken !== null}
-                            />
-                        </View>
-                    </View>
-                    <View style={styles.section}>
-                        <Text style={styles.sectionTitle}>Actions</Text>
-                        <View
-                            style={[
-                                styles.row,
-                                { backgroundColor: secondaryColor }
-                            ]}
-                        >
-                            <View
-                                style={[
-                                    styles.rowIcon,
-                                    { backgroundColor: '#38C959' }
-                                ]}
-                            >
-                                <Feather
-                                    color="#fff"
-                                    name="at-sign"
-                                    size={20}
+                                <MaterialIcons
+                                    name="5g"
+                                    size={24}
+                                    color="#ffffff"
                                 />
                             </View>
 
@@ -431,6 +504,37 @@ export default function ModernSettingsPage() {
                                 value={saveContact}
                             />
                         </View>
+
+                        <View
+                            style={[
+                                styles.row,
+                                { backgroundColor: secondaryColor }
+                            ]}
+                        >
+                            <View
+                                style={[
+                                    styles.rowIcon,
+                                    { backgroundColor: '#38C959' }
+                                ]}
+                            >
+                                <Feather color="#fff" name="bell" size={20} />
+                            </View>
+
+                            <Text style={styles.rowLabel}>
+                                Push Notifications
+                            </Text>
+
+                            <View style={styles.rowSpacer} />
+
+                            <Switch
+                                onValueChange={(pushNotifications) =>
+                                    handlePushNotificationChange(
+                                        pushNotifications
+                                    )
+                                }
+                                value={user?.pushToken !== null}
+                            />
+                        </View>
                     </View>
 
                     <View style={styles.section}>
@@ -451,10 +555,10 @@ export default function ModernSettingsPage() {
                                     { backgroundColor: 'green' }
                                 ]}
                             >
-                                <Feather
-                                    color="#fff"
-                                    name="phone-incoming"
+                                <SimpleLineIcons
+                                    name="earphones-alt"
                                     size={20}
+                                    color="#ffffff"
                                 />
                             </View>
 
@@ -559,7 +663,7 @@ export default function ModernSettingsPage() {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.section}>
-                        <Text style={styles.sectionTitle}>Extreme</Text>
+                        <Text style={styles.sectionTitle}>Privacy</Text>
                         <TouchableOpacity
                             onPress={() => {
                                 // handle onPress
@@ -620,127 +724,136 @@ export default function ModernSettingsPage() {
                             </TouchableOpacity>
                         </View>
                     </View>
-                </ScrollView>
+                </Animated.ScrollView>
             </View>
-            <BottomSheet
-                index={-1}
-                snapPoints={snapoints}
-                topInset={SIZES.statusBarHeight + SIZES.padding + 80}
-                ref={bottomSheetRef}
-                backdropComponent={renderBackdrop}
-                style={{ flex: 1 }}
-                backgroundStyle={{
-                    backgroundColor: bgColor
-                }}
-                overDragResistanceFactor={5}
-                handleIndicatorStyle={{ backgroundColor: 'gray' }}
-                handleStyle={{ backgroundColor: bgColor }}
-            >
-                <View style={{ padding: SIZES.padding, flex: 1 }}>
-                    <View>
-                        <Text fontFamily="QSBold">Full Name</Text>
-                        <BottomSheetTextInput
-                            style={{
-                                marginTop: 10,
-                                marginBottom: 10,
-                                borderRadius: 10,
-                                fontSize: 16,
-                                lineHeight: 20,
-                                padding: SIZES.base,
-                                backgroundColor: 'rgba(151, 151, 151, 0.25)'
-                            }}
-                            defaultValue={user?.name}
-                            placeholder="Joe Smith"
-                            autoCapitalize="words"
-                            value={name}
-                            autoFocus
-                            onChangeText={(text) => {
-                                setName(text)
-                            }}
-                        />
-                    </View>
-                    <View>
-                        <Text fontFamily="QSBold">Phone</Text>
-                        <BottomSheetTextInput
-                            style={{
-                                marginTop: 10,
-                                marginBottom: 30,
-                                borderRadius: 10,
-                                fontSize: 16,
-                                lineHeight: 20,
-                                padding: SIZES.base,
-                                backgroundColor: 'rgba(151, 151, 151, 0.25)'
-                            }}
-                            defaultValue={user?.phone!}
-                            placeholder="Cell Phone Number"
-                            value={phone}
-                            autoFocus
-                            keyboardType="numeric"
-                            onChangeText={(text) => {
-                                setPhone(formatPhone(text))
-                            }}
-                        />
-                        <Row
-                            style={{
-                                alignSelf: 'center',
-                                gap: SIZES.padding * 2
-                            }}
-                        >
-                            <Button
-                                title="Cancel"
-                                color={'orange'}
-                                onPress={resetForm}
-                            />
-                            <Button
-                                title="Update"
-                                disabled={!name || !phone}
-                                onPress={() => {
-                                    if (!isFullName(name)) {
-                                        Alert.alert(
-                                            'Invalid name',
-                                            'You must write your full name'
-                                        )
-                                        return
-                                    }
-                                    if (phone.length !== 14) {
-                                        Alert.alert('Invalid phone number')
-                                        return
-                                    }
-                                    console.log(name, phone)
-
-                                    Alert.alert(
-                                        'Name and Phone Updates',
-                                        'Are you sure that you want to update this info',
-                                        [
-                                            { text: 'Cancel' },
-                                            {
-                                                text: 'Yes, I am sure',
-                                                onPress: async () => {
-                                                    try {
-                                                        if (!user) return
-                                                        dispatch(
-                                                            updateUser({
-                                                                ...user,
-                                                                phone,
-                                                                name
-                                                            })
-                                                        )
-                                                        resetForm()
-                                                    } catch (error) {
-                                                        console.log(
-                                                            'Error updating info'
-                                                        )
-                                                    }
-                                                }
-                                            }
-                                        ]
-                                    )
+            {showEditModal && (
+                <BottomSheet
+                    index={-1}
+                    onClose={resetForm}
+                    keyboardBehavior="interactive"
+                    snapPoints={snapoints}
+                    topInset={SIZES.statusBarHeight + SIZES.padding + 80}
+                    ref={bottomSheetRef}
+                    backdropComponent={renderBackdrop}
+                    style={{ flex: 1 }}
+                    backgroundStyle={{
+                        backgroundColor: bgColor
+                    }}
+                    overDragResistanceFactor={5}
+                    handleIndicatorStyle={{ backgroundColor: 'gray' }}
+                    handleStyle={{ backgroundColor: bgColor }}
+                >
+                    <View
+                        style={{
+                            padding: SIZES.padding,
+                            flex: 1,
+                            backgroundColor: 'red '
+                        }}
+                    >
+                        <View>
+                            <Text fontFamily="QSBold">Full Name</Text>
+                            <BottomSheetTextInput
+                                style={{
+                                    marginTop: 10,
+                                    marginBottom: 10,
+                                    borderRadius: 10,
+                                    fontSize: 16,
+                                    lineHeight: 20,
+                                    padding: SIZES.base,
+                                    backgroundColor: 'rgba(151, 151, 151, 0.25)'
+                                }}
+                                defaultValue={user?.name}
+                                placeholder="Joe Smith"
+                                autoCapitalize="words"
+                                value={name}
+                                autoFocus
+                                onChangeText={(text) => {
+                                    setName(text)
                                 }}
                             />
-                        </Row>
+                        </View>
+                        <View>
+                            <Text fontFamily="QSBold">Phone</Text>
+                            <BottomSheetTextInput
+                                style={{
+                                    marginTop: 10,
+                                    marginBottom: 30,
+                                    borderRadius: 10,
+                                    fontSize: 16,
+                                    lineHeight: 20,
+                                    padding: SIZES.base,
+                                    backgroundColor: 'rgba(151, 151, 151, 0.25)'
+                                }}
+                                defaultValue={user?.phone!}
+                                placeholder="Cell Phone Number"
+                                value={phone}
+                                keyboardType="numeric"
+                                onChangeText={(text) => {
+                                    setPhone(formatPhone(text))
+                                }}
+                            />
+                            <Row
+                                style={{
+                                    alignSelf: 'center',
+                                    gap: SIZES.padding * 2,
+                                    height: 60
+                                }}
+                            >
+                                <Button
+                                    title="Cancel"
+                                    color={'orange'}
+                                    onPress={resetForm}
+                                />
+                                <Button
+                                    title="Update"
+                                    disabled={!name || !phone}
+                                    onPress={() => {
+                                        if (!isFullName(name)) {
+                                            Alert.alert(
+                                                'Invalid name',
+                                                'You must write your full name'
+                                            )
+                                            return
+                                        }
+                                        if (phone.length !== 14) {
+                                            Alert.alert('Invalid phone number')
+                                            return
+                                        }
+
+                                        Alert.alert(
+                                            'Name and Phone Updates',
+                                            'Are you sure that you want to update this info',
+                                            [
+                                                { text: 'Cancel' },
+                                                {
+                                                    text: 'Yes, I am sure',
+                                                    onPress: async () => {
+                                                        try {
+                                                            if (!user) return
+                                                            dispatch(
+                                                                updateUser({
+                                                                    ...user,
+                                                                    phone,
+                                                                    name
+                                                                })
+                                                            )
+                                                            resetForm()
+                                                        } catch (error) {
+                                                            console.log(
+                                                                'Error updating info'
+                                                            )
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        )
+                                    }}
+                                />
+                            </Row>
+                        </View>
                     </View>
-                </View>
-            </BottomSheet>
+                </BottomSheet>
+            )}
         </SafeAreaView>
     )
 }
@@ -754,8 +867,7 @@ const styles = StyleSheet.create({
     },
     /** Profile */
     profile: {
-        padding: 24,
-
+        padding: 16,
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center'
@@ -770,14 +882,16 @@ const styles = StyleSheet.create({
     },
     profileAction: {
         position: 'absolute',
-        right: -4,
-        bottom: -10,
+        top: IMAGE_HEIGHT - 28,
+        right: -IMAGE_HEIGHT / 2,
+        zIndex: 999,
         alignItems: 'center',
         justifyContent: 'center',
-        width: 28,
-        height: 28,
-        borderRadius: 9999,
-        backgroundColor: '#007bff'
+        width: 30,
+        height: 30,
+        borderRadius: 15,
+        backgroundColor: '#007bff',
+        padding: 6
     },
     profileName: {
         marginTop: 12,
@@ -785,8 +899,11 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         textAlign: 'center'
     },
+    scrollViewContent: {
+        paddingTop: IMAGE_HEIGHT / 2,
+        marginTop: IMAGE_HEIGHT / 2
+    },
     profileAddress: {
-        marginTop: 5,
         fontSize: 16,
         color: '#989898',
         textAlign: 'center'
@@ -832,6 +949,24 @@ const styles = StyleSheet.create({
     rowLabel: {
         fontSize: 17,
         fontWeight: '400'
+    },
+    image: {
+        width: IMAGE_HEIGHT,
+        height: IMAGE_HEIGHT,
+        borderRadius: IMAGE_HEIGHT / 2,
+        position: 'absolute',
+        zIndex: 998,
+
+        alignSelf: 'center'
+    },
+    infoContainer: {
+        position: 'absolute',
+        top: IMAGE_HEIGHT,
+        marginVertical: 10,
+        zIndex: 997,
+        left: 0,
+        right: 0,
+        alignItems: 'center'
     },
     rowSpacer: {
         flexGrow: 1,

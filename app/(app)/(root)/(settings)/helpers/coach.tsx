@@ -20,8 +20,8 @@ import { helpersCollection } from '@/utils/collections'
 import { FontAwesome } from '@expo/vector-icons'
 import { router } from 'expo-router'
 import { addDoc } from 'firebase/firestore'
-import { Image } from 'moti'
 import { TouchableOpacity } from 'react-native'
+import Animated, { FadeIn } from 'react-native-reanimated'
 
 const Coach = () => {
     const { loading, coaches } = useCoachess()
@@ -114,17 +114,15 @@ const Coach = () => {
                         marginBottom: SIZES.padding * 2
                     }}
                 >
-                    <Image
-                        from={{ opacity: 0, rotateX: '0deg' }}
+                    <Animated.Image
                         style={{
                             height: SIZES.width / 2,
                             width: SIZES.width / 2,
                             borderRadius: SIZES.width / 4,
                             alignSelf: 'center',
-                            marginBottom: SIZES.padding
+                            marginBottom: SIZES.padding * 2
                         }}
-                        animate={{ opacity: 1, rotateX: '360deg' }}
-                        transition={{ type: 'timing', duration: 800 }}
+                        entering={FadeIn.duration(800)}
                         source={
                             selectedCoach.image
                                 ? { uri: selectedCoach.image }
