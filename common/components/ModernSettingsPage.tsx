@@ -59,7 +59,6 @@ export default function ModernSettingsPage() {
     const { registerForPushNotificationsAsync } = useNotifications()
     const dispatch = useAppDispatch()
     const deleteColor = useThemeColor('warning')
-    const iconColor = useThemeColor('text')
     const bgColor = useThemeColor('background')
     const secondaryColor = useThemeColor('primary')
     const { show5G, saveContact } = useAppSelector((s) => s.settings)

@@ -388,7 +388,6 @@ const WirelessQuoteEmail: React.FC<Readonly<WirelessQuote>> = ({
                                 - International data, talk, & text abroad, 210+
                                 Countries & Destinations
                             </Text>
-                            <Text>- $25 off Verizon Home Internet</Text>
                             <Text>
                                 - Up to $540 bring your own device credit
                             </Text>
@@ -415,7 +414,6 @@ const WirelessQuoteEmail: React.FC<Readonly<WirelessQuote>> = ({
                                 - Unlimited Calls, text and data in The US,
                                 Mexico & Canada
                             </Text>
-                            <Text>- $25 off Verizon Home Internet</Text>
                             <Text>
                                 - Up to $360 bring your own device credit
                             </Text>
@@ -440,7 +438,6 @@ const WirelessQuoteEmail: React.FC<Readonly<WirelessQuote>> = ({
                                 - Unlimited Calls, text and data in The US,
                                 Mexico & Canada
                             </Text>
-                            <Text>- $10 off Verizon Home Internet</Text>
                             <Text>
                                 - Up to $180 bring your own device credit
                             </Text>

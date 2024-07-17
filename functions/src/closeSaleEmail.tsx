@@ -31,6 +31,23 @@ export const SendCloseEmail = ({
     const previewText = `This Sale Has Been Closed`
 
     const services = generatePackage(service)
+    function getMonthDayTime(dateString: string) {
+        const date = new Date(dateString)
+
+        const month = date.toLocaleString('en-US', { month: '2-digit' })
+        const day = date.getDate()
+        const time = date.toLocaleTimeString('en-US', {
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: true
+        })
+
+        return {
+            month,
+            day,
+            time
+        }
+    }
 
     return (
         <Html>
@@ -85,14 +102,27 @@ export const SendCloseEmail = ({
                         </Section>
                         <Text className="font-bold">Comments / Notes</Text>
                         {comment && (
-                            <Section className="shadow-md rounded-md bg-slate-300 px-4">
+                            <Section className="shadow-md rounded-md bg-slate-300 p-3">
                                 {typeof comment === 'string' ? (
                                     <Text>{comment}</Text>
                                 ) : (
                                     comment.map((item, index) => (
-                                        <i className="text-muted" key={index}>
+                                        <Text
+                                            className="text-gray-500 italic"
+                                            key={index}
+                                        >
                                             {item.message}
-                                        </i>
+                                            <i className="text-sm text-gray-300">{`${
+                                                getMonthDayTime(item.timestamp)
+                                                    .month
+                                            }/${
+                                                getMonthDayTime(item.timestamp)
+                                                    .day
+                                            } at ${
+                                                getMonthDayTime(item.timestamp)
+                                                    .time
+                                            }`}</i>
+                                        </Text>
                                     ))
                                 )}
                             </Section>

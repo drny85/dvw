@@ -617,9 +617,15 @@ const ReferralsScreen = () => {
                 show={showComment}
                 setShow={setShowComment}
                 onDone={(newComment) => {
-                    if (!newComment) return
+                    console.log(
+                        'NEw Comment',
+                        newComment,
+                        typeof referral.comment
+                    )
+                    if (!newComment || !referral.comment) return
+                    console.log('here')
                     setReferral({
-                        ...referral!,
+                        ...referral,
                         comment: [
                             {
                                 message: newComment,

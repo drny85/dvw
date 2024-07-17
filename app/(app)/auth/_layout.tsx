@@ -2,7 +2,8 @@
 import { useAuth } from '@/common/hooks/auth/useAuth'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
 import useAppSelector from '@/common/hooks/useAppSelector'
-import useNotifications from '@/common/hooks/useNotification'
+import { useNotifications } from '@/common/hooks/useNotification'
+
 import { getUser } from '@/features/auth/authActions'
 import { setAppUser } from '@/features/auth/authSlice'
 import { auth } from '@/firebase'

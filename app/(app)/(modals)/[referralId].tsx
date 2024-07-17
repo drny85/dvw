@@ -28,7 +28,7 @@ import Communications from 'react-native-communications'
 import useAppSelector from '@/common/hooks/useAppSelector'
 import { Referral } from '@/types'
 import { Entypo, FontAwesome } from '@expo/vector-icons'
-import { deviceName, modelName } from 'expo-device'
+import { modelName } from 'expo-device'
 import * as Linking from 'expo-linking'
 import { router, useLocalSearchParams } from 'expo-router'
 import moment from 'moment'
@@ -77,7 +77,7 @@ const ReferralDetails = () => {
             user?.name.split(' ')[0]
         }, your dedicated Verizon Specialist at ${
             referral?.propertyName
-        }. I’ve tried to reach you to discuss the exclusive Verizon services available for your move. Please let me know a convenient time to connect. I would appreciate hearing back from you.\n\nThank you!`
+        }. I’ve tried to reach you to discuss the exclusive Verizon services available to you. Please let me know a convenient time to connect. I would appreciate hearing back from you.\n\nThank you!`
 
         try {
             Communications.text(number, msg)
@@ -115,13 +115,13 @@ const ReferralDetails = () => {
                                   message: newComment,
                                   timestamp: new Date().toISOString()
                               }
-                          ]
+                          ] || []
                         : [
                               {
                                   message: newComment,
                                   timestamp: new Date().toISOString()
                               },
-                              ...referral.comment
+                              ...referral.comment!
                           ]
             }
 

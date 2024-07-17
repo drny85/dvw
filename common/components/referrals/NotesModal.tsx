@@ -110,7 +110,7 @@ export default function NotesModal({ show, setShow, onDone }: Props) {
                                         color: textColor
                                     }}
                                     placeholderTextColor={ascent}
-                                    value={comment || ''}
+                                    value={comment}
                                     onChangeText={(text) => {
                                         setComment(text)
                                         // dispatch(setComment(text))
@@ -122,7 +122,9 @@ export default function NotesModal({ show, setShow, onDone }: Props) {
                                     title="Done"
                                     onPress={() => {
                                         onDone(comment)
-                                        resetComment()
+                                        Keyboard.dismiss()
+                                        setShow(false)
+                                        //resetComment()
                                     }}
                                 />
                             </View>
