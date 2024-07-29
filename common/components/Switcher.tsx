@@ -8,6 +8,7 @@ interface SwitcherProps {
     title: string | ReactNode
     value: boolean
     onValueChange: () => void
+    subtitle?: string
     containerStyle?: ViewStyle
 }
 
@@ -15,6 +16,7 @@ const Switcher: React.FC<SwitcherProps> = ({
     title,
     value,
     onValueChange,
+    subtitle,
     containerStyle
 }) => {
     const trackColor = useThemeColor('button')
@@ -28,6 +30,11 @@ const Switcher: React.FC<SwitcherProps> = ({
                     <Text style={styles.title}>{title}</Text>
                 ) : (
                     title
+                )}
+                {subtitle && (
+                    <Text fontFamily="SFLight" color="grey" fontSize={14}>
+                        {subtitle}
+                    </Text>
                 )}
             </View>
             <View>

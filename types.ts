@@ -359,7 +359,10 @@ export type ReferralSold = {
     customer: string
     seller: string
     date: string
+    show: boolean
     services: Referral['package']
+    coach?: Helper
+    userId?: string
 }
 
 export type ReferralsFilterType =

@@ -27,7 +27,6 @@ const Referrals = () => {
     const bgColor = useThemeColor('accent')
     const { loading, helpers } = useHelpers()
     const accent = useThemeColor('accent')
-    const text = useThemeColor('text')
     const dispatch = useAppDispatch()
     const user = useAppSelector((s) => s.auth.user)
 

@@ -22,6 +22,7 @@ import { sendNotificationToAllUsers } from './sendNotificationToAllUsers'
 import {
     AppUser,
     Feed,
+    Helper,
     Msg,
     NotificationData,
     Referral,
@@ -369,7 +370,9 @@ exports.sendClosedEmail = onDocumentWritten(
                 customer: data.name,
                 seller: data.userName!,
                 date: new Date().toISOString(),
-                services: data.package
+                services: data.package,
+                userId: data.userId!,
+                coach: coach as Helper
             }
             await admin.firestore().collection('sales').add(sale)
             await increaseEmailSentForUser(event.params.userId)
@@ -495,4 +498,6 @@ type ReferralSold = {
     seller: string
     date: string
     services: Referral['package']
+    coach?: Helper
+    userId?: string
 }

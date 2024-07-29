@@ -28,7 +28,9 @@ const filter = () => {
         <Screen>
             <View style={Styles.flex}>
                 <Header title="Discounts" onPressBack={router.back} />
+
                 <Switcher
+                    subtitle="It must be a bank account (checking, saving) or Verizon Visa Card to be eligible for the discount & enroll in paper-free billing"
                     value={expressAutoPay === 10}
                     title="Auto Pay"
                     onValueChange={() => {
@@ -37,6 +39,7 @@ const filter = () => {
                         )
                     }}
                 />
+
                 <Switcher
                     value={isWelcome}
                     title="Welcome Unlimited Offer"

@@ -11,6 +11,7 @@ export type SettingsState = {
     show5G: boolean
     saveContact: boolean
     pushNotifications: boolean
+    weeklySalesGoal: number
 }
 
 export const themes: Theme[] = ['auto', 'dark', 'light']
@@ -21,7 +22,8 @@ const initialState: SettingsState = {
     shake: true,
     show5G: false,
     saveContact: true,
-    pushNotifications: true
+    pushNotifications: true,
+    weeklySalesGoal: 100
     // Default theme is 'auto'
 }
 
@@ -49,6 +51,9 @@ const slice = createSlice({
         },
         setPushNotifications: (state, { payload }: PayloadAction<boolean>) => {
             state.pushNotifications = payload
+        },
+        setWeeklySalesGoal: (state, { payload }: PayloadAction<number>) => {
+            state.weeklySalesGoal = payload
         }
     }
 })
@@ -61,7 +66,8 @@ export const {
     setShake,
     setShow5G,
     setSaveContact,
-    setPushNotifications
+    setPushNotifications,
+    setWeeklySalesGoal
 } = slice.actions
 
 export default settingsReducer

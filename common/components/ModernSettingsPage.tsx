@@ -12,6 +12,7 @@ import {
     Button,
     Dimensions,
     Keyboard,
+    Linking,
     SafeAreaView,
     StyleSheet,
     Switch,
@@ -542,6 +543,41 @@ export default function ModernSettingsPage() {
                         <TouchableOpacity
                             onPress={() => {
                                 // handle onPress
+                                router.push('/(app)/(nova)/guide')
+                            }}
+                            style={[
+                                styles.row,
+                                { backgroundColor: secondaryColor }
+                            ]}
+                        >
+                            <View
+                                style={[
+                                    styles.rowIcon,
+                                    { backgroundColor: 'green' }
+                                ]}
+                            >
+                                <FontAwesome
+                                    name="wifi"
+                                    size={20}
+                                    color="#ffffff"
+                                />
+                            </View>
+
+                            <Text style={styles.rowLabel}>
+                                VZW Sales Prep List
+                            </Text>
+
+                            <View style={styles.rowSpacer} />
+
+                            <Feather
+                                color="#C6C6C6"
+                                name="chevron-right"
+                                size={20}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => {
+                                // handle onPress
                                 router.push('/(app)/(root)/(settings)/numbers')
                             }}
                             style={[
@@ -601,6 +637,37 @@ export default function ModernSettingsPage() {
                                 size={20}
                             />
                         </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => {
+                                // handle onPress
+                                router.push('/(app)/(nova)/nova')
+                            }}
+                            style={[
+                                styles.row,
+                                { backgroundColor: secondaryColor }
+                            ]}
+                        >
+                            <View
+                                style={[
+                                    styles.rowIcon,
+                                    { backgroundColor: '#264653' }
+                                ]}
+                            >
+                                <Entypo name="flag" size={24} color="#ffffff" />
+                            </View>
+
+                            <Text style={styles.rowLabel}>
+                                NOVA Credit Countries
+                            </Text>
+
+                            <View style={styles.rowSpacer} />
+
+                            <Feather
+                                color="#C6C6C6"
+                                name="chevron-right"
+                                size={20}
+                            />
+                        </TouchableOpacity>
 
                         <TouchableOpacity
                             onPress={() => {
@@ -635,7 +702,19 @@ export default function ModernSettingsPage() {
                         <TouchableOpacity
                             onPress={() => {
                                 // handle onPress
-                                Alert.alert('Upcoming feature')
+                                Linking.canOpenURL(
+                                    'mailto:melendez@robertdev.dev'
+                                )
+                                    .then((res) => {
+                                        if (res) {
+                                            Linking.openURL(
+                                                'mailto:melendez@robertdev.dev'
+                                            )
+                                        }
+                                    })
+                                    .catch((e) => console.log(e))
+
+                                // Alert.alert('Upcoming feature')
                             }}
                             style={[
                                 styles.row,

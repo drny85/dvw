@@ -35,7 +35,7 @@ export default function () {
 
     // If the user is logged in, redirect to the home page
     if (loggedIn && loggedIn.emailVerified) {
-        return <Redirect href={'/(app)/(root)/(feeds)/(home)/feeds'} />
+        return <Redirect href={'/(app)/(root)/(feeds)/(home)'} />
     }
 
     return (

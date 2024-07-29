@@ -42,6 +42,7 @@ const OPTIONS = ['Week', 'Month', 'Year']
 const Sales = () => {
     const { loading, feeds } = useFeeds()
     const user = useAppSelector((s) => s.auth.user)
+
     const [data, setData] = useState<SaleData[]>([])
     const range = useAppSelector((s) => s.sales.range)
     const [expand, setExpand] = useState<boolean>(false)

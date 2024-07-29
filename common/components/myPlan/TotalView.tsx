@@ -1,5 +1,6 @@
 import useAppDispatch from '@/common/hooks/useAppDispatch'
 import useAppSelector from '@/common/hooks/useAppSelector'
+import useThemeColor from '@/common/hooks/useThemeColor'
 import {
     LOYALTY_EXPIRATION_DATE,
     WELCOME_OFFER_EXPIRATION_DATE
@@ -11,22 +12,23 @@ import {
     setExpressHasFios,
     setExpressInternet,
     setLinesData,
+    setShowInfo,
     toggleIsWelcomeQualified
 } from '@/features/wireless/wirelessSlide'
 import { byodSavings } from '@/utils/byodSavings'
 import { firstResponderDiscount } from '@/utils/firstResponderDiscount'
 import { totalPerksCount } from '@/utils/perksCount'
+import { FontAwesome } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 import moment from 'moment'
 import { AnimatePresence, MotiView } from 'moti'
 import React, { useMemo, useState } from 'react'
-import { TouchableOpacity } from 'react-native'
+import { StyleSheet, TouchableOpacity } from 'react-native'
 import Divider from '../Divider'
 import Row from '../Row'
 import Text from '../Text'
 import View from '../View'
-import { FontAwesome } from '@expo/vector-icons'
-import useThemeColor from '@/common/hooks/useThemeColor'
+import LGPO from './LGPO'
 
 type Props = {
     showResetAll?: boolean
@@ -48,7 +50,8 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
         expressFirstResponder,
         expressAutoPay,
         expressHasFios,
-        expressInternet
+        expressInternet,
+        showInfo
     } = useAppSelector((s) => s.wireless)
     const welcomeTotal = lines.filter(
         (l) => l.name === 'Unlimited Welcome'
@@ -210,6 +213,7 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
 
     return (
         <View>
+            <AnimatePresence>{showInfo && <LGPO />}</AnimatePresence>
             <Row
                 style={{
                     justifyContent: showResetAll ? 'space-between' : 'center',
@@ -455,7 +459,18 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
                     welcomeOfferBonus() > 0
                 }
             >
-                <Text>LGPO</Text>
+                <Row style={{ gap: 10 }}>
+                    <Text>LGPO</Text>
+                    <TouchableOpacity
+                        onPress={() => dispatch(setShowInfo(!showInfo))}
+                    >
+                        <FontAwesome
+                            name="info-circle"
+                            size={20}
+                            color={'grey'}
+                        />
+                    </TouchableOpacity>
+                </Row>
                 <Text fontFamily="SFLight" color="warning" fontSize={13}>
                     ends ({WELCOME_OFFER_EXPIRATION_DATE})
                 </Text>

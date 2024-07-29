@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { TouchableOpacity, StyleSheet, Dimensions } from 'react-native'
+import {
+    TouchableOpacity,
+    StyleSheet,
+    Dimensions,
+    ViewStyle
+} from 'react-native'
 import Animated, {
     useSharedValue,
     useAnimatedStyle,
@@ -9,6 +14,7 @@ import View from './View'
 import Text from './Text'
 import useThemeColor from '../hooks/useThemeColor'
 import { TradeInDeviceType } from '@/types'
+import { SIZES } from '@/constants/Sizes'
 
 const { width } = Dimensions.get('window')
 
@@ -16,12 +22,14 @@ interface SegmentedControlProps {
     values: string[]
     selectedIndex: number
     onChange: (value: string | TradeInDeviceType, index: number) => void
+    containerStyle?: ViewStyle
 }
 
 const SegmentedControl: React.FC<SegmentedControlProps> = ({
     values,
     onChange,
-    selectedIndex
+    selectedIndex,
+    containerStyle
 }) => {
     const backgroundColor = useThemeColor('accent')
     const bgColor = useThemeColor('primary')
@@ -50,12 +58,19 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
     })
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, containerStyle]}>
             <View
                 style={[styles.controlContainer, { backgroundColor: bgColor }]}
             >
                 <Animated.View
-                    style={[styles.slider, { backgroundColor }, animatedStyle]}
+                    style={[
+                        styles.slider,
+                        {
+                            backgroundColor,
+                            width: width / values.length - SIZES.padding
+                        },
+                        animatedStyle
+                    ]}
                 />
                 {values.map((value, index) => (
                     <TouchableOpacity
@@ -95,9 +110,8 @@ const styles = StyleSheet.create({
     },
     slider: {
         position: 'absolute',
-        width: width / 3, // Adjust this based on the number of segments
-        height: '100%',
 
+        height: '100%',
         borderRadius: 10
     },
     controlItem: {

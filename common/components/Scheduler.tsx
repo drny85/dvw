@@ -52,7 +52,7 @@ const Scheduler = ({
                 updateReferral({
                     ...referral,
                     followUpOn: followUp?.toISOString(),
-                    followUpType: followUpType || null,
+                    followUpType: followUpType,
                     notificationIdentifier: identifier
                 })
             )

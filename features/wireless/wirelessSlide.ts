@@ -15,13 +15,14 @@ interface DataState {
     shake: boolean
     isWelcome: boolean
     fromQuote: boolean
+    showInfo: boolean
 }
 
 const initialState: DataState = {
     expressAutoPay: 10,
     expressFirstResponder: false,
     BYOD: false,
-    expressHasFios: false,
+    expressHasFios: true,
     expressInternet: undefined,
     hoverPlan: undefined,
     lines: [],
@@ -29,8 +30,9 @@ const initialState: DataState = {
     getStarted: false,
     quotes: [],
     shake: false,
-    isWelcome: false,
-    fromQuote: false
+    isWelcome: true,
+    fromQuote: false,
+    showInfo: false
 }
 
 const wirelessSlide = createSlice({
@@ -99,6 +101,9 @@ const wirelessSlide = createSlice({
         },
         setFromQuote: (state, { payload }: PayloadAction<boolean>) => {
             state.fromQuote = payload
+        },
+        setShowInfo: (state, { payload }: PayloadAction<boolean>) => {
+            state.showInfo = payload
         }
     }
 })
@@ -114,6 +119,7 @@ export const {
     toogleHoverPlan,
     setReviewModal,
     setGetStarted,
+    setShowInfo,
     setQuotes,
     toogleShake,
     toggleIsWelcomeQualified,

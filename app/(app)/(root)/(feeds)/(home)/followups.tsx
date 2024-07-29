@@ -17,7 +17,7 @@ import { Referral } from '@/types'
 import { FontAwesome } from '@expo/vector-icons'
 import { router } from 'expo-router'
 import moment from 'moment'
-import React from 'react'
+import React, { useMemo } from 'react'
 import {
     Alert,
     FlatList,
@@ -32,12 +32,19 @@ const FollowUps = () => {
 
     const bg = useThemeColor('accent')
     const dispatch = useAppDispatch()
-    const data = referrals
-        ?.filter(
-            (r) =>
-                r.followUpOn !== null && moment(r.followUpOn).isAfter(moment())
-        )
-        .sort((a, b) => moment(a.followUpOn).diff(moment(b.followUpOn)))
+    const data = useMemo(
+        () =>
+            referrals
+                ?.filter(
+                    (r) =>
+                        r.followUpOn !== null &&
+                        moment(r.followUpOn).isAfter(moment())
+                )
+                .sort((a, b) =>
+                    moment(a.followUpOn).diff(moment(b.followUpOn))
+                ),
+        [referrals]
+    )
 
     // if (data.length === 0 && )
     //     return (

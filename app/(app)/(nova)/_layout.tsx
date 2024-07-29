@@ -53,6 +53,12 @@ const NovaLayout = () => {
                 }}
             />
             <Stack.Screen
+                name="guide"
+                options={{
+                    headerShown: false
+                }}
+            />
+            <Stack.Screen
                 name="directory"
                 options={{
                     ...StackScreenWithSearchBar,

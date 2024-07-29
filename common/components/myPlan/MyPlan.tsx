@@ -16,6 +16,7 @@ import {
     setExpressHasFios,
     setExpressInternet,
     setLinesData,
+    setShowInfo,
     toogleShake
 } from '@/features/wireless/wirelessSlide'
 import { calculatePrice } from '@/helpers'
@@ -142,9 +143,11 @@ const MyPlan = () => {
 
     useEffect(() => {
         if (!bottomShetRef.current) return
+
         const timer = setTimeout(() => {
             if (lines.length === 0) {
                 bottomShetRef.current?.close()
+                dispatch(setShowInfo(false))
             }
             if (lines.length > 0) {
                 if (lines.length > 0 && lines.length <= 3) {
