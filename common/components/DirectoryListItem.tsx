@@ -1,5 +1,4 @@
 import { Alert, Image, StyleSheet, TouchableOpacity } from 'react-native'
-import React from 'react'
 import Row from './Row'
 import { SIZES } from '@/constants/Sizes'
 import { AppUser } from '@/types'
@@ -40,7 +39,6 @@ const DirectoryListItem = ({ user }: Props) => {
         const number = phone.replace(/[^0-9]/g, '').trim()
         if (!number) return
 
-        console.log(number)
         try {
             Communications.text(number, `Hi ${name.split(' ')[0]}, \n \n`)
         } catch (error) {
@@ -88,14 +86,6 @@ const DirectoryListItem = ({ user }: Props) => {
             ]}
         >
             <Row>
-                <View
-                    style={{
-                        width: 12,
-                        height: 12,
-                        borderRadius: 6,
-                        backgroundColor: user.isOnline ? 'green' : '#e63946'
-                    }}
-                />
                 <Image
                     source={{
                         uri:

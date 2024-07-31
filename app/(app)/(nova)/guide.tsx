@@ -18,7 +18,7 @@ const firstSteps = [
     'Current account number(s) if you are porting in.',
     'Phone Number(s)',
     'Transfer PIN',
-    'IMEI (BYOD or trading in a device'
+    'IMEI (BYOD or trading in a device)'
 ]
 const carriers = ['AT&T', 'T-Mobile', 'Other']
 type Carriers = 'AT&T' | 'T-Mobile' | 'Other'

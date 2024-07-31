@@ -98,6 +98,16 @@ const MyQuotes = () => {
             ]
         )
     }
+    const isWelcomeUnlimitedDiscount = (lines: Line[]): number => {
+        const welcomeLLines = lines.filter(
+            (l) => l.name === 'Unlimited Welcome'
+        ).length
+        if (welcomeLLines === 0) return 0
+        if (welcomeLLines === 1) return 10
+        if (welcomeLLines === 2) return 15
+        if (welcomeLLines === 3) return 20
+        return 0
+    }
 
     const toggleQuoteStatus = async (q: WirelessQuote) => {
         try {
@@ -114,7 +124,8 @@ const MyQuotes = () => {
 
     const total = (lines: Line[], isFirstResponder: boolean): number =>
         lines.reduce((acc, line) => acc + line.price, 0) -
-        firstResponderDiscount(lines.length, isFirstResponder)
+        firstResponderDiscount(lines.length, isFirstResponder) -
+        isWelcomeUnlimitedDiscount(lines)
 
     const onDelete = (quoteId: string) => {
         try {
@@ -184,7 +195,13 @@ const MyQuotes = () => {
                         marginBottom: SIZES.base
                     }}
                 >
-                    <Text>Perks {totalPerksCount(item.lines)}</Text>
+                    <Text>
+                        LGPO:
+                        <Text color="grey">
+                            {' '}
+                            ${isWelcomeUnlimitedDiscount(item.lines)}
+                        </Text>
+                    </Text>
                     <Text>
                         Total{' '}
                         <Text fontFamily="SFBold">

@@ -40,10 +40,10 @@ const Directory = () => {
         }
     })
     const directory = useMemo(() => {
-        if (!search) return users
-        return users.filter((d) =>
-            d.name.toLowerCase().includes(search.toLowerCase())
-        )
+        if (!search) return users.filter((u) => u.name !== '')
+        return users
+            .filter((u) => u.name !== '')
+            .filter((d) => d.name.toLowerCase().includes(search.toLowerCase()))
     }, [users, search])
 
     const renderUsers: ListRenderItem<AppUser> = useCallback(({ item }) => {
@@ -70,7 +70,9 @@ const Directory = () => {
             headerStyle: {
                 backgroundColor: background
             },
-            headerTitle: `Directory (${users.length})`,
+            headerTitle: `Directory (${
+                users.filter((u) => u.name !== '').length
+            })`,
             headerLargeStyle: {
                 backgroundColor: background
             },
