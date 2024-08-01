@@ -1,4 +1,5 @@
 import useColorScheme from '@/common/hooks/useColorScheme'
+import { useLinking } from '@/common/hooks/useLinking'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import { useUserStatus } from '@/common/hooks/useUserStatus'
 import Fonts from '@/constants/Fonts'
@@ -60,7 +61,7 @@ function RootLayout() {
     const colorScheme = useColorScheme()
     const navigationBarColor = useThemeColor('background')
     const bg = useThemeColor('background')
-
+    useLinking()
     useUserStatus()
 
     return (
