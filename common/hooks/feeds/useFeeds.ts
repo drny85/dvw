@@ -17,7 +17,10 @@ export const useFeeds = () => {
             return
         }
         const blocked = [...user.blockedUsers]
+
         return onSnapshot(feedsColletion, (snap) => {
+            console.log(snap.size)
+
             setFeeds(
                 snap.docs
                     .map((doc) => ({ ...doc.data(), id: doc.id } as Feed))

@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react'
-import { Switch, StyleSheet, ViewStyle } from 'react-native'
+import { Switch, StyleSheet, ViewStyle, DimensionValue } from 'react-native'
 import useThemeColor from '../hooks/useThemeColor'
 import View from './View'
 import Text from './Text'
@@ -10,6 +10,7 @@ interface SwitcherProps {
     onValueChange: () => void
     subtitle?: string
     containerStyle?: ViewStyle
+    width?: DimensionValue
 }
 
 const Switcher: React.FC<SwitcherProps> = ({
@@ -17,7 +18,8 @@ const Switcher: React.FC<SwitcherProps> = ({
     value,
     onValueChange,
     subtitle,
-    containerStyle
+    containerStyle,
+    width
 }) => {
     const trackColor = useThemeColor('button')
     const thumbColor = useThemeColor('success')
@@ -25,7 +27,7 @@ const Switcher: React.FC<SwitcherProps> = ({
 
     return (
         <View style={[styles.container, containerStyle]}>
-            <View style={{ width: '75%' }}>
+            <View style={{ width: width ? width : '75%' }}>
                 {typeof title === 'string' ? (
                     <Text style={styles.title}>{title}</Text>
                 ) : (

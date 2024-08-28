@@ -23,12 +23,13 @@ import { useRouter } from 'expo-router'
 import moment from 'moment'
 import { AnimatePresence, MotiView } from 'moti'
 import React, { useMemo, useState } from 'react'
-import { StyleSheet, TouchableOpacity } from 'react-native'
+import { TouchableOpacity } from 'react-native'
 import Divider from '../Divider'
 import Row from '../Row'
 import Text from '../Text'
 import View from '../View'
 import LGPO from './LGPO'
+import DiscountButtons from '../DiscountButtons'
 
 type Props = {
     showResetAll?: boolean
@@ -36,6 +37,7 @@ type Props = {
 }
 const TotalView = ({ onClickSave, showResetAll }: Props) => {
     const router = useRouter()
+
     const iconColor = useThemeColor('text')
     const lines = useAppSelector((s) => s.wireless.lines)
     const isWelcome = useAppSelector((s) => s.wireless.isWelcome)
@@ -214,6 +216,22 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
     return (
         <View>
             <AnimatePresence>{showInfo && <LGPO />}</AnimatePresence>
+
+            <TouchableOpacity
+                style={{
+                    width: '100%',
+                    alignSelf: 'center',
+                    marginVertical: SIZES.base
+                }}
+                onPress={onClickSave}
+            >
+                <Text center={true} fontFamily="SFHeavy" color="accent">
+                    {showResetAll ? 'View Summary' : 'Save Wireless Quote'}
+                </Text>
+            </TouchableOpacity>
+            <RowView show={true}>
+                <DiscountButtons />
+            </RowView>
             <Row
                 style={{
                     justifyContent: showResetAll ? 'space-between' : 'center',
@@ -229,18 +247,7 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
                     </Text>
                 )}
             </Row>
-            <TouchableOpacity
-                style={{
-                    width: '100%',
-                    alignSelf: 'center',
-                    marginVertical: SIZES.base
-                }}
-                onPress={onClickSave}
-            >
-                <Text center={true} fontFamily="SFHeavy" color="accent">
-                    {showResetAll ? 'View Summary' : 'Save Wireless Quote'}
-                </Text>
-            </TouchableOpacity>
+
             {/* <Row style={{ alignSelf: 'center', gap: 8 }}>
                 <Text color="tertiary" fontFamily={'SFRegular'}>
                     Welcome Offer (NY & MA)
@@ -257,6 +264,7 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
                 />
             </Row> */}
             <Divider />
+
             <RowView show={lines.length > 0}>
                 <TouchableOpacity
                     onPress={() => setShowBreakdown((prev) => !prev)}
