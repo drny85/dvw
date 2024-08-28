@@ -1,4 +1,4 @@
-import { View, Text, Switch } from 'react-native'
+import { View, Switch } from 'react-native'
 import React from 'react'
 import { SIZES } from '@/constants/Sizes'
 import Row from './Row'
@@ -12,10 +12,11 @@ import {
     setExpressInternet,
     toggleIsWelcomeQualified
 } from '@/features/wireless/wirelessSlide'
+import Text from './Text'
 
 const DiscountButtons = () => {
     const trackColor = useThemeColor('button')
-    const thumbColor = useThemeColor('success')
+    const thumbColor = useThemeColor('accent')
     const bgColor = useThemeColor('background')
     const dispatch = useAppDispatch()
     const isWelcome = useAppSelector((s) => s.wireless.isWelcome)
@@ -35,7 +36,7 @@ const DiscountButtons = () => {
             <Row style={{ gap: 6 }}>
                 <Text>Auto Pay</Text>
                 <Switch
-                    trackColor={{ false: thumbColor, true: trackColor }}
+                    trackColor={{ false: thumbColor, true: bgColor + '30' }}
                     thumbColor={expressAutoPay ? thumbColor : 'grey'}
                     ios_backgroundColor={bgColor}
                     onChange={() => {
@@ -50,7 +51,7 @@ const DiscountButtons = () => {
             <Row style={{ gap: 6 }}>
                 <Text>M+H</Text>
                 <Switch
-                    trackColor={{ false: thumbColor, true: trackColor }}
+                    trackColor={{ false: thumbColor, true: bgColor + '30' }}
                     thumbColor={expressHasFios ? thumbColor : 'grey'}
                     ios_backgroundColor={bgColor}
                     onChange={() => {
@@ -66,7 +67,7 @@ const DiscountButtons = () => {
             <Row style={{ gap: 6 }}>
                 <Text>LGPO</Text>
                 <Switch
-                    trackColor={{ false: thumbColor, true: trackColor }}
+                    trackColor={{ false: thumbColor, true: bgColor + '30' }}
                     thumbColor={isWelcome ? thumbColor : 'grey'}
                     ios_backgroundColor={bgColor}
                     onChange={() => {

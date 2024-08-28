@@ -22,7 +22,7 @@ const Switcher: React.FC<SwitcherProps> = ({
     width
 }) => {
     const trackColor = useThemeColor('button')
-    const thumbColor = useThemeColor('success')
+    const thumbColor = useThemeColor('accent')
     const bgColor = useThemeColor('background')
 
     return (

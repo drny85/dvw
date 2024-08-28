@@ -34,7 +34,7 @@ const LineItem = ({ line, onBYOD, onDelete, onTradeInPress, index }: Props) => {
     const shake = useAppSelector((s) => s.wireless.shake)
     const dispatch = useAppDispatch()
     const warning = useThemeColor('warning')
-    const thumbColor = useThemeColor('success')
+    const thumbColor = useThemeColor('accent')
     const bgColor = useThemeColor('background')
     const animation = new Animated.Value(0)
     const shakeDelete = () => {
@@ -131,7 +131,7 @@ const LineItem = ({ line, onBYOD, onDelete, onTradeInPress, index }: Props) => {
                     </Text>
                     <Switch
                         value={line.byod}
-                        trackColor={{ false: thumbColor, true: '#8d99ae' }}
+                        trackColor={{ false: thumbColor, true: bgColor + '40' }}
                         thumbColor={line.byod ? thumbColor : 'grey'}
                         ios_backgroundColor={bgColor}
                         onChange={() => onBYOD(line.id)}
