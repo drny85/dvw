@@ -106,17 +106,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         borderRadius: 10,
         overflow: 'hidden',
-        width: '100%'
+        width: '110%'
     },
     slider: {
         position: 'absolute',
-
         height: '100%',
         borderRadius: 10
     },
     controlItem: {
         flex: 1,
-        paddingVertical: 10,
+        paddingVertical: 8,
         justifyContent: 'center',
         alignItems: 'center'
     }

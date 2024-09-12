@@ -6,7 +6,7 @@ import {
     Phone
 } from '@/constants'
 import { Line, LineName, TradeInDeviceType } from '@/types'
-
+const TRADE_IN = 999.99
 export const calculateTradeInValues = (
     lineName: LineName,
     deviceOS: TradeInDeviceType,
@@ -61,22 +61,37 @@ export const calculateTradeInValues = (
     } else {
         if (deviceOS === 'Iphone') {
             return {
-                monthlyPrice: phone.isFree
-                    ? 0
-                    : IPHONE_NON_UNLIMITED_PLAN_TRADE_IN_CREDIT >= phone.value
-                    ? 0
-                    : (phone.value -
-                          IPHONE_NON_UNLIMITED_PLAN_TRADE_IN_CREDIT) /
-                      36,
+                monthlyPrice:
+                    phone.name.includes('16 Pro') &&
+                    lineName === 'Unlimited Ultimate'
+                        ? (phone.value - TRADE_IN) / 36
+                        : phone.isFree
+                        ? 0
+                        : IPHONE_NON_UNLIMITED_PLAN_TRADE_IN_CREDIT >=
+                          phone.value
+                        ? 0
+                        : (phone.value -
+                              IPHONE_NON_UNLIMITED_PLAN_TRADE_IN_CREDIT) /
+                          36,
                 name: lineName,
-                balance: phone.isFree
-                    ? 0
-                    : phone.value <= IPHONE_NON_UNLIMITED_PLAN_TRADE_IN_CREDIT
-                    ? 0
-                    : phone.value - IPHONE_NON_UNLIMITED_PLAN_TRADE_IN_CREDIT,
-                discount: phone.isFree
-                    ? phone.value
-                    : IPHONE_NON_UNLIMITED_PLAN_TRADE_IN_CREDIT,
+                balance:
+                    phone.name.includes('16 Pro') &&
+                    lineName === 'Unlimited Ultimate'
+                        ? phone.value - TRADE_IN
+                        : phone.isFree
+                        ? 0
+                        : phone.value <=
+                          IPHONE_NON_UNLIMITED_PLAN_TRADE_IN_CREDIT
+                        ? 0
+                        : phone.value -
+                          IPHONE_NON_UNLIMITED_PLAN_TRADE_IN_CREDIT,
+                discount:
+                    phone.name.includes('16 Pro') &&
+                    lineName === 'Unlimited Ultimate'
+                        ? TRADE_IN
+                        : phone.isFree
+                        ? phone.value
+                        : IPHONE_NON_UNLIMITED_PLAN_TRADE_IN_CREDIT,
                 device: deviceOS,
                 phoneRetailValue: phone.value,
                 phone

@@ -41,6 +41,42 @@ type PhoneArray = {
 export const PHONES: PhoneArray = {
     Iphone: [
         {
+            name: 'Iphone 16 Pro Max',
+            value: 1199.99,
+            isFree: false,
+            priceWithPlan: [
+                { name: 'Unlimited Ultimate', price: 10 },
+                { name: 'Unlimited Plus', price: 10 }
+            ]
+        },
+        {
+            name: 'Iphone 16 Pro',
+            value: 999.99,
+            isFree: false,
+            priceWithPlan: [
+                { name: 'Unlimited Ultimate', price: 5 },
+                { name: 'Unlimited Plus', price: 5 }
+            ]
+        },
+        {
+            name: 'Iphone 16 Plus',
+            value: 929.99,
+            isFree: false,
+            priceWithPlan: [
+                { name: 'Unlimited Ultimate', price: 5 },
+                { name: 'Unlimited Plus', price: 5 }
+            ]
+        },
+        {
+            name: 'Iphone 16',
+            value: 829.99,
+            isFree: false,
+            priceWithPlan: [
+                { name: 'Unlimited Ultimate', price: 0 },
+                { name: 'Unlimited Plus', price: 0 }
+            ]
+        },
+        {
             name: 'Iphone 15 Pro Max',
             value: 1199.99,
             isFree: false,

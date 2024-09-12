@@ -578,7 +578,8 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
                                         ? { price: l.tradeInValues.phone.value }
                                         : { price: 0 }
                                 )
-                                .reduce((acc, curr) => acc + curr.price, 0)}
+                                .reduce((acc, curr) => acc + curr.price, 0)
+                                .toFixed(2)}
                         </Text>
                     </Row>
                 </TouchableOpacity>

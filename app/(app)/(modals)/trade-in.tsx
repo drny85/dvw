@@ -18,8 +18,15 @@ import { TradeInDeviceType } from '@/types'
 import { calculateTradeInValues } from '@/utils/calculateTradeIn'
 import { FontAwesome } from '@expo/vector-icons'
 import { router, useLocalSearchParams } from 'expo-router'
+import moment from 'moment'
 import { useEffect, useMemo, useState } from 'react'
-import { Button, Modal, ScrollView, TouchableOpacity } from 'react-native'
+import {
+    Button,
+    Modal,
+    ScrollView,
+    StyleSheet,
+    TouchableOpacity
+} from 'react-native'
 
 type Props = {
     lineId: string
@@ -69,7 +76,16 @@ const TradeIn = () => {
             selectedSegment === 'Iphone' &&
             line?.name !== 'Unlimited Welcome'
         ) {
-            return 830
+            return selectedSegment === 'Iphone' &&
+                line?.name === 'Unlimited Ultimate' &&
+                (line.name.includes('16 Pro Max') ||
+                    line.name.includes('16 Pro'))
+                ? 1000
+                : selectedSegment === 'Iphone' &&
+                  line?.name === 'Unlimited Ultimate' &&
+                  phone?.name.includes('16 Pro')
+                ? 1000
+                : 830
         } else if (
             selectedSegment === 'Android' &&
             line?.name === 'Unlimited Welcome'
@@ -174,7 +190,9 @@ const TradeIn = () => {
                             padding: 6
                         }}
                         containerStyle={{
-                            borderRadius: SIZES.radius * 2
+                            borderRadius: SIZES.radius * 2,
+                            borderWidth: StyleSheet.hairlineWidth,
+                            borderColor: bgColor
                         }}
                     >
                         <LinesMenu
@@ -268,7 +286,7 @@ const TradeIn = () => {
                                 </Text>
                                 <Text>
                                     $
-                                    {phone && phone?.isFree
+                                    {phone?.isFree
                                         ? phone.value
                                         : phoneDiscount.toFixed(2)}
                                 </Text>
@@ -326,25 +344,6 @@ const TradeIn = () => {
                                     onPress={applyTradeIn}
                                 />
                             </View>
-                            {calculateIfBetterPriceWithoutTradeIn().isLess &&
-                                phone && (
-                                    <View style={{ marginBottom: 20 }}>
-                                        <Text fontFamily="QSBold">
-                                            This {phone?.name} is better without
-                                            a trade in because is on promo for $
-                                            {
-                                                calculateIfBetterPriceWithoutTradeIn()
-                                                    .price
-                                            }
-                                            . Just remember to add the{' '}
-                                            {
-                                                calculateIfBetterPriceWithoutTradeIn()
-                                                    .price
-                                            }{' '}
-                                            to the monthly total.
-                                        </Text>
-                                    </View>
-                                )}
                         </View>
                     </>
                 )}
@@ -397,6 +396,19 @@ const TradeIn = () => {
                                             <Text fontFamily="QSBold">
                                                 {p.name}
                                             </Text>
+                                            {p.name.includes('16') &&
+                                                moment(new Date()).isBefore(
+                                                    moment(
+                                                        new Date('2024-09-20')
+                                                    )
+                                                ) && (
+                                                    <Text
+                                                        fontFamily="QSLight"
+                                                        color="error"
+                                                    >
+                                                        Pre-Order
+                                                    </Text>
+                                                )}
                                             {p && p.isFree && (
                                                 <Text
                                                     fontFamily="QSBold"

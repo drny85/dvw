@@ -31,7 +31,7 @@ export const CONTACT_NUMBERS: ContactNumber[] = [
     },
     {
         name: 'PACT (Wireless CVC)',
-        number: '1-888-886-6924'
+        number: '1-888-866-6924'
     },
     {
         name: 'Porting Department',
