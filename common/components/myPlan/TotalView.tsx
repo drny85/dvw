@@ -23,13 +23,14 @@ import { useRouter } from 'expo-router'
 import moment from 'moment'
 import { AnimatePresence, MotiView } from 'moti'
 import React, { useMemo, useState } from 'react'
-import { TouchableOpacity } from 'react-native'
+import { Button, Modal, TouchableOpacity } from 'react-native'
 import Divider from '../Divider'
 import Row from '../Row'
 import Text from '../Text'
 import View from '../View'
 import LGPO from './LGPO'
 import DiscountButtons from '../DiscountButtons'
+import StateTaxComponent from '../TaxComponent'
 
 type Props = {
     showResetAll?: boolean
@@ -37,6 +38,7 @@ type Props = {
 }
 const TotalView = ({ onClickSave, showResetAll }: Props) => {
     const router = useRouter()
+    const [modalVisible, setModalVisible] = useState(false)
 
     const iconColor = useThemeColor('text')
     const lines = useAppSelector((s) => s.wireless.lines)
@@ -53,7 +55,8 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
         expressAutoPay,
         expressHasFios,
         expressInternet,
-        showInfo
+        showInfo,
+        dueTotal
     } = useAppSelector((s) => s.wireless)
     const welcomeTotal = lines.filter(
         (l) => l.name === 'Unlimited Welcome'
@@ -87,6 +90,12 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
                 .reduce((acc, tradeIn) => acc + tradeIn?.monthlyPrice!, 0) || 0
         )
     }
+
+    const tradeInRetailsTotalvalue =
+        lines
+            .filter((i) => i.tradeIn && i.tradeInValues !== null)
+            .map((line) => line.tradeInValues)
+            .reduce((acc, tradeIn) => acc + tradeIn?.phoneRetailValue!, 0) || 0
 
     const firstResponder = (): number =>
         firstResponderDiscount(lines.length, expressFirstResponder)
@@ -632,6 +641,44 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
                 </Text>
             </RowView>
             <Divider small />
+            <RowView show={dueTotal > 0}>
+                <Text>{dueTotal}</Text>
+            </RowView>
+            <RowView show={tradeInRetailsTotalvalue > 0}>
+                <View
+                    style={{
+                        paddingTop: 6,
+                        justifyContent: 'center',
+                        width: '100%',
+                        alignItems: 'center',
+                        alignSelf: 'center'
+                    }}
+                >
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            gap: 6
+                        }}
+                    >
+                        <FontAwesome
+                            name="calculator"
+                            size={20}
+                            color={'grey'}
+                        />
+                        <Button
+                            title="Tax Calculator"
+                            color={'grey'}
+                            onPress={() => setModalVisible(true)}
+                        />
+                        <StateTaxComponent
+                            amount={tradeInRetailsTotalvalue}
+                            visible={modalVisible}
+                            onClose={() => setModalVisible(false)}
+                        />
+                    </View>
+                </View>
+            </RowView>
 
             {showResetAll && (
                 <Row

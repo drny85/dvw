@@ -1,7 +1,6 @@
 import Divider from '@/common/components/Divider'
 import Header from '@/common/components/Header'
 import LinesMenu from '@/common/components/myPlan/Menu'
-import TotalView from '@/common/components/myPlan/TotalView'
 import NeoView from '@/common/components/NeoView'
 import Row from '@/common/components/Row'
 import Screen from '@/common/components/Screen'
@@ -35,7 +34,6 @@ type Props = {
 
 const TradeIn = () => {
     const { lineId, lineIndex } = useLocalSearchParams<Props>()
-
     const dispatch = useAppDispatch()
     const bgColor = useThemeColor('accent')
     const [showPhones, setShowPhones] = useState(false)
@@ -78,13 +76,12 @@ const TradeIn = () => {
         ) {
             return selectedSegment === 'Iphone' &&
                 line?.name === 'Unlimited Ultimate' &&
-                (line.name.includes('16 Pro Max') ||
-                    line.name.includes('16 Pro'))
+                phone?.name.includes('16 Pro')
                 ? 1000
                 : selectedSegment === 'Iphone' &&
                   line?.name === 'Unlimited Ultimate' &&
-                  phone?.name.includes('16 Pro')
-                ? 1000
+                  phone?.name.includes('16 Plus')
+                ? 929.99
                 : 830
         } else if (
             selectedSegment === 'Android' &&
@@ -99,7 +96,7 @@ const TradeIn = () => {
         } else {
             return 0
         }
-    }, [selectedSegment, line?.name])
+    }, [selectedSegment, line?.name, phone?.name])
 
     const applyTradeIn = () => {
         if (!phone) return
@@ -212,6 +209,7 @@ const TradeIn = () => {
                     selectedIndex={INDEXES.indexOf(selectedSegment)}
                     values={INDEXES}
                     onChange={(values) => {
+                        console.log(values)
                         setPhone(null)
                         handleSegmentChange(values as TradeInDeviceType)
                     }}
@@ -220,7 +218,6 @@ const TradeIn = () => {
                     <NeoView
                         containerStyle={{
                             borderRadius: SIZES.base,
-
                             alignSelf: 'center'
                         }}
                         innerStyleContainer={{
@@ -251,10 +248,10 @@ const TradeIn = () => {
                         }}
                     >
                         <Row style={{ gap: SIZES.base }}>
-                            <Text fontSize={18} fontFamily="QSBold">
+                            <Text fontSize={18} fontFamily="SFHeavy">
                                 {phone.name}
                             </Text>
-                            <Text fontSize={18} fontFamily="QSBold">
+                            <Text fontSize={18} fontFamily="SFHeavy">
                                 ${phone.value}
                             </Text>
                         </Row>

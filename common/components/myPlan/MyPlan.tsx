@@ -29,6 +29,7 @@ import { AnimatePresence, MotiView } from 'moti'
 import React, { useEffect, useRef } from 'react'
 
 import { Alert, ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
+import StateTaxComponent from '../TaxComponent'
 
 const MyPlan = () => {
     const iconColor = useThemeColor('text')
@@ -192,6 +193,7 @@ const MyPlan = () => {
                     <AntDesign name="menu-fold" size={32} color={iconColor} />
                 </TouchableOpacity>
             </View>
+
             <View style={{ marginVertical: SIZES.base, zIndex: 190 }}>
                 <LineSetter
                     onRemoveLine={() => {

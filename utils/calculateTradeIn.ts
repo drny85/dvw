@@ -62,8 +62,11 @@ export const calculateTradeInValues = (
         if (deviceOS === 'Iphone') {
             return {
                 monthlyPrice:
-                    phone.name.includes('16 Pro') &&
+                    phone.name.includes('16 Plus') &&
                     lineName === 'Unlimited Ultimate'
+                        ? (phone.value - 929.99) / 36
+                        : phone.name.includes('16 Pro') &&
+                          lineName === 'Unlimited Ultimate'
                         ? (phone.value - TRADE_IN) / 36
                         : phone.isFree
                         ? 0
@@ -75,8 +78,11 @@ export const calculateTradeInValues = (
                           36,
                 name: lineName,
                 balance:
-                    phone.name.includes('16 Pro') &&
+                    phone.name.includes('16 Plus') &&
                     lineName === 'Unlimited Ultimate'
+                        ? 0
+                        : phone.name.includes('16 Pro') &&
+                          lineName === 'Unlimited Ultimate'
                         ? phone.value - TRADE_IN
                         : phone.isFree
                         ? 0

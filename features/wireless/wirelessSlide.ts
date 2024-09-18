@@ -16,6 +16,7 @@ interface DataState {
     isWelcome: boolean
     fromQuote: boolean
     showInfo: boolean
+    dueTotal: number
 }
 
 const initialState: DataState = {
@@ -32,7 +33,8 @@ const initialState: DataState = {
     shake: false,
     isWelcome: true,
     fromQuote: false,
-    showInfo: false
+    showInfo: false,
+    dueTotal: 0
 }
 
 const wirelessSlide = createSlice({
@@ -104,6 +106,9 @@ const wirelessSlide = createSlice({
         },
         setShowInfo: (state, { payload }: PayloadAction<boolean>) => {
             state.showInfo = payload
+        },
+        setDueToday: (state, { payload }: PayloadAction<number>) => {
+            state.dueTotal = payload
         }
     }
 })
@@ -123,7 +128,8 @@ export const {
     setQuotes,
     toogleShake,
     toggleIsWelcomeQualified,
-    setFromQuote
+    setFromQuote,
+    setDueToday
 } = wirelessSlide.actions
 
 export default wirelessSlide.reducer
