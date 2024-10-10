@@ -1,24 +1,23 @@
-import React, { useEffect, useState } from 'react'
+import Row from '@/common/components/Row'
 import Screen from '@/common/components/Screen'
+import Switcher from '@/common/components/Switcher'
 import Text from '@/common/components/Text'
 import View from '@/common/components/View'
-import Row from '@/common/components/Row'
+import useAppDispatch from '@/common/hooks/useAppDispatch'
+import useAppSelector from '@/common/hooks/useAppSelector'
+import useThemeColor from '@/common/hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
+import { setShow5G } from '@/features/settings/settingsSlice'
+import { setFromQuote } from '@/features/wireless/wirelessSlide'
 import {
     AntDesign,
     Entypo,
     FontAwesome,
     MaterialIcons
 } from '@expo/vector-icons'
+import React, { useEffect, useState } from 'react'
 import { Image, Modal, ScrollView, TouchableOpacity } from 'react-native'
-import Switcher from '@/common/components/Switcher'
-import useThemeColor from '@/common/hooks/useThemeColor'
-import { router } from 'expo-router'
-import useAppSelector from '@/common/hooks/useAppSelector'
-import useAppDispatch from '@/common/hooks/useAppDispatch'
-import { setFromQuote } from '@/features/wireless/wirelessSlide'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { setShow5G } from '@/features/settings/settingsSlice'
 
 const PRICE = {
     plus: 80,
@@ -315,7 +314,7 @@ const My5GPlan = () => {
                                 dispatch(setFromQuote(!fromQuote))
                             }}
                         />
-                        <Text fontFamily="SFLight" fontSize={12}>
+                        <Text fontFamily="SFLight" fontSize={13}>
                             Toggle this on if you want to get the discount based
                             on the plan you are working on for wireless
                         </Text>
