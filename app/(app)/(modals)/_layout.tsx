@@ -43,6 +43,7 @@ const ModalLaout = () => {
                 }}
             />
             <Stack.Screen name="spark" />
+            <Stack.Screen name="switcherOffer" />
             <Stack.Screen name="welcome" />
             <Stack.Screen name="reports" />
             <Stack.Screen name="Congratulations" />

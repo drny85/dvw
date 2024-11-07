@@ -23,14 +23,16 @@ import { useRouter } from 'expo-router'
 import moment from 'moment'
 import { AnimatePresence, MotiView } from 'moti'
 import React, { useMemo, useState } from 'react'
-import { Button, Modal, TouchableOpacity } from 'react-native'
+import { Button, Image, ScrollView, TouchableOpacity } from 'react-native'
+import Animated, { SlideInRight, SlideOutRight } from 'react-native-reanimated'
+import DiscountButtons from '../DiscountButtons'
 import Divider from '../Divider'
 import Row from '../Row'
+import StateTaxComponent from '../TaxComponent'
 import Text from '../Text'
 import View from '../View'
 import LGPO from './LGPO'
-import DiscountButtons from '../DiscountButtons'
-import StateTaxComponent from '../TaxComponent'
+import { setShow5G } from '@/features/settings/settingsSlice'
 
 type Props = {
     showResetAll?: boolean
@@ -46,6 +48,7 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
     const dispatch = useAppDispatch()
     const [showTradeInDetails, setShowTradeInDetails] = useState(false)
     const [showBreakdown, setShowBreakdown] = useState(false)
+    const [showGC, setShowGC] = useState(true)
     const [showBYODDetails, setShowBYODDetails] = useState(false)
     const [showMHDetails, setShowMHDetails] = useState(false)
     const [showFreeTradeIn, setShowFreeTradeIn] = useState(false)
@@ -241,6 +244,120 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
             <RowView show={true}>
                 <DiscountButtons />
             </RowView>
+            <RowView
+                show={
+                    lines.length > 0 &&
+                    lines.filter((a) => !a.byod).length > 0 &&
+                    !showGC
+                }
+            >
+                <TouchableOpacity
+                    onPress={() => setShowGC(true)}
+                    style={{ alignSelf: 'center', width: '100%' }}
+                >
+                    <Text center fontFamily="QSBold" style={{ color: 'blue' }}>
+                        Show Gift Cards
+                    </Text>
+                </TouchableOpacity>
+            </RowView>
+
+            <RowView
+                show={
+                    lines.length > 0 &&
+                    lines.filter((a) => !a.byod).length > 0 &&
+                    showGC
+                }
+            >
+                <View
+                    style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: '100%'
+                    }}
+                >
+                    <View style={{ flexDirection: 'row', gap: 16 }}>
+                        <Text center fontFamily="QSBold" color="grey">
+                            $
+                            {lines
+                                .filter((a) => !a.byod)
+                                .reduce((acc, curr) => {
+                                    if (curr.name === 'Unlimited Welcome')
+                                        return acc + 100
+                                    if (curr.name === 'Unlimited Plus')
+                                        return acc + 200
+                                    if (curr.name === 'Unlimited Ultimate')
+                                        return acc + 200
+                                    return acc
+                                }, 0)}{' '}
+                            VZ Gift Card,
+                            <Text color="grey" fontFamily="SFLight">
+                                {' '}
+                                Port-In Required
+                            </Text>
+                        </Text>
+                        <TouchableOpacity
+                            onPress={() => {
+                                setShowGC(false)
+                            }}
+                        >
+                            <Text
+                                fontFamily="SFBold"
+                                style={{ color: 'blue', opacity: 0.7 }}
+                            >
+                                Hide
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                    <ScrollView
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={{
+                            flexDirection: 'row',
+                            gap: 8,
+                            marginTop: 6,
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}
+                    >
+                        {lines
+                            .filter((a) => !a.byod)
+                            .map((line, index) => (
+                                <TouchableOpacity
+                                    key={index}
+                                    onPress={() =>
+                                        router.push('/switcherOffer')
+                                    }
+                                >
+                                    <Animated.View
+                                        entering={SlideInRight}
+                                        exiting={SlideOutRight.duration(400)}
+                                        style={{ alignItems: 'center' }}
+                                    >
+                                        <Image
+                                            source={require('@/assets/images/verizon.png')}
+                                            style={{
+                                                width: 60,
+                                                height: 36,
+                                                resizeMode: 'center',
+                                                borderRadius: 6
+                                            }}
+                                        />
+                                        <Text
+                                            fontFamily="QSBold"
+                                            fontSize={13}
+                                            color="grey"
+                                        >
+                                            {line.name === 'Unlimited Welcome'
+                                                ? '$100'
+                                                : '$200'}
+                                        </Text>
+                                    </Animated.View>
+                                </TouchableOpacity>
+                            ))}
+                    </ScrollView>
+                </View>
+            </RowView>
+
             <Row
                 style={{
                     justifyContent: showResetAll ? 'space-between' : 'center',
