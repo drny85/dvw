@@ -14,7 +14,7 @@ const SwitcherOffer = () => {
             <Header title="Switcher Offer" onPressBack={() => router.back()} />
             <View style={{ padding: 4, gap: 6, marginBottom: 6 }}>
                 <Text fontFamily="QSBold">Effective Period</Text>
-                <Text>11/07/24 - 12/18/24</Text>
+                <Text>11/07/24 - 12/19/24</Text>
             </View>
             <ScrollView
                 contentContainerStyle={{ padding: 10 }}

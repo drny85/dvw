@@ -1,6 +1,8 @@
 import { LineName } from '@/types'
+import { isDateNotInPast } from '@/utils/isNotInThePast'
 
-const WELCOME_BYOD = 360
+export const WELCOME_BYOD_BONUS_ENDS = '2025-01-08'
+const WELCOME_BYOD = isDateNotInPast(WELCOME_BYOD_BONUS_ENDS) ? 360 : 180
 const PLUS_BYOD = 360
 const ULTIMATE_BYOD = 540
 
@@ -8,8 +10,7 @@ export const ULTIMATE_BYOD_VALUE = ULTIMATE_BYOD / 36
 export const PLUS_BYOD_VALUE = PLUS_BYOD / 36
 export const WELCOME_BYOD_VALUE = WELCOME_BYOD / 36
 export const WELCOME_BYOD_BONUS_EXPIRATION = '07/07/2024'
-export const LOYALTY_EXPIRATION_DATE = '05/08/2024'
-export const WELCOME_OFFER_EXPIRATION_DATE = '12/31/2024'
+export const WELCOME_OFFER_EXPIRATION_DATE = '2025-03-31'
 export const WIRELESS_MONTHLY_GOAL = 10
 export const WIRELESS_DIRECT = 125
 export const WIRELESS_CLICK_TO_CALL = 60
@@ -17,6 +18,7 @@ export const IPHONE_UNLIMITED_PLAN_TRADE_IN_CREDIT = 415
 export const IPHONE_NON_UNLIMITED_PLAN_TRADE_IN_CREDIT = 830
 export const ANDROID_NON_UNLIMITED_PLAN_TRADE_IN_CREDIT = 800
 export const ANDROID_UNLIMITED_PLAN_TRADE_IN_CREDIT = 400
+export const SWITCHER_OFFER_EXPIRES = '2024-12-19'
 
 export const VALUES = [
     '799.99',

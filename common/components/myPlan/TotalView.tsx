@@ -2,7 +2,8 @@ import useAppDispatch from '@/common/hooks/useAppDispatch'
 import useAppSelector from '@/common/hooks/useAppSelector'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import {
-    LOYALTY_EXPIRATION_DATE,
+    SWITCHER_OFFER_EXPIRES,
+    WELCOME_BYOD_BONUS_ENDS,
     WELCOME_OFFER_EXPIRATION_DATE
 } from '@/constants'
 import { SIZES } from '@/constants/Sizes'
@@ -32,7 +33,7 @@ import StateTaxComponent from '../TaxComponent'
 import Text from '../Text'
 import View from '../View'
 import LGPO from './LGPO'
-import { setShow5G } from '@/features/settings/settingsSlice'
+import { isDateNotInPast } from '@/utils/isNotInThePast'
 
 type Props = {
     showResetAll?: boolean
@@ -41,7 +42,6 @@ type Props = {
 const TotalView = ({ onClickSave, showResetAll }: Props) => {
     const router = useRouter()
     const [modalVisible, setModalVisible] = useState(false)
-
     const iconColor = useThemeColor('text')
     const lines = useAppSelector((s) => s.wireless.lines)
     const isWelcome = useAppSelector((s) => s.wireless.isWelcome)
@@ -66,12 +66,8 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
     ).length
 
     const welcomeOfferBonus = (): number => {
+        if (!isDateNotInPast(WELCOME_OFFER_EXPIRATION_DATE)) return 0
         if (welcomeTotal === 0 || !isWelcome || lines.length > 3) return 0
-        if (
-            new Date(WELCOME_OFFER_EXPIRATION_DATE).getTime() <
-            new Date().getTime()
-        )
-            return 0
 
         return welcomeTotal === 1
             ? 10
@@ -263,6 +259,7 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
 
             <RowView
                 show={
+                    isDateNotInPast(SWITCHER_OFFER_EXPIRES) &&
                     lines.length > 0 &&
                     lines.filter((a) => !a.byod).length > 0 &&
                     showGC
@@ -319,41 +316,45 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
                             alignItems: 'center'
                         }}
                     >
-                        {lines
-                            .filter((a) => !a.byod)
-                            .map((line, index) => (
-                                <TouchableOpacity
-                                    key={index}
-                                    onPress={() =>
-                                        router.push('/switcherOffer')
-                                    }
-                                >
-                                    <Animated.View
-                                        entering={SlideInRight}
-                                        exiting={SlideOutRight.duration(400)}
-                                        style={{ alignItems: 'center' }}
+                        {isDateNotInPast(SWITCHER_OFFER_EXPIRES) &&
+                            lines
+                                .filter((a) => !a.byod)
+                                .map((line, index) => (
+                                    <TouchableOpacity
+                                        key={index}
+                                        onPress={() =>
+                                            router.push('/switcherOffer')
+                                        }
                                     >
-                                        <Image
-                                            source={require('@/assets/images/verizon.png')}
-                                            style={{
-                                                width: 60,
-                                                height: 36,
-                                                resizeMode: 'center',
-                                                borderRadius: 6
-                                            }}
-                                        />
-                                        <Text
-                                            fontFamily="QSBold"
-                                            fontSize={13}
-                                            color="grey"
+                                        <Animated.View
+                                            entering={SlideInRight}
+                                            exiting={SlideOutRight.duration(
+                                                400
+                                            )}
+                                            style={{ alignItems: 'center' }}
                                         >
-                                            {line.name === 'Unlimited Welcome'
-                                                ? '$100'
-                                                : '$200'}
-                                        </Text>
-                                    </Animated.View>
-                                </TouchableOpacity>
-                            ))}
+                                            <Image
+                                                source={require('@/assets/images/verizon.png')}
+                                                style={{
+                                                    width: 60,
+                                                    height: 36,
+                                                    resizeMode: 'center',
+                                                    borderRadius: 6
+                                                }}
+                                            />
+                                            <Text
+                                                fontFamily="QSBold"
+                                                fontSize={13}
+                                                color="grey"
+                                            >
+                                                {line.name ===
+                                                'Unlimited Welcome'
+                                                    ? '$100'
+                                                    : '$200'}
+                                            </Text>
+                                        </Animated.View>
+                                    </TouchableOpacity>
+                                ))}
                     </ScrollView>
                 </View>
             </RowView>
@@ -512,18 +513,7 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
                     ))}
                 </View>
             </RowView>
-            <RowView
-                show={
-                    loyaltyBonusDiscount() > 0 &&
-                    moment().isAfter(LOYALTY_EXPIRATION_DATE)
-                }
-            >
-                <Text>Loyalty Discount</Text>
-                <Text fontSize={14} color="error">
-                    ends ({LOYALTY_EXPIRATION_DATE})
-                </Text>
-                <Text color="red">-${loyaltyBonusDiscount()}</Text>
-            </RowView>
+
             <RowView show={firstResponder() > 0}>
                 <Text>First Responder</Text>
                 <Text color="red">-${firstResponder()}</Text>
@@ -578,7 +568,11 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
                                         : l.name === 'Unlimited Plus'
                                         ? 10
                                         : l.name === 'Unlimited Welcome'
-                                        ? 5
+                                        ? isDateNotInPast(
+                                              WELCOME_BYOD_BONUS_ENDS
+                                          )
+                                            ? 10
+                                            : 5
                                         : 0}
                                 </Text>
                             </Row>
@@ -587,6 +581,7 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
             </RowView>
             <RowView
                 show={
+                    isDateNotInPast(WELCOME_OFFER_EXPIRATION_DATE) &&
                     welcomeTotal > 0 &&
                     isWelcome &&
                     lines.length <= 3 &&
@@ -606,7 +601,7 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
                     </TouchableOpacity>
                 </Row>
                 <Text fontFamily="SFLight" color="warning" fontSize={13}>
-                    ends ({WELCOME_OFFER_EXPIRATION_DATE})
+                    ends ({moment(WELCOME_OFFER_EXPIRATION_DATE).format('ll')})
                 </Text>
                 <Text color="red">-${welcomeOfferBonus()}</Text>
             </RowView>

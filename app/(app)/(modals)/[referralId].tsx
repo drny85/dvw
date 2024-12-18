@@ -109,19 +109,20 @@ const ReferralDetails = () => {
             const newReferral: Referral = {
                 ...referral!,
                 comment:
-                    referral?.comment && typeof referral.comment === 'string'
+                    Array.isArray(referral?.comment) &&
+                    referral.comment.length > 0
                         ? [
                               {
                                   message: newComment,
                                   timestamp: new Date().toISOString()
-                              }
-                          ] || []
+                              },
+                              ...referral.comment
+                          ]
                         : [
                               {
                                   message: newComment,
                                   timestamp: new Date().toISOString()
-                              },
-                              ...referral.comment!
+                              }
                           ]
             }
 
