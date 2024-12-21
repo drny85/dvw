@@ -1,33 +1,40 @@
 {
-  "name": "functions",
-  "scripts": {
-    "build": "tsc",
-    "build:watch": "tsc --watch",
-    "serve": "npm run build && firebase emulators:start --only functions",
-    "shell": "npm run build && firebase functions:shell",
-    "start": "npm run shell",
-    "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
-  },
-  "engines": {
-    "node": "18"
-  },
-  "main": "lib/index.js",
-  "dependencies": {
-    "@react-email/components": "^0.0.14",
-    "@react-email/tailwind": "^0.0.14",
-    "dotenv": "^16.4.1",
-    "expo-server-sdk": "^3.7.0",
-    "firebase-admin": "^11.8.0",
-    "firebase-functions": "^4.7.0",
-    "moment": "^2.30.1",
-    "node-fetch": "^2.7.0",
-    "resend": "^3.1.0"
-  },
-  "devDependencies": {
-    "@types/node-fetch": "^2.6.11",
-    "firebase-functions-test": "^3.1.0",
-    "typescript": "^4.9.0"
-  },
-  "private": true
+    "name": "functions",
+    "scripts": {
+        "build": "npx babel src --out-dir lib --extensions '.ts,.tsx,.js,.jsx'",
+        "build:watch": "tsc --watch",
+        "serve": "npm run build && firebase emulators:start --only functions",
+        "shell": "npm run build && firebase functions:shell",
+        "start": "npm run shell",
+        "deploy": "npm run build && firebase deploy --only functions",
+        "logs": "firebase functions:log"
+    },
+    "engines": {
+        "node": "18"
+    },
+    "type": "commonjs",
+    "main": "lib/index.js",
+    "dependencies": {
+        "@react-email/components": "^0.0.31",
+        "@react-email/tailwind": "^0.0.14",
+        "dotenv": "^16.4.1",
+        "expo-server-sdk": "^3.7.0",
+        "firebase-admin": "^11.8.0",
+        "firebase-functions": "^4.7.0",
+        "moment": "^2.30.1",
+        "node-fetch": "^2.7.0",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+        "resend": "^3.1.0"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.26.4",
+        "@babel/core": "^7.26.0",
+        "@babel/preset-env": "^7.26.0",
+        "@babel/preset-react": "^7.26.3",
+        "@types/node-fetch": "^2.6.11",
+        "firebase-functions-test": "^3.1.0",
+        "typescript": "^4.9.0"
+    },
+    "private": true
 }

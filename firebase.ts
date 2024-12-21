@@ -12,6 +12,7 @@ import {
     DocumentData,
     collection
 } from 'firebase/firestore'
+import { WelcomeEmailProps } from './types'
 
 const firebaseConfig = {
     apiKey: process.env.EXPO_PUBLIC_FIREBASE_APIKEY,
@@ -48,6 +49,11 @@ export const sendMeATotificationWhenSomeoneLogin = () =>
     httpsCallable<{}, void>(functions, 'sendMeATotificationWhenSomeoneLogin')
 export const sendEmail = () =>
     httpsCallable<{ quoteId: string }>(functions, 'sendEmail')
+
+export const sendPreparationEmail = httpsCallable<WelcomeEmailProps, boolean>(
+    functions,
+    'sendWirelessPreparationEmail'
+)
 
 export const sendIntroductionEmail = () =>
     httpsCallable<{ referralId: string }, { message: string | null }>(

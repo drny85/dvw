@@ -25,6 +25,23 @@ export interface MessageUser {
     name?: string
     avatar?: string | number
 }
+export type Quote = {
+    quote?: string
+    author?: string
+}
+
+export type WelcomeEmailProps = {
+    customer: {
+        name: string
+        email: string
+        carrier: 'AT&T' | 'T-Mobile' | 'Other'
+    }
+    myInfo: {
+        name: string
+        email: string
+        phone: string
+    }
+}
 
 export type IMessage = {
     _id: string | number

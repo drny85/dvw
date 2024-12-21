@@ -37,7 +37,6 @@ import { setSaleQuoteReferral } from '@/features/sales/salesSlide'
 
 const SaveQuote = () => {
     const [inReview, setReview] = useState(true)
-    const [loading, setLoading] = useState(false)
     const [isVisible, setIsVisible] = useState(false)
     const user = useAppSelector((s) => s.auth.user)
     const [name, setName] = useState('')
@@ -112,9 +111,8 @@ const SaveQuote = () => {
             message,
             isWelcome
         }
-        try {
-            setLoading(true)
 
+        try {
             const noti: NotificationBody = {
                 body: `Get in touch with ${quote.customerName}`,
                 date: quote.scheduledOn!,
@@ -140,8 +138,6 @@ const SaveQuote = () => {
             router.back()
         } catch (error) {
             console.log(error)
-        } finally {
-            setLoading(false)
         }
     }
 

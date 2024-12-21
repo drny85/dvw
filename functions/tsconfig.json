@@ -3,12 +3,15 @@
         "module": "commonjs",
         "noImplicitReturns": true,
         "noUnusedLocals": true,
-        "outDir": "lib",
+        "outDir": "./lib",
+        "rootDir": "./src",
         "sourceMap": true,
         "strict": true,
-        "target": "es2017",
+        "target": "ES2019", // Downgrade target if needed
         "typeRoots": ["node_modules/@types"],
-        "jsx": "react-jsx"
+        "jsx": "react-jsx",
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true
     },
     "compileOnSave": true,
     "include": ["src", "**/*.ts", "**/*.tsx"],

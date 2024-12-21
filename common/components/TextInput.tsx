@@ -6,6 +6,7 @@ import { ColorName } from '@/constants/Colors'
 import useThemeColor from '../hooks/useThemeColor'
 import { SIZES } from '@/constants/Sizes'
 import View from './View'
+import React from 'react'
 
 // Define props for the custom TextInput component, including customizable text styling properties and backgroundColor option
 type InputError = {

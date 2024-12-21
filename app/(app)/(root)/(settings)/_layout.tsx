@@ -14,6 +14,17 @@ const SettingsLayout = () => {
         >
             <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen
+                name="google-form"
+                options={{ title: 'Google Forms', headerBackTitle: 'Back' }}
+            />
+            <Stack.Screen
+                name="wireless-prepare"
+                options={{
+                    title: 'Wireless Checklist',
+                    headerBackTitle: 'Back'
+                }}
+            />
+            <Stack.Screen
                 name="numbers"
                 options={{
                     presentation: 'fullScreenModal',

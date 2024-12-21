@@ -12,6 +12,7 @@ const ModalLaout = () => {
             <Stack.Screen name="referral" />
             <Stack.Screen name="perks" />
             <Stack.Screen name="quotes" />
+
             <Stack.Screen
                 name="trade-in"
                 options={{ animation: 'slide_from_bottom' }}

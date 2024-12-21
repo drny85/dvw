@@ -11,12 +11,9 @@ import {
 } from '@react-email/components'
 import { Tailwind } from '@react-email/tailwind'
 
-import { Referral } from './typing'
+import { Quote, Referral } from './typing'
 import { sendMe } from './utils'
-type Quote = {
-    quote?: string
-    author?: string
-}
+
 export type EmailRef = Referral & Quote
 export const CloseReferralEmailToReferee = (data: EmailRef) => {
     const {

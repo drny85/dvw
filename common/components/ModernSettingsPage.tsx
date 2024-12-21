@@ -413,6 +413,41 @@ export default function ModernSettingsPage() {
                                 size={20}
                             />
                         </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => {
+                                // handle onPress
+                                router.push('/google-form')
+                            }}
+                            style={[
+                                styles.row,
+                                { backgroundColor: secondaryColor }
+                            ]}
+                        >
+                            <View
+                                style={[
+                                    styles.rowIcon,
+                                    { backgroundColor: '#edfefe' }
+                                ]}
+                            >
+                                <Feather
+                                    color="#212121"
+                                    name="book-open"
+                                    size={20}
+                                />
+                            </View>
+
+                            <Text style={styles.rowLabel}>
+                                Daily Activities / Google Form
+                            </Text>
+
+                            <View style={styles.rowSpacer} />
+
+                            <Feather
+                                color="#C6C6C6"
+                                name="chevron-right"
+                                size={20}
+                            />
+                        </TouchableOpacity>
                     </View>
                     <View style={styles.section}>
                         <Text style={styles.sectionTitle}>Preferences</Text>
@@ -540,6 +575,43 @@ export default function ModernSettingsPage() {
 
                     <View style={styles.section}>
                         <Text style={styles.sectionTitle}>Resources</Text>
+                        <TouchableOpacity
+                            onPress={() => {
+                                // handle onPress
+                                router.push(
+                                    '/(app)/(root)/(settings)/wireless-prepare'
+                                )
+                            }}
+                            style={[
+                                styles.row,
+                                { backgroundColor: secondaryColor }
+                            ]}
+                        >
+                            <View
+                                style={[
+                                    styles.rowIcon,
+                                    { backgroundColor: 'orange' }
+                                ]}
+                            >
+                                <FontAwesome
+                                    name="wifi"
+                                    size={20}
+                                    color="#ffffff"
+                                />
+                            </View>
+
+                            <Text style={styles.rowLabel}>
+                                VZW Checklist Email
+                            </Text>
+
+                            <View style={styles.rowSpacer} />
+
+                            <Feather
+                                color="#C6C6C6"
+                                name="chevron-right"
+                                size={20}
+                            />
+                        </TouchableOpacity>
                         <TouchableOpacity
                             onPress={() => {
                                 // handle onPress

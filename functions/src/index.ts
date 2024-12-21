@@ -26,12 +26,14 @@ import {
     Msg,
     NotificationData,
     Referral,
+    WelcomeEmailProps,
     WirelessQuote
 } from './typing'
 import WirelessClosedTemplate, {
     WirelessClosedTemplateProps
 } from './wirelessClosedTemplate'
 import { increaseEmailSentForUser } from './utils'
+import WelcomeEmail from './wirelessPreparation'
 
 const { initializeApp } = require('firebase-admin/app')
 const { getFirestore } = require('firebase-admin/firestore')
@@ -201,7 +203,9 @@ exports.sendNewMessageNotification = onDocumentCreated(
             const message = messageData?.data() as Msg
             const sender = message.user.name
             const usersRef = await admin.firestore().collection('users').get()
-            const users = usersRef.docs.map((doc) => doc.data()) as AppUser[]
+            const users = usersRef.docs.map((doc: any) =>
+                doc.data()
+            ) as AppUser[]
             const data: NotificationData = {
                 id: message.chatId,
                 type: 'new-message'
@@ -237,7 +241,9 @@ exports.sendNewPostNotification = onDocumentCreated(
             const quote = quoteData?.data() as Feed
             const sender = quote.user
             const usersRef = await admin.firestore().collection('users').get()
-            const users = usersRef.docs.map((doc) => doc.data()) as AppUser[]
+            const users = usersRef.docs.map((doc: any) =>
+                doc.data()
+            ) as AppUser[]
             const data: NotificationData = {
                 id: event.params.feedId,
                 type: 'feed'
@@ -314,7 +320,9 @@ exports.sendClosedEmail = onDocumentWritten(
                 .doc(data.userId!)
                 .collection('helpers')
                 .get()
-            const coaches = helpersRef.docs.map((s) => s.data())
+            const coaches = helpersRef.docs.map((s: any) =>
+                s.data()
+            ) as Helper[]
             const coach = coaches.find((h) => h.type === 'coach')
             const coachEmail = coach?.email || ''
 
@@ -349,7 +357,7 @@ exports.sendClosedEmail = onDocumentWritten(
                     to: [refereeEmail],
                     subject: 'Congratulations! This Referral Has Been Closed',
                     reply_to: user.email,
-                    bcc: [ceEmail, coachEmail, user.email],
+                    bcc: [ceEmail || '', coachEmail, user.email || ''],
                     text: '',
                     react: TemplateTwo(d)
                 })
@@ -462,6 +470,37 @@ exports.sendWirelessClosedTemplate = onCall<{ referralId: string }>(
             return true
         } catch (error) {
             console.log('Error sending wireless template', error)
+            return false
+        }
+    }
+)
+
+exports.sendWirelessPreparationEmail = onCall<WelcomeEmailProps>(
+    async ({ data, auth }): Promise<boolean> => {
+        console.log('DATA', data, auth?.uid)
+        if (!auth || !data) return false
+        try {
+            const userRef = await admin
+                .firestore()
+                .collection('users')
+                .doc(auth.uid)
+                .get()
+            const user = userRef.data() as AppUser
+            const { name, email } = user
+            const Template: typeof WelcomeEmail = WelcomeEmail
+            const res = await resend.emails.send({
+                from: `${name} <no-reply@robertdev.net>`,
+                to: [data.customer.email],
+                subject: 'Wireless Preparation',
+                reply_to: email,
+                bcc: [email || ''],
+                text: '',
+                react: Template(data)
+            })
+
+            return res.data?.id !== undefined
+        } catch (error) {
+            console.log(error)
             return false
         }
     }
