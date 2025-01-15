@@ -14,6 +14,7 @@ import Text from '../Text'
 import View from '../View'
 import LinesMenu from './Menu'
 import { calculatePrice } from '@/helpers'
+import React from 'react'
 
 type Props = {
     index: number

@@ -97,6 +97,30 @@ const MyPlan = () => {
         dispatch(setLinesData(newLines))
     }
 
+    const onSwitchTradeIn = (id: string) => {
+        const newLines = lines.map((line) => {
+            if (line.id === id) {
+                return {
+                    ...line,
+                    price: calculatePrice(
+                        { ...line, byod: !line.byod },
+                        lines,
+                        expressAutoPay,
+                        expressInternet,
+                        expressHasFios
+                    ),
+                    byod: false,
+                    tradeIn: false,
+                    tradeInValues: null
+                }
+            }
+            return line
+        })
+        // @ts-ignore
+
+        dispatch(setLinesData(newLines))
+    }
+
     const onTradeInPress = (id: string, index: string) => {
         const line = lines.find((l) => l.id === id)
         if (line && line.byod) {
@@ -214,7 +238,11 @@ const MyPlan = () => {
             <ScrollView showsVerticalScrollIndicator={false}>
                 <LinesContainer
                     lines={lines}
-                    onTradeInPress={(id, index) => onTradeInPress(id, index)}
+                    onTradeInPress={(id, index) => {
+                        onTradeInPress(id, index)
+                        onSwitchTradeIn(id)
+                        //onSwitchBYOD(id)
+                    }}
                     onBYOD={(line) => onSwitchBYOD(line)}
                     onDelete={(id) => deleteLine(id)}
                     onPerksPress={(id) => {

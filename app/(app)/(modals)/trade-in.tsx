@@ -13,12 +13,12 @@ import useThemeColor from '@/common/hooks/useThemeColor'
 import { INDEXES, Phone, PHONES } from '@/constants'
 import { SIZES } from '@/constants/Sizes'
 import { setLinesData } from '@/features/wireless/wirelessSlide'
-import { TradeInDeviceType } from '@/types'
+import { Line, TradeInDeviceType } from '@/types'
 import { calculateTradeInValues } from '@/utils/calculateTradeIn'
 import { FontAwesome } from '@expo/vector-icons'
 import { router, useLocalSearchParams } from 'expo-router'
-import moment from 'moment'
-import { useEffect, useMemo, useState } from 'react'
+import React from 'react'
+import { useEffect, useState } from 'react'
 import {
     Button,
     Modal,
@@ -44,10 +44,8 @@ const TradeIn = () => {
         setSelectedSegment(value)
     }
 
-    const line = useAppSelector((s) =>
-        s.wireless.lines.find((l) => l.id === lineId)
-    )
     const lines = useAppSelector((s) => s.wireless.lines)
+    const line = lines.find((line) => line.id === lineId)
 
     const handleRemoveTradeIn = () => {
         const newLines = lines.map((line) => {
@@ -64,39 +62,6 @@ const TradeIn = () => {
         dispatch(setLinesData(newLines))
         router.back()
     }
-    const phoneDiscount = useMemo(() => {
-        if (
-            selectedSegment === 'Iphone' &&
-            line?.name === 'Unlimited Welcome'
-        ) {
-            return 0
-        } else if (
-            selectedSegment === 'Iphone' &&
-            line?.name !== 'Unlimited Welcome'
-        ) {
-            return selectedSegment === 'Iphone' &&
-                line?.name === 'Unlimited Ultimate' &&
-                phone?.name.includes('16 Pro')
-                ? 830
-                : selectedSegment === 'Iphone' &&
-                  line?.name === 'Unlimited Ultimate' &&
-                  phone?.name.includes('16 Plus')
-                ? 830
-                : 830
-        } else if (
-            selectedSegment === 'Android' &&
-            line?.name === 'Unlimited Welcome'
-        ) {
-            return 400
-        } else if (
-            selectedSegment === 'Android' &&
-            line?.name !== 'Unlimited Welcome'
-        ) {
-            return 800
-        } else {
-            return 0
-        }
-    }, [selectedSegment, line?.name, phone?.name])
 
     const applyTradeIn = () => {
         if (!phone) return
@@ -125,21 +90,6 @@ const TradeIn = () => {
         selectedSegment,
         phone!
     )
-
-    const calculateIfBetterPriceWithoutTradeIn = (): {
-        isLess: boolean
-        price: number
-    } => {
-        if (!phone || !line || !discounts) return { isLess: false, price: 0 }
-        const p = phone?.priceWithPlan.map((s) => s.name).includes(line.name)
-        if (!p) return { isLess: false, price: 0 }
-        const result = phone.priceWithPlan.find((i) => i.name === line.name)
-        if (!result) return { isLess: false, price: 0 }
-        if (result.price === 0) return { isLess: false, price: 0 }
-        const isLess = result?.price <= discounts?.monthlyPrice
-
-        return { isLess, price: result?.price }
-    }
 
     useEffect(() => {
         if (!line) return
@@ -192,12 +142,14 @@ const TradeIn = () => {
                             borderColor: bgColor
                         }}
                     >
-                        <LinesMenu
-                            line={line!}
-                            index={+lineIndex}
-                            showFullName={true}
-                            fontSize={15}
-                        />
+                        {line && (
+                            <LinesMenu
+                                line={line}
+                                index={+lineIndex}
+                                showFullName={true}
+                                fontSize={15}
+                            />
+                        )}
                     </NeoView>
                 </Row>
 
@@ -209,7 +161,6 @@ const TradeIn = () => {
                     selectedIndex={INDEXES.indexOf(selectedSegment)}
                     values={INDEXES}
                     onChange={(values) => {
-                        console.log(values)
                         setPhone(null)
                         handleSegmentChange(values as TradeInDeviceType)
                     }}
@@ -235,7 +186,7 @@ const TradeIn = () => {
                             >
                                 {phone
                                     ? 'Change Phone'
-                                    : `Pick a ${selectedSegment}`}
+                                    : `Pick an ${selectedSegment}`}
                             </Text>
                         </TouchableOpacity>
                     </NeoView>
@@ -285,7 +236,7 @@ const TradeIn = () => {
                                     $
                                     {phone?.isFree
                                         ? phone.value
-                                        : phoneDiscount.toFixed(2)}
+                                        : discounts.discount.toFixed(2)}
                                 </Text>
 
                                 {phone && (
@@ -337,7 +288,11 @@ const TradeIn = () => {
                             )}
                             <View>
                                 <Button
-                                    title="Apply Trade In"
+                                    title={
+                                        line?.tradeIn
+                                            ? 'Update Trade-In'
+                                            : 'Apply Trade In'
+                                    }
                                     onPress={applyTradeIn}
                                 />
                             </View>
@@ -393,19 +348,7 @@ const TradeIn = () => {
                                             <Text fontFamily="QSBold">
                                                 {p.name}
                                             </Text>
-                                            {p.name.includes('16') &&
-                                                moment(new Date()).isBefore(
-                                                    moment(
-                                                        new Date('2024-09-20')
-                                                    )
-                                                ) && (
-                                                    <Text
-                                                        fontFamily="QSLight"
-                                                        color="error"
-                                                    >
-                                                        Pre-Order
-                                                    </Text>
-                                                )}
+
                                             {p && p.isFree && (
                                                 <Text
                                                     fontFamily="QSBold"
