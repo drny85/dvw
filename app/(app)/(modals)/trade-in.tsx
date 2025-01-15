@@ -69,7 +69,7 @@ const TradeIn = () => {
             selectedSegment === 'Iphone' &&
             line?.name === 'Unlimited Welcome'
         ) {
-            return 415
+            return 0
         } else if (
             selectedSegment === 'Iphone' &&
             line?.name !== 'Unlimited Welcome'
@@ -77,11 +77,11 @@ const TradeIn = () => {
             return selectedSegment === 'Iphone' &&
                 line?.name === 'Unlimited Ultimate' &&
                 phone?.name.includes('16 Pro')
-                ? 1000
+                ? 830
                 : selectedSegment === 'Iphone' &&
                   line?.name === 'Unlimited Ultimate' &&
                   phone?.name.includes('16 Plus')
-                ? 929.99
+                ? 830
                 : 830
         } else if (
             selectedSegment === 'Android' &&

@@ -42,7 +42,7 @@ export const WelcomeEmail = ({ customer, myInfo }: WelcomeEmailProps) => (
                     <Text className="text-gray-700 mb-4">
                         Thank you for choosing Verizon Wireless! We’re excited
                         to welcome you to our network and are here to ensure
-                        your transition is as seamless as possible.
+                        your transaction is as seamless as possible.
                     </Text>
 
                     <Heading
@@ -183,7 +183,7 @@ export const WelcomeEmail = ({ customer, myInfo }: WelcomeEmailProps) => (
                         <Link href={`tel:${myInfo.phone}`}>
                             <span className="font-bold">{myInfo.phone}</span>
                         </Link>
-                        . I'am here to help you every step of the way.
+                        . I'm here to help you every step of the way.
                     </Text>
 
                     <Text className="text-gray-700">
