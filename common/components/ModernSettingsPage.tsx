@@ -578,6 +578,72 @@ export default function ModernSettingsPage() {
                         <TouchableOpacity
                             onPress={() => {
                                 // handle onPress
+                                router.push('/(app)/(root)/(settings)/porting')
+                            }}
+                            style={[
+                                styles.row,
+                                { backgroundColor: secondaryColor }
+                            ]}
+                        >
+                            <View
+                                style={[
+                                    styles.rowIcon,
+                                    { backgroundColor: 'grey' }
+                                ]}
+                            >
+                                <FontAwesome
+                                    name="phone-square"
+                                    size={20}
+                                    color="#ffffff"
+                                />
+                            </View>
+
+                            <Text style={styles.rowLabel}>Porting Status</Text>
+
+                            <View style={styles.rowSpacer} />
+
+                            <Feather
+                                color="#C6C6C6"
+                                name="chevron-right"
+                                size={20}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => {
+                                // handle onPress
+                                router.push('/(app)/(root)/(settings)/grid')
+                            }}
+                            style={[
+                                styles.row,
+                                { backgroundColor: secondaryColor }
+                            ]}
+                        >
+                            <View
+                                style={[
+                                    styles.rowIcon,
+                                    { backgroundColor: 'blue' }
+                                ]}
+                            >
+                                <FontAwesome
+                                    name="dollar"
+                                    size={20}
+                                    color="#ffffff"
+                                />
+                            </View>
+
+                            <Text style={styles.rowLabel}>Ed Pricing Grid</Text>
+
+                            <View style={styles.rowSpacer} />
+
+                            <Feather
+                                color="#C6C6C6"
+                                name="chevron-right"
+                                size={20}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => {
+                                // handle onPress
                                 router.push(
                                     '/(app)/(root)/(settings)/wireless-prepare'
                                 )

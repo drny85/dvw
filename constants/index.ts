@@ -1,10 +1,11 @@
 import { LineName } from '@/types'
 import { isDateNotInPast } from '@/utils/isNotInThePast'
 
-export const WELCOME_BYOD_BONUS_ENDS = '2025-01-08'
+export const WELCOME_BYOD_BONUS_ENDS = '2025-04-02'
 const WELCOME_BYOD = isDateNotInPast(WELCOME_BYOD_BONUS_ENDS) ? 360 : 180
 const PLUS_BYOD = 360
 const ULTIMATE_BYOD = 540
+export const MOBILE_PLUS_HOME_EXPIRES = '2025-02-25'
 
 export const BIC_CREDIT_MONTHS = 36
 
@@ -142,7 +143,6 @@ export const PHONES: PhoneArray = {
             name: 'Iphone 14 Pro Max',
             value: 1099.99,
             isFree: false,
-
             tradeInCredit: {
                 'Unlimited Welcome': IPHONE_UNLIMITED_WELCOME_TRADE_IN_CREDIT,
                 'Unlimited Plus': IPHONE_UNLIMITED_PLUS_TRADE_IN_CREDIT,
@@ -153,7 +153,6 @@ export const PHONES: PhoneArray = {
             name: 'Iphone 14 Pro',
             value: 899.99,
             isFree: false,
-
             tradeInCredit: {
                 'Unlimited Welcome': IPHONE_UNLIMITED_WELCOME_TRADE_IN_CREDIT,
                 'Unlimited Plus': IPHONE_UNLIMITED_PLUS_TRADE_IN_CREDIT,
@@ -164,7 +163,6 @@ export const PHONES: PhoneArray = {
             name: 'Iphone 14 Plus',
             value: 829.99,
             isFree: true,
-
             tradeInCredit: {
                 'Unlimited Welcome': IPHONE_UNLIMITED_WELCOME_TRADE_IN_CREDIT,
                 'Unlimited Plus': IPHONE_UNLIMITED_PLUS_TRADE_IN_CREDIT,
@@ -181,64 +179,39 @@ export const PHONES: PhoneArray = {
                 'Unlimited Plus': IPHONE_UNLIMITED_PLUS_TRADE_IN_CREDIT,
                 'Unlimited Ultimate': IPHONE_UNLIMITED_ULTIMATE_TRADE_IN_CREDIT
             }
-        },
-        {
-            name: 'Iphone 13 Pro Max',
-            value: 1099.99,
-            isFree: false,
-
-            tradeInCredit: {
-                'Unlimited Welcome': IPHONE_UNLIMITED_WELCOME_TRADE_IN_CREDIT,
-                'Unlimited Plus': IPHONE_UNLIMITED_PLUS_TRADE_IN_CREDIT,
-                'Unlimited Ultimate': IPHONE_UNLIMITED_ULTIMATE_TRADE_IN_CREDIT
-            }
-        },
-        {
-            name: 'Iphone 13 Pro',
-            value: 899.99,
-            isFree: false,
-
-            tradeInCredit: {
-                'Unlimited Welcome': IPHONE_UNLIMITED_WELCOME_TRADE_IN_CREDIT,
-                'Unlimited Plus': IPHONE_UNLIMITED_PLUS_TRADE_IN_CREDIT,
-                'Unlimited Ultimate': IPHONE_UNLIMITED_ULTIMATE_TRADE_IN_CREDIT
-            }
-        },
-        {
-            name: 'Iphone 13 Plus',
-            value: 799.99,
-            isFree: false,
-
-            tradeInCredit: {
-                'Unlimited Welcome': IPHONE_UNLIMITED_WELCOME_TRADE_IN_CREDIT,
-                'Unlimited Plus': IPHONE_UNLIMITED_PLUS_TRADE_IN_CREDIT,
-                'Unlimited Ultimate': IPHONE_UNLIMITED_ULTIMATE_TRADE_IN_CREDIT
-            }
-        },
-        {
-            name: 'Iphone 13',
-            value: 629.99,
-            isFree: true,
-
-            tradeInCredit: {
-                'Unlimited Welcome': IPHONE_UNLIMITED_WELCOME_TRADE_IN_CREDIT,
-                'Unlimited Plus': IPHONE_UNLIMITED_PLUS_TRADE_IN_CREDIT,
-                'Unlimited Ultimate': IPHONE_UNLIMITED_ULTIMATE_TRADE_IN_CREDIT
-            }
-        },
-        {
-            name: 'Iphone 13 Mini',
-            value: 599.99,
-            isFree: true,
-
-            tradeInCredit: {
-                'Unlimited Welcome': IPHONE_UNLIMITED_WELCOME_TRADE_IN_CREDIT,
-                'Unlimited Plus': IPHONE_UNLIMITED_PLUS_TRADE_IN_CREDIT,
-                'Unlimited Ultimate': IPHONE_UNLIMITED_ULTIMATE_TRADE_IN_CREDIT
-            }
         }
     ],
     Android: [
+        {
+            name: 'Samsung Galaxy S25 Ultra',
+            value: 1299.99,
+            tradeInCredit: {
+                'Unlimited Welcome': ANDROID_UNLIMITED_WELCOME_TRADE_IN_CREDIT,
+                'Unlimited Plus': 800,
+                'Unlimited Ultimate': 1000
+            },
+            isFree: false
+        },
+        {
+            name: 'Samsung Galaxy S25+',
+            value: 999.99,
+            tradeInCredit: {
+                'Unlimited Welcome': ANDROID_UNLIMITED_WELCOME_TRADE_IN_CREDIT,
+                'Unlimited Plus': ANDROID_UNLIMITED_PLUS_TRADE_IN_CREDIT,
+                'Unlimited Ultimate': 999.99
+            },
+            isFree: false
+        },
+        {
+            name: 'Samsung Galaxy S25',
+            value: 799.99,
+            tradeInCredit: {
+                'Unlimited Welcome': ANDROID_UNLIMITED_WELCOME_TRADE_IN_CREDIT,
+                'Unlimited Plus': 799.99,
+                'Unlimited Ultimate': ANDROID_UNLIMITED_ULTIMATE_TRADE_IN_CREDIT
+            },
+            isFree: false
+        },
         {
             name: 'Samsung Galaxy Z Fold5',
             value: 1799.99,

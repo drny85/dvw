@@ -103,7 +103,7 @@ const TradeIn = () => {
         if (line && line?.tradeInValues?.device) {
             handleSegmentChange(line.tradeInValues.device)
         }
-    }, [line])
+    }, [line, selectedSegment])
 
     return (
         <Screen>

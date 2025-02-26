@@ -6,6 +6,7 @@ import Text from '@/common/components/Text'
 import View from '@/common/components/View'
 import useAppDispatch from '@/common/hooks/useAppDispatch'
 import useAppSelector from '@/common/hooks/useAppSelector'
+import { MOBILE_PLUS_HOME_EXPIRES } from '@/constants'
 import { SIZES } from '@/constants/Sizes'
 import Styles from '@/constants/Styles'
 import {
@@ -15,6 +16,7 @@ import {
     setExpressInternet,
     toggleIsWelcomeQualified
 } from '@/features/wireless/wirelessSlide'
+import { isDateNotInPast } from '@/utils/isNotInThePast'
 import { router } from 'expo-router'
 import React from 'react'
 import { TouchableOpacity } from 'react-native'
@@ -62,17 +64,19 @@ const filter = () => {
                         )
                     }}
                 />
-                <Switcher
-                    value={expressHasFios}
-                    title="Mobile + Home 3.0"
-                    onValueChange={() => {
-                        if (expressHasFios) {
-                            dispatch(setExpressInternet())
-                        }
+                {isDateNotInPast(MOBILE_PLUS_HOME_EXPIRES) && (
+                    <Switcher
+                        value={expressHasFios}
+                        title="Mobile + Home 3.0"
+                        onValueChange={() => {
+                            if (expressHasFios) {
+                                dispatch(setExpressInternet())
+                            }
 
-                        dispatch(setExpressHasFios(!expressHasFios))
-                    }}
-                />
+                            dispatch(setExpressHasFios(!expressHasFios))
+                        }}
+                    />
+                )}
 
                 {/* <AnimatePresence>
                     {expressHasFios && (

@@ -58,7 +58,7 @@ export const calculatePrice = (
                     : lines.length === 4
                     ? 40
                     : lines.length >= 5
-                    ? 37
+                    ? 40
                     : 0) -
                 expressAutoPay -
                 mobilePlusHome(line, expressInternet, expressHasFios) -

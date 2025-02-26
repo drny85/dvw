@@ -13,9 +13,10 @@ import {
     toggleIsWelcomeQualified
 } from '@/features/wireless/wirelessSlide'
 import Text from './Text'
+import { isDateNotInPast } from '@/utils/isNotInThePast'
+import { MOBILE_PLUS_HOME_EXPIRES } from '@/constants'
 
 const DiscountButtons = () => {
-    const trackColor = useThemeColor('button')
     const thumbColor = useThemeColor('accent')
     const bgColor = useThemeColor('background')
     const dispatch = useAppDispatch()
@@ -26,7 +27,7 @@ const DiscountButtons = () => {
         <View
             style={{
                 flexDirection: 'row',
-                justifyContent: 'space-evenly',
+                justifyContent: 'space-between',
                 alignItems: 'center',
                 padding: 6,
                 borderRadius: SIZES.base,
@@ -48,22 +49,43 @@ const DiscountButtons = () => {
                 />
             </Row>
 
-            <Row style={{ gap: 6 }}>
-                <Text>M+H</Text>
-                <Switch
-                    trackColor={{ false: thumbColor, true: bgColor + '30' }}
-                    thumbColor={expressHasFios ? thumbColor : 'grey'}
-                    ios_backgroundColor={bgColor}
-                    onChange={() => {
-                        if (expressHasFios) {
-                            dispatch(setExpressInternet())
-                        }
+            {isDateNotInPast(MOBILE_PLUS_HOME_EXPIRES) ? (
+                <Row style={{ gap: 6 }}>
+                    <Text>M+H</Text>
+                    <Switch
+                        trackColor={{ false: thumbColor, true: bgColor + '30' }}
+                        thumbColor={expressHasFios ? thumbColor : 'grey'}
+                        ios_backgroundColor={bgColor}
+                        onChange={() => {
+                            if (expressHasFios) {
+                                dispatch(setExpressInternet())
+                            }
 
-                        dispatch(setExpressHasFios(!expressHasFios))
-                    }}
-                    value={expressHasFios}
-                />
-            </Row>
+                            dispatch(setExpressHasFios(!expressHasFios))
+                        }}
+                        value={expressHasFios}
+                    />
+                </Row>
+            ) : (
+                <Row style={{ gap: 6 }}>
+                    <Text>First R</Text>
+                    <Switch
+                        trackColor={{ false: thumbColor, true: bgColor + '30' }}
+                        thumbColor={expressFirstResponder ? thumbColor : 'grey'}
+                        ios_backgroundColor={bgColor}
+                        onChange={() => {
+                            if (isWelcome) {
+                                dispatch(toggleIsWelcomeQualified())
+                            }
+
+                            dispatch(
+                                setExpressFirstResponder(!expressFirstResponder)
+                            )
+                        }}
+                        value={expressFirstResponder}
+                    />
+                </Row>
+            )}
             <Row style={{ gap: 6 }}>
                 <Text>LGPO</Text>
                 <Switch

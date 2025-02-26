@@ -2,6 +2,7 @@ import useAppDispatch from '@/common/hooks/useAppDispatch'
 import useAppSelector from '@/common/hooks/useAppSelector'
 import useThemeColor from '@/common/hooks/useThemeColor'
 import {
+    MOBILE_PLUS_HOME_EXPIRES,
     SWITCHER_OFFER_EXPIRES,
     WELCOME_BYOD_BONUS_ENDS,
     WELCOME_OFFER_EXPIRATION_DATE
@@ -113,6 +114,8 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
     }, [lines])
 
     const mobilePlusHomeDiscount = (): number => {
+        console.log(!isDateNotInPast(MOBILE_PLUS_HOME_EXPIRES))
+        if (!isDateNotInPast(MOBILE_PLUS_HOME_EXPIRES)) return 0
         return lines
             .map((line) =>
                 // (line.name === 'Unlimited Plus' ||

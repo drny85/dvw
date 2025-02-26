@@ -117,6 +117,19 @@ const SettingsLayout = () => {
                     headerShown: false
                 }}
             />
+            <Stack.Screen
+                name="porting"
+                options={{
+                    headerShown: false
+                }}
+            />
+
+            <Stack.Screen
+                name="grid"
+                options={{
+                    headerShown: false
+                }}
+            />
         </Stack>
     )
 }
