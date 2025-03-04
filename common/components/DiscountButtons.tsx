@@ -87,7 +87,7 @@ const DiscountButtons = () => {
                 </Row>
             )}
             <Row style={{ gap: 6 }}>
-                <Text>LGPO</Text>
+                <Text>NGPO</Text>
                 <Switch
                     trackColor={{ false: thumbColor, true: bgColor + '30' }}
                     thumbColor={isWelcome ? thumbColor : 'grey'}

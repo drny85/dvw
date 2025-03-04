@@ -59,24 +59,24 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
         expressAutoPay,
         expressHasFios,
         expressInternet,
+
         showInfo,
         dueTotal
     } = useAppSelector((s) => s.wireless)
-    const welcomeTotal = lines.filter(
-        (l) => l.name === 'Unlimited Welcome'
-    ).length
+
+    const totalLines = lines.length
 
     const welcomeOfferBonus = (): number => {
         if (!isDateNotInPast(WELCOME_OFFER_EXPIRATION_DATE)) return 0
-        if (welcomeTotal === 0 || !isWelcome || lines.length > 3) return 0
+        if (totalLines === 0 || !isWelcome || expressFirstResponder) return 0
 
-        return welcomeTotal === 1
+        return totalLines === 1
             ? 10
-            : welcomeTotal === 2
+            : totalLines === 2
             ? 15
-            : welcomeTotal === 3
+            : totalLines >= 3
             ? 20
-            : welcomeTotal === 0
+            : totalLines === 0
             ? 0
             : 0
     }
@@ -585,14 +585,13 @@ const TotalView = ({ onClickSave, showResetAll }: Props) => {
             <RowView
                 show={
                     isDateNotInPast(WELCOME_OFFER_EXPIRATION_DATE) &&
-                    welcomeTotal > 0 &&
+                    totalLines > 0 &&
                     isWelcome &&
-                    lines.length <= 3 &&
                     welcomeOfferBonus() > 0
                 }
             >
                 <Row style={{ gap: 10 }}>
-                    <Text>LGPO</Text>
+                    <Text>NGPO</Text>
                     <TouchableOpacity
                         onPress={() => dispatch(setShowInfo(!showInfo))}
                     >

@@ -55,9 +55,7 @@ export const calculatePrice = (
                     ? 65
                     : lines.length === 3
                     ? 50
-                    : lines.length === 4
-                    ? 40
-                    : lines.length >= 5
+                    : lines.length >= 4
                     ? 40
                     : 0) -
                 expressAutoPay -
@@ -74,10 +72,8 @@ export const calculatePrice = (
                     ? 80
                     : lines.length === 3
                     ? 65
-                    : lines.length === 4
+                    : lines.length >= 4
                     ? 55
-                    : lines.length >= 5
-                    ? 52
                     : 0) -
                 expressAutoPay -
                 mobilePlusHome(line, expressInternet, expressHasFios) -
@@ -93,10 +89,8 @@ export const calculatePrice = (
                     ? 90
                     : lines.length === 3
                     ? 75
-                    : lines.length === 4
+                    : lines.length >= 4
                     ? 65
-                    : lines.length >= 5
-                    ? 62
                     : 0) -
                 expressAutoPay -
                 mobilePlusHome(line, expressInternet, expressHasFios) -

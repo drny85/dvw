@@ -38,13 +38,13 @@ const LGPO = () => {
                 fontFamily="SFBold"
                 fontSize={18}
             >
-                Local Growth Pricing Offer
+                National Growth Pricing Offer
             </Text>
 
             <View style={{ padding: 10, gap: 10 }}>
-                <Text>1 Line on Welcome Unlimited, $10 off</Text>
-                <Text>2 Lines on Welcome Unlimited, $15 off</Text>
-                <Text>3 Lines on Welcome Unlimited, $20 off</Text>
+                <Text>1 Line on Any Plan, $10 off</Text>
+                <Text>2 Lines on Any Plan, $15 off</Text>
+                <Text>3+ Lines on Any Plan, $20 off</Text>
                 <View style={{ padding: 10 }}>
                     <Text center fontFamily="QSLight">
                         Offer set to end on {WELCOME_OFFER_EXPIRATION_DATE}
