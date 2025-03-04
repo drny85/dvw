@@ -9,7 +9,13 @@ import { setLinesData, toogleShake } from '@/features/wireless/wirelessSlide'
 import { FontAwesome } from '@expo/vector-icons'
 import { MotiView } from 'moti'
 import { useEffect } from 'react'
-import { Animated, StyleSheet, Switch, TouchableOpacity } from 'react-native'
+import {
+    Alert,
+    Animated,
+    StyleSheet,
+    Switch,
+    TouchableOpacity
+} from 'react-native'
 import Text from '../Text'
 import View from '../View'
 import LinesMenu from './Menu'
@@ -131,11 +137,23 @@ const LineItem = ({ line, onBYOD, onDelete, onTradeInPress, index }: Props) => {
                         BYOD
                     </Text>
                     <Switch
+                        //disabled={line.name === 'Unlimited Welcome'}
                         value={line.byod}
                         trackColor={{ false: thumbColor, true: bgColor + '40' }}
                         thumbColor={line.byod ? thumbColor : 'grey'}
                         ios_backgroundColor={bgColor}
-                        onChange={() => onBYOD(line.id)}
+                        onChange={() => {
+                            console.log('line.byod', line.byod)
+                            if (line.name === 'Unlimited Welcome') {
+                                Alert.alert(
+                                    'Unlimited Welcome',
+                                    'You cannot apply BYOD at the moment.\nPlease let wait until Wednesday 5th to resolve this issue',
+                                    [{ text: 'OK' }]
+                                )
+                                return
+                            }
+                            onBYOD(line.id)
+                        }}
                     />
                 </View>
                 <View style={styles.lineName}>
