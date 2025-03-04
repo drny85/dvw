@@ -110,6 +110,7 @@ export const onSwitchLine = (
     expressAutoPay: 0 | 10,
     expressInternet: InternetPlan,
     expressHasFios: boolean,
+
     dispatch: Dispatch<any>
 ) => {
     const line = lines.find((line) => line.id === id)!
@@ -133,6 +134,12 @@ export const onSwitchLine = (
                   perks: []
               }
             : { ...n, perks: [] }
+    const numberOfLinesOnWelcome = lines.filter(
+        (line) => line.name === 'Unlimited Welcome' && line.byod
+    ).length
+    const turnoffBYOD =
+        name === 'Unlimited Welcome' && line.byod && numberOfLinesOnWelcome >= 1
+
     const newLines = lines.map((line) => {
         if (line.id === id) {
             return {
@@ -146,7 +153,9 @@ export const onSwitchLine = (
                 ),
                 name: name,
                 perks: line.perks,
+                byod: turnoffBYOD ? false : line.byod,
                 tradeIn: line.tradeIn,
+
                 tradeInValues: line.tradeInValues
                     ? calculateTradeInValues(
                           name,

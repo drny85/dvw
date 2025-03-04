@@ -143,15 +143,28 @@ const LineItem = ({ line, onBYOD, onDelete, onTradeInPress, index }: Props) => {
                         thumbColor={line.byod ? thumbColor : 'grey'}
                         ios_backgroundColor={bgColor}
                         onChange={() => {
-                            console.log('line.byod', line.byod)
-                            if (line.name === 'Unlimited Welcome') {
+                            const numbersOfWelcome = lines.filter(
+                                (l) => l.name === 'Unlimited Welcome' && l.byod
+                            ).length
+                            console.log(
+                                'line.byod',
+                                numbersOfWelcome,
+                                line.byod
+                            )
+
+                            if (
+                                numbersOfWelcome >= 1 &&
+                                !line.byod &&
+                                line.name === 'Unlimited Welcome'
+                            ) {
                                 Alert.alert(
-                                    'Unlimited Welcome',
-                                    'You cannot apply BYOD at the moment.\nPlease let wait until Wednesday 5th to resolve this issue',
+                                    'BYOD',
+                                    'You can only have one BYOD discount.',
                                     [{ text: 'OK' }]
                                 )
                                 return
                             }
+
                             onBYOD(line.id)
                         }}
                     />
