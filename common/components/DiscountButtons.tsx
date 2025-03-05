@@ -68,7 +68,9 @@ const DiscountButtons = () => {
                 </Row>
             ) : (
                 <Row style={{ gap: 6 }}>
-                    <Text>First R</Text>
+                    <Text>
+                        {SIZES.width > 500 ? 'First Responder' : 'First R'}
+                    </Text>
                     <Switch
                         trackColor={{ false: thumbColor, true: bgColor + '30' }}
                         thumbColor={expressFirstResponder ? thumbColor : 'grey'}

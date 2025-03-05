@@ -146,11 +146,6 @@ const LineItem = ({ line, onBYOD, onDelete, onTradeInPress, index }: Props) => {
                             const numbersOfWelcome = lines.filter(
                                 (l) => l.name === 'Unlimited Welcome' && l.byod
                             ).length
-                            console.log(
-                                'line.byod',
-                                numbersOfWelcome,
-                                line.byod
-                            )
 
                             if (
                                 numbersOfWelcome >= 1 &&
@@ -159,7 +154,7 @@ const LineItem = ({ line, onBYOD, onDelete, onTradeInPress, index }: Props) => {
                             ) {
                                 Alert.alert(
                                     'BYOD',
-                                    'You can only have one BYOD discount.',
+                                    'You can only have one BYOD discount on Unlimited Welcome.',
                                     [{ text: 'OK' }]
                                 )
                                 return
@@ -208,7 +203,7 @@ const LineItem = ({ line, onBYOD, onDelete, onTradeInPress, index }: Props) => {
                             //shake()
                         }}
                     >
-                        <FontAwesome name="trash-o" size={26} color={warning} />
+                        <FontAwesome name="trash-o" size={24} color={warning} />
                     </TouchableOpacity>
                 </Animated.View>
             </MotiView>
