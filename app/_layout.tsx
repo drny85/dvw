@@ -15,6 +15,7 @@ export default function () {
     // Render the Slot component to initiate navigation
 
     useNotificationObserver()
+    console.log('root')
 
     return (
         <BottomSheetModalProvider>
